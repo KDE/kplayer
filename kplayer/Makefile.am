@@ -41,7 +41,7 @@ KDE_OPTIONS = noautodist nofinal
 
 KDE_ICON = kplayer
 
-DIST_SOURCES =
+#DIST_SOURCES =
 
 # the library search path. 
 kplayer_LDFLAGS = $(all_libraries) $(KDE_RPATH)
