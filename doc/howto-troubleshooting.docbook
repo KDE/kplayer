@@ -1,0 +1,335 @@
+<sect1 id="howto-troubleshooting">
+<title>Troubleshooting</title>
+
+<sect2 id="howto-troubleshooting-support">
+<title>Getting support</title>
+
+<para>There are several ways to get help with &kplayer;. If you want to ask a
+question, the <ulink
+url="http://sourceforge.net/forum/forum.php?forum_id=244388">user
+forum</ulink> is the best place to post it, since other users will be able to
+see it, as well as the developer who is of course subscribed to receive e-mail
+when a message is posted there. The user forum is also a good place to post
+about a problem that you are not sure is a bug.</para>
+
+<para>Bugs should be reported through the <ulink
+url="http://sourceforge.net/tracker/?atid=532182&amp;group_id=71710">bug
+tracking system</ulink>, following the instructions in the
+<link linkend="howto-bug-reporting">Bug reporting micro-HOWTO</link>. Bugs
+reported using the <guimenuitem>Report a bug</guimenuitem> option on the
+<guimenu>Help</guimenu> menu are still accepted, but are less helpful.</para>
+
+<para>Also there are special sections at the
+<ulink url="http://sourceforge.net/projects/kplayer/">&kplayer; project</ulink>
+on SourceForge for <ulink
+url="http://sourceforge.net/tracker/?atid=532183&amp;group_id=71710">support
+requests</ulink>, <ulink
+url="http://sourceforge.net/tracker/?atid=532185&amp;group_id=71710">feature
+requests</ulink> and <ulink
+url="http://sourceforge.net/tracker/?group_id=71710&amp;atid=532184">code
+patches</ulink>.</para>
+
+</sect2>
+
+<sect2 id="howto-troubleshooting-problems">
+<title>Common problems</title>
+
+<sect3>
+<title>Most commands on the menu and on the toolbar are missing</title>
+
+<para>The <filename>kplayerui.rc</filename> file was misplaced during
+installation, and &kplayer; cannot find it. If you installed using a binary
+package, complain to the package maintainer. When compiling from source, be sure
+to follow the instructions in the <link linkend="howto-compilation">Compilation
+micro-HOWTO</link>, especially the part about <command>kde-config</command>.
+Before starting, run</para>
+
+<para><userinput><command>kde-config</command>
+<option>--prefix</option></userinput></para>
+
+<para>from the command line to make sure that it returns the &kde; prefix
+path.</para>
+
+</sect3>
+
+<sect3>
+<title>After a &kplayer; upgrade new features are missing</title>
+
+<para>You may have a file called <filename>kplayerui.rc</filename> in
+<filename>~/.kde/share/apps/kplayer</filename>. Removing it will get you the new
+menus, but it will also reset any keyboard shortcuts you may have changed in
+the <link linkend="configuration-shortcuts">Key Bindings dialog</link>.</para>
+
+</sect3>
+
+<sect3>
+<title>&kplayer; is not showing up on the <guisubmenu>Multimedia</guisubmenu>
+submenu of the &kmenu;</title>
+
+<para>The <filename>kplayer.desktop</filename> file needs to be installed in the
+correct place, under either <filename>share/applnk/Multimedia</filename> or
+<filename>share/applications/kde</filename> in the global &kde;
+directory.</para>
+
+<para>There also may be a file called <filename>kde-kplayer.desktop</filename>
+in <filename>~/.local/share/applications</filename>. Removing it will get the
+<guisubmenu>Multimedia</guisubmenu> menu updated automatically again when you
+install or uninstall &kplayer;, but it will also reset changes you made to
+&kplayer; associations with media types on the <guilabel>File
+Associations</guilabel> page in &konqueror; configuration dialog or in
+&kcontrolcenter;.</para>
+
+<para>The <guilabel>Contents</guilabel> tab in &khelpcenter; should also list
+&kplayer; in the <guilabel>Multimedia</guilabel> section under
+<guilabel>Application Manuals</guilabel>.</para>
+
+</sect3>
+
+<sect3>
+<title>Could not start &mplayer;</title>
+
+<para>If you get this error when trying to play a file, you need to install
+&mplayer; before you can use &kplayer;. This error can also happen if the name
+of your &mplayer; executable is not <command>mplayer</command> or it is not in
+the current path. In that case go to the
+<link linkend="settings-advanced">Advanced</link> page in
+<guilabel>&kplayer; Settings</guilabel> and give the executable name or the
+full path in the <guilabel>Executable path</guilabel> field.</para>
+
+</sect3>
+
+<sect3>
+<title>configure: error: Can't find X includes</title>
+
+<para>That means that you are missing the X include files, which normally come
+with the X development package. So look for a package in your distribution that
+has files like X.h and XEvent.h. For example, on Debian it is called
+<literal>xlibs-dev</literal>.</para>
+
+<para>Similarly, if <command>configure</command> complains about missing Qt
+files, you need to find and install the Qt development package. If you look
+in the <filename>config.log</filename>, it will probably tell you the exact
+name of the file it couldn't find, somewhere near the bottom. The
+<filename>config.log</filename> file is quite verbose, so you would have to
+scroll a few pages up from the bottom to find the place where it reports the
+error.</para>
+
+</sect3>
+
+<sect3>
+<title>Cannot play any files</title>
+
+<para>Look at the end of the message log to see what errors &mplayer; gives when
+trying to play the files. Hit
+<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo> if &kplayer; does
+not show the log automatically.</para>
+
+<para>Try playing the files with <command>mplayer</command> from the command
+line. If &mplayer; can play them, compare the options you used on the command
+line to the ones &kplayer; passed to &mplayer;. Set the required options in
+<link linkend="settings">&kplayer; Settings</link>. The most important ones are
+the <guilabel>Driver</guilabel> options on the
+<link linkend="settings-video">Video</link> and
+<link linkend="settings-audio">Audio</link> pages. On the
+<link linkend="settings-advanced">Advanced page</link>
+check the <guilabel>Executable path</guilabel> option to make sure &kplayer;
+will be able to find the &mplayer; executable, and if there are any options
+that are not found anywhere in the <guilabel>&kplayer; Settings</guilabel>
+dialog, put them in the <guilabel>Additional command line arguments</guilabel>
+field.</para>
+
+</sect3>
+
+<sect3>
+<title>Cannot play a specific file</title>
+
+<para>Look at the end of the message log to see what errors &mplayer; gives when
+trying to play the file. Hit
+<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo> if &kplayer; does
+not show the log automatically.</para>
+
+<para>Try playing the file with <command>mplayer</command> from the command
+line. If &mplayer; can play it, but requires special option to play this
+particular file, put them in the <link linkend="properties">File
+Properties</link> for that file. Two options that sometimes help &mplayer; when
+it cannot detect the file type automatically are <option>-vc</option> and
+<option>-ac</option>, which correspond to the <guilabel>Codec</guilabel> options
+on the <link linkend="properties-video">Video</link> and
+<link linkend="properties-audio">Audio</link> pages in <guilabel>File
+Properties</guilabel>. If there are any options that are not found anywhere
+in the <guilabel>File Properties</guilabel> dialog, put them in the
+<guilabel>Additional command line arguments</guilabel> field.</para>
+
+<para>If it is a playlist file but it does not have one of the standard playlist
+file extensions, go to the
+<link linkend="properties-general">General page</link> in the <guilabel>File
+Properties</guilabel> and set the <guilabel>Playlist</guilabel> option to
+<guilabel>yes</guilabel>. In rare cases a file that is not a playlist may have a
+playlist extension. Then you will need to set the <guilabel>Playlist</guilabel>
+property to <guilabel>no</guilabel>. For more details see the
+<link linkend="howto-playlist-files">Playlist files</link> section in the
+Playlist micro-HOWTO.</para>
+
+</sect3>
+
+<sect3>
+<title>Cannot play any video files</title>
+
+<para>If &kplayer; only plays audio files but not video files, there may be a
+problem with the video output. By default &kplayer; uses
+<link linkend="howto-installation-xvideo">XVideo extension</link> for video
+output. If the extension is not enabled or is being used by another program like
+<application>Kino</application>, &kplayer; may not be able to use a different
+video output. You can either enable the XVideo extension or tell &kplayer; to
+use another video output. See the
+<link linkend="howto-configuration">Configuration micro-HOWTO</link> for
+details.</para>
+
+</sect3>
+
+<sect3>
+<title>Video plays fine, but there is no sound</title>
+
+<para>Look in the <link linkend="parts-message-log">Message Log</link> to see
+why &mplayer; cannot play audio. The most common problem is the audio device
+being locked by another program. In this case the chief suspect is
+<command>artsd</command>. Try running</para>
+
+<para><userinput><command>killall</command> artsd</userinput></para>
+
+<para>from the command line. If that helps then the permanent solution is to go
+to the &kcontrolcenter; and disable &arts;. &arts; and everything based on it is
+by far the worst part of &kde;. Fortunately it seems there are plans to finally
+get rid of it in &kde; 4.</para>
+
+<para>For more information on audio setup in &kplayer; see the
+<link linkend="howto-configuration-audio">Configuration
+micro-HOWTO</link>.</para>
+
+</sect3>
+
+<sect3>
+<title>&kplayer; cannot play a file that plays fine with &mplayer;</title>
+
+<para>When &kplayer; is in <guilabel>Running</guilabel> or
+<guilabel>Playing</guilabel> state, run</para>
+
+<para><userinput><command>ps</command> <option>auxww</option></userinput></para>
+
+<para>from the command line. Compare the command line options that &kplayer;
+uses to run &mplayer; to what you are using to play the file with &mplayer;.
+Then start adding missing options one by one until you get the same problem
+you are getting in &kplayer;. After you find out what option is causing the
+problem, you can open the <link linkend="settings">configuration dialog</link>
+in &kplayer; and remove or change that option. If you need to make the change
+just for that one file, go to the <link linkend="properties">File
+Properties</link> instead.</para>
+
+</sect3>
+
+<sect3>
+<title>Cannot play a DVD, video CD or audio CD</title>
+
+<para>Choose <guimenuitem>Open URL</guimenuitem> from <guimenu>File</guimenu>
+menu. Enter a <acronym>URL</acronym> like <userinput>dvd://1</userinput> or
+<userinput>vcd://1</userinput>. For more information about playback from various
+kinds of hardware devices see the <link linkend="howto-devices">Devices
+micro-HOWTO</link>.</para>
+
+</sect3>
+
+<sect3>
+<title>Problems when coming back from full screen mode</title>
+
+<para>If you are getting problems when you try to go back to normal window size
+from full screen mode, for example the window becomes too large or you are
+seeing endless flickering, you can try unselecting the <guilabel>Resize main
+window automatically</guilabel> option on the
+<link linkend="settings-general">General page</link> in <guilabel>&kplayer;
+Settings</guilabel>. Also read the thread about this problem at the <ulink
+url="http://sourceforge.net/forum/forum.php?thread_id=1122221&amp;forum_id=244388">&kplayer;
+user forum</ulink> and watch it for updates.</para>
+
+</sect3>
+
+<sect3>
+<title>Radio station takes too long to start playing</title>
+
+<para>By default &kplayer; uses one megabyte of cache. When playing low bitrate
+media like a radio station, it will take a long time to fill it. You can choose
+a lower <guilabel>Cache size</guilabel> setting on the
+<guilabel>Advanced</guilabel> page either globally in
+<link linkend="settings-advanced">&kplayer; Settings</link> or in the
+individual <link linkend="properties-advanced">File Properties</link>.
+For more information on playing online media see the
+<link linkend="howto-streams">Streams micro-HOWTO</link>.</para>
+
+</sect3>
+
+<sect3>
+<title>Large video files take too long to start playing</title>
+
+<para>You may have set the <guilabel>Cache size</guilabel> option too low in
+<link linkend="settings-advanced">&kplayer; Settings</link>. The default global
+setting is one megabyte, which should work fine in most cases. If you need to
+set it higher or lower for an individual file or stream, you can do so on the
+<link linkend="properties-advanced">Advanced page</link> in <guilabel>File
+Properties</guilabel>.</para>
+
+</sect3>
+
+<sect3>
+<title>Only video area is shown in &konqueror; or &kmldonkey;</title>
+
+<para>If you open a web page with an embedded multimedia object in &konqueror;,
+only the video area is displayed, with no controls. Same happens when previewing
+partially downloaded files in &kmldonkey;. It is recommended that you right
+click the video area and choose the <guimenuitem>Start &kplayer;</guimenuitem>
+command. Playback will then stop, and the full &kplayer; will open up and start
+playing the file or <acronym>URL</acronym>.</para>
+
+</sect3>
+
+<sect3>
+<title>Contrast and brightness controls do not work</title>
+
+<para>You need to enable the <link linkend="howto-installation-xvideo">XVideo
+extension</link> in your X11 configuration.</para>
+
+</sect3>
+
+<sect3>
+<title>Cannot upgrade kdelibs-data because of a conflict</title>
+
+<para>In Debian the <literal>kdelibs-data</literal> package contains
+<filename>rtsp.protocol</filename> file, which &kplayer; replaces with its own
+version. If later you try to upgrade the <literal>kdelibs-data</literal>
+package, <command>apt-get</command> will complain about a conflict. This is a
+bug in <command>apt-get</command>. To work around it, run the following
+commands:</para>
+
+<para><userinput><command>apt-get</command> remove kplayer</userinput></para>
+
+<para><userinput><command>apt-get</command> install
+kdelibs-data</userinput></para>
+
+<para><userinput><command>apt-get</command> install kplayer</userinput></para>
+
+<para>If you run <userinput><command>apt-get</command> install
+kdelibs-data</userinput> before <userinput><command>apt-get</command> remove
+kplayer</userinput>, another <command>apt-get</command> bug will prevent you
+from removing the <literal>kplayer</literal> package. The workaround is:</para>
+
+<para><userinput><command>dpkg</command> <option>-r</option>
+kplayer</userinput></para>
+
+<para><userinput><command>apt-get</command> <option>-f</option>
+install</userinput></para>
+
+<para><userinput><command>apt-get</command> install kplayer</userinput></para>
+
+</sect3>
+
+</sect2>
+
+</sect1>

@@ -1,0 +1,106 @@
+<sect1 id="howto-installation">
+<title>Installation</title>
+
+<sect2 id="howto-installation-dependencies">
+<title>Dependencies</title>
+
+<sect3 id="howto-installation-mplayer">
+<title>MPlayer</title>
+
+<para>&kplayer; uses <ulink url="http://www.mplayerhq.hu/">&mplayer;</ulink>
+as the multimedia backend for playing audio and video files and streams.
+This ensures maximum variety of supported types of files and encodings.</para>
+
+<para>You need to have &mplayer; version 0.90 or later. The recommended version
+is 1.0-pre5. If there are good binary packages for your distribution, use those.
+For example on Debian you would do</para>
+
+<para><userinput><command>echo</command>
+'deb ftp://ftp.nerim.net/debian-marillat/ unstable main' >>
+<filename>/etc/apt/sources.list</filename></userinput></para>
+
+<para><userinput><command>apt-get</command> update</userinput></para>
+
+<para><userinput><command>apt-get</command> install mplayer-k7</userinput></para>
+
+<para>Substitute <literal>unstable</literal> for <literal>stable</literal> or
+<literal>testing</literal> as required, and <literal>k7</literal> for
+<literal>386</literal>, <literal>586</literal>, <literal>686</literal> or
+<literal>k6</literal>, according to your processor type.</para>
+
+<para>As always <ulink
+url="http://www.mplayerhq.hu/DOCS/HTML/en/faq.html#faq-compilation">compiling
+from source</ulink> is an option.</para>
+
+</sect3>
+
+<sect3 id="howto-installation-xvideo">
+<title>X11 and XVideo</title>
+
+<para>X11 is required. Recommended versions are XFree86 4.2.x and 4.3.x, as well
+as X Server versions released by X.org.</para>
+
+<para>XVideo extension is recommended. You can check your
+<filename>/etc/X11/xorg.conf</filename> or
+<filename>/etc/X11/XF86Config-4</filename> file for a line that reads</para>
+
+<para><userinput>Load "extmod"</userinput></para>
+
+<para>This is the line that loads XVideo extension, so make sure it is not
+disabled. Also check <filename>/var/log/XFree86.0.log</filename> to make sure
+that XVideo is loaded without error.</para>
+
+<para>See the <link linkend="howto-configuration">Configuration
+micro-HOWTO</link> if you want to use a different video output.</para>
+
+</sect3>
+
+<sect3 id="howto-installation-kde">
+<title>Qt and KDE</title>
+
+<para>&kplayer; 0.5 supports &kde; 3.1.x, 3.2.x and 3.3.x, so you need to either
+run a relatively recent &kde; (recommended) or at least have &kde; libraries
+and the corresponding Qt libraries on your system.</para>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="howto-installation-installation">
+<title>Installation</title>
+
+<sect3 id="howto-installation-binary">
+<title>Binary install</title>
+
+<para>The recommended way to install &kplayer; is by using the binary package
+built specifically for your distribution. The
+<ulink url="http://kplayer.sourceforge.net/#downloads">Downloads section</ulink>
+of the &kplayer; home page lists the available packages and repositories.</para>
+
+<para><ulink url="http://sourceforge.net/sendmessage.php?touser=137121">Add
+a section for your distro</ulink></para>
+
+</sect3>
+
+<sect3 id="howto-installation-source">
+<title>Compiling from source</title>
+
+<para>If you cannot install a precompiled binary for any reason, you can compile
+&kplayer; yourself. See the <link linkend="howto-compilation">Compilation
+Micro-HOWTO</link> for instructions.</para>
+
+</sect3>
+
+<sect3 id="howto-installation-cvs">
+<title>Compiling from CVS</title>
+<para>If you want to try the latest and greatest &kplayer; features at the risk
+of getting some parts of it broken, you can compile the latest
+<acronym>CVS</acronym> code. See the
+<link linkend="howto-compilation">Compilation Micro-HOWTO</link> for
+details.</para>
+
+</sect3>
+
+</sect2>
+
+</sect1>

@@ -1,0 +1,302 @@
+<chapter id="configuration">
+<title>Configuring &kplayer;</title>
+
+<para>Like other &kde; programs, &kplayer; is highly configurable. When you
+<link linkend="howto-installation">install &kplayer;</link> and its multimedia
+playing backend <link linkend="howto-installation-mplayer">&mplayer;</link>,
+the default settings should enable your system to play multimedia content
+without any additional configuration. This chapter describes ways to make
+&kplayer;'s user interface best fit your tastes and configure media playback
+for optimal quality and performance.</para>
+
+<sect1 id="configuration-bars">
+<title>Toolbars</title>
+
+<para>When &kplayer; is first installed, its window contains a
+<link linkend="parts-menu-bar">menu bar</link>, a
+<link linkend="parts-toolbar-main">main toolbar</link>, a
+<link linkend="parts-toolbar-playlist">playlist toolbar</link> and a
+<link linkend="parts-status-bar">status bar</link>. Additionally, a
+<link linkend="parts-toolbar-slider">progress toolbar</link> will usually appear
+when you start playing a file.</para>
+
+<para>On the <link linkend="menu-settings"><guimenu>Settings</guimenu>
+menu</link> you will find options to hide toolbars that you do not need and to
+show <link linkend="parts-toolbar-slider">other available toolbars</link>. Some
+of them will only be available for video files, while the progress toolbar is
+available when &kplayer; can detect the time length of the current file.</para>
+
+<para>The menu bar itself can be toggled on and off with the shortcut key
+combination <keycombo action="simul">&Ctrl;<keycap>M</keycap></keycombo>.
+You can also hide the status bar if you do not need the information it displays,
+or show the message log detailing internal operation of &mplayer; backend as
+well as &kde; <acronym>I/O</acronym> Slaves.</para>
+
+<para>Each toolbar has a small area on one of its sides where you can press and
+hold the &LMB; to drag the toolbar into a new position. You can place most
+toolbars either horizontally at the top or bottom of &kplayer; window or
+vertically at the left or right side of it, while the playlist toolbar can only
+be positioned horizontally.</para>
+
+<para>If you <mousebutton>right</mousebutton> click a toolbar, you will get a
+<link linkend="popup-toolbar">menu</link> to configure it. You can choose the
+toolbar orientation, text position and icon size.</para>
+
+<para>&kplayer; will of course remember all the settings you choose and the
+positions where you put your toolbars. It will remember visibility settings
+for <link linkend="howto-full-screen">full screen mode</link> and for normal
+mode separately.</para>
+
+</sect1>
+
+<sect1 id="configuration-playlist">
+<title>Playlist</title>
+
+<para>&kplayer;'s playlist stores items that have been played and let you easily
+play them again, arrange them and set individual item
+<link linkend="howto-properties">properties</link>. For a full list of commands
+and options see the sections about the <link linkend="menu-playlist">Playlist
+menu</link> and the <link linkend="popup-playlist">Playlist popup menu</link> in
+Command Reference, the <link linkend="settings-playlist">Playlist section</link>
+in the Configuration Dialog chapter. The <link linkend="howto-playlist">Playlist
+micro-HOWTO</link> gives details on playlist support in &kplayer;. Following is
+a description of options that affect the playlist behavior.</para>
+
+<itemizedlist>
+
+<listitem><para><guimenuitem>Show Playlist</guimenuitem> option is available
+from the <link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu
+and the <link linkend="popup-main">general popup menu</link>. It shows or hides
+the <link linkend="parts-toolbar-playlist">playlist toolbar</link> that contains
+the playlist itself in a combo box, as well as <guimenuitem>Next</guimenuitem>
+and <guimenuitem>Previous</guimenuitem> commands and
+<guimenuitem>Loop</guimenuitem> and <guimenuitem>Shuffle</guimenuitem>
+options.</para></listitem>
+
+<listitem><para><guimenuitem>Show Editor</guimenuitem> option is available from
+the <link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu and
+the <link linkend="popup-main">general popup menu</link>. It shows or hides the
+<link linkend="parts-playlist-editor">playlists editor</link> that you can use
+to move items up and down the list, remove them or change their
+<link linkend="howto-properties">properties</link>.</para></listitem>
+
+<listitem><para><guimenuitem>Show Toolbar</guimenuitem> option is available from
+the <link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu. It
+shows or hides the <link linkend="parts-toolbar-editor">playlist editor
+toolbar</link> that contains commands that work on items in the editor, as
+well as the option to lock the main playlist.</para></listitem>
+
+<listitem><para><guimenuitem>Loop</guimenuitem> option is available from the
+<link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu and the
+<link linkend="toolbar-playlist">playlist toolbar</link>. When enabled, it makes
+&kplayer; start playing items from the beginning of the list after it finishes
+playing the last item on the list.</para></listitem>
+
+<listitem><para><guimenuitem>Shuffle</guimenuitem> option is available from the
+<link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu and the
+<link linkend="toolbar-playlist">playlist toolbar</link>. When enabled, it makes
+&kplayer; play items in a random order. When the <guimenuitem>Loop</guimenuitem>
+option is also enabled, items will be reshuffled every time &kplayer; restarts
+playback from the top of the list. To reshuffle immediately, disable the
+<guimenuitem>Shuffle</guimenuitem> option and then enable it
+again.</para></listitem>
+
+<listitem><para><guimenuitem>Temporary List For New Entries</guimenuitem>
+option is available from the
+<link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu,
+the <link linkend="popup-main">playlist popup menu</link> and the
+<link linkend="toolbar-playlist">playlist editor toolbar</link>. When
+enabled, it locks the main playlist, so when you load new items using
+<menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></menuchoice>
+or
+<menuchoice><guimenu>File</guimenu><guimenuitem>Open URL</guimenuitem></menuchoice>
+commands, by dragging and dropping files onto &kplayer; window, or by starting
+&kplayer; with file arguments, it creates a temporary playlist, puts the new
+items on it and starts playing them. To start playing items from the main
+playlist again, choose <menuchoice><guimenu>Playlist</guimenu><guimenuitem>Play
+From Playlist</guimenuitem></menuchoice>.</para></listitem>
+
+<listitem><para><guimenuitem>Play Selection Only</guimenuitem> option is
+available from the
+<link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu and
+the <link linkend="popup-main">playlist popup menu</link>. When enabled,
+it makes &kplayer; play only the items selected in the
+<link linkend="parts-playlist-editor">playlist editor</link>.</para></listitem>
+
+<listitem><para><guimenuitem>Clear Before Adding Entries</guimenuitem>
+option is available from the
+<link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu.
+When it is enabled, all items are removed from the current playlist before
+adding new items to it. The current playlist can be either the main playlist
+or the temporary playlist when the
+<guimenuitem>Temporary List For New Entries</guimenuitem> option is
+enabled.</para></listitem>
+
+<listitem><para>More advanced playlist option are available in the
+<link linkend="settings-playlist">Playlist section</link> of
+<guilabel>&kplayer; Settings</guilabel> dialog.</para></listitem>
+
+</itemizedlist>
+
+</sect1>
+
+<sect1 id="configuration-shortcuts">
+<title>Shortcuts</title>
+
+<para>To change the shortcut key arrangements used by &kplayer; select
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+Shortcuts...</guimenuitem></menuchoice>. This will open a dialog box
+as shown below.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="shortcuts-configure.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>Shortcut configuration dialog</phrase>
+</textobject>
+</mediaobject>
+
+<para>If you change the key bindings, make sure not to duplicate an existing
+shortcut and also not to use the &Shift; key for your new shortcuts, because
+the &Shift; key has a <link linkend="howto-properties">special function</link>
+in &kplayer;.</para>
+
+<para>Search through the list to find the action for which you want to add or
+change the shortcut keys and select it by <mousebutton>left</mousebutton>
+clicking the name. You will then be able to change the shortcut by selecting
+the <guilabel>None</guilabel>, <guilabel>Default</guilabel> or
+<guilabel>Custom</guilabel> radio button or by clicking the large button in the
+<guilabel>Shortcut for Selected Action</guilabel> area. The <guilabel>Define
+Shortcut</guilabel> dialog box will then open.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="shortcuts-define.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>Define Shortcut dialog</phrase>
+</textobject>
+</mediaobject>
+
+<para>Choose whether you want to change the <guilabel>Primary</guilabel> or 
+<guilabel>Alternate</guilabel> shortcut, then press the key or key combination
+you want to act as the shortcut. If the <guilabel>Auto-Close</guilabel> box is
+checked, the dialog will vanish  as soon as you enter the key combination, else
+it will remain until you press <guibutton>OK</guibutton> or
+<guibutton>Cancel</guibutton>. Clicking the little black icon with a white
+cross in it clears the shortcut.</para>
+
+<sect2 id="configuration-userdefmenus">
+<title>User defined menus</title>
+
+<para>You can add your own pop up menu to &kplayer;, so that pressing one key
+combination will make the menu appear, then pressing a second key, or using the
+<keysym>Up arrow</keysym> and <keysym>Down arrow</keysym> keys and pressing
+<keycap>Enter</keycap>, will select an item from it.</para>
+
+<para>To do this add a <guilabel>Custom</guilabel> shortcut for each of the
+actions you want to appear in the menu and in the <guilabel>Define
+Shortcut</guilabel> dialog check the <guilabel>Multi-Key</guilabel> box, press
+the key combination that you want to bring up your new menu, then, separately,
+press the key that will choose that item from the menu.</para>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="configuration-dialog">
+<title>Other settings</title>
+
+<para>&kde; is known as the most flexible and configurable desktop environment,
+and &kplayer; is no exception. In addition to the configuration options
+described in previous sections, there are many more options, most of which
+are accessible through the <link linkend="settings">&kplayer; configuration
+dialog</link>. Select <menuchoice><guimenu>Settings</guimenu><guimenuitem>
+Configure &kplayer;...</guimenuitem></menuchoice> to open it.</para>
+
+<para>The dialog is divided into several sections. Some of them affect &kplayer;
+behavior, including <link linkend="settings-general">general</link> options and
+options that affect the <link linkend="settings-playlist">playlist</link> and
+<link linkend="settings-messages">message log</link> specifically. The
+<link linkend="settings-controls">Controls section</link> tells &kplayer; which
+changes it should remember globally and which ones it should store in individual
+<link linkend="howto-properties">file properties</link>, and its subsections
+allow you to fine tune individual &kplayer; controls, including
+<link linkend="settings-progress">progress</link>,
+<link linkend="settings-volume">volume</link>,
+<link linkend="settings-contrast">contrast</link>,
+<link linkend="settings-brightness">brightness</link>,
+<link linkend="settings-hue">hue</link>,
+<link linkend="settings-saturation">saturation</link>, and
+<link linkend="settings-sliders">slider controls</link> in general. Other
+sections affect option &kplayer; uses for interaction with
+<link linkend="howto-installation-mplayer">&mplayer;</link> and control various
+aspect of multimedia playback, including
+<link linkend="settings-video">video</link>,
+<link linkend="settings-audio">audio</link>,
+<link linkend="settings-subtitles">subtitles</link> and
+<link linkend="settings-advanced">advanced</link> options.</para>
+
+<para>The <link linkend="settings">Configuration dialog chapter</link> gives
+complete details on each section and all the available options. Also the
+<link linkend="howto-settings">Advanced configuration micro-HOWTO</link>
+describes some of the more advanced options in more detail.</para>
+
+<para>Some additional options that apply to the main &kplayer; window are
+available from the <link linkend="popup-title-bar">title bar popup menu</link>
+that you can get by <mousebutton>right</mousebutton> clicking the
+<link linkend="parts-title-bar">title bar</link> or
+<mousebutton>left</mousebutton> clicking the little button in the top left
+corner of &kplayer; window or by pressing
+<keycombo action="simul">&Alt;<keycap>F3</keycap></keycombo>.</para>
+
+</sect1>
+
+<sect1 id="configuration-properties">
+<title>File properties</title>
+
+<para>&kplayer; has a unique feature that lets you choose many different options
+on per-file basis. These options are called File Properties and are stored along
+with the <acronym>URL</acronym> of each individual file or network
+location.</para>
+
+<para>There are two ways to set a file property. The easiest one is by holding
+down the &Shift; key when changing a setting like video size or aspect, sound
+volume, video contrast or brightness, etc. &kplayer; will apply the change to
+the currently loaded file and remember it in the corresponding file property.
+When it loads another file, it will revert the setting back to where it was
+before the change (unless the other file also has the same property set). When
+you load and play that first file again, &kplayer; will again apply the change
+you made to the setting and keep it until you load another file or
+<acronym>URL</acronym>.</para>
+
+<para>The other way to set a file property is through the
+<link linkend="properties">File Properties dialog</link>. The properties in the
+dialog are arranged according to their function. General properties like
+<guilabel>Name</guilabel>, <guilabel>Length</guilabel> and others, including
+properties that control the video size are in the
+<link linkend="properties-general">General</link> section. Other sections
+contain properties that affect &kplayer; interaction with
+<link linkend="howto-installation-mplayer">&mplayer;</link> and control
+multimedia playback, including <link linkend="properties-video">video</link>,
+<link linkend="properties-audio">audio</link>,
+<link linkend="properties-subtitles">subtitles</link> and
+<link linkend="properties-advanced">advanced</link> properties.</para>
+
+<para>Select <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Properties...</guimenuitem></menuchoice> to open the properties
+of the current file or <acronym>URL</acronym>. You can also
+<mousebutton>right</mousebutton> click an item in the <guilabel>Playlist
+Editor</guilabel> and select the <guimenuitem>Properties...</guimenuitem>
+command to open the <guilabel>File Properties</guilabel> dialog for that
+item.</para>
+
+<para>The <link linkend="properties">File properties dialog chapter</link> gives
+complete details on each section and all the available properties. Also the
+<link linkend="howto-properties">File properties micro-HOWTO</link>
+describes this feature in more detail and gives some examples.</para>
+
+</sect1>
+
+</chapter>

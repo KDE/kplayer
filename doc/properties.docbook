@@ -1,0 +1,546 @@
+<chapter id="properties">
+<title>File properties</title>
+
+<sect1 id="properties-overview">
+<title>Overview</title>
+
+<para>The <guilabel>File Properties</guilabel> dialog allows you to choose
+various options that will apply only to a particular file or
+<acronym>URL</acronym>. Many of the options are the same or similar to the ones
+that can be chosen globally on the <link linkend="settings">&kplayer;
+Settings</link> dialog. The options set in file properties will override the
+global ones. The file properties give you full control of how the file is
+played, including options that are passed to &mplayer;. Other properties display
+information that &kplayer; found out about the file or stream, like time length,
+video size, and audio and video bitrates.</para>
+
+<para>Select <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Properties...</guimenuitem></menuchoice> to open the dialog
+box for the currently loaded file or <acronym>URL</acronym>. You can also open
+the properties for any item on the playlist by <mousebutton>right</mousebutton>
+clicking the item in the <link linkend="parts-playlist-editor">Playlist
+Editor</link> and selecting <guimenuitem>Properties...</guimenuitem> from the
+<link linkend="popup-playlist">playlist popup menu</link>.</para>
+
+<para>The dialog contains several sections which are selected by
+<mousebutton>left</mousebutton> clicking one of the items on the
+left side of the dialog box.</para>
+
+<variablelist>
+
+<varlistentry>
+<term><link linkend="properties-general">General</link> section</term>
+<listitem><para>Shows general information about the file or URL and lets
+you control the video area size when playing it.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="properties-video">Video</link> section</term>
+<listitem><para>Contains properties that show technical information about
+the video and let you control video output when playing the file, if it has
+a video component.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="properties-audio">Audio</link> section</term>
+<listitem><para>Contains properties that show technical information about
+the audio and let you control audio output when playing the file, if it has
+an audio component.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="properties-subtitles">Subtitles</link> section</term>
+<listitem><para>Contains properties that control subtitle loading and
+display, if the file is played with subtitles.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="properties-advanced">Advanced</link> section</term>
+<listitem><para>Contains various properties that affect advanced command
+line parameters passed to &mplayer;, as well as interaction with the &kde;
+I/O Slave if it is used to transfer the file.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>The buttons at the bottom of the dialog let you make choices
+about the contents of all sections of the dialog.</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guibutton>OK</guibutton> button</term>
+<listitem><para>Accepts your changes and closes the dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Cancel</guibutton> button</term>
+<listitem><para>Closes the dialog without saving the changes.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Apply</guibutton> button</term>
+<listitem><para>Applies the changes without closing the dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Defaults</guibutton> button</term>
+<listitem><para>Restores all settings to their original, predefined values
+and applies them.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Close</guibutton> button</term>
+<listitem><para>After you choose <guibutton>Apply</guibutton> or
+<guibutton>Defaults</guibutton>, the <guibutton>Cancel</guibutton> button
+changes to <guibutton>Close</guibutton>. Clicking it closes the dialog
+and discards changes you made since the last time changes were
+applied.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Help</guibutton> button</term>
+<listitem><para>Opens this user manual and displays the section that describes
+the currently selected section of the dialog.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<note><para>You can also click the small <guibutton>What's This</guibutton>
+button with a question mark at the top right of the dialog and then click a
+property to get a brief explanation of it.</para>
+
+<para>Clicking the rightmost button at the top of the dialog closes the dialog
+discarding any unapplied changes.</para></note>
+
+</sect1>
+
+<sect1 id="properties-general">
+<title><guilabel>General</guilabel> section</title>
+
+<para>This section shows general information about the file or URL and lets
+you control the video area size when playing it.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="properties-general.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Path or URL</guilabel></term>
+
+<listitem><para>This property shows the file path for local files or the full
+URL for all other files. The URL identifies the file or stream, and all other
+properties are attached to it. For now it is not possible to change the URL,
+you have to create a new playlist entry instead, by using
+<menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></menuchoice>
+or
+<menuchoice><guimenu>File</guimenu><guimenuitem>Open URL</guimenuitem></menuchoice>
+commands, by dragging and dropping files onto &kplayer; window, or by starting
+&kplayer; with the new URL as the command line argument.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Name</guilabel></term>
+
+<listitem><para>This property shows and lets you change the name of the
+item that is displayed in the playlist, the playlist editor, and also in
+the &kplayer; title bar when the item becomes is loaded.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Playlist</guilabel></term>
+
+<listitem><para>This property shows and lets you choose whether this item
+is a playlist file. &mplayer; cannot automatically detect and play a playlist
+file, so &kplayer; has to explicitly tell it to parse a file as a playlist.
+<guilabel>Auto</guilabel> lets &kplayer; use the file extension to guess
+if it is a playlist file. The playlist extensions KPlayer recognizes are ram,
+rpm, smi, smil, asx, m3u, pls and strm. If a file that is not a playlist has
+one of these extensions, or a playlist file has a different extension, you
+will need to correctly set this property in order to be able to play the file
+or stream.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Length</guilabel></term>
+
+<listitem><para>This property shows the time length of the file.
+&kplayer; tries to detect it with precision of one tenth of a second,
+and usually it gets it pretty close to the real length. This property
+is read only.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Original size</guilabel></term>
+
+<listitem><para>This property shows the original size of the video in pixels.
+It is read only, and it is empty for audio only files.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Display size</guilabel></term>
+
+<listitem><para>This property lets you choose the initial video size &kplayer;
+will use when it starts playing the file, unless you turned off the option to
+<guilabel>Resize Main Window Automatically</guilabel> on the
+<guilabel>General</guilabel> page in <guilabel>KPlayer Settings</guilabel>.
+The <guilabel>Auto</guilabel> setting will use the <guilabel>Minimum
+Initial Video Width</guilabel> option from the <guilabel>General</guilabel>
+page in <guilabel>KPlayer Settings</guilabel>. The <guilabel>Set Size</guilabel>
+setting will use the fixed initial size you specify. The <guilabel>Set
+Aspect</guilabel> setting will again use the <guilabel>Minimum Initial Video
+Width</guilabel> option, but will apply the fixed initial aspect you
+specify.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Full screen</guilabel></term>
+
+<listitem><para>This property lets you choose the full screen or maximized
+window state for this file. Normally you would simply leave this at the
+<guilabel>default</guilabel> setting, which will keep the full screen or
+maximized state of the previous file. The <guilabel>normal</guilabel>
+setting will force normal windowed mode for this file, the <guilabel>full
+screen</guilabel> setting will force full screen mode unless it is an audio
+only file, and the <guilabel>maximized</guilabel> setting will force
+maximized window mode.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maintain aspect</guilabel></term>
+
+<listitem><para>This property lets you choose the <guilabel>Maintain
+Aspect</guilabel> option specifically for this file. The
+<guilabel>default</guilabel> setting will keep the <guilabel>Maintain
+Aspect</guilabel> setting you choose globally.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="properties-video">
+<title><guilabel>Video</guilabel> section</title>
+
+<para>This section contains properties that show technical information about
+the video and let you control video output when playing the file, if it has
+a video component.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="properties-video.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Contrast</guilabel></term>
+
+<listitem><para>This property controls the video contrast for this file.
+The <guilabel>default</guilabel> option uses the same contrast as for other
+files. The <guilabel>set to</guilabel> option sets the specified initial
+contrast when loading the file. The <guilabel>add</guilabel> and
+<guilabel>subtract</guilabel> settings will adjust the contrast relative
+to the default setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Brightness</guilabel></term>
+
+<listitem><para>This property controls the video brightness for this file.
+The <guilabel>default</guilabel> option uses the same brightness as for other
+files. The <guilabel>set to</guilabel> option sets the specified initial
+brightness when loading the file. The <guilabel>add</guilabel> and
+<guilabel>subtract</guilabel> settings will adjust the brightness relative
+to the default setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Hue</guilabel></term>
+
+<listitem><para>This property controls the video hue for this file.
+The <guilabel>default</guilabel> option uses the same hue as for other
+files. The <guilabel>set to</guilabel> option sets the specified initial
+hue when loading the file. The <guilabel>add</guilabel> and
+<guilabel>subtract</guilabel> settings will adjust the hue relative
+to the default setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Saturation</guilabel></term>
+
+<listitem><para>This property controls the video saturation for this file.
+The <guilabel>default</guilabel> option uses the same saturation as for other
+files. The <guilabel>set to</guilabel> option sets the specified initial
+saturation when loading the file. The <guilabel>add</guilabel> and
+<guilabel>subtract</guilabel> settings will adjust the saturation relative
+to the default setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Codec</guilabel></term>
+
+<listitem><para>This property specifies the video codec to use when playing
+this file. The <guilabel>default</guilabel> setting will use the codec chosen
+on the <guilabel>Video</guilabel> page in <guilabel>KPlayer Settings</guilabel>,
+normally <guilabel>Auto</guilabel>. <guilabel>Auto</guilabel> will tell
+&mplayer; to choose the codec it thinks is the best for playing this
+file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Fallback</guilabel></term>
+
+<listitem><para>This property specifies whether &mplayer; should try other
+codecs if the one you choose fails. The <guilabel>default</guilabel> setting
+will use the option on the <guilabel>Video</guilabel> page in <guilabel>KPlayer
+Settings</guilabel>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Bitrate</guilabel></term>
+
+<listitem><para>This property shows the video bitrate of this file.
+It is read only, and it is empty for audio only files.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Framerate</guilabel></term>
+
+<listitem><para>This property shows the video framerate of this file.
+It is read only, and it is empty for audio only files.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="properties-audio">
+<title><guilabel>Audio</guilabel> section</title>
+
+<para>This section contains properties that show technical information about
+the audio and let you control audio output when playing the file, if it has
+an audio component.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="properties-audio.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Volume</guilabel></term>
+
+<listitem><para>This property controls the sound volume for this file.
+The <guilabel>default</guilabel> option uses the same volume as for other
+files. The <guilabel>set to</guilabel> option sets the specified initial
+volume when loading the file. The <guilabel>add</guilabel> and
+<guilabel>subtract</guilabel> settings will adjust the volume relative
+to the default setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Delay</guilabel></term>
+
+<listitem><para>This property controls delay of the sound relative to video.
+By default this property is remembered automatically when you use the
+<guimenuitem>Increase Delay</guimenuitem> and <guimenuitem>Decrease
+Delay</guimenuitem> commands from the <guisubmenu>Audio</guisubmenu> submenu
+of the <guimenu>Player</guimenu> menu. The <guilabel>default</guilabel>
+setting always resets audio delay to zero when the file is loaded.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Codec</guilabel></term>
+
+<listitem><para>This property specifies the audio codec to use when playing
+this file. The <guilabel>default</guilabel> setting will use the codec chosen
+on the <guilabel>Audio</guilabel> page in <guilabel>KPlayer Settings</guilabel>,
+normally <guilabel>Auto</guilabel>. <guilabel>Auto</guilabel> will tell
+&mplayer; to choose the codec it thinks is the best for playing this
+file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Fallback</guilabel></term>
+
+<listitem><para>This property specifies whether &mplayer; should try other
+codecs if the one you choose fails. The <guilabel>default</guilabel> setting
+will use the option on the <guilabel>Audio</guilabel> page in <guilabel>KPlayer
+Settings</guilabel>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Bitrate</guilabel></term>
+
+<listitem><para>This property shows the audio bitrate of this file. It is
+read only, and it is empty for files without an audio track.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="properties-subtitles">
+<title><guilabel>Subtitles</guilabel> section</title>
+
+<para>This section contains properties that control subtitle loading and
+display, if the file is played with subtitles.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="properties-subtitles.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Autoload</guilabel></term>
+
+<listitem><para>If this is a local file, this property tells &kplayer;
+whether to try to autoload subtitles for it. The <guilabel>default</guilabel>
+setting uses the <guilabel>Autoload</guilabel> settings from the
+<guilabel>Subtitles</guilabel> page in KPlayer Settings. Setting this
+property to <guilabel>no</guilabel> allows you to enter the path or URL
+of the subtitles you want to use in the next field.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Path or URL</guilabel></term>
+
+<listitem><para>This property specifies the subtitles to be used for this file.
+By default this property is set automatically when you use the
+<guimenuitem>Load Subtitles</guimenuitem>, <guimenuitem>Load Subtitle
+URL</guimenuitem> and <guimenuitem>Unload Subtitles</guimenuitem> commands
+from the <guimenu>File</guimenu> menu.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show</guilabel></term>
+
+<listitem><para>This property lets you choose whether subtitles should be
+shown initially. By default subtitles are initially shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Position</guilabel></term>
+
+<listitem><para>This property lets you set vertical position of subtitles.
+The <guilabel>default</guilabel> setting will use the same subtitle position
+as for other files. An easy way to set this property is by using keyboard
+shortcuts for subtitle position commands on the
+<guisubmenu>Subtitles</guisubmenu> submenu of the <guimenu>Player</guimenu>
+menu while holding down the &Shift; key.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Delay</guilabel></term>
+
+<listitem><para>This property controls delay of the subtitles relative to
+video. By default this property is remembered automatically when you use
+the <guimenuitem>Increase Delay</guimenuitem> and <guimenuitem>Decrease
+Delay</guimenuitem> commands from the <guisubmenu>Subtitles</guisubmenu>
+submenu of the <guimenu>Player</guimenu> menu.
+The <guilabel>default</guilabel> setting always resets subtitle delay
+to zero when the file is loaded.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="properties-advanced">
+<title><guilabel>Advanced</guilabel> section</title>
+
+<para>This section contains various properties that affect advanced command
+line parameters passed to &mplayer;, as well as interaction with the &kde;
+I/O Slave if it is used to transfer the file.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="properties-advanced.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Additional command line arguments</guilabel></term>
+
+<listitem><para>This property lets you specify additional arguments to be
+passed to &mplayer;. You can either <guilabel>append</guilabel> the arguments
+to the ones given on the <guilabel>Advanced</guilabel> page in
+<guilabel>KPlayer Settings</guilabel> or use the <guilabel>set to</guilabel>
+setting to override them. The <guilabel>default</guilabel> option uses the
+arguments given in <guilabel>KPlayer Settings</guilabel>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Frame drop</guilabel></term>
+
+<listitem><para>This property allows you to tell &mplayer; to drop some
+frames if your system is too slow to play the file properly.
+The <guilabel>soft</guilabel> setting drops less frames than
+the <guilabel>hard</guilabel> one, so you should try it first.
+The <guilabel>default</guilabel> option uses the <guilabel>Frame
+Drop</guilabel> setting from the <guilabel>Advanced</guilabel> page
+in <guilabel>KPlayer Settings</guilabel>. You can also change this option
+while playing a file using commands on the <guimenu>Player</guimenu> menu.
+If you hold &Shift; when choosing them, &kplayer; by default will use the
+setting only for the current file and remember it in this
+property.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Cache</guilabel></term>
+
+<listitem><para>This property lets you choose whether to use cache for this
+file and set its size. The <guilabel>default</guilabel> setting uses the cache
+options from the <guilabel>Advanced</guilabel> page in <guilabel>&kplayer;
+Settings</guilabel>, <guilabel>auto</guilabel> lets &mplayer; use the its own
+configuration, <guilabel>none</guilabel> tells &mplayer; to use no cache, and
+<guilabel>set size</guilabel> lets you set a specific size.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Build new index</guilabel></term>
+
+<listitem><para>This property lets you choose whether &mplayer; should build
+a new index for seeking. The <guilabel>default</guilabel> setting uses the
+option from <guilabel>KPlayer Settings</guilabel>, <guilabel>yes</guilabel>
+builds an index if the file does not have it, <guilabel>no</guilabel> tells
+&mplayer; not to build an index, and <guilabel>force</guilabel> tells it to
+always build an index.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Use KIOSlave</guilabel></term>
+
+<listitem><para>This property lets you choose whether to use a &kde; I/O
+Slave to transfer and play this file. The <guilabel>auto</guilabel> setting
+tells &kplayer; to decide it automatically using options set in
+<guilabel>KPlayer Settings</guilabel>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Use temporary file</guilabel></term>
+
+<listitem><para>This property lets you choose whether to use a temporary
+file for playing from &kde; I/O Slave. The <guilabel>default</guilabel>
+setting uses the option from <guilabel>KPlayer Settings</guilabel>. This
+property has no effect for URLs passed directly to &mplayer;.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+</chapter>

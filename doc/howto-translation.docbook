@@ -1,0 +1,60 @@
+<sect1 id="howto-translation">
+<title>Translation</title>
+
+<sect2 id="howto-translation-interface">
+<title>Translating the user interface</title>
+
+<para>If &kplayer; is not yet translated into your language and you want to make
+a translation, first find out what is the abbreviated code for your language by
+looking in the <ulink url="http://i18n.kde.org/teams/">list of &kde;
+languages</ulink> for your language code. For example the code for Portuguese
+is <literal>pt</literal>.</para>
+
+<para>Next look at the
+<ulink url="http://cvs.sourceforge.net/viewcvs.py/kplayer/kplayer/po/">list of
+existing &kplayer; translations</ulink> to see if the file for your translation
+already exists. For example an Italian translation file
+<filename>it.po</filename> does exist, which means that someone already did at
+least part of the job. If so, download the latest version of the file and see if
+it needs some work.</para>
+
+<para>If the file does not exist, download the
+<ulink url="http://cvs.sourceforge.net/viewcvs.py/kplayer/kplayer/po/kplayer.pot?rev=HEAD">latest
+<filename>kplayer.pot</filename> file</ulink> and rename it with your language
+code and the <literal>.po</literal> extension. For example a Portuguese
+translation file will be called <filename>pt.po</filename>. If there already
+is a translation to a language that is close to yours, you can use that as a
+template instead.</para>
+
+<para><ulink url="http://i18n.kde.org/tools/kbabel/">&kbabel;</ulink> is a great
+&kde; program for translating <literal>.po</literal> files. Once you are done,
+send your translation to
+<email>kplayer dash translations at en dash directo dot net</email>.</para>
+
+</sect2>
+
+<sect2 id="howto-translation-manual">
+<title>Translating the user manual</title>
+
+<para>Go to the <ulink
+url="http://cvs.sourceforge.net/viewcvs.py/kplayer/kplayer/doc/">&kplayer;
+documentation directory</ulink> and look for a subdirectory for your language
+code. If you find it, get the latest versions of all <literal>.po</literal>
+files from it and see if they have any untranslated text.</para>
+
+<para>If the subdirectory for your language code does not exist, go to the <ulink
+url="http://cvs.sourceforge.net/viewcvs.py/kplayer/kplayer/doc/templates/"><filename>templates</filename>
+subdirectory</ulink>, download the latest versions of all
+<literal>.pot</literal> files from it, open each one of them in &kbabel;,
+translate and save with the <literal>.po</literal> extension.</para>
+
+<para>When you are done translating all the files, send the finished translation
+to <email>kplayer dash translations at en dash directo dot net</email>.</para>
+
+<important><para>Do not translate the <literal>.docbook</literal> files
+directly. Such translation is very difficult to maintain, and therefore will not
+be accepted.</para></important>
+
+</sect2>
+
+</sect1>

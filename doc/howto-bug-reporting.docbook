@@ -1,0 +1,91 @@
+<sect1 id="howto-bug-reporting">
+<title>Reporting bugs</title>
+
+<sect2 id="howto-bug-reporting-duplicates">
+<title>Checking for duplicate bugs</title>
+
+<para>Before you report a bug, please first make sure the bug has not been
+reported yet. Look through the list of <ulink
+url="http://cvs.sourceforge.net/viewcvs.py/kplayer/kplayer/BUGS?rev=HEAD">known
+issues</ulink>, then in the <ulink
+url="http://sourceforge.net/tracker/?atid=532182&amp;group_id=71710">bug
+tracking system</ulink>. Also look in <ulink
+url="http://sourceforge.net/tracker/?atid=532183&amp;group_id=71710">support
+requests</ulink>, <ulink
+url="http://sourceforge.net/tracker/?atid=532185&amp;group_id=71710">feature
+requests</ulink> and the <ulink
+url="http://sourceforge.net/forum/forum.php?forum_id=244388">user
+forum</ulink>.</para>
+
+</sect2>
+
+<sect2 id="howto-bug-reporting-submitting">
+<title>Submitting a bug</title>
+
+<para>Please report bugs through the <ulink
+url="http://sourceforge.net/tracker/?group_id=71710&amp;atid=532182">&kplayer;
+bug tracking system</ulink>. Using SourceForge is much preferable over private
+e-mail, for it helps prevent duplicate requests.</para>
+
+<para>When you <ulink
+url="http://sourceforge.net/account/login.php?return_to=%2Ftracker%3Ffunc%3Dadd%26group_id%3D71710%26atid%3D532182">submit
+a bug</ulink>, please include all of the following information.</para>
+
+<itemizedlist>
+
+<listitem><para>The versions of all relevant programs you are using:
+
+<itemizedlist>
+
+<listitem><para>&kplayer;,</para></listitem>
+
+<listitem><para>&mplayer;,</para></listitem>
+
+<listitem><para>&kde;,</para></listitem>
+
+<listitem><para>Qt,</para></listitem>
+
+<listitem><para>XFree,</para></listitem>
+
+<listitem><para>the window manager, normally &kwin;.</para></listitem>
+
+</itemizedlist>
+
+</para></listitem>
+
+<listitem><para>&kplayer; debug log.</para>
+
+<para>Make sure your console history size is unlimited, for example in &konsole;
+go to <menuchoice><guimenu>Preferences</guimenu>
+<guimenuitem>History</guimenuitem></menuchoice> and set the
+<guilabel>Unlimited</guilabel> option.</para>
+
+<para>Run &kplayer; from the console.</para>
+
+<para>Reproduce the bug.</para>
+
+<para>Then post on SourceForge whatever shows up on the console, clearly marking
+the point where the problem occurs.</para>
+
+<para>If the problem happened only once and you cannot reproduce it, you can
+look in the <filename>~/.xsession-errors</filename> file to see if it recorded
+the &kplayer; output when the problem occurred.</para>
+
+<para>If you are not getting any console output from &kplayer;, you may need
+to recompile &kplayer; with debug information. Follow the instructions in the
+<link linkend="howto-compilation">Compilation micro-HOWTO</link> and give an
+additional <option>--enable-debug=yes</option> option to the
+<command>configure</command> script.</para>
+
+<para>The &kplayer; debug output includes &mplayer; messages. To make &mplayer;
+more verbose put a <option>-v</option> option in the <guilabel>Additional
+command line arguments</guilabel> field on the
+<link linkend="settings-advanced">Advanced page</link> in <guilabel>&kplayer;
+Settings</guilabel>. You can repeat the option up to three times, separated
+by spaces, to get even more &mplayer; output.</para></listitem>
+
+</itemizedlist>
+
+</sect2>
+
+</sect1>

@@ -1,0 +1,110 @@
+<sect1 id="howto-slaves">
+<title>Playing from &kde; I/O Slaves</title>
+
+<sect2 id="howto-slaves-about">
+<title>What are &kde; I/O Slaves</title>
+
+<para>&kde; has a great way to access all kinds of data through a system known
+as <acronym>I/O</acronym> Slaves. They are little programs that let you
+represent many different sources of data as <acronym>URL</acronym> like
+addresses, and open them in &kde; programs like &konqueror; and &kplayer;. For
+example you can access a network host over <acronym>SSH</acronym> with a
+<acronym>URL</acronym> like <filename>fish:/host/path/</filename>, or a zip file
+with <filename>zip:/home/cooldude/my.zip</filename>.</para>
+
+</sect2>
+
+<sect2 id="howto-slaves-using">
+<title>How &kplayer; uses them</title>
+
+<para>Many of the &kde; <acronym>I/O</acronym> Slaves can return video and audio
+files and streams, for example <literal>fish:</literal>,
+<literal>sftp:</literal>, <literal>webdav:</literal>, <literal>tar:</literal>,
+<literal>zip:</literal>, <literal>audiocd:</literal> and so on. &kplayer; will
+play them just like any other type of file. By default it will pass the data
+directly to &mplayer; through a named pipe. If that does not work for any
+reason, you can tell &kplayer; to use a temporary file for playing from &kde;
+<acronym>I/O</acronym> Slaves on the <guilabel>Advanced</guilabel> page either
+globally in <link linkend="settings-advanced">&kplayer; Settings</link> or in
+individual <link linkend="properties-advanced">File Properties</link>. &kplayer;
+will then download the entire file into a temporary directory before playing it,
+which will consume some disk space temporarily, but will allow seeking and
+length detection.</para>
+
+<para>Note that with the <literal>audiocd</literal> slave you will probably have
+to play the <literal>.wav</literal> files from the <guilabel>By Track</guilabel>
+directory, since &mplayer; currently fails to play <literal>.cda</literal>
+files. Or you can use a <link linkend="howto-devices"><literal>cdda:</literal>
+<acronym>URL</acronym>s</link> instead.</para>
+
+</sect2>
+
+<sect2 id="howto-slaves-http">
+<title>HTTP, FTP and Samba</title>
+
+<para>The best way to play <acronym>URL</acronym>s that
+<link linkend="howto-installation-mplayer">&mplayer;</link> supports is by
+passing them on to &mplayer; directly. However, there will be cases where you
+need to use &kplayer; support for playing from
+<link linkend="howto-slaves">&kde; <acronym>I/O</acronym> Slaves</link> for
+those types of <acronym>URL</acronym>s.</para>
+
+<para>For example, the &mplayer; folks managed to release &mplayer; 1.0-pre4
+with <acronym>FTP</acronym> support and handling of encodable characters in
+<acronym>URL</acronym>s both broken all the way down. So if you use that
+version, you will need to enable the use of <acronym>I/O</acronym> Slave for
+<acronym>FTP</acronym> on the
+<link linkend="settings-advanced">Advanced page</link> in
+<guilabel>&kplayer; Settings</guilabel>, and if you need to play an
+<acronym>HTTP</acronym> <acronym>URL</acronym> with a space in it for example,
+you will need to turn on the <acronym>HTTP</acronym> <acronym>I/O</acronym>
+Slave on the <guilabel>Advanced</guilabel> page either for that individual
+<acronym>URL</acronym> in its <link linkend="properties-advanced">File
+Properties</link>, or globally for all <acronym>HTTP</acronym>
+<acronym>URL</acronym>s in <link linkend="settings-advanced">&kplayer;
+Settings</link>.</para>
+
+<para>Also, Samba support is still listed as experimental in &mplayer;,
+so if it is not compiled into your &mplayer; or it is broken, go to the
+<link linkend="settings-advanced">Advanced page</link> in
+<guilabel>&kplayer; Settings</guilabel> and turn on the use of &kde;
+<acronym>I/O</acronym> Slaves for <acronym>SMB</acronym>
+<acronym>URL</acronym>s.</para>
+
+</sect2>
+
+<sect2 id="howto-slaves-cache">
+<title>Cache size</title>
+
+<para>When playing directly from a &kde; <acronym>I/O</acronym> Slave, the
+<guilabel>Cache</guilabel> setting is important. It should not be too small so
+&mplayer; can detect the encoding type without discarding data, but on the other
+hand with large values it will take longer to fill the cache, especially with
+low bitrate streams like <link linkend="howto-streams">online radio
+stations</link>.</para>
+
+<para>&kplayer; uses one megabyte of cache by default, but in many cases you can
+go much lower than that, for example for most audio files 64 kilobytes is
+enough. The cache size can be set on the <guilabel>Advanced</guilabel> page
+either globally in <link linkend="settings-advanced">&kplayer; Settings</link>
+or in individual <link linkend="properties-advanced">File Properties</link>.
+Keep in mind that the global setting will also affect files played directly by
+&mplayer;, and changing it can cause unwanted side effects. For example, cache
+size lower than one megabyte has been found to cause <acronym>AVI</acronym>
+files take a few seconds to start playing.</para>
+
+</sect2>
+
+<sect2 id="howto-slaves-playlists">
+<title>Playlists</title>
+
+<para>When using a &kde; <acronym>I/O</acronym> Slave to play a playlist file,
+only the playlist file itself will be retrieved from the
+<acronym>I/O</acronym> Slave. All the <acronym>URL</acronym>s it contains will
+be played by &mplayer; directly. You have to give &kplayer; the
+<acronym>URL</acronym> contained in the playlist if you want it to be played
+through an <acronym>I/O</acronym> Slave.</para>
+
+</sect2>
+
+</sect1>

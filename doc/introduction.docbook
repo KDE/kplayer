@@ -1,0 +1,31 @@
+<chapter id="introduction">
+<title>Overview</title>
+
+<para>&kplayer; is a multimedia player for the K Desktop Environment.</para>
+
+<para>&kplayer; uses <ulink url="http://www.mplayerhq.hu/">&mplayer;</ulink> as
+the media playing backend, and therefore offers the best playback quality and
+performance and the widest variety of supported video, audio and subtitle
+formats, input methods and output options. Specifically, &mplayer; supports
+<link linkend="playing">playing</link> from local files,
+<acronym>DVD</acronym>s, video <acronym>CD</acronym>s, audio
+<acronym>CD</acronym>s, <acronym>TV</acronym> and <acronym>DVB</acronym> cards,
+as well as network locations using many types of protocols.</para>
+
+<para>However, &kplayer; is much more that just an &mplayer; frontend. In
+addition to &kde; integration and an easy to use interface that follows &kde;
+standards, it offers a simple but full featured
+<link linkend="howto-playlist">playlist</link>, many additional input methods
+using <link linkend="howto-slaves">&kde; I/O Slaves</link>, and last but not
+least the <link linkend="howto-properties">ability</link> to easily choose many
+different options for each individual file or <acronym>URL</acronym>, giving you
+flexibility not found in any other media player.</para>
+
+<para>&kplayer; is a fully customizable program that you can
+<link linkend="configuration">configure</link> and fine tune for your system and
+your personal preferences, from changing the way video is shown and sound is
+played and setting any playback option &mplayer; understands to arranging the
+player controls inside &kplayer; window, changing the number and positions of
+toolbars and defining new shortcut key combinations.</para>
+
+</chapter>

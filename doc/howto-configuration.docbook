@@ -1,0 +1,161 @@
+<sect1 id="howto-configuration">
+<title>Basic configuration</title>
+
+<para>As a general rule, the initial &kplayer; settings are chosen for optimal
+performance and playback, so no additional setup is needed. However, in some
+cases changing the initial settings can improve &kplayer; performance.</para>
+
+<sect2 id="howto-configuration-video">
+<title>Video setup</title>
+
+<para>XVideo is the video output &kplayer; uses by default. For many systems
+this is the optimal choice. Make sure your X Server has XVideo extension
+enabled. Look in your <filename>/etc/X11/xorg.conf</filename> or
+<filename>/etc/X11/XF86Config-4</filename> file for a line that reads</para>
+
+<para><userinput>Load "extmod"</userinput></para>
+
+<para>This is the line that loads the XVideo extension, so make sure it is not
+disabled. Also check <filename>/var/log/Xorg.0.log</filename> or
+<filename>/var/log/XFree86.0.log</filename> to make sure that XVideo is loaded
+without error.</para>
+
+<para>If &kplayer; cannot use XVideo for any reason, it will fall back on using
+X11 video output in the default configuration. X11 output is OK except it forces
+the use of software scaler, which will consume significantly more processor
+cycles, and it does not support changing contrast, brightness, hue and
+saturation, so those controls will not be functional.</para>
+
+<para>Depending on your video card, you may find that a different
+&mplayer; video output type(s) work better for you. For example you can try
+VIDIX output if you have a Matrox or ATI card. For Matrox cards there is also
+XMGA output.</para>
+
+<para><ulink
+url="http://sourceforge.net/account/login.php?return_to=%2Fsendmessage.php%3Ftouser%3D137121">Add
+a section for your video card</ulink></para>
+
+<para>However, some video outputs may not support embedding video into &kplayer;
+and will open their own window instead. Those video outputs are not
+recommended.</para>
+
+<para>You can change the video output type on the
+<link linkend="settings-video">Video page</link> in <guilabel>&kplayer;
+Settings</guilabel>, and optionally tell &kplayer; to fall back on other video
+outputs if the one you choose fails.</para>
+
+</sect2>
+
+<sect2 id="howto-configuration-audio">
+<title>Audio setup</title>
+
+<para>The optimal audio outputs to use with &kplayer; are <acronym>OSS</acronym>
+(the default) and <acronym>ALSA</acronym> (recommended when present).</para>
+
+<para>If you see that &kplayer; cannot use the audio output you have chosen, it
+is usually because another program has locked the audio device. If you find that
+<filename>/dev/dsp</filename> is locked, the chief suspect usually is &artsd;.
+Run</para>
+
+<para><userinput><command>killall</command> artsd</userinput></para>
+
+<para>and then try playing a file with &kplayer; again. If that works, the
+permanent solution is to disable &arts; through &kcontrolcenter;. There is an
+option to tell &artsd; to unlock the device after so many seconds of inactivity,
+but setting it to 0 seconds or 1 second has not been found to work. If you
+disable &arts; but not remove it from the system, some programs will still start
+it, but normally it will then at least not lock the audio device. Another
+program that may lock the audio device is Mozilla and its derivatives and
+successors. Just use &konqueror; instead.</para>
+
+<para><acronym>ARTS</acronym> and <acronym>SDL</acronym> audio outputs are not
+recommended since they will cause stability problems, degraded performance and
+a broken volume control.</para>
+
+<para>You can change the audio output type on the
+<link linkend="settings-audio">Audio page</link> in <guilabel>&kplayer;
+Settings</guilabel>, and optionally tell &kplayer; to fall back on other audio
+outputs if the one you choose fails.</para>
+
+</sect2>
+
+<sect2 id="howto-configuration-mplayer">
+<title>&mplayer; setup</title>
+
+<para>Depending on how you installed &mplayer; you may have gotten a global
+<filename>mplayer.conf</filename> file in a directory like
+<filename>/etc/mplayer</filename>. The local version of that file is
+<filename>~/.mplayer/config</filename>. Make sure that those files do not have
+a <option>gui=yes</option> option. Remove or comment it out if you find it.
+If you ever want to use &mplayer;'s own <acronym>GUI</acronym> (not
+recommended), you can get it by running <command>gmplayer</command>.</para>
+
+<para>Also make sure there are no other options that may interfere with
+&kplayer; operation. If you see any, either comment them out or override them
+in <guilabel>&kplayer; Settings</guilabel>. For example, the recommended cache
+size is one megabyte, although you can use a different size depending on the
+type of media you are going to play, as discussed for example in
+<link linkend="howto-streams">Online Radio and TV micro-HOWTO</link>.</para>
+
+</sect2>
+
+<sect2 id="howto-configuration-smooth">
+<title>Smooth playback</title>
+
+<para>A while ago Arpi wrote a
+<ulink url="http://freshmeat.net/articles/view/747/">Fine-tuning
+&mplayer;</ulink> article where you can find more useful tips on optimizing
+&mplayer;.</para>
+
+<para>One thing you can do to get smoother playback is enable the hardware
+<acronym>RTC</acronym> timer. Run</para>
+
+<para><userinput><command>echo</command> 1024 >
+<filename>/proc/sys/dev/rtc/max-user-freq</filename></userinput></para>
+
+<para>as root, and also make sure <filename>/dev/rtc</filename> is user
+readable.</para>
+
+<para>Arpi also recommends trying options like <option>-mc 0.001</option> and
+<option>-autosync 30</option>. Put them into the <guilabel>Additional command
+line arguments</guilabel> field on the
+<link linkend="settings-advanced">Advanced page</link> in <guilabel>&kplayer;
+Settings</guilabel> and see if they make a noticeable difference for you.</para>
+
+<para>The <option>-vop</option> &mplayer; option has since been replaced by the
+<option>-vf</option> option, so that section of the article may be somewhat
+obsolete or the tips may need some adjustment for the current &mplayer;.</para>
+
+</sect2>
+
+<sect2 id="howto-configuration-preview">
+<title>Previews in the Open File dialog</title>
+
+<para>There is some obsolete &kde; based software, like &kaboodle;, that tells
+&kde; that it wants to be used for previewing media files, even those it does
+not support, in the standard <guilabel>Open File</guilabel> dialog, which is
+what &kplayer; uses. This makes browsing directories with media files painfully
+slow, and unfortunately there is no option to turn off previewing selectively
+for certain file types. Even if you turn off the <guilabel>Play
+automatically</guilabel> option, the preview program will still be loaded. The
+workaround is to either turn off previewing in &kplayer; entirely if you don't
+need it, or remove the offending program from your system.</para>
+
+</sect2>
+
+<sect2 id="howto-configuration-donkey">
+<title>Previewing files in &kmldonkey;</title>
+
+<para>The recent official &mldonkey; <acronym>GUI</acronym>s have been badly
+broken, leaving <ulink url="http://kmldonkey.org/">&kmldonkey;</ulink> as
+the most usable, albeit crashy, &mldonkey; frontend. &kmldonkey; supports
+embedding of &kplayer; for previewing files, but it is recommended that you
+change your <application>mldonkey_preview</application> script to start the
+full &kplayer; for previewing partial downloads, since that will give better
+interface and more options. If &mplayer; cannot play a partial download,
+probably nothing else will, so just wait for a larger chunk to get
+downloaded.</para>
+
+</sect2>
+
+</sect1>

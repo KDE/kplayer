@@ -1,0 +1,83 @@
+<sect1 id="howto-subtitles">
+<title>Subtitles</title>
+
+<sect2 id="howto-subtitles-loading">
+<title>Loading subtitles</title>
+
+<para>If you load subtitles using <guimenuitem>Load Subtitles</guimenuitem> or
+<guimenuitem>Load Subtitle URL</guimenuitem> commands on the
+<guimenu>File</guimenu> menu, &kplayer; will load the subtitles, restart
+playback and then seek to the position where it was playing. It will also
+automatically remember your choice and reload the subtitles next time you play
+the same file or <acronym>URL</acronym>. If you don't want &kplayer; to remember
+your choice of subtitles, or if you want it to remember your other choices, you
+can choose that on the <link linkend="settings-controls">Controls page</link> in
+<guilabel>&kplayer; Settings</guilabel>.</para>
+
+</sect2>
+
+<sect2 id="howto-subtitles-autoloading">
+<title>Autoloading</title>
+
+<para>You can also let &kplayer; load subtitles automatically by placing them
+in the same directory as the movie and giving them the same name as the movie
+and the correct subtitle extension. For example, if you play a file called
+<filename><replaceable>Carandiru.avi</replaceable></filename>, and you have
+<literal>srt</literal> subtitles for it, you can name the subtitle file
+<filename><replaceable>Carandiru.srt</replaceable></filename>,
+<filename><replaceable>Carandiru.SRT</replaceable></filename>,
+<filename><replaceable>Carandiru.avi.srt</replaceable></filename> or
+<filename><replaceable>Carandiru.avi.SRT</replaceable></filename>.</para>
+
+<para>&kplayer; will autoload subtitle types you choose on the
+<link linkend="settings-subtitles">Subtitles page</link> in <guilabel>&kplayer;
+Settings</guilabel>. Autoloading only works for local files, and &kplayer; will
+not remember autoloaded subtitles, rather it will autoload them every
+time.</para>
+
+<para>If you loaded subtitles manually and want to revert to autoloading, go
+to the <link linkend="properties-subtitles">Subtitles page</link> in
+<link linkend="properties">File Properties</link> and change the
+<guilabel>Autoload</guilabel> property.</para>
+
+</sect2>
+
+<sect2 id="howto-subtitles-settings">
+<title>Subtitle settings</title>
+
+<para>Subtitle visibility, vertical position and time delay can be changed using
+commands on the
+<link linkend="submenu-subtitles"><guisubmenu>Subtitles</guisubmenu>
+submenu</link> of the <guimenu>Player</guimenu> menu. As usual, using keyboard
+shortcuts is recommended. By default &kplayer; will remember the subtitle delay
+for each file or <acronym>URL</acronym>, and will keep the vertical position
+across files. This can be changed on the
+<link linkend="settings-controls">Controls page</link> in <guilabel>&kplayer;
+Settings</guilabel>.</para>
+
+<para>Subtitle font, size, horizontal position and other things can be set with
+corresponding options from
+<link linkend="howto-installation-mplayer">&mplayer;</link> manpage. Put them
+into the <guilabel>Additional command line parameters</guilabel> field on the
+<guilabel>Advanced</guilabel> page either in
+<link linkend="settings-advanced">&kplayer; Settings</link> or in individual
+<link linkend="properties-advanced">File Properties</link>. You can also choose
+a subtitle font by creating a link to it from the <filename>.mplayer</filename>
+directory like this:</para>
+
+<para><userinput><command>ln</command> <option>-s</option>
+<filename>/usr/share/fonts/truetype/Arial.ttf</filename>
+<filename>~/.mplayer/subfont.ttf</filename></userinput></para>
+
+</sect2>
+
+<sect2 id="howto-subtitles-finding">
+<title>Finding subtitles</title>
+
+<para><ulink url="http://extratitles.to/">Extratitles.to</ulink> seems to be the
+best place to look for subtitles as of this writing. Make sure to enable popup
+blocking before going to that site though.</para>
+
+</sect2>
+
+</sect1>
