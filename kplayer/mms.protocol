@@ -14,6 +14,7 @@ Class=:internet
 Description=MMS Protocol
 Description[br]=Komenad MMS
 Description[et]=MMS-protokoll
+Description[fr]=Protocole MMS
 Description[nl]=MMS-protocol
 Description[pt]=Protocolo MMS
 Description[pt_BR]=Protocolo MMS

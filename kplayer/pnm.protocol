@@ -14,6 +14,7 @@ Class=:internet
 Description=PNM Protocol
 Description[br]=Komenad PNM
 Description[et]=PNM-protokoll
+Description[fr]=Protocole PNM
 Description[nl]=PNM-protocol
 Description[pt]=Protocolo PNM
 Description[pt_BR]=Protocolo PNM
