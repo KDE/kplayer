@@ -1679,7 +1679,7 @@ KURL::List KPlayerEngine::openFiles (QWidget* parent)
   static QString filter = i18n("*|All files\n*.avi *.AVI|AVI files\n*.mpg *.mpeg *.MPG *.MPEG|MPEG files\n*.ogg *.OGG|OGG files\n*.mp3 *.MP3|MP3 files");
   KConfig* config = kPlayerConfig();
   config -> setGroup ("Dialog Options");
-  QString dir = config -> readEntry ("Open File Directory");
+  QString dir = config -> readPathEntry ("Open File Directory");
 //Saving dialog position did not work: dlg.pos() returns wrong position in Qt 3.1.1
 //int x = config -> readNumEntry ("Open File Left");
 //int y = config -> readNumEntry ("Open File Top");
@@ -1700,7 +1700,7 @@ KURL::List KPlayerEngine::openFiles (QWidget* parent)
 //kdDebugTime() << "         " << dlg.x() << "x" << dlg.y() << " " << dlg.width() << "x" << dlg.height() << "\n";
 #endif
   dlg.exec();
-  config -> writeEntry ("Open File Directory", dlg.directory());
+  config -> writePathEntry ("Open File Directory", dlg.directory());
 //config -> writeEntry ("Open File Left", dlg.x());
 //config -> writeEntry ("Open File Top", dlg.y());
   config -> writeEntry ("Open File Width", dlg.width());
