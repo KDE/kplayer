@@ -77,7 +77,7 @@ KPlayerPropertiesDialog::KPlayerPropertiesDialog (KPlayerProperties* properties)
   QString name (config -> readEntry ("Properties Dialog Page"));
   if ( ! name.isEmpty() )
   {
-    frame = (QFrame*) child (name);
+    frame = (QFrame*) child (name.latin1());
     if ( frame )
     {
       frame = (QFrame*) frame -> parent();
@@ -132,7 +132,7 @@ void KPlayerPropertiesDialog::slotDefault (void)
   m_video -> load();
   m_audio -> load();
   m_advanced -> load();
-  setButtonCancelText (i18n("&Close"));
+  setButtonCancel(KStdGuiItem::close());
   KDialogBase::slotDefault();
 }
 
@@ -170,7 +170,8 @@ void KPlayerPropertiesDialog::slotApply (void)
   m_video -> save();
   m_advanced -> save();
   m_properties -> save();
-  setButtonCancelText (i18n("&Close"));
+  setButtonCancel(KStdGuiItem::close());
+
   KDialogBase::slotApply();
 }
 
@@ -204,7 +205,7 @@ void KPlayerPropertiesGeneral::save (void)
   m_properties -> setPlaylistOption (c_playlist -> currentItem());
   m_properties -> setDisplaySizeOption (c_display_size -> currentItem());
   if ( m_properties -> displaySizeOption() == 1 || m_properties -> displaySizeOption() == 2 )
-    m_properties -> setDisplaySizeValue (QSize (labs (atol (c_display_width -> text())), labs (atol (c_display_height -> text()))));
+    m_properties -> setDisplaySizeValue (QSize (labs (c_display_width->text().toLong()), labs (c_display_height->text().toLong())));
   m_properties -> setMaintainAspectOption (c_maintain_aspect -> currentItem() - 1);
 }
 
@@ -258,10 +259,10 @@ void KPlayerPropertiesSubtitles::save (void)
   m_properties -> setSubtitleVisibilityOption (c_visibility -> currentItem() - 1);
   m_properties -> setSubtitlePositionOption (c_position_set -> currentItem() - 1);
   if ( m_properties -> subtitlePositionOption() != -1 )
-    m_properties -> setSubtitlePositionValue (labs (atol (c_position -> text())));
+    m_properties -> setSubtitlePositionValue (labs (c_position -> text().toLong()));
   m_properties -> setSubtitleDelayOption (c_delay_set -> currentItem() - 1);
   if ( m_properties -> subtitleDelayOption() != -1 )
-    m_properties -> setSubtitleDelayValue (atof (c_delay -> text()));
+    m_properties -> setSubtitleDelayValue (c_delay -> text().toDouble());
 }
 
 void KPlayerPropertiesSubtitles::autoloadChanged (int option)
@@ -322,10 +323,10 @@ void KPlayerPropertiesAudio::save (void)
 {
   m_properties -> setVolumeOption (c_volume_set -> currentItem() - 1);
   if ( m_properties -> volumeOption() != -1 )
-    m_properties -> setVolumeValue (labs (atol (c_volume -> text())));
+    m_properties -> setVolumeValue (labs (c_volume -> text().toLong()));
   m_properties -> setAudioDelayOption (c_delay_set -> currentItem() - 1);
   if ( m_properties -> audioDelayOption() != -1 )
-    m_properties -> setAudioDelayValue (atof (c_delay -> text()));
+    m_properties -> setAudioDelayValue (c_delay -> text().toDouble());
   m_properties -> setAudioCodecOption (listEntry (c_codec, true));
   if ( c_codec -> currentItem() != 1 )
     m_properties -> setAudioCodecFallbackOption (c_fallback -> currentItem() - 1);
@@ -409,16 +410,16 @@ void KPlayerPropertiesVideo::save (void)
 {
   m_properties -> setContrastOption (c_contrast_set -> currentItem() - 1);
   if ( m_properties -> contrastOption() != -1 )
-    m_properties -> setContrastValue (atol (c_contrast -> text()));
+    m_properties -> setContrastValue (c_contrast -> text().toLong());
   m_properties -> setBrightnessOption (c_brightness_set -> currentItem() - 1);
   if ( m_properties -> brightnessOption() != -1 )
-    m_properties -> setBrightnessValue (atol (c_brightness -> text()));
+    m_properties -> setBrightnessValue (c_brightness -> text().toLong());
   m_properties -> setHueOption (c_hue_set -> currentItem() - 1);
   if ( m_properties -> hueOption() != -1 )
-    m_properties -> setHueValue (atol (c_hue -> text()));
+    m_properties -> setHueValue (c_hue -> text().toLong());
   m_properties -> setSaturationOption (c_saturation_set -> currentItem() - 1);
   if ( m_properties -> saturationOption() != -1 )
-    m_properties -> setSaturationValue (atol (c_saturation -> text()));
+    m_properties -> setSaturationValue (c_saturation -> text().toLong());
   m_properties -> setVideoCodecOption (listEntry (c_codec, true));
   if ( c_codec -> currentItem() != 1 )
     m_properties -> setVideoCodecFallbackOption (c_fallback -> currentItem() - 1);
@@ -516,7 +517,7 @@ void KPlayerPropertiesAdvanced::save (void)
   m_properties -> setFrameDropOption (c_frame_drop -> currentItem() - 1);
   m_properties -> setCacheOption (c_use_cache -> currentItem() - 1);
   if ( c_use_cache -> currentItem() == 3 )
-    m_properties -> setCacheSizeValue (atol (c_cache_size -> text()));
+    m_properties -> setCacheSizeValue (c_cache_size -> text().toLong());
   m_properties -> setBuildNewIndexOption (c_build_index -> currentItem() - 1);
   m_properties -> setUseKioslaveOption (c_use_kioslave -> currentItem());
   m_properties -> setUseTemporaryFileOption (c_use_temporary_file -> currentItem() - 1);

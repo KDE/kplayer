@@ -116,7 +116,7 @@ KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
   QString name (config -> readEntry ("Settings Dialog Page"));
   if ( ! name.isEmpty() )
   {
-    frame = (QFrame*) child (name);
+    frame = (QFrame*) child (name.latin1());
     if ( frame )
     {
       frame = (QFrame*) frame -> parent();
@@ -246,7 +246,7 @@ void KPlayerSettingsDialog::slotDefault (void)
   m_brightness -> load();
   m_hue -> load();
   m_saturation -> load();
-  setButtonCancelText (i18n("&Close"));
+  setButtonCancel(KStdGuiItem::close());
   KDialogBase::slotDefault();
 }
 
@@ -298,7 +298,7 @@ void KPlayerSettingsDialog::slotApply (void)
   m_hue -> save();
   m_saturation -> save();
   kPlayerSettings() -> save();
-  setButtonCancelText (i18n("&Close"));
+  setButtonCancel(KStdGuiItem::close());
   KDialogBase::slotApply();
 }
 
@@ -332,7 +332,7 @@ void KPlayerSettingsAdvanced::save (void)
   settings -> setFrameDropDefault (c_frame_drop -> currentItem());
   settings -> setCacheDefault (c_use_cache -> currentItem());
   if ( c_use_cache -> currentItem() == 2 )
-    settings -> setCacheSizeDefault (atol (c_cache_size -> text()));
+    settings -> setCacheSizeDefault (c_cache_size -> text().toLong());
   settings -> setBuildNewIndexDefault (c_build_index -> currentItem());
   settings -> setOsdLevelDefault (c_osd_level -> currentItem());
   settings -> setUseTemporaryFileDefault (c_use_temporary_file -> isChecked());
@@ -427,7 +427,7 @@ void KPlayerSettingsAudio::save (void)
   settings -> setAudioCodecDefault (listEntry (c_codec));
   if ( c_codec -> currentItem() > 0 )
     settings -> setAudioCodecFallbackDefault (c_codec_fallback -> isChecked());
-  settings -> setAudioDelayStep (fabs (atof (c_delay_step -> text())));
+  settings -> setAudioDelayStep (fabs (c_delay_step -> text().toFloat()));
 }
 
 void KPlayerSettingsAudio::driverChanged (int index)
@@ -524,8 +524,8 @@ void KPlayerSettingsGeneral::save (void)
   KPlayerSettings* settings = kPlayerSettings();
   settings -> setResizeAutomatically (c_resize_automatically -> isChecked());
   if ( settings -> resizeAutomatically() )
-    settings -> setMinimumInitialWidth (labs (atol (c_minimum_initial_width -> text())));
-  settings -> setRecentFileListSize (labs (atol (c_recent_file_list_size -> text())));
+    settings -> setMinimumInitialWidth (labs (c_minimum_initial_width -> text().toLong()));
+  settings -> setRecentFileListSize (labs (c_recent_file_list_size -> text().toLong()));
   settings -> setShowFilePath (c_show_file_path -> isChecked());
   settings -> setShowOpenDialog (c_show_open_dialog -> isChecked());
   settings -> setDisableScreenSaver (c_disable_screen_saver -> isChecked());
@@ -565,8 +565,8 @@ void KPlayerSettingsPlaylist::save (void)
   if ( settings -> startPlayingImmediately() )
     settings -> setStartPlayingOnlyIfIdle (c_only_if_idle -> isChecked());
   settings -> setAllowDuplicateEntries (c_allow_duplicate_entries -> isChecked());
-  settings -> setPlaylistSizeLimit (labs (atol (c_playlist_size_limit -> text())));
-  settings -> setCacheSizeLimit (labs (atol (c_cache_size_limit -> text())));
+  settings -> setPlaylistSizeLimit (labs (c_playlist_size_limit -> text().toLong()));
+  settings -> setCacheSizeLimit (labs (c_cache_size_limit -> text().toLong()));
 }
 
 void KPlayerSettingsPlaylist::startPlayingChanged (bool checked)
@@ -615,8 +615,8 @@ void KPlayerSettingsSliders::load (void)
 void KPlayerSettingsSliders::save (void)
 {
   KPlayerSettings* settings = kPlayerSettings();
-  settings -> setPreferredSliderLength (labs (atol (c_preferred_slider_length -> text())));
-  settings -> setMinimumSliderLength (labs (atol (c_minimum_slider_length -> text())));
+  settings -> setPreferredSliderLength (labs (c_preferred_slider_length -> text().toLong()));
+  settings -> setMinimumSliderLength (labs (c_minimum_slider_length -> text().toLong()));
 }
 
 KPlayerSettingsSubtitles::KPlayerSettingsSubtitles (QWidget* parent, const char* name)
@@ -636,8 +636,8 @@ void KPlayerSettingsSubtitles::load (void)
 void KPlayerSettingsSubtitles::save (void)
 {
   KPlayerSettings* settings = kPlayerSettings();
-  settings -> setSubtitlePositionStep (labs (atol (c_position_step -> text())));
-  settings -> setSubtitleDelayStep (fabs (atof (c_delay_step -> text())));
+  settings -> setSubtitlePositionStep (labs (c_position_step -> text().toLong()));
+  settings -> setSubtitleDelayStep (fabs (c_delay_step -> text().toFloat()));
   settings -> setSubtitleAutoloadDefault (c_subtitles_autoload -> isChecked());
   if ( settings -> subtitleAutoloadDefault() )
   {
@@ -823,9 +823,9 @@ void KPlayerSettingsProgress::save (void)
   KPlayerSettings* settings = kPlayerSettings();
   settings -> setProgressNormalSeekUnits (c_progress_seek_units -> currentItem());
   settings -> setProgressFastSeekUnits (c_progress_fast_units -> currentItem());
-  settings -> setProgressNormalSeek (labs (atol (c_progress_seek -> text())));
-  settings -> setProgressFastSeek (labs (atol (c_progress_fast -> text())));
-  settings -> setProgressMarks (labs (atol (c_progress_marks -> text())));
+  settings -> setProgressNormalSeek (labs (c_progress_seek -> text().toLong()));
+  settings -> setProgressFastSeek (labs (c_progress_fast -> text().toLong()));
+  settings -> setProgressMarks (labs (c_progress_marks -> text().toLong()));
 }
 
 KPlayerSettingsVolume::KPlayerSettingsVolume (QWidget* parent, const char* name)
@@ -848,13 +848,13 @@ void KPlayerSettingsVolume::load (void)
 void KPlayerSettingsVolume::save (void)
 {
   KPlayerSettings* settings = kPlayerSettings();
-  settings -> setVolumeMinimumMaximum (atol (c_volume_minimum -> text()), labs (atol (c_volume_maximum -> text())));
-  settings -> setVolumeMarks (labs (atol (c_volume_marks -> text())));
-  settings -> setVolumeStep (labs (atol (c_volume_step -> text())));
+  settings -> setVolumeMinimumMaximum (c_volume_minimum -> text().toLong(), labs (c_volume_maximum -> text().toLong()));
+  settings -> setVolumeMarks (labs (c_volume_marks -> text().toLong()));
+  settings -> setVolumeStep (labs (c_volume_step -> text().toLong()));
   settings -> setVolumeReset (c_volume_reset -> isChecked());
   if ( settings -> volumeReset() )
   {
-    settings -> setInitialVolume (labs (atol (c_volume_default -> text())));
+    settings -> setInitialVolume (labs (c_volume_default -> text().toLong()));
     settings -> setVolumeEvery (c_volume_every -> currentItem());
   }
 }
@@ -904,13 +904,13 @@ void KPlayerSettingsContrast::load (void)
 void KPlayerSettingsContrast::save (void)
 {
   KPlayerSettings* settings = kPlayerSettings();
-  settings -> setContrastMinimumMaximum (atol (c_contrast_minimum -> text()), atol (c_contrast_maximum -> text()));
-  settings -> setContrastMarks (labs (atol (c_contrast_marks -> text())));
-  settings -> setContrastStep (labs (atol (c_contrast_step -> text())));
+  settings -> setContrastMinimumMaximum (c_contrast_minimum -> text().toLong(), c_contrast_maximum -> text().toLong());
+  settings -> setContrastMarks (labs (c_contrast_marks -> text().toLong()));
+  settings -> setContrastStep (labs (c_contrast_step -> text().toLong()));
   settings -> setContrastReset (c_contrast_reset -> isChecked());
   if ( settings -> contrastReset() )
   {
-    settings -> setInitialContrast (atol (c_contrast_default -> text()));
+    settings -> setInitialContrast (c_contrast_default -> text().toLong());
     settings -> setContrastEvery (c_contrast_every -> currentItem());
   }
 }
@@ -960,13 +960,13 @@ void KPlayerSettingsBrightness::load (void)
 void KPlayerSettingsBrightness::save (void)
 {
   KPlayerSettings* settings = kPlayerSettings();
-  settings -> setBrightnessMinimumMaximum (atol (c_brightness_minimum -> text()), atol (c_brightness_maximum -> text()));
-  settings -> setBrightnessMarks (labs (atol (c_brightness_marks -> text())));
-  settings -> setBrightnessStep (labs (atol (c_brightness_step -> text())));
+  settings -> setBrightnessMinimumMaximum (c_brightness_minimum -> text().toLong(), c_brightness_maximum -> text().toLong());
+  settings -> setBrightnessMarks (labs (c_brightness_marks -> text().toLong()));
+  settings -> setBrightnessStep (labs (c_brightness_step -> text().toLong()));
   settings -> setBrightnessReset (c_brightness_reset -> isChecked());
   if ( settings -> brightnessReset() )
   {
-    settings -> setInitialBrightness (atol (c_brightness_default -> text()));
+    settings -> setInitialBrightness (c_brightness_default -> text().toLong());
     settings -> setBrightnessEvery (c_brightness_every -> currentItem());
   }
 }
@@ -1016,13 +1016,13 @@ void KPlayerSettingsHue::load (void)
 void KPlayerSettingsHue::save (void)
 {
   KPlayerSettings* settings = kPlayerSettings();
-  settings -> setHueMinimumMaximum (atol (c_hue_minimum -> text()), atol (c_hue_maximum -> text()));
-  settings -> setHueMarks (labs (atol (c_hue_marks -> text())));
-  settings -> setHueStep (labs (atol (c_hue_step -> text())));
+  settings -> setHueMinimumMaximum (c_hue_minimum -> text().toLong(), c_hue_maximum -> text().toLong());
+  settings -> setHueMarks (labs (c_hue_marks -> text().toLong()));
+  settings -> setHueStep (labs (c_hue_step -> text().toLong()));
   settings -> setHueReset (c_hue_reset -> isChecked());
   if ( settings -> hueReset() )
   {
-    settings -> setInitialHue (atol (c_hue_default -> text()));
+    settings -> setInitialHue (c_hue_default -> text().toLong());
     settings -> setHueEvery (c_hue_every -> currentItem());
   }
 }
@@ -1072,13 +1072,13 @@ void KPlayerSettingsSaturation::load (void)
 void KPlayerSettingsSaturation::save (void)
 {
   KPlayerSettings* settings = kPlayerSettings();
-  settings -> setSaturationMinimumMaximum (atol (c_saturation_minimum -> text()), atol (c_saturation_maximum -> text()));
-  settings -> setSaturationMarks (labs (atol (c_saturation_marks -> text())));
-  settings -> setSaturationStep (labs (atol (c_saturation_step -> text())));
+  settings -> setSaturationMinimumMaximum (c_saturation_minimum -> text().toLong(), c_saturation_maximum -> text().toLong());
+  settings -> setSaturationMarks (labs (c_saturation_marks -> text().toLong()));
+  settings -> setSaturationStep (labs (c_saturation_step -> text().toLong()));
   settings -> setSaturationReset (c_saturation_reset -> isChecked());
   if ( settings -> saturationReset() )
   {
-    settings -> setInitialSaturation (atol (c_saturation_default -> text()));
+    settings -> setInitialSaturation (c_saturation_default -> text().toLong());
     settings -> setSaturationEvery (c_saturation_every -> currentItem());
   }
 }
