@@ -13,6 +13,7 @@ Icon=kplayer
 Class=:internet
 Description=MMST Protocol
 Description[br]=Komenad MMST
+Description[da]=MMST-protokol
 Description[et]=MMST-protokoll
 Description[fr]=Protocole MMST
 Description[it]=Protocollo MMST

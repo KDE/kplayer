@@ -13,6 +13,7 @@ Icon=kplayer
 Class=:internet
 Description=MMS Protocol
 Description[br]=Komenad MMS
+Description[da]=MMS-protokol
 Description[et]=MMS-protokoll
 Description[fr]=Protocole MMS
 Description[it]=Protocollo MMS
