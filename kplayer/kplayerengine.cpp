@@ -612,11 +612,11 @@ void KPlayerEngine::setupActions (void)
 
   toggle = new KToggleAction (i18n("S&oft Frame Dropping"), 0, 0, this, SLOT (softFrameDrop()), m_ac, "player_soft_frame_drop");
   toggle -> setStatusText (i18n("Turns soft frame dropping on/off"));
-  toggle -> setWhatsThis (i18n("Soft Frame Dropping command toggles the soft frame dropping option. If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. The soft option drops frames less agressively than the hard one, and should not cause playback problems. The Frame drop option can also be set on the Advanced page either globally in KPlayer Settings or for a particular file in the File Properties."));
+  toggle -> setWhatsThis (i18n("Soft Frame Dropping command toggles the soft frame dropping option. If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. The soft option drops frames less aggressively than the hard one, and should not cause playback problems. The Frame drop option can also be set on the Advanced page either globally in KPlayer Settings or for a particular file in the File Properties."));
   toggle -> setExclusiveGroup ("framedrop");
   toggle = new KToggleAction (i18n("&Hard Frame Dropping"), 0, 0, this, SLOT (hardFrameDrop()), m_ac, "player_hard_frame_drop");
   toggle -> setStatusText (i18n("Turns hard frame dropping on/off"));
-  toggle -> setWhatsThis (i18n("Hard Frame Dropping command toggles the hard frame dropping option. If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. The hard option drops frames more agressively than the soft one, and may sometimes break decoding. The Frame drop option can also be set on the Advanced page either globally in KPlayer Settings or for a particular file in the File Properties."));
+  toggle -> setWhatsThis (i18n("Hard Frame Dropping command toggles the hard frame dropping option. If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. The hard option drops frames more aggressively than the soft one, and may sometimes break decoding. The Frame drop option can also be set on the Advanced page either globally in KPlayer Settings or for a particular file in the File Properties."));
   toggle -> setExclusiveGroup ("framedrop");
 
   toggle = new KToggleAction (i18n("&Show"), 0, 0, this, SLOT (subtitlesShow()), m_ac, "subtitles_show");

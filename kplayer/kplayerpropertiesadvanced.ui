@@ -173,7 +173,7 @@
                                 <string>Choose whether and how MPlayer should drop frames</string>
                             </property>
                             <property name="whatsThis" stdset="0">
-                                <string>If your system is too slow to play this file, MPlayer can drop some frames so playback does not slow down. Default uses the default from KPlayer Settings, None disables dropping, Soft drops less frames, and Hard drops more frames and may sometimes break decoding. If you select a frame dropping option from Player menu while holding Shift key, KPlayer will remember that choice in this property for the currently loaded file.</string>
+                                <string>If your system is too slow to play this file, MPlayer can drop some frames so playback does not slow down. Default uses the default from KPlayer Settings, None disables dropping, Soft drops fewer frames, and Hard drops more frames and may sometimes break decoding. If you select a frame dropping option from Player menu while holding Shift key, KPlayer will remember that choice in this property for the currently loaded file.</string>
                             </property>
                         </widget>
                         <widget class="QComboBox" row="0" column="1">
@@ -204,7 +204,7 @@
                                 <string>Choose whether and how MPlayer should drop frames</string>
                             </property>
                             <property name="whatsThis" stdset="0">
-                                <string>If your system is too slow to play this file, MPlayer can drop some frames so playback does not slow down. Default uses the default from KPlayer Settings, None disables dropping, Soft drops less frames, and Hard drops more frames and may sometimes break decoding. If you select a frame dropping option from Player menu while holding Shift key, KPlayer will remember that choice in this property for the currently loaded file.</string>
+                                <string>If your system is too slow to play this file, MPlayer can drop some frames so playback does not slow down. Default uses the default from KPlayer Settings, None disables dropping, Soft drops fewer frames, and Hard drops more frames and may sometimes break decoding. If you select a frame dropping option from Player menu while holding Shift key, KPlayer will remember that choice in this property for the currently loaded file.</string>
                             </property>
                         </widget>
                         <widget class="QLabel" row="1" column="0">
