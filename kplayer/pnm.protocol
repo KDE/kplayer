@@ -13,6 +13,7 @@ Icon=kplayer
 Class=:internet
 Description=PNM Protocol
 Description[br]=Komenad PNM
+Description[et]=PNM-protokoll
 Description[nl]=PNM-protocol
 Description[pt]=Protocolo PNM
 Description[pt_BR]=Protocolo PNM
