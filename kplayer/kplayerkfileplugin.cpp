@@ -21,7 +21,7 @@
 #include "kplayerkfileplugin.moc"
 
 typedef KGenericFactory<KPlayerKFilePlugin> KPlayerKFilePluginFactory;
-K_EXPORT_COMPONENT_FACTORY (kfile_kplayer, KPlayerKFilePluginFactory ("kfile_kplayer"));
+K_EXPORT_COMPONENT_FACTORY (kfile_kplayer, KPlayerKFilePluginFactory ("kfile_kplayer"))
 
 KPlayerKFilePlugin::KPlayerKFilePlugin (QObject* parent, const char* name, const QStringList& args)
   : KFilePlugin (parent, name, args)

@@ -29,7 +29,7 @@
 static const char* description = I18N_NOOP("KPlayerPart, an embeddable KDE media player based on MPlayer");
 
 typedef KParts::GenericFactory<KPlayerPart> KPlayerPartFactory;
-K_EXPORT_COMPONENT_FACTORY (libkplayerpart, KPlayerPartFactory);
+K_EXPORT_COMPONENT_FACTORY (libkplayerpart, KPlayerPartFactory)
 
 /*KPlayerBrowserExtension::KPlayerBrowserExtension (KPlayerPart* parent)
   : KParts::BrowserExtension (parent, "KPlayerBrowserExtension")
