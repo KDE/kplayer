@@ -1667,7 +1667,7 @@ QSize KPlayerSettings::adjustDisplaySize (bool user_zoom, bool user_resize)
   if ( ! fullScreen() && ! maximized() )
   {
     setDisplaySize (size);
-    if ( user_zoom || user_resize )
+    if ( (user_zoom || user_resize) && m_properties )
     {
       if ( rememberSize() || rememberWithShift() && shift() )
       {

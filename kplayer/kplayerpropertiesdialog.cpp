@@ -13,6 +13,7 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qcheckbox.h>
@@ -72,6 +73,9 @@ KPlayerPropertiesDialog::KPlayerPropertiesDialog (KPlayerProperties* properties)
   layout -> setAutoAdd (true);
   m_advanced = new KPlayerPropertiesAdvanced (m_properties, frame, "advanced");
   setHelp ("properties");
+  KListView* view = (KListView*) child (0, "KListView");
+  if ( view )
+    view -> setMinimumSize (view -> sizeHint());
   KConfig* config = kPlayerConfig();
   config -> setGroup ("General Options");
   QString name (config -> readEntry ("Properties Dialog Page"));
@@ -132,7 +136,7 @@ void KPlayerPropertiesDialog::slotDefault (void)
   m_video -> load();
   m_audio -> load();
   m_advanced -> load();
-  setButtonCancel(KStdGuiItem::close());
+  setButtonCancelText (i18n("&Close"));
   KDialogBase::slotDefault();
 }
 
@@ -170,8 +174,7 @@ void KPlayerPropertiesDialog::slotApply (void)
   m_video -> save();
   m_advanced -> save();
   m_properties -> save();
-  setButtonCancel(KStdGuiItem::close());
-
+  setButtonCancelText (i18n("&Close"));
   KDialogBase::slotApply();
 }
 
@@ -205,7 +208,7 @@ void KPlayerPropertiesGeneral::save (void)
   m_properties -> setPlaylistOption (c_playlist -> currentItem());
   m_properties -> setDisplaySizeOption (c_display_size -> currentItem());
   if ( m_properties -> displaySizeOption() == 1 || m_properties -> displaySizeOption() == 2 )
-    m_properties -> setDisplaySizeValue (QSize (labs (c_display_width->text().toLong()), labs (c_display_height->text().toLong())));
+    m_properties -> setDisplaySizeValue (QSize (labs (c_display_width -> text().toLong()), labs (c_display_height -> text().toLong())));
   m_properties -> setMaintainAspectOption (c_maintain_aspect -> currentItem() - 1);
 }
 
@@ -262,7 +265,7 @@ void KPlayerPropertiesSubtitles::save (void)
     m_properties -> setSubtitlePositionValue (labs (c_position -> text().toLong()));
   m_properties -> setSubtitleDelayOption (c_delay_set -> currentItem() - 1);
   if ( m_properties -> subtitleDelayOption() != -1 )
-    m_properties -> setSubtitleDelayValue (c_delay -> text().toDouble());
+    m_properties -> setSubtitleDelayValue (c_delay -> text().toFloat());
 }
 
 void KPlayerPropertiesSubtitles::autoloadChanged (int option)
@@ -326,7 +329,7 @@ void KPlayerPropertiesAudio::save (void)
     m_properties -> setVolumeValue (labs (c_volume -> text().toLong()));
   m_properties -> setAudioDelayOption (c_delay_set -> currentItem() - 1);
   if ( m_properties -> audioDelayOption() != -1 )
-    m_properties -> setAudioDelayValue (c_delay -> text().toDouble());
+    m_properties -> setAudioDelayValue (c_delay -> text().toFloat());
   m_properties -> setAudioCodecOption (listEntry (c_codec, true));
   if ( c_codec -> currentItem() != 1 )
     m_properties -> setAudioCodecFallbackOption (c_fallback -> currentItem() - 1);

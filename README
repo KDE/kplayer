@@ -13,27 +13,6 @@ Features include
 - configuration dialog and file specific options;
 - KPart for integration with Konqueror, KMLDonkey, etc.
 
-New in KPlayer 0.5
-- per-file options: fine tune KPlayer and MPlayer options
-  for individual files;
-- playing from KDE I/O Slaves: transfer and play files from
-  SSH connection or Zip archive without storing them locally;
-- media file meta information in Konqueror file manager;
-- support for mms:, pnm: and rtsp: URLs in Konqueror browser;
-- zoom in and out with mouse wheel;
-- smooth seeking when dragging the progress slider;
-- tons of minor improvements and bug fixes;
-- new Czech, Finnish and Simplified Chinese translations;
-- most existing translations updated.
-KPlayer 0.5.1
-- GCC 3.4 and Qt 3.1 compilation fixes.
-KPlayer 0.5.2
-- user manual;
-- whats this hints;
-- improved mouse wheel support;
-- minor improvements and bug fixes;
-- new Hungarian and Polish translations.
-
 Requirements
 ------------
 
@@ -88,7 +67,7 @@ X11 and XVideo
 
 Qt and KDE
 
-   KPlayer 0.5.2 supports KDE 3.3, 3.2 and 3.1, so you need to either run
+   KPlayer 0.5.x supports KDE 3.3, 3.2 and 3.1, so you need to either run
    a relatively recent KDE (recommended) or at least have KDE libraries
    and the corresponding Qt libraries on your system.
 

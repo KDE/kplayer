@@ -246,7 +246,7 @@ void KPlayerSettingsDialog::slotDefault (void)
   m_brightness -> load();
   m_hue -> load();
   m_saturation -> load();
-  setButtonCancel(KStdGuiItem::close());
+  setButtonCancelText (i18n("&Close"));
   KDialogBase::slotDefault();
 }
 
@@ -298,7 +298,7 @@ void KPlayerSettingsDialog::slotApply (void)
   m_hue -> save();
   m_saturation -> save();
   kPlayerSettings() -> save();
-  setButtonCancel(KStdGuiItem::close());
+  setButtonCancelText (i18n("&Close"));
   KDialogBase::slotApply();
 }
 

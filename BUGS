@@ -8,18 +8,18 @@ will be larger than its original size after coming back from full screen
 mode. This is believed to be a KWin problem.
 
 Seeking does not work well on some media types, in particular DVDs, VCDs
-and some Windows Media files. In those cases you can try using the
-Forward/Backward commands instead of clicking on the slider itself or
-dragging the slider thumb. Also the detected length may not be correct
-in some cases, especially on DVDs, VCDs and variable bitrate files. Some
-files are not seekable at all. This is an MPlayer problem.
+and some Real Media and Windows Media files. In those cases you can try
+using the Forward/Backward commands instead of clicking on the slider
+itself or dragging the slider thumb. Also the detected length may not
+be correct in some cases, especially on DVDs, VCDs and variable bitrate
+files. Some files are not seekable at all. This is an MPlayer problem.
 
 Reporting bugs
 --------------
 
 It is importand that you follow the steps described in Reporting KPlayer
 Bugs Micro-HOWTO
-http://sourceforge.net/docman/display_doc.php?docid=22190&group_id=71710
+http://kplayer.sourceforge.net/manual/howto-bug-reporting.html
 
 All bugs should be reported through the SourceForge bug tracking system
 http://sourceforge.net/tracker/?group_id=71710&atid=532182

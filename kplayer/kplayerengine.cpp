@@ -509,27 +509,38 @@ void KPlayerEngine::setupActions (void)
   action -> setStatusText (i18n("Shrinks the video"));
   action -> setWhatsThis (i18n("Zoom Out command reduces the video area by one half of the original video size of the current file."));
   toggle = new KToggleAction (i18n("Zoom to 5&0%"), 0, 0, this, SLOT (zoom12()), m_ac, "view_zoom_1_2");
+  // xgettext:no-c-format
   toggle -> setStatusText (i18n("Scales video to 50% of the original size"));
+  // xgettext:no-c-format
   toggle -> setWhatsThis (i18n("Zoom to 50% command resizes the video area to one half of the original video size of the current file."));
   toggle -> setExclusiveGroup ("zoom");
   toggle = new KToggleAction (i18n("Zoom to &100%"), 0, CTRL + Key_Backspace, this, SLOT (zoom11()), m_ac, "view_zoom_1_1");
   toggle -> setStatusText (i18n("Scales video to its original size"));
+  // xgettext:no-c-format
   toggle -> setWhatsThis (i18n("Zoom to 100% command resizes the video area to the original video size of the current file."));
   toggle -> setExclusiveGroup ("zoom");
   toggle = new KToggleAction (i18n("Zoo&m to 150%"), 0, 0, this, SLOT (zoom32()), m_ac, "view_zoom_3_2");
+  // xgettext:no-c-format
   toggle -> setStatusText (i18n("Scales video to 150% of the original size"));
+  // xgettext:no-c-format
   toggle -> setWhatsThis (i18n("Zoom to 150% command resizes the video area to 150% of the original video size of the current file."));
   toggle -> setExclusiveGroup ("zoom");
   toggle = new KToggleAction (i18n("Zoom to &200%"), 0, 0, this, SLOT (zoom21()), m_ac, "view_zoom_2_1");
+  // xgettext:no-c-format
   toggle -> setStatusText (i18n("Scales video to 200% of the original size"));
+  // xgettext:no-c-format
   toggle -> setWhatsThis (i18n("Zoom to 200% command resizes the video area to twice the original video size of the current file."));
   toggle -> setExclusiveGroup ("zoom");
   toggle = new KToggleAction (i18n("Zoom &to 250%"), 0, 0, this, SLOT (zoom52()), m_ac, "view_zoom_5_2");
+  // xgettext:no-c-format
   toggle -> setStatusText (i18n("Scales video to 250% of the original size"));
+  // xgettext:no-c-format
   toggle -> setWhatsThis (i18n("Zoom to 250% command resizes the video area to 250% of the original video size of the current file."));
   toggle -> setExclusiveGroup ("zoom");
   toggle = new KToggleAction (i18n("Zoom to &300%"), 0, 0, this, SLOT (zoom31()), m_ac, "view_zoom_3_1");
+  // xgettext:no-c-format
   toggle -> setStatusText (i18n("Scales video to 300% of the original size"));
+  // xgettext:no-c-format
   toggle -> setWhatsThis (i18n("Zoom to 300% command resizes the video area to thrice the original video size of the current file."));
   toggle -> setExclusiveGroup ("zoom");
 
@@ -1679,7 +1690,7 @@ KURL::List KPlayerEngine::openFiles (QWidget* parent)
 #endif
   KPlayerFileDialog dlg (dir, filter, parent, "filedialog");
   dlg.setOperationMode (KFileDialog::Opening);
-  dlg.setMode (KFile::Files | KFile::LocalOnly | KFile::ExistingOnly);
+  dlg.setMode (KFile::Files | KFile::ExistingOnly);
   dlg.setCaption (i18n("Open"));
   if ( width > 0 && height > 0 )
     dlg.resize (width, height);
@@ -1740,7 +1751,7 @@ KURL KPlayerEngine::openSubtitle (QWidget* parent)
   int height = config -> readNumEntry ("Open Subtitle Height");
   KPlayerFileDialog dlg (dir, filter, parent, "filedialog");
   dlg.setOperationMode (KFileDialog::Opening);
-  dlg.setMode (KFile::File | KFile::LocalOnly | KFile::ExistingOnly);
+  dlg.setMode (KFile::File | KFile::ExistingOnly);
   dlg.setCaption (i18n("Open Subtitles"));
   if ( width > 0 && height > 0 )
     dlg.resize (width, height);
