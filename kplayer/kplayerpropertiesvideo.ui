@@ -1,0 +1,624 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerPropertiesVideoPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerPropertiesVideoPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>640</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Video Properties</string>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout1</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>l_contrast</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Contrast</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_contrast_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video contrast level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video contrast level for this file. Default uses the same contrast as for other files, Set To adjusts contrast to the given level, Add and Subtract turn contrast up and down respectively by the given amount. It is easier to set this option by moving contrast slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="0" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set to</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>add</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>subtract</string>
+                                </property>
+                            </item>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="name">
+                                <cstring>c_contrast_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video contrast level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video contrast level for this file. Default uses the same contrast as for other files, Set To adjusts contrast to the given level, Add and Subtract turn contrast up and down respectively by the given amount. It is easier to set this option by moving contrast slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="0" column="2">
+                            <property name="name">
+                                <cstring>c_contrast</cstring>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video contrast level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video contrast level for this file. Default uses the same contrast as for other files, Set To adjusts contrast to the given level, Add and Subtract turn contrast up and down respectively by the given amount. It is easier to set this option by moving contrast slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="0" column="3">
+                            <property name="name">
+                                <cstring>l_empty</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="0">
+                            <property name="name">
+                                <cstring>l_brightness</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Bri&amp;ghtness</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_brightness_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video brightness level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video brightness level for this file. Default uses the same brightness as for other files, Set To adjusts brightness to the given level, Add and Subtract turn brightness up and down respectively by the given amount. It is easier to set this option by moving brightness slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="1" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set to</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>add</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>subtract</string>
+                                </property>
+                            </item>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="name">
+                                <cstring>c_brightness_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video brightness level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video brightness level for this file. Default uses the same brightness as for other files, Set To adjusts brightness to the given level, Add and Subtract turn brightness up and down respectively by the given amount. It is easier to set this option by moving brightness slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="1" column="2">
+                            <property name="name">
+                                <cstring>c_brightness</cstring>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video brightness level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video brightness level for this file. Default uses the same brightness as for other files, Set To adjusts brightness to the given level, Add and Subtract turn brightness up and down respectively by the given amount. It is easier to set this option by moving brightness slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="2" column="0">
+                            <property name="name">
+                                <cstring>l_hue</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Hue</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_hue_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video hue for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video hue for this file. Default uses the same hue as for other files, Set To adjusts hue to the given level, Add and Subtract turn hue up and down respectively by the given amount. It is easier to set this option by moving hue slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="2" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set to</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>add</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>subtract</string>
+                                </property>
+                            </item>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="name">
+                                <cstring>c_hue_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video hue for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video hue for this file. Default uses the same hue as for other files, Set To adjusts hue to the given level, Add and Subtract turn hue up and down respectively by the given amount. It is easier to set this option by moving hue slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="2" column="2">
+                            <property name="name">
+                                <cstring>c_hue</cstring>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video hue for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video hue for this file. Default uses the same hue as for other files, Set To adjusts hue to the given level, Add and Subtract turn hue up and down respectively by the given amount. It is easier to set this option by moving hue slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="3" column="0">
+                            <property name="name">
+                                <cstring>l_saturation</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Saturatio&amp;n</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_saturation_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video saturation level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video saturation level for this file. Default uses the same saturation as for other files, Set To adjusts saturation to the given level, Add and Subtract turn saturation up and down respectively by the given amount. It is easier to set this option by moving saturation slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="3" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set to</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>add</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>subtract</string>
+                                </property>
+                            </item>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="name">
+                                <cstring>c_saturation_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video saturation level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video saturation level for this file. Default uses the same saturation as for other files, Set To adjusts saturation to the given level, Add and Subtract turn saturation up and down respectively by the given amount. It is easier to set this option by moving saturation slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="3" column="2">
+                            <property name="name">
+                                <cstring>c_saturation</cstring>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video saturation level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video saturation level for this file. Default uses the same saturation as for other files, Set To adjusts saturation to the given level, Add and Subtract turn saturation up and down respectively by the given amount. It is easier to set this option by moving saturation slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="4" column="0">
+                            <property name="name">
+                                <cstring>l_codec</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Cod&amp;ec</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_codec</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video codec to use for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available codecs and lets you choose the one to be used for this file. Default uses the option from KPlayer Settings, Auto lets MPlayer decide which codec to use automatically.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="4" column="1" colspan="3">
+                            <property name="name">
+                                <cstring>c_codec</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video codec to use for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available codecs and lets you choose the one to be used for this file. Default uses the option from KPlayer Settings, Auto lets MPlayer decide which codec to use automatically.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="5" column="0">
+                            <property name="name">
+                                <cstring>l_fallback</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Fa&amp;llback</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_fallback</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Specify whether to use other codecs if the chosen one fails</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify whether to use other codecs if the chosen one fails. Default uses the option from KPlayer Settings.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="5" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>yes</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>no</string>
+                                </property>
+                            </item>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="name">
+                                <cstring>c_fallback</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Specify whether to use other codecs if the chosen one fails</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify whether to use other codecs if the chosen one fails. Default uses the option from KPlayer Settings.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="6" column="0">
+                            <property name="name">
+                                <cstring>l_bitrate</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Bitrate</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_bitrate</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video bitrate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows video bitrate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="6" column="1">
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>4</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="name">
+                                <cstring>c_bitrate</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video bitrate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows video bitrate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="6" column="2">
+                            <property name="name">
+                                <cstring>l_kbps</cstring>
+                            </property>
+                            <property name="text">
+                                <string>kbps</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video bitrate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows video bitrate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="7" column="0">
+                            <property name="name">
+                                <cstring>l_framerate</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Framerate</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_framerate</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video frame rate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows video frame rate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="7" column="1">
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>4</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="name">
+                                <cstring>c_framerate</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video frame rate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows video frame rate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="7" column="2">
+                            <property name="name">
+                                <cstring>l_fps</cstring>
+                            </property>
+                            <property name="text">
+                                <string>fps</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video frame rate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows video frame rate of this file.</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </vbox>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>c_contrast_set</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesVideoPage</receiver>
+        <slot>contrastChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_brightness_set</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesVideoPage</receiver>
+        <slot>brightnessChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_hue_set</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesVideoPage</receiver>
+        <slot>hueChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_saturation_set</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesVideoPage</receiver>
+        <slot>saturationChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_codec</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesVideoPage</receiver>
+        <slot>codecChanged(int)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">contrastChanged(int)</slot>
+    <slot access="protected">brightnessChanged(int)</slot>
+    <slot access="protected">hueChanged(int)</slot>
+    <slot access="protected">saturationChanged(int)</slot>
+    <slot access="protected">codecChanged(int)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="0"/>
+</UI>

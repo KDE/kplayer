@@ -1,0 +1,482 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerPropertiesAdvancedPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerPropertiesAdvancedPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>1</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="caption">
+        <string>Advanced Properties</string>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout1</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <widget class="QLabel" row="0" column="0" colspan="2">
+                            <property name="name">
+                                <cstring>l_command_line</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Additional command &amp;line arguments</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_command_line_option</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Additional options to be passed to MPlayer</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Additional options that will be passed to MPlayer on the command line. See mplayer(1) manpage for a complete list of possible options.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="1" column="0">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set to</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>append</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_command_line_option</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose how to combine your options with the defaults</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Choose how to combine the options you specify here with the defaults set in KPlayer Settings. Default uses options from KPlayer Settings, Set To replaces them with the options set here, and Append adds these options to the defaults.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="1" column="1">
+                            <property name="name">
+                                <cstring>c_command_line</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Additional options to be passed to MPlayer</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Additional options that will be passed to MPlayer on the command line. See mplayer(1) manpage for a complete list of possible options.</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout2</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>l_frame_drop</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Frame drop</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_frame_drop</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether and how MPlayer should drop frames</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>If your system is too slow to play this file, MPlayer can drop some frames so playback does not slow down. Default uses the default from KPlayer Settings, None disables dropping, Soft drops less frames, and Hard drops more frames and may sometimes break decoding. If you select a frame dropping option from Player menu while holding Shift key, KPlayer will remember that choice in this property for the currently loaded file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="0" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>none</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>soft</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>hard</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_frame_drop</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether and how MPlayer should drop frames</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>If your system is too slow to play this file, MPlayer can drop some frames so playback does not slow down. Default uses the default from KPlayer Settings, None disables dropping, Soft drops less frames, and Hard drops more frames and may sometimes break decoding. If you select a frame dropping option from Player menu while holding Shift key, KPlayer will remember that choice in this property for the currently loaded file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="0">
+                            <property name="name">
+                                <cstring>l_use_cache</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Cac&amp;he</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_use_cache</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use cache and set its size</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use cache and set its size. Default uses the option set in KPlayer Settings, Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="1" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>none</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set size</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_use_cache</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use cache and set its size</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use cache and set its size. Default uses the option set in KPlayer Settings, Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="1" column="2">
+                            <property name="name">
+                                <cstring>c_cache_size</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>60</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use cache and set its size</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use cache and set its size. Default uses the option set in KPlayer Settings, Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="3">
+                            <property name="name">
+                                <cstring>l_cache_size_kb</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>kilobytes</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use cache and set its size</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use cache and set its size. Default uses the option set in KPlayer Settings, Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="2" column="0">
+                            <property name="name">
+                                <cstring>l_build_index</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Build new index</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_build_index</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to build new index for seeking</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to build new index for seeking. Default uses the option from KPlayer Settings, Yes builds an index if the file does not have it, No tells MPlayer not to build index, and Force makes it always build an index.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="2" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>yes</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>no</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>force</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_build_index</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to build new index for seeking</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to build new index for seeking. Default uses the option from KPlayer Settings, Yes builds an index if the file does not have it, No tells MPlayer not to build index, and Force makes it always build an index.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="3" column="0">
+                            <property name="name">
+                                <cstring>l_use_kioslave</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Use &amp;KIOSlave</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_use_kioslave</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use a KDE I/O Slave to play this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use a KDE I/O Slave to play this file. Auto decides it automatically using options set in KPlayer Settings.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="3" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>yes</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>no</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_use_kioslave</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use a KDE I/O Slave to play this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use a KDE I/O Slave to play this file. Auto decides it automatically using options set in KPlayer Settings.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="4" column="0">
+                            <property name="name">
+                                <cstring>l_use_temporary_file</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Use &amp;temporary file</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_use_temporary_file</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use a temporary file for playing from KDE I/O Slave</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use a temporary file for playing from KDE I/O Slave. Default uses the option from KPlayer Settings. This option has no effect for URLs passed directly to MPlayer.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="4" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>yes</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>no</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_use_temporary_file</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use a temporary file for playing from KDE I/O Slave</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use a temporary file for playing from KDE I/O Slave. Default uses the option from KPlayer Settings. This option has no effect for URLs passed directly to MPlayer.</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </vbox>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>c_command_line_option</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesAdvancedPage</receiver>
+        <slot>commandLineChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_use_cache</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesAdvancedPage</receiver>
+        <slot>cacheChanged(int)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">commandLineChanged(int)</slot>
+    <slot access="protected">cacheChanged(int)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="0"/>
+</UI>

@@ -1,0 +1,272 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerSettingsGeneralPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerSettingsGeneralPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>General Settings</string>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_resize_automatically</cstring>
+                    </property>
+                    <property name="text">
+                        <string>R&amp;esize main window automatically</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Resize main window automatically to make video area the correct size</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically resize main KPlayer window so that the video area is of the desired size.</string>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout4</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>l_minimum_initial_width</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>1</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Minimum initial video width</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_minimum_initial_width</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Minimum width of the video area when starting to play a new file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="0" column="1">
+                            <property name="name">
+                                <cstring>c_minimum_initial_width</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>60</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Minimum width of the video area when starting to play a new file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="0" column="2">
+                            <property name="name">
+                                <cstring>l_minimum_initial_width_pixels</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>1</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>pixels</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Minimum width of the video area when starting to play a new file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="0">
+                            <property name="name">
+                                <cstring>l_recent_file_list_size</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>1</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Recent file list size</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_recent_file_list_size</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Maximum number of entries on Recent Files menu</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the maximum number of files to be put on the Recent Files menu. If this number is exceeded, the oldest entries will be removed.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="1" column="1">
+                            <property name="name">
+                                <cstring>c_recent_file_list_size</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>60</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Maximum number of entries on Recent Files menu</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the maximum number of files to be put on the Recent Files menu. If this number is exceeded, the oldest entries will be removed.</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_show_open_dialog</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Show Open dialog if started without file</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Show Open File dialog if KPlayer is started without a file to play</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to show Open File dialog if KPlayer is started without a command line argument giving a file to play.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_show_file_path</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Show &amp;full path in window title</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Show full path of the current file in main window title</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to show full path of the currently loaded file in the main window title.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_disable_screen_saver</cstring>
+                    </property>
+                    <property name="text">
+                        <string>D&amp;isable screensaver while playing video</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Disable KDE screen saver while playing video</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to disable KDE screen saver while playing video if it is enabled. KPlayer will re-enable the screen saver when it stops playing video if it was previously enabled. When playing audio only file screen saver will not be disabled.</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>c_resize_automatically</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>KPlayerSettingsGeneralPage</receiver>
+        <slot>resizeAutomaticallyChanged(bool)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">resizeAutomaticallyChanged(bool)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="0"/>
+</UI>

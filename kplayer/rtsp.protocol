@@ -1,0 +1,15 @@
+[Protocol]
+exec=kplayer '%u'
+protocol=rtsp
+input=none
+output=none
+helper=true
+listing=
+reading=false
+writing=false
+makedir=false
+deleting=false
+Icon=kplayer
+Class=:internet
+Description=RTSP Protocol
+URIMode=url

@@ -1,0 +1,226 @@
+KPlayer is a KDE media player based on MPlayer, www.mplayerhq.hu.
+
+With KPlayer you can easily play a wide variety of video and audio files and
+streams using a rich and friendly interface compliant with KDE standards.
+
+Features include
+- video, audio and subtitle playback from file, URL, DVD, VCD,
+  audio CD, TV, DVB, etc., as well as KDE I/O Slaves;
+- volume, contrast, brightness, hue and saturation controls;
+- zooming, full screen and fixed aspect options;
+- status and progress display and seeking;
+- playlist;
+- configuration dialog and file specific options;
+- KPart for integration with Konqueror, KMLDonkey, etc.
+
+New in KPlayer 0.5
+- per-file options: fine tune KPlayer and MPlayer options
+  for individual files;
+- playing from KDE I/O Slaves: transfer and play files from
+  SSH connection or Zip archive without storing them locally;
+- media file meta information in Konqueror file manager;
+- support for mms:, pnm: and rtsp: URLs in Konqueror browser;
+- zoom in and out with mouse wheel;
+- smooth seeking when dragging the progress slider;
+- tons of minor improvements and bug fixes;
+- new Czech, Finnish and Simplified Chinese translations;
+- most existing translations updated.
+KPlayer 0.5.1
+- GCC 3.4 and Qt 3.1 compilation fixes.
+KPlayer 0.5.2
+- user manual;
+- whats this hints;
+- improved mouse wheel support;
+- minor improvements and bug fixes;
+- new Hungarian and Polish translations.
+
+Requirements
+------------
+
+A recent MPlayer
+
+   KPlayer uses the famous MPlayer as the backend for playing audio and
+   video files and streams. This ensures the maximum variety of supported
+   types of files and encodings.
+
+   You need to have MPlayer version 0.90 or later. Of the stable MPlayer
+   releases 0.90 was the least buggy, but it has security issues. The same
+   issues were present in recent unstable releases up to and including
+   1.0-pre3, so if you are concerned about security (as you should be),
+   your choice would be MPlayer 1.0-pre4 or later. However, 1.0-pre4
+   introduced a fresh set of bugs, in particular in remote URL handling
+   and FTP support.
+
+   If there are good binary packages for your distribution, use those.
+   For example on Debian unstable you would do
+
+   echo 'deb ftp://ftp.nerim.net/debian-marillat/ unstable main' >> /etc/apt/sources.list
+   apt-get update
+   apt-get install mplayer-k7
+
+   Substitute unstable for stable or testing as required, and k7 for 386,
+   586, 686 or k6, according to your processor type.
+
+   As always compiling from source is an option.
+
+   If you got an mplayer.conf in /etc/mplayer or a ~/.mplayer/config,
+   check them to make sure that they do not have a line like "gui=yes".
+   Kill it dead if you find it. Use 'gmplayer' if you ever decide to
+   use MPlayer's own GUI (not recommended).
+
+   It is perfectly fine if you want to remove the MPlayer config files
+   entirely. However, they may be useful as an alternative way of
+   specifying options that KPlayer does not yet support directly.
+
+X11 and XVideo
+
+   X11 is required. Recommended versions are XFree86 4.2.x and 4.3.x, as
+   well as X Server versions released by X.org.
+
+   XVideo extension is recommended. You can check your /etc/X11/xorg.conf
+   or /etc/X11/XF86Config-4 file for a line that reads
+
+   Load "extmod"
+
+   This is the line that loads XVideo extension, so make sure it is not
+   disabled. Also check /var/log/XFree86.0.log to make sure that XVideo
+   is loaded without error.
+
+Qt and KDE
+
+   KPlayer 0.5.2 supports KDE 3.3, 3.2 and 3.1, so you need to either run
+   a relatively recent KDE (recommended) or at least have KDE libraries
+   and the corresponding Qt libraries on your system.
+
+Installation
+------------
+
+See INSTALL.
+
+Configuration
+-------------
+
+KPlayer's initial settings have been tuned to the optimal values so that
+the program should be fully usable out of the box. In fact, version 0.2
+did not have a configuration dialog and was quite useful nevertheless.
+
+For advanced users the configuration dialog offers a lot of different
+settings affecting both the KPlayer user interface and MPlayer options.
+If you mess KPlayer up by playing with them, the Defaults button is there
+to help you out.
+
+However, if KPlayer does not work for you in the first place, please first
+test MPlayer itself from the command line to see if it needs any command
+line options to work on your system. Then you can set those options in the
+KPlayer configuration dialog.
+
+Before you put anything into the Additional Command Line Arguments box,
+please first look around the dialog to make sure the option you need is not
+yet supported directly. For example, the only time you'll ever need to put
+-ao, -ac, -vo or -vc in there is when you want to list more than one output
+or codec separated by a comma. In that case please first set the respective
+option on the Audio or Video page to 'auto'.
+
+Warning about -vo sdl and -vo svga: if you set these anywhere other than the
+Video page in the KPlayer config dialog, you will likely have to either wait
+for your file to finish playing or kill your X session. If you really have
+to, you can edit or remove the input.conf file in share/apps/kplayer, but
+that is not recommended, nor are -vo sdl and -vo svga for that matter.
+
+File properties
+---------------
+
+Starting from KPlayer 0.5 each file and URL has its own set of properties.
+They include information that KPlayer found out about the file, like time
+length, video size, frame rate, bitrates, and so on, as well as various
+options you can set, like name, video aspect, subtitles, and many more.
+
+Most properties can be set through the File Properties dialog. The
+Properties dialog for the currently loaded file or URL can be opened from
+the File menu, or using a button on the main toolbar, or from the right
+click popup menu. You can also open Properties dialog for an entry from
+your playlist by right clicking on it in the Playlist Editor, or by using
+the command on the Playlist menu.
+
+An easier way to set file properties is by holding the Shift key when
+changing a setting. For example, if you hold Shift and select Soft Frame
+Drop from the Player menu, KPlayer will remember that setting for the
+current URL, and use it the next time you play it. After it is done playing
+the current URL, it will revert the Frame Drop setting to the default, the
+one that was in effect before you changed it with Shift. On the other hand,
+if you change Frame Drop without holding Shift, the new setting will become
+the default, and will be used for all URLs that do not have it set
+explicitly.
+
+Playing DVDs, VCDs, audio CDs, TV
+---------------------------------
+
+As advertised on MPlayer manpage, DVDs can be played by passing a URL like
+dvd://1 to MPlayer. "1" in this case is the track number you want to watch.
+So put that in the Open URL dialog inside KPlayer.
+
+Similarly, a URL like vcd://1 can be used to play a track from video CD.
+Use the cdda: prefix to play a track from audio CD, and tv: to play from TV.
+
+Full screen mode
+----------------
+
+To return from the full screen mode to the normal mode just hit Ctrl+F or
+right click anywhere in the video area and choose Full Screen from the menu.
+You can also hit the Esc key, which will stop playback and end the full
+screen mode.
+
+History
+-------
+
+See ChangeLog.
+
+Known issues
+------------
+
+See BUGS.
+
+Online HOWTOs
+-------------
+
+Installation
+http://sourceforge.net/docman/display_doc.php?docid=23142&group_id=71710
+
+Compiling from source
+http://sourceforge.net/docman/display_doc.php?docid=22178&group_id=71710
+
+Compiling from CVS
+http://sourceforge.net/docman/display_doc.php?docid=22177&group_id=71710
+
+Basic configuration
+http://sourceforge.net/docman/display_doc.php?docid=23154&group_id=71710
+
+Advanced configuration
+http://sourceforge.net/docman/display_doc.php?docid=23162&group_id=71710
+
+File properties
+http://sourceforge.net/docman/display_doc.php?docid=23508&group_id=71710
+
+Full screen and maximized window
+http://sourceforge.net/docman/display_doc.php?docid=23505&group_id=71710
+
+Playlist
+http://sourceforge.net/docman/display_doc.php?docid=23506&group_id=71710
+
+Subtitles
+http://sourceforge.net/docman/display_doc.php?docid=23507&group_id=71710
+
+DVD, VCD, audio CD, TV, DVB
+http://sourceforge.net/docman/display_doc.php?docid=23240&group_id=71710
+
+HTTP, FTP and Samba
+http://sourceforge.net/docman/display_doc.php?docid=23242&group_id=71710
+
+KDE I/O Slaves
+http://sourceforge.net/docman/display_doc.php?docid=23246&group_id=71710
+
+Translation
+http://sourceforge.net/docman/display_doc.php?docid=22175&group_id=71710
+
+Reporting bugs
+http://sourceforge.net/docman/display_doc.php?docid=22190&group_id=71710

@@ -1,0 +1,124 @@
+Basic functionality
+ + Open file
+ + Open URL
+ + Start
+ + Stop
+ + Pause
+ + Quit
+ + Full screen
+ + Context menu
+ + Shortcut keys
+ + Main window title
+ + Volume
+ + Mute
+ + Seek
+ + Autosize
+ + Status
+ + Recent files
+ + Maintain Aspect and Force Aspect options
+ + Persist options between sessions
+ + Maintain video size when docking states change
+ + Enable and disable actions according to state
+ + Drag and grop
+
+Additional controls
+ + Zoom
+ + Frame drop
+ + Contrast
+ + Brightness
+ + Hue
+ + Saturation
+ + Popup sliders
+ + Display mplayer text output
+ + Message log and error handling
+ + Audio delay
+   Tooltips when dragging a slider
+   Toolbar configuration dialog
+   Equalizer
+   Always on top
+   Recording
+
+Subtitles
+ + Load from file
+ + Load from URL
+ + Autoload
+ + Unload
+ + Delay
+ + Position
+ + Visibility
+
+Configuration dialog
+ + Tree like interface
+ + GUI-related options
+ + MPlayer executable path
+ + MPlayer additional options
+ + Drivers and codecs
+ + Cache size
+   Filters
+   Fine-tuning wizard
+
+Playlist
+ + Name
+ + Path or URL
+ + Type
+ + Length
+ + Video size
+ + Formats
+ + Bitrates
+ + Shuffling
+ + Allow duplicate entries
+ + Size limit
+ + Settings
+   Remove missing files
+   Make combo box editable
+   Saving and loading
+   Hierarchical structure and navigation
+   Hierarchical shuffling
+   Searching
+   Bookmarks
+   Filtering
+   Directories as playlists
+   Author
+   Album
+   Title
+   Genre
+
+Per file options
+ + Properties dialog
+ + Update properties with Shift
+ + Controls page in Settings
+
+Tabbed interface
+
+Documentation
+ + Readme
+ + Install
+ + HowTo
+ + Handbook
+
+DVD and VCD support
+ + Playback using dvd:// urls
+   Menus
+   Chapters
+   Titles
+   Navigation
+   Audio language
+   Subtitles by id or language
+   Devices
+   Eject
+
+KDE Integration
+ + MIME file types
+ + KPart
+ + Playing from KIOSlaves
+ + KFileMetaInfo
+   Window manager size hints
+   Do not show windows in task bar
+   Remember dialog position
+
+Advanced options
+   DVD options
+   VCD options
+   CD options
+   TV options
+   Just about every option from mplayer(1)

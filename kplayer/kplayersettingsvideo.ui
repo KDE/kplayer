@@ -1,0 +1,362 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerSettingsVideoPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerSettingsVideoPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>640</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Video Settings</string>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout1</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>l_video_driver</cstring>
+                            </property>
+                            <property name="text">
+                                <string>D&amp;river</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_driver</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video output to use for playing video</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available video outputs and lets you choose the one to use for playing video. Recommended choice depends on the video card you have. For Matrox card try XMGA, for other cards either XVidix (if supported) or XVideo provide the best quality. With NVidia drivers you can also try XVMC output. If after trying hard you cannot make any of these work, you can use X11 output as the last resort. Video outputs that open a separate window instead of using KPlayer video area are not recommended. Auto will let MPlayer choose a video output according to its own configuration. If you need to specify more than one output separated by comma, set this option to Auto and put them in Additional Command Line Arguments on Advanced page.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="0" column="1">
+                            <property name="name">
+                                <cstring>c_driver</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video output to use for playing video</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available video outputs and lets you choose the one to use for playing video. Recommended choice depends on the video card you have. For Matrox card try XMGA, for other cards either XVidix (if supported) or XVideo provide the best quality. With NVidia drivers you can also try XVMC output. If after trying hard you cannot make any of these work, you can use X11 output as the last resort. Video outputs that open a separate window instead of using KPlayer video area are not recommended. Auto will let MPlayer choose a video output according to its own configuration. If you need to specify more than one output separated by comma, set this option to Auto and put them in Additional Command Line Arguments on Advanced page.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox" row="1" column="1">
+                            <property name="name">
+                                <cstring>c_driver_fallback</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Fall back on others</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Specify whether to use other outputs if the chosen one fails</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify whether to use other outputs if the chosen one fails.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="2" column="0">
+                            <property name="name">
+                                <cstring>l_video_device</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Dev&amp;ice</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_device</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video device to use for the chosen output</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify video device to use for the chosen video output. Leave blank to use the default device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="2" column="1">
+                            <property name="name">
+                                <cstring>c_device</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>32767</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video device to use for the chosen output</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify video device to use for the chosen video output. Leave blank to use the default device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="3" column="0">
+                            <property name="name">
+                                <cstring>l_video_codec</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Cod&amp;ec</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_codec</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Codec to use for decoding video (Auto is recommended)</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available codecs and lets you choose the one to be used for decoding video. Auto is the recommended choice, it lets MPlayer decide which codec to use automatically. If you need to tell MPlayer to use a particular codec for a given file or stream, set this option in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="3" column="1">
+                            <property name="name">
+                                <cstring>c_codec</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Codec to use for decoding video (Auto is recommended)</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available codecs and lets you choose the one to be used for decoding video. Auto is the recommended choice, it lets MPlayer decide which codec to use automatically. If you need to tell MPlayer to use a particular codec for a given file or stream, set this option in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox" row="4" column="1">
+                            <property name="name">
+                                <cstring>c_codec_fallback</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Fa&amp;ll back on others</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Specify whether to use other codecs if the chosen one fails</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify whether to use other codecs if the chosen one fails.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="5" column="0">
+                            <property name="name">
+                                <cstring>l_video_scaler</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Scaler</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_scaler</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video scaler to use when doing software scaling</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the video scaler to be used when doing software scaling. Software scaling consumes considerable amount of system resources, so unless you have plenty of them and software scaling gives you better image quality, you should choose a video output above that uses hardware scaling.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="5" column="1">
+                            <property name="name">
+                                <cstring>c_scaler</cstring>
+                            </property>
+                            <item>
+                                <property name="text">
+                                    <string>fast bilinear</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>bilinear</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>bicubic (good quality)</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>experimental</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>nearest neighbour (bad quality)</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>area</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>luma bicubic / chroma bilinear</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>gauss</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>sincR</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>lanczos</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>bicubic spline</string>
+                                </property>
+                            </item>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video scaler to use when doing software scaling</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the video scaler to be used when doing software scaling. Software scaling consumes considerable amount of system resources, so unless you have plenty of them and software scaling gives you better image quality, you should choose a video output above that uses hardware scaling.</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_doublebuffering</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Enable do&amp;uble buffering</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Enable double buffering for video output</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether double buffering should be used for video output. This option is recommended, it gives smoother display in many cases.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_direct_rendering</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Enable direc&amp;t rendering</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Enable direct rendering for video output</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether direct rendering should be used for video output. This option may give performance improvement, but may also cause video display problems, for example when used along with double buffering option or when playing with subtitles.</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>c_driver</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerSettingsVideoPage</receiver>
+        <slot>driverChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_codec</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerSettingsVideoPage</receiver>
+        <slot>codecChanged(int)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">driverChanged(int)</slot>
+    <slot access="protected">codecChanged(int)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="0"/>
+</UI>

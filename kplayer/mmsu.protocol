@@ -1,0 +1,15 @@
+[Protocol]
+exec=kplayer '%u'
+protocol=mmsu
+input=none
+output=none
+helper=true
+listing=
+reading=false
+writing=false
+makedir=false
+deleting=false
+Icon=kplayer
+Class=:internet
+Description=MMSU Protocol
+URIMode=url

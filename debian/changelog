@@ -1,0 +1,76 @@
+kplayer (0.5.2-1) unstable; urgency=low
+
+  * User manual
+  * Whats this hints
+  * Improved mouse wheel support
+  * Minor improvements and bug fixes
+  * New Hungarian and Polish translations
+
+ -- kiriuja <kplayer-debs@en-directo.net>  Tue, 05 Oct 2004 18:10:00 -0500
+
+kplayer (0.5.1-1) unstable; urgency=low
+
+  * GCC 3.4 and Qt 3.1 compilation fixes
+
+ -- kiriuja <kplayer-debs@en-directo.net>  Mon, 05 Jul 2004 18:10:00 -0500
+
+kplayer (0.5.0-1) unstable; urgency=low
+
+  * File properties
+  * Playing from I/O slaves
+  * Meta info in Konqueror
+  * mms:, pnm: and rtsp: URLs in Konqueror
+  * Zooming with mouse wheel
+  * Smoother seeking
+  * Bug fixes
+  * New Czech, Finnish and Simplified Chinese translations
+  * Most existing translations updated
+
+ -- kiriuja <kplayer-debs@en-directo.net>  Fri, 02 Jul 2004 18:10:00 -0500
+
+kplayer (0.4.0-1) unstable; urgency=low
+
+  * Playlist
+  * KPart
+  * Translations
+  * Bug fixes
+
+ -- kiriuja <kplayer-debs@en-directo.net>  Wed, 05 Nov 2003 18:10:00 -0500
+
+kplayer (0.3.1-1) unstable; urgency=low
+
+  * Bug fixes
+
+ -- kiriuja <kplayer-debs@en-directo.net>  Wed, 08 Aug 2003 18:10:00 -0500
+
+kplayer (0.3.0-1) unstable; urgency=low
+
+  * Configuration dialog
+  * Drag and drop support
+  * Message log
+  * Key bindings dialog
+  * More subtitle commands and options
+  * MPlayer error detection
+  * Bug fixes
+
+ -- kiriuja <kplayer-debs@en-directo.net>  Wed, 30 Jul 2003 18:10:00 -0500
+
+kplayer (0.2.0-1) unstable; urgency=low
+
+  * Options to maintain video aspect ratio
+  * Zooming
+  * Contrast, brightness, hue and saturation controls
+  * Subtitle loading
+  * Frame dropping options
+  * Persitence of options between sessions
+  * Option to use popup sliders instead of toolbars
+  * Only one instance allowed to run
+  * Many miscellaneous fixes
+
+ -- kiriuja <kplayer-debs@en-directo.net>  Wed, 26 Mar 2003 10:04:00 -0500
+
+kplayer (0.1.0-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- kiriuja <kplayer-debs@en-directo.net>  Tue, 4 Feb 2003 12:18:32 -0500

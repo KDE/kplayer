@@ -1,0 +1,14 @@
+Begin4
+Title:          KPlayer 
+Version:        0.5.2
+Entered-date:   2004-10-05
+Description:    KPlayer is a KDE media player based on MPlayer.
+Keywords:       MPlayer media movie video audio sound player KDE
+Author:         kplayer dash developer at en dash directo dot net (kiriuja)
+Maintained-by:  kplayer dash developer at en dash directo dot net (kiriuja)
+Primary-site: 
+Home-page:      http://kplayer.sourceforge.net/
+Original-site:  
+Platforms:      Linux and other Unices
+Copying-policy: GPL
+End

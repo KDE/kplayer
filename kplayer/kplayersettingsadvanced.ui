@@ -1,0 +1,532 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerSettingsAdvancedPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerSettingsAdvancedPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>1</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="caption">
+        <string>Advanced Settings</string>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>l_executable_path</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Executable path</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>c_executable_path</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Path to MPlayer executable</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Path to MPlayer executable, either absolute path or a name to look for in the current environment path.</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>c_executable_path</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Path to MPlayer executable</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Path to MPlayer executable, either absolute path or a name to look for in the current environment path.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>l_command_line</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Additional command &amp;line arguments</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>c_command_line</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Additional options to be passed to MPlayer</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Additional options that will be passed to MPlayer on the command line. See mplayer(1) manpage for a complete list of possible options. You can also choose this option for individual file or URL in File Properties.</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>c_command_line</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Additional options to be passed to MPlayer</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Additional options that will be passed to MPlayer on the command line. See mplayer(1) manpage for a complete list of possible options. You can also choose this option for individual file or URL in File Properties.</string>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout2</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>l_frame_drop</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Frame drop</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_frame_drop</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether and how MPlayer should drop frames</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. None disables dropping, Soft drops less frames, and Hard drops more frames and may sometimes break decoding. You can also choose this option for individual file or URL in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="0" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>none</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>soft</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>hard</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_frame_drop</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether and how MPlayer should drop frames</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. None disables dropping, Soft drops less frames, and Hard drops more frames and may sometimes break decoding. You can also choose this option for individual file or URL in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="0">
+                            <property name="name">
+                                <cstring>l_use_cache</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Cac&amp;he</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_use_cache</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use cache and set its size</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use cache and set its size. Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size. You can also choose this option for individual file or URL in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="1" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>none</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set size</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_use_cache</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use cache and set its size</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use cache and set its size. Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size. You can also choose this option for individual file or URL in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="1" column="2">
+                            <property name="name">
+                                <cstring>c_cache_size</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>60</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use cache and set its size</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use cache and set its size. Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size. You can also choose this option for individual file or URL in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="3">
+                            <property name="name">
+                                <cstring>l_cache_size_kb</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>kilobytes</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use cache and set its size</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use cache and set its size. Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size. You can also choose this option for individual file or URL in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="2" column="0">
+                            <property name="name">
+                                <cstring>l_build_index</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Build new index</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_build_index</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to build new index for seeking</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to build new index for seeking. Yes builds an index if the file does not have it, No tells MPlayer not to build index, and Force makes it always build an index. You can also choose this option for individual file or URL in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="2" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>yes</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>no</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>force</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_build_index</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to build new index for seeking</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to build new index for seeking. Yes builds an index if the file does not have it, No tells MPlayer not to build index, and Force makes it always build an index. You can also choose this option for individual file or URL in File Properties.</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_use_temporary_file</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Use temporary file for playing from KIOSlave</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Choose whether to use a temporary file for playing from KDE I/O Slave</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to use a temporary file for playing from KDE I/O Slave. This option has no effect for URLs passed directly to MPlayer. You can also choose it for individual file or URL in File Properties.</string>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout4</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>l_use_kioslave</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Use KIOSlave for</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use a KDE I/O Slave to play selected URL types</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use a KDE I/O Slave to play selected URL types. You can also choose this option for individual file or stream in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>c_use_kioslave_for_http</cstring>
+                            </property>
+                            <property name="text">
+                                <string>H&amp;TTP</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use a KDE I/O Slave to play HTTP URLs</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use a KDE I/O Slave to play HTTP URLs. You can also choose this option for individual file or stream in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>c_use_kioslave_for_ftp</cstring>
+                            </property>
+                            <property name="text">
+                                <string>FT&amp;P</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use a KDE I/O Slave to play FTP URLs</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use a KDE I/O Slave to play FTP URLs. You can also choose this option for individual file in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>c_use_kioslave_for_smb</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;SMB</string>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to use a KDE I/O Slave to play Samba URLs</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to use a KDE I/O Slave to play Samba URLs. You can also choose this option for individual file in File Properties.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>l_osd_level</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>OSD le&amp;vel</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>c_osd_level</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Choose what to display inside the video area</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose what to include in On Screen Display inside the video area. Since KPlayer can display almost everything outside the video area, the recommended choice is Subtitles Only.</string>
+                    </property>
+                </widget>
+                <widget class="QComboBox">
+                    <item>
+                        <property name="text">
+                            <string>subtitles only</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>subtitles, volume and seek</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>subtitles, volume, seek, timer and percentage</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>subtitles, volume, seek, timer, percentage and total time</string>
+                        </property>
+                    </item>
+                    <property name="name">
+                        <cstring>c_osd_level</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Choose what to display inside the video area</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose what to include in On Screen Display inside the video area. Since KPlayer can display almost everything outside the video area, the recommended choice is Subtitles Only.</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>c_use_cache</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerSettingsAdvancedPage</receiver>
+        <slot>cacheChanged(int)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">cacheChanged(int)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="0"/>
+</UI>

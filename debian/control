@@ -1,0 +1,17 @@
+Source: kplayer
+Section: x11
+Priority: optional
+Maintainer: kiriuja <kplayer-debs@en-directo.net>
+Build-Depends: debhelper (>> 3.0.0)
+Standards-Version: 3.5.8
+
+Package: kplayer
+Architecture: any
+Depends: ${shlibs:Depends}, mplayer | mplayer-k7 | mplayer-k6 | mplayer-686 | mplayer-586 | mplayer-386
+Replaces: kdelibs-data, kmplayer, kaffeine
+Description: A KDE media player based on MPlayer
+ KPlayer is a multimedia player based on the popular MPlayer.
+ It provides video, audio and subtitle playback from files,
+ URLs, DVDs, VCDs, audio CDs, TV, DVB and KDE I/O Slaves as
+ well as global and file specific options, various controls,
+ playlist, progress and status display, and a message log.

@@ -1,0 +1,15 @@
+[Protocol]
+exec=kplayer '%u'
+protocol=pnm
+input=none
+output=none
+helper=true
+listing=
+reading=false
+writing=false
+makedir=false
+deleting=false
+Icon=kplayer
+Class=:internet
+Description=PNM Protocol
+URIMode=url

@@ -1,0 +1,226 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="kplayer" version="4">
+<MenuBar>
+  <Menu name="file" noMerge="1"><text>&amp;File</text>
+    <Action name="file_open"/>
+    <Action name="file_open_url"/>
+    <Action name="file_open_recent"/>
+    <Separator lineSeparator="true"/>
+    <Action name="subtitles_load"/>
+    <Action name="subtitles_load_url"/>
+    <Action name="subtitles_unload"/>
+    <Separator lineSeparator="true"/>
+    <Action name="file_clear_log"/>
+    <Separator lineSeparator="true"/>
+    <Action name="file_properties"/>
+    <Separator lineSeparator="true"/>
+    <Action name="file_quit"/>
+  </Menu>
+  <Menu name="view" noMerge="1"><text>&amp;View</text>
+    <Action name="view_full_screen"/>
+    <Separator lineSeparator="true"/>
+    <Action name="view_zoom_in"/>
+    <Action name="view_zoom_out"/>
+    <Separator lineSeparator="true"/>
+    <Action name="view_zoom_1_2"/>
+    <Action name="view_zoom_1_1"/>
+    <Action name="view_zoom_3_2"/>
+    <Action name="view_zoom_2_1"/>
+    <Action name="view_zoom_5_2"/>
+    <Action name="view_zoom_3_1"/>
+    <Separator lineSeparator="true"/>
+    <Action name="view_original_aspect"/>
+    <Action name="view_current_aspect"/>
+    <Action name="view_aspect_4_3"/>
+    <Action name="view_aspect_16_9"/>
+  </Menu>
+  <Menu name="player" noMerge="1"><text>&amp;Player</text>
+    <Action name="player_play"/>
+    <Action name="player_pause"/>
+    <Action name="player_stop"/>
+    <Separator lineSeparator="true"/>
+    <Action name="player_forward"/>
+    <Action name="player_fast_forward"/>
+    <Action name="player_backward"/>
+    <Action name="player_fast_backward"/>
+    <Action name="player_start"/>
+    <Separator lineSeparator="true"/>
+    <Action name="player_soft_frame_drop"/>
+    <Action name="player_hard_frame_drop"/>
+    <Separator lineSeparator="true"/>
+    <Menu name="audio"><text>&amp;Audio</text>
+      <Action name="audio_volume_down"/>
+      <Action name="audio_volume_up"/>
+      <Action name="audio_mute"/>
+      <Separator lineSeparator="true"/>
+      <Action name="audio_delay_down"/>
+      <Action name="audio_delay_up"/>
+    </Menu>
+    <Menu name="video"><text>&amp;Video</text>
+      <Action name="video_contrast_down"/>
+      <Action name="video_contrast_up"/>
+      <Separator lineSeparator="true"/>
+      <Action name="video_brightness_down"/>
+      <Action name="video_brightness_up"/>
+      <Separator lineSeparator="true"/>
+      <Action name="video_hue_down"/>
+      <Action name="video_hue_up"/>
+      <Separator lineSeparator="true"/>
+      <Action name="video_saturation_down"/>
+      <Action name="video_saturation_up"/>
+    </Menu>
+    <Menu name="subtitles"><text>Subt&amp;itles</text>
+      <Action name="subtitles_show"/>
+      <Separator lineSeparator="true"/>
+      <Action name="subtitles_move_down"/>
+      <Action name="subtitles_move_up"/>
+      <Separator lineSeparator="true"/>
+      <Action name="subtitles_delay_decrease"/>
+      <Action name="subtitles_delay_increase"/>
+    </Menu>
+  </Menu>
+  <Menu name="playlist" noMerge="1"><text>P&amp;laylist</text>
+    <Action name="playlist_show"/>
+    <Action name="playlist_editor"/>
+    <Action name="playlist_toolbar"/>
+    <Separator lineSeparator="true"/>
+    <Action name="playlist_next"/>
+    <Action name="playlist_previous"/>
+    <Separator lineSeparator="true"/>
+    <Action name="playlist_loop"/>
+    <Action name="playlist_shuffle"/>
+    <Separator lineSeparator="true"/>
+    <Action name="playlist_lock"/>
+    <Action name="playlist_selection"/>
+    <Action name="playlist_transitory"/>
+    <Action name="playlist_playlist"/>
+    <Separator lineSeparator="true"/>
+    <Action name="playlist_rename"/>
+    <Action name="playlist_properties"/>
+    <Separator lineSeparator="true"/>
+    <Action name="playlist_move_up"/>
+    <Action name="playlist_move_down"/>
+    <Action name="playlist_remove"/>
+    <Action name="playlist_clear"/>
+  </Menu>
+  <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
+    <Action name="options_show_menubar"/>
+    <Action name="options_show_statusbar"/>
+    <Action name="options_show_log"/>
+    <Separator lineSeparator="true"/>
+    <Action name="options_show_toolbar"/>
+    <Action name="settings_progress_toolbar"/>
+    <Action name="settings_volume_toolbar"/>
+    <Separator lineSeparator="true"/>
+    <Action name="settings_contrast_toolbar"/>
+    <Action name="settings_brightness_toolbar"/>
+    <Action name="settings_hue_toolbar"/>
+    <Action name="settings_saturation_toolbar"/>
+    <Separator lineSeparator="true"/>
+    <Action name="options_configure_keybinding"/>
+    <Action name="options_configure"/>
+  </Menu>
+</MenuBar>
+<ToolBar name="mainToolBar" noMerge="1">
+  <Action name="file_open"/>
+  <Action name="file_open_url"/>
+  <Action name="file_properties"/>
+  <Separator lineSeparator="true"/>
+  <Action name="player_play"/>
+  <Action name="player_pause"/>
+  <Action name="player_stop"/>
+  <Separator lineSeparator="true"/>
+  <Action name="view_zoom_in"/>
+  <Action name="view_zoom_out"/>
+  <Action name="view_maintain_aspect"/>
+  <Action name="view_full_screen"/>
+  <Separator lineSeparator="true"/>
+  <Action name="popup_volume"/>
+  <Action name="popup_contrast"/>
+  <Action name="popup_brightness"/>
+  <Action name="popup_hue"/>
+  <Action name="popup_saturation"/>
+</ToolBar>
+<ToolBar name="volumeToolBar">
+  <Action name="settings_volume_toolbar"/>
+  <Action name="audio_volume"/>
+  <Action name="audio_mute"/>
+</ToolBar>
+<ToolBar name="contrastToolBar">
+  <Action name="settings_contrast_toolbar"/>
+  <Action name="video_contrast"/>
+</ToolBar>
+<ToolBar name="brightnessToolBar">
+  <Action name="settings_brightness_toolbar"/>
+  <Action name="video_brightness"/>
+</ToolBar>
+<ToolBar name="hueToolBar">
+  <Action name="settings_hue_toolbar"/>
+  <Action name="video_hue"/>
+</ToolBar>
+<ToolBar name="saturationToolBar">
+  <Action name="settings_saturation_toolbar"/>
+  <Action name="video_saturation"/>
+</ToolBar>
+<ToolBar name="progressToolBar">
+  <Action name="player_fast_backward"/>
+  <Action name="player_progress"/>
+  <Action name="player_fast_forward"/>
+</ToolBar>
+<ToolBar name="playlistToolBar">
+  <Action name="playlist_previous"/>
+  <Action name="playlist_next"/>
+  <Action name="playlist_list"/>
+  <Action name="playlist_loop"/>
+  <Action name="playlist_shuffle"/>
+</ToolBar>
+<ToolBar name="editorToolBar">
+  <Action name="playlist_lock"/>
+  <Action name="playlist_move_up"/>
+  <Action name="playlist_move_down"/>
+  <Action name="playlist_remove"/>
+  <Action name="playlist_clear"/>
+</ToolBar>
+<Menu name="player_popup">
+  <Action name="file_open"/>
+  <Action name="file_open_url"/>
+  <Separator lineSeparator="true"/>
+  <Action name="file_properties"/>
+  <Separator lineSeparator="true"/>
+  <Action name="player_play"/>
+  <Action name="player_pause"/>
+  <Action name="player_stop"/>
+  <Separator lineSeparator="true"/>
+  <Action name="view_maintain_aspect"/>
+  <Action name="view_full_screen"/>
+  <Separator lineSeparator="true"/>
+  <Menu name="showhide"><text>&amp;Settings</text>
+    <Action name="options_show_menubar"/>
+    <Action name="options_show_statusbar"/>
+    <Action name="options_show_log"/>
+    <Action name="playlist_show"/>
+    <Action name="playlist_editor"/>
+    <Separator lineSeparator="true"/>
+    <Action name="options_show_toolbar"/>
+    <Action name="settings_progress_toolbar"/>
+    <Action name="settings_volume_toolbar"/>
+  </Menu>
+  <Separator lineSeparator="true"/>
+  <Action name="file_quit"/>
+</Menu>
+<Menu name="playlist_popup">
+  <Action name="playlist_play"/>
+  <Separator lineSeparator="true"/>
+  <Action name="playlist_rename"/>
+  <Action name="playlist_properties"/>
+  <Separator lineSeparator="true"/>
+  <Action name="playlist_lock"/>
+  <Action name="playlist_selection"/>
+  <Separator lineSeparator="true"/>
+  <Action name="playlist_move_up"/>
+  <Action name="playlist_move_down"/>
+  <Separator lineSeparator="true"/>
+  <Action name="playlist_remove"/>
+  <Action name="playlist_clear"/>
+</Menu>
+</kpartgui>

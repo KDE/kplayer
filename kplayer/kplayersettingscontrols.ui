@@ -1,0 +1,373 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerSettingsControlsPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerSettingsControlsPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>648</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Control Settings</string>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_shift</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Remember for current file any changes made with Shift</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember changes made while holding Shift key down in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember in file properties for currently loaded file any changes and adjustments made while holding Shift key down. Particularly useful with volume, contrast, brightness and aspect settings, but also works with other options listed (but not checked) below.</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QFrame" row="1" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>l_remember</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Always remember the following settings for each file</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Always remember in file properties for current file any changes made to settings selected below</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember in file properties for currently loaded file any changes and adjustments made to the settings you select below. The selected settings will be stored even if you do not hold Shift. Most useful for settings that are almost always file specific, like subtitle URL, subtitle delay and audio delay.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>c_spacer</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>1</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>16</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>16</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="1" column="1">
+                    <property name="name">
+                        <cstring>c_size</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Display si&amp;ze</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember display size you choose by resizing KPlayer window in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember in file properties for currently loaded file the video display size you choose by resizing KPlayer window. If this option is not selected, you can still make KPlayer remember the display size by holding down Shift key before and while you resize the window.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="2" column="1">
+                    <property name="name">
+                        <cstring>c_aspect</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Displa&amp;y aspect</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember video aspect in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember in file properties for currently loaded file the video aspect you choose by using commands on View menu. If this option is selected, KPlayer will remember video aspect in the current file properties, then automatically reset it to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember the video aspect by holding down Shift key when choosing an aspect command.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="3" column="1">
+                    <property name="name">
+                        <cstring>c_full_screen</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Full screen</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember full screen display option in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember in file properties for currently loaded file the full screen option you choose on View menu. If this option is selected, KPlayer will remember full screen option in the current file properties, then automatically reset it to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember the full screen option by holding down Shift key when choosing it.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="4" column="1">
+                    <property name="name">
+                        <cstring>c_maximized</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Ma&amp;ximized</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember maximized window state in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember in file properties for currently loaded file the maximized window state. If this option is selected, KPlayer will remember maximized state in the current file properties, then automatically reset it to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember the maximized state by holding down Shift key when maximizing KPlayer window.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="5" column="1">
+                    <property name="name">
+                        <cstring>c_maintain_aspect</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Maintain aspect</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember maintain aspect option in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember in file properties for currently loaded file the maintain aspect option. If this option is selected, KPlayer will remember maintain aspect option in the current file properties, then automatically reset it to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember the maintain aspect option by holding down Shift key when clicking the maintain aspect toolbar button or choosing an aspect option from View menu.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="6" column="1">
+                    <property name="name">
+                        <cstring>c_volume</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Volume</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember volume adjustments in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember volume adjustments in file properties for currently loaded file. If this option is selected, KPlayer will remember volume adjustments in the current file properties, then automatically reset volume to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember volume adjustments by holding down Shift key when making them.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="7" column="1">
+                    <property name="name">
+                        <cstring>c_audio_delay</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Audio d&amp;elay</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember audio delay in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember audio delay in file properties for currently loaded file. If this option is selected, KPlayer will remember audio delay in the current file properties, then automatically reset audio delay when another file is loaded. If this option is not selected, you can still make KPlayer remember audio delay by holding down Shift key when changing it.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="8" column="1">
+                    <property name="name">
+                        <cstring>c_frame_drop</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Frame dro&amp;p</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember frame dropping option in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember frame dropping option in file properties for currently loaded file. If this option is selected, KPlayer will remember frame dropping option in the current file properties, then automatically reset frame dropping to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember frame dropping option by holding down Shift key when choosing it from Player menu.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="1" column="2">
+                    <property name="name">
+                        <cstring>c_contrast</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Co&amp;ntrast</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember contrast adjustments in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember contrast adjustments in file properties for currently loaded file. If this option is selected, KPlayer will remember contrast adjustments in the current file properties, then automatically reset contrast to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember contrast adjustments by holding down Shift key when making them.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="2" column="2">
+                    <property name="name">
+                        <cstring>c_brightness</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Brightness</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember brightness adjustments in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember brightness adjustments in file properties for currently loaded file. If this option is selected, KPlayer will remember brightness adjustments in the current file properties, then automatically reset brightness to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember brightness adjustments by holding down Shift key when making them.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="3" column="2">
+                    <property name="name">
+                        <cstring>c_hue</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Hue</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember hue adjustments in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember hue adjustments in file properties for currently loaded file. If this option is selected, KPlayer will remember hue adjustments in the current file properties, then automatically reset hue to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember hue adjustments by holding down Shift key when making them.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="4" column="2">
+                    <property name="name">
+                        <cstring>c_saturation</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Sa&amp;turation</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember saturation adjustments in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember saturation adjustments in file properties for currently loaded file. If this option is selected, KPlayer will remember saturation adjustments in the current file properties, then automatically reset saturation to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember saturation adjustments by holding down Shift key when making them.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="5" column="2">
+                    <property name="name">
+                        <cstring>c_subtitle_url</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Subtitle &amp;URL</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember subtitle URL in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember subtitle URL in file properties for currently loaded file. If this option is not selected, you can still make KPlayer remember subtitles by holding down Shift key when loading them by using Load Subtitles or Load Subtitle URL command on File menu.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="6" column="2">
+                    <property name="name">
+                        <cstring>c_subtitle_visibility</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Subtitle v&amp;isibility</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember subtitle visibility in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember subtitle visibility in file properties for currently loaded file. If this option is not selected, you can still make KPlayer remember subtitle visibility by holding down Shift key when changing it using Show command on Player/Subtitles menu.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="7" column="2">
+                    <property name="name">
+                        <cstring>c_subtitle_position</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Subtitle po&amp;sition</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember subtitle vertical position in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember subtitle vertical position in file properties for currently loaded file. If this option is selected, KPlayer will remember subtitle position in the current file properties, then automatically reset subtitle position when another file is loaded. If this option is not selected, you can still make KPlayer remember subtitle position by holding down Shift key when changing it.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="8" column="2">
+                    <property name="name">
+                        <cstring>c_subtitle_delay</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Subtitle de&amp;lay</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember subtitle delay in file properties for current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember subtitle delay in file properties for currently loaded file. If this option is selected, KPlayer will remember subtitle delay in the current file properties, then automatically reset subtitle delay when another file is loaded. If this option is not selected, you can still make KPlayer remember subtitle delay by holding down Shift key when changing it.</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>c_size</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>KPlayerSettingsControlsPage</receiver>
+        <slot>rememberSizeChanged(bool)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">rememberSizeChanged(bool)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="0"/>
+</UI>

@@ -1,0 +1,485 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerSettingsSubtitlesPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerSettingsSubtitlesPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Subtitle Settings</string>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>l_position_step</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Position adjustment a&amp;mount</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>c_position_step</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Amount of adjustment to subtitle vertical position when using Move Up/Down commands</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify the amount in percents of video height by which to move subtitles when using Move Up/Down commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>c_position_step</cstring>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>70</width>
+                            <height>32767</height>
+                        </size>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Amount of adjustment to subtitle vertical position when using Move Up/Down commands</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify the amount in percents of video height by which to move subtitles when using Move Up/Down commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="2">
+                    <property name="name">
+                        <cstring>l_position_percent</cstring>
+                    </property>
+                    <property name="text">
+                        <string>percent</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Amount of adjustment to subtitle vertical position when using Move Up/Down commands</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify the amount in percents of video height by which to move subtitles when using Move Up/Down commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>l_delay_step</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Delay adjustment a&amp;mount</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>c_delay_step</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Amount of adjustment to subtitle delay when using Increase/Decrease commands</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify the amount in seconds by which to change subtitle delay when using Increase/Decrease Delay commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="1" column="1">
+                    <property name="name">
+                        <cstring>c_delay_step</cstring>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>70</width>
+                            <height>32767</height>
+                        </size>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Amount of adjustment to subtitle delay when using Increase/Decrease commands</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify the amount in seconds by which to change subtitle delay when using Increase/Decrease Delay commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="2">
+                    <property name="name">
+                        <cstring>l_delay_seconds</cstring>
+                    </property>
+                    <property name="text">
+                        <string>seconds</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Amount of adjustment to subtitle delay when using Increase/Decrease commands</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify the amount in seconds by which to change subtitle delay when using Increase/Decrease Delay commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QFrame" row="1" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox" row="0" column="0" rowspan="1" colspan="5">
+                    <property name="name">
+                        <cstring>c_subtitles_autoload</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Auto&amp;load subtitles</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load subtitle types selected below</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load subtitle types selected below by looking for subtitle files with the same name as the currently loaded file and the corresponding subtitle extension.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>c_spacer_1</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>1</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>16</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>16</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="1" column="1" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>c_subtitles_aqt</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>85</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>a&amp;qt</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load AQT subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load AQT subtitles by looking for subtitle files with the same name as the currently loaded file and AQT or aqt extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="1" column="3">
+                    <property name="name">
+                        <cstring>c_subtitles_jss</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>85</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>&amp;jss</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load JSS subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load JSS subtitles by looking for subtitle files with the same name as the currently loaded file and JSS or jss extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="1" column="4">
+                    <property name="name">
+                        <cstring>c_subtitles_rt</cstring>
+                    </property>
+                    <property name="text">
+                        <string>r&amp;t</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load RT subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load RT subtitles by looking for subtitle files with the same name as the currently loaded file and RT or rt extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="2" column="1" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>c_subtitles_smi</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>85</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>s&amp;mi</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load SMI subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load SMI subtitles by looking for subtitle files with the same name as the currently loaded file and SMI or smi extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="2" column="3">
+                    <property name="name">
+                        <cstring>c_subtitles_srt</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>85</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>s&amp;rt</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load SRT subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load SRT subtitles by looking for subtitle files with the same name as the currently loaded file and SRT or srt extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="2" column="4">
+                    <property name="name">
+                        <cstring>c_subtitles_ssa</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;ssa</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load SSA subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load SSA subtitles by looking for subtitle files with the same name as the currently loaded file and SSA or ssa extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="3" column="1" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>c_subtitles_sub</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>85</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>su&amp;b</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load SUB subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load SUB subtitles by looking for subtitle files with the same name as the currently loaded file and SUB or sub extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="3" column="3">
+                    <property name="name">
+                        <cstring>c_subtitles_txt</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>85</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>t&amp;xt</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load TXT subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load TXT subtitles by looking for subtitle files with the same name as the currently loaded file and TXT or txt extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="3" column="4">
+                    <property name="name">
+                        <cstring>c_subtitles_utf</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;utf</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load UTF subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load UTF subtitles by looking for subtitle files with the same name as the currently loaded file and UTF or utf extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="4" column="1" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>c_subtitles_other</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>85</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>ot&amp;her</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load subtitle files with extensions you enter below</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load subtitle files with extensions you enter in text field below, separated by commas, semicolons, colons, periods or spaces.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="5" column="1">
+                    <property name="name">
+                        <cstring>c_spacer_2</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>1</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>16</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>16</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="5" column="2" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>c_subtitles_list</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>200</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>List of extensions to use for automatically loading subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option that lets you give a list of extensions that will be used to automatically load subtitles. If you enter multiple extensions, separate them by commas, semicolons, colons, periods or spaces. Extensions you give will be converted to lower and upper case when looking for files. Subtitles with mixed case extensions cannot be autoloaded at this time.</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>c_subtitles_autoload</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>KPlayerSettingsSubtitlesPage</receiver>
+        <slot>autoloadSubtitlesChanged(bool)</slot>
+    </connection>
+    <connection>
+        <sender>c_subtitles_other</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>KPlayerSettingsSubtitlesPage</receiver>
+        <slot>otherSubtitlesChanged(bool)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">autoloadSubtitlesChanged(bool)</slot>
+    <slot access="protected">otherSubtitlesChanged(bool)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="0"/>
+</UI>

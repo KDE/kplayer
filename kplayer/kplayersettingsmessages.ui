@@ -1,0 +1,114 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerSettingsMessagesPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerSettingsMessagesPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Message Settings</string>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_show_on_error</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Show if a file fails to play</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Show message log if KPlayer encounters an error when trying to play a file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to show message log if KPlayer encounters an error when trying to play a file, so you can look at the end of the log to see what the error was.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_show_before</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Show &amp;before playing</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Show message log before starting to play a file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to show message log before starting to play a file. Select it if you want to always see messages while a file is being played.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_show_after</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Show after &amp;playing</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Show message log after a file finishes playing</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to show message log after a file finishes playing. Select it if you want to always see messages after playing a file.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>c_clear_before</cstring>
+                    </property>
+                    <property name="text">
+                        <string>C&amp;lear before playing</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remove all messages before starting to play a file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to remove all previous messages before starting to play a file. If you select this option and also select the option to show messages on error, KPlayer will keep messages from errored files until playback stops so you have a chance to review the errors.</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+    </grid>
+</widget>
+<layoutdefaults spacing="12" margin="0"/>
+</UI>

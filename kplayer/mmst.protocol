@@ -1,0 +1,15 @@
+[Protocol]
+exec=kplayer '%u'
+protocol=mmst
+input=none
+output=none
+helper=true
+listing=
+reading=false
+writing=false
+makedir=false
+deleting=false
+Icon=kplayer
+Class=:internet
+Description=MMST Protocol
+URIMode=url

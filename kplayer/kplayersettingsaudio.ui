@@ -1,0 +1,303 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerSettingsAudioPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerSettingsAudioPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>640</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Audio Settings</string>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget" row="0" column="0">
+                    <property name="name">
+                        <cstring>layout0</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>l_audio_driver</cstring>
+                            </property>
+                            <property name="text">
+                                <string>D&amp;river</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_driver</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio output to use for playing sound</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available audio outputs and lets you choose the one to use for playing sound. Recommended choices are OSS (the default) and ALSA (recommended when available). ARTS and SDL are not recommended. Auto will let MPlayer choose an audio output according to its own configuration. If you need to specify more than one output separated by comma, set this option to Auto and put them in Additional Command Line Arguments on Advanced page.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="0" column="1">
+                            <property name="name">
+                                <cstring>c_driver</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio output to use for playing sound</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available audio outputs and lets you choose the one to use for playing sound. Recommended choices are OSS (the default) and ALSA (recommended when available). ARTS and SDL are not recommended. Auto will let MPlayer choose an audio output according to its own configuration. If you need to specify more than one output separated by comma, set this option to Auto and put them in Additional Command Line Arguments on Advanced page.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox" row="1" column="1">
+                            <property name="name">
+                                <cstring>c_driver_fallback</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Fall back on others</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Specify whether to use other outputs if the chosen one fails</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify whether to use other outputs if the chosen one fails.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="2" column="0">
+                            <property name="name">
+                                <cstring>l_audio_device</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Dev&amp;ice</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_device</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio device to use for the chosen output</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify audio device to use for the chosen audio output. Leave blank to use the default device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="2" column="1">
+                            <property name="name">
+                                <cstring>c_device</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio device to use for the chosen output</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify audio device to use for the chosen audio output. Leave blank to use the default device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="3" column="0">
+                            <property name="name">
+                                <cstring>l_audio_codec</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Cod&amp;ec</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_codec</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Codec to use for decoding audio (Auto is recommended)</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available codecs and lets you choose the one to be used for decoding audio. Auto is the recommended choice, it lets MPlayer decide which codec to use automatically. If you need to tell MPlayer to use a particular codec for a given file or stream, set this option in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="3" column="1">
+                            <property name="name">
+                                <cstring>c_codec</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Codec to use for decoding audio (Auto is recommended)</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available codecs and lets you choose the one to be used for decoding audio. Auto is the recommended choice, it lets MPlayer decide which codec to use automatically. If you need to tell MPlayer to use a particular codec for a given file or stream, set this option in File Properties.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox" row="4" column="1">
+                            <property name="name">
+                                <cstring>c_codec_fallback</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Fa&amp;ll back on others</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Specify whether to use other codecs if the chosen one fails</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify whether to use other codecs if the chosen one fails.</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QLayoutWidget" row="1" column="0">
+                    <property name="name">
+                        <cstring>layout0</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>l_delay_step</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Delay adjustment a&amp;mount</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_delay_step</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Amount of adjustment to audio delay when using Increase/Decrease commands</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the amount in seconds by which to change audio delay when using Increase/Decrease Delay commands on Player/Audio menu or the corresponding keyboard shortcuts.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>c_delay_step</cstring>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Amount of adjustment to audio delay when using Increase/Decrease commands</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the amount in seconds by which to change audio delay when using Increase/Decrease Delay commands on Player/Audio menu or the corresponding keyboard shortcuts.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>l_delay_seconds</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>seconds</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Amount of adjustment to audio delay when using Increase/Decrease commands</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the amount in seconds by which to change audio delay when using Increase/Decrease Delay commands on Player/Audio menu or the corresponding keyboard shortcuts.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>c_driver</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerSettingsAudioPage</receiver>
+        <slot>driverChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_codec</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerSettingsAudioPage</receiver>
+        <slot>codecChanged(int)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">driverChanged(int)</slot>
+    <slot access="protected">codecChanged(int)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="0"/>
+</UI>

@@ -1,0 +1,57 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="kplayerpart" version="1">
+<MenuBar>
+  <Menu name="player"><text>&amp;Player</text>
+    <Action name="player_play"/>
+    <Action name="player_pause"/>
+    <Action name="player_stop"/>
+    <Separator lineSeparator="true"/>
+    <Action name="player_forward"/>
+    <Action name="player_fast_forward"/>
+    <Action name="player_backward"/>
+    <Action name="player_fast_backward"/>
+    <Action name="player_start"/>
+    <Separator lineSeparator="true"/>
+    <Action name="audio_volume_down"/>
+    <Action name="audio_volume_up"/>
+    <Action name="audio_mute"/>
+    <Separator lineSeparator="true"/>
+    <Action name="view_maintain_aspect"/>
+    <Action name="file_properties"/>
+    <Action name="player_launch"/>
+  </Menu>
+</MenuBar>
+<ToolBar name="mainToolBar">
+  <text>Main Toolbar</text>
+  <Separator lineSeparator="true"/>
+  <Action name="player_play"/>
+  <Action name="player_pause"/>
+  <Action name="player_stop"/>
+  <Action name="view_maintain_aspect"/>
+  <Action name="popup_volume"/>
+  <Action name="file_properties"/>
+</ToolBar>
+<ToolBar name="volumeToolBar">
+  <text>Volume Toolbar</text>
+  <Action name="settings_volume_toolbar"/>
+  <Action name="audio_volume"/>
+  <Action name="audio_mute"/>
+</ToolBar>
+<ToolBar name="progressToolBar">
+  <text>Progress Toolbar</text>
+  <Action name="player_fast_backward"/>
+  <Action name="player_progress"/>
+  <Action name="player_fast_forward"/>
+</ToolBar>
+<Menu name="player_popup">
+  <Action name="player_launch"/>
+  <Separator lineSeparator="true"/>
+  <Action name="player_play"/>
+  <Action name="player_pause"/>
+  <Action name="player_stop"/>
+  <Separator lineSeparator="true"/>
+  <Action name="view_maintain_aspect"/>
+  <Separator lineSeparator="true"/>
+  <Action name="file_properties"/>
+</Menu>
+</kpartgui>
