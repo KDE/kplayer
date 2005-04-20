@@ -13,6 +13,7 @@ Icon=kplayer
 Class=:internet
 Description=MMSU Protocol
 Description[br]=Komenad MMSU
+Description[cs]=MMSU protokol
 Description[da]=MMSU-protokol
 Description[es]=Protocolo MMSU
 Description[et]=MMSU-protokoll
