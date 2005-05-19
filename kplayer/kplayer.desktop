@@ -5,6 +5,7 @@ Exec=kplayer %U
 Icon=kplayer.png
 DocPath=kplayer/index.html
 Comment=Media player based on MPlayer
+Comment[cs]=Přehrávač médií založený na MPlayeru
 Comment[da]=Medieafspiller baseret på Mplayer
 Comment[es]=Un reproductor multimedia basado en MPlayer
 Comment[et]=MPlayeril põhinev meediamängija
