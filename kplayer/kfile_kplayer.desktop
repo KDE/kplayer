@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=Service
 Name=KPlayer File Info
 Name[da]=KPlayer Filiformation
+Name[el]=Αρχείο πληροφοριών του KMPlayer
 Name[es]=Información del fichero de KPlayer
 Name[et]=KPlayeri failiinfo
 Name[fr]=Informations sur le fichier KPlayer
