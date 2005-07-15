@@ -22,6 +22,7 @@ Comment[sr]=Медија плејер базиран на MPlayer-у
 Comment[sr@Latn]=Medija plejer baziran na MPlayer-u
 Comment[sv]=Mediaspelare baserad på Mplayer
 Comment[ta]=ஊடக ப்ளேயர் எம்ப்ளேயரின் அடிப்படையிலானது
+Comment[tr]=MPlayer tabanlı medya oynatıcı
 Terminal=false
 Name=KPlayer
 Name[fr]=KPlauer
