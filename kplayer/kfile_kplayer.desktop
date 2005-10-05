@@ -22,6 +22,7 @@ Name[sr@Latn]=KPlayer-ov fajl info
 Name[sv]=Kplayer filinformation
 Name[ta]=கேப்ளேயர் கோப்பு தகவல்
 Name[tr]=KPlayer Dosya Bilgisi
+Name[uk]=Інформація про файл KPlayer
 Name[xx]=xxKPlayer File Infoxx
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_kplayer
