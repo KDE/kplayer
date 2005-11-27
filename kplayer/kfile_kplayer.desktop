@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=KPlayer File Info
+Name[bg]=Информация за файл на KPlayer
 Name[br]=Titouroù diwar-benn ar restr KPlayer
 Name[da]=KPlayer Filiformation
 Name[de]=KPlayer Dateiinfo

@@ -12,6 +12,7 @@ deleting=false
 Icon=kplayer
 Class=:internet
 Description=RTSP Protocol
+Description[bg]=RTSP протокол
 Description[br]=Komenad RTSP
 Description[cs]=RTSP protokol
 Description[da]=RTSP-protokol

@@ -12,6 +12,7 @@ deleting=false
 Icon=kplayer
 Class=:internet
 Description=MMST Protocol
+Description[bg]=MMST протокол
 Description[br]=Komenad MMST
 Description[cs]=MMST protokol
 Description[da]=MMST-protokol
