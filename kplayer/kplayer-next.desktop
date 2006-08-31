@@ -1,0 +1,14 @@
+[Desktop Entry]
+ServiceTypes=audio/mpeg,audio/mp4,video/mpeg,video/x-mpeg,video/x-mpeg2,video/mp4,video/x-msmpeg,video/vnd.mpegurl,video/x-mpegurl,video/x-msvideo,video/quicktime,audio/x-ms-asf,audio/x-ms-wma,audio/x-ms-wax,audio/x-ms-wmp,video/x-ms-asf,video/x-ms-afs,video/x-ms-wmp,video/x-ms-wmv,video/x-ms-wma,video/x-ms-wvx,video/x-ms-wmx,application/x-ms-asf,application/vnd.ms-asf,audio/x-scpls,audio/x-pls,audio/vnd.mpegurl,audio/x-mpegurl,audio/x-realaudio,audio/x-pn-realaudio,audio/x-pn-realaudio-plugin,application/x-pn-realaudio,audio/vnd.rn-realaudio,video/x-realvideo,video/x-pn-realvideo,video/vnd.rn-realvideo,video/x-pn-realvideo-plugin,application/vnd.rn-realmedia,application/vnd.rn-realplayer,application/smil,video/nsv,audio/x-mp3,video/x-ogm,video/x-theora,audio/vorbis,audio/x-vorbis,audio/x-oggflac,application/x-ogg,application/ogg,audio/x-mp2,audio/x-wav,video/x-avi,video/x-divx,video/x-matroska,audio/x-matroska,application/x-mplayer2,application/x-cda,audio/aac,audio/ac3,audio/basic,audio/x-adpcm,inode/directory,media/cdrom_mounted,media/cdrom_unmounted,media/cdwriter_mounted,media/cdwriter_unmounted,media/dvd_mounted,media/dvd_unmounted,media/audiocd,media/dvdvideo,media/svcd,media/vcd
+Actions=PlayNext;QueueNext
+Encoding=UTF8
+
+[Desktop Action PlayNext]
+Name=Play next
+Icon=kplayer
+Exec=kplayer --play-next %U
+
+[Desktop Action QueueNext]
+Name=Queue next
+Icon=kplayer
+Exec=kplayer --queue-next %U

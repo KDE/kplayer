@@ -1,0 +1,14 @@
+[Desktop Entry]
+ServiceTypes=inode/directory
+Actions=AddToPlaylists;AddToCollection
+Encoding=UTF8
+
+[Desktop Action AddToPlaylists]
+Name=Add to playlists
+Icon=kplayer
+Exec=kplayer --add-to-playlists %U
+
+[Desktop Action AddToCollection]
+Name=Add to collection
+Icon=kplayer
+Exec=kplayer --add-to-collection %U
