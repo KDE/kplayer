@@ -1,3 +1,131 @@
+0.6 release
+ + Sources
+  + Root
+  + Directory
+  + Store
+  + Origin
+  + List
+  + Devices
+  + Device
+   + CD
+   + DVD
+   + TV
+   + DVB
+ + Order
+  + By name
+  + By key
+  + Custom
+ + Metadata
+  + Extract
+   + MIME type
+   + Icon
+  + Store
+  + Display
+  + Update
+  + Change
+  + Video IDs
+  + Audio IDs
+  + Subtitle IDs
+  + Demuxer
+ + Library
+  + Node sync
+  + Columns
+   + Hiding
+   + Moving
+   + Meta sync
+  + Drag and drop
+   + Copy
+   + Link
+   + Move
+   + Set action
+   + Reorder
+   + URL
+  + Context menu
+   + Play
+   + Queue next
+   + Queue
+   + Add files
+   + Add URL
+   + Add group
+   + Save as playlist
+   + Add to playlist
+   + Add to collection
+   + Open
+   + Rename/Edit
+   + Properties
+   + Move up
+   + Move down
+   + Select all
+   + Remove
+   + Go back
+   + Go forward
+   + Go up
+   + Go down
+   + Go to source
+ + Playlist
+  + Play file
+  + Play URL
+  + Play recent
+  + List
+  + Play
+  + Next
+  + Previous
+  + Loop
+  + Shuffle
+   + Restore order
++ Menus
+ + File
+  + Play
+  + Play URL
+  + Play Recent
+  + DVD
+   + Load
+   + Play title
+   + Play DVD
+  + VCD
+   + Load
+   + Play track
+   + Play VCD
+  + Audio CD
+   + Load
+   + Play track
+   + Play CD
+  + TV
+   + Play channel
+  + DVB
+   + Play channel
+  + Library
+   + Now Playing
+   + Playlists
+   + Collection
+   + Devices
+   + Root
+   + Home
+ + Configure toolbars
+ Bugs
+  Order of relative options
+  Auto expand in tree
+  Aspect calculation
+  Auto resize cleared
+  Junk config entries
+  Move edit after scrolling
+  Duplicate recent entries
+  Shift with shortcuts
+  Main window popping up
+  Resizing and moving
+  Xinerama
+  Capitalize command names
+  Disable full screen when not playing
+  Maintain aspect when size fixed
+  Restore maintain aspect on part unload
+  Irish channel list
+ Testing
+  Allow duplicates
+  Empty config
+ Update input.conf
+ Update documentation
+ Update release info
+
 Basic functionality
  + Open file
  + Open URL
@@ -34,8 +162,13 @@ Additional controls
  + Audio delay
    Tooltips when dragging a slider
    Toolbar configuration dialog
-   Equalizer
+   Volume control mode
+    PCM
+    Master
+    Native
+   Audio equalizer
    Always on top
+   Quit when done playing
    Recording
 
 Subtitles
@@ -46,6 +179,11 @@ Subtitles
  + Delay
  + Position
  + Visibility
+   Alignment
+   Font face
+   Font size
+   Font style
+   Font scaling
 
 Configuration dialog
  + Tree like interface
@@ -56,11 +194,28 @@ Configuration dialog
  + Cache size
    Filters
    Fine-tuning wizard
+   Decimals in position and length
 
 Playlist
+ + Play file
+ + Play URL
+ + Play recent
+ + List
+ + Play
+ + Next
+ + Previous
+ + Loop
+ + Shuffle
+   Queue next
+   Edit
+   Move up
+   Move down
+   Remove
+
+Multimedia library
  + Name
  + Path or URL
- + Type
+   Type
  + Length
  + Video size
  + Formats
@@ -70,18 +225,32 @@ Playlist
  + Size limit
  + Settings
    Remove missing files
-   Make combo box editable
-   Saving and loading
-   Hierarchical structure and navigation
+ + Hierarchical structure
+   + Directories as playlists
+   + Meta information
+   Accumulate
+   Grouping
+   Sources
+    + Root
+    + Directory
+    + Store
+    + Origin
+    + List
+    + Devices
+    + Device
+      + CD
+      + DVD
+      + TV
+      + DVB
+      Group
+      Key
+      Search
+      Playlist
+      Slave
    Hierarchical shuffling
    Searching
    Bookmarks
    Filtering
-   Directories as playlists
-   Author
-   Album
-   Title
-   Genre
 
 Per file options
  + Properties dialog
@@ -89,6 +258,7 @@ Per file options
  + Controls page in Settings
 
 Tabbed interface
+ Dock windows
 
 Documentation
  + Readme
@@ -96,16 +266,22 @@ Documentation
  + HowTo
  + Handbook
 
-DVD and VCD support
- + Playback using dvd:// urls
-   Menus
+DVD, VCD and Audio CD
+ + Tracks
+ + Titles
    Chapters
-   Titles
+   Menus
    Navigation
-   Audio language
-   Subtitles by id or language
-   Devices
+ + Video stream
+ + Audio stream
+ + Subtitle stream
+ + Devices
    Eject
+
+TV and DVB
+ + Devices
+ + Channels
+ + Frequencies
 
 KDE Integration
  + MIME file types
@@ -115,10 +291,3 @@ KDE Integration
    Window manager size hints
    Do not show windows in task bar
    Remember dialog position
-
-Advanced options
-   DVD options
-   VCD options
-   CD options
-   TV options
-   Just about every option from mplayer(1)

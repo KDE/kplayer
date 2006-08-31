@@ -7,12 +7,10 @@
  ***************************************************************************/
 
 /***************************************************************************
- *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
- *                                                                         *
  ***************************************************************************/
 
 #include <kapplication.h>
@@ -22,14 +20,14 @@
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 
-#include <kdebug.h>
+#ifdef DEBUG
+#define DEBUG_KPLAYER_SLIDERS
+#endif
 
 #include "kplayerslideraction.h"
 #include "kplayerslideraction.moc"
 #include "kplayerengine.h"
 #include "kplayersettings.h"
-
-#define DEBUG_KPLAYER_SLIDERS
 
 void KPlayerPopupFrame::keyPressEvent (QKeyEvent* ev)
 {
@@ -185,7 +183,7 @@ KPlayerSlider::~KPlayerSlider()
 QSize KPlayerSlider::sizeHint() const
 {
   QSize hint = QSlider::sizeHint();
-  int length = kPlayerSettings() -> preferredSliderLength();
+  int length = KPlayerEngine::engine() -> configuration() -> preferredSliderLength();
   if ( orientation() == Qt::Horizontal )
   {
     if ( hint.width() < length )
@@ -203,7 +201,7 @@ QSize KPlayerSlider::minimumSizeHint() const
 {
 //kdDebugTime() << "KPlayerSlider minimum size hint\n";
   QSize hint = QSlider::minimumSizeHint();
-  int length = kPlayerSettings() -> minimumSliderLength();
+  int length = KPlayerEngine::engine() -> configuration() -> minimumSliderLength();
   if ( orientation() == Qt::Horizontal )
   {
     if ( hint.width() < length )

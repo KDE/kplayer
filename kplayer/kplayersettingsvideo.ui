@@ -60,7 +60,7 @@
                         </property>
                         <widget class="QLabel" row="0" column="0">
                             <property name="name">
-                                <cstring>l_video_driver</cstring>
+                                <cstring>l_driver</cstring>
                             </property>
                             <property name="text">
                                 <string>D&amp;river</string>
@@ -97,23 +97,9 @@
                                 <string>Option that lists available video outputs and lets you choose the one to use for playing video. Recommended choice depends on the video card you have. For Matrox card try XMGA, for other cards either XVidix (if supported) or XVideo provide the best quality. With NVidia drivers you can also try XVMC output. If after trying hard you cannot make any of these work, you can use X11 output as the last resort. Video outputs that open a separate window instead of using KPlayer video area are not recommended. Auto will let MPlayer choose a video output according to its own configuration. If you need to specify more than one output separated by comma, set this option to Auto and put them in Additional Command Line Arguments on Advanced page.</string>
                             </property>
                         </widget>
-                        <widget class="QCheckBox" row="1" column="1">
+                        <widget class="QLabel" row="1" column="0">
                             <property name="name">
-                                <cstring>c_driver_fallback</cstring>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Fall back on others</string>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Specify whether to use other outputs if the chosen one fails</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to specify whether to use other outputs if the chosen one fails.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="2" column="0">
-                            <property name="name">
-                                <cstring>l_video_device</cstring>
+                                <cstring>l_device</cstring>
                             </property>
                             <property name="text">
                                 <string>Dev&amp;ice</string>
@@ -131,7 +117,7 @@
                                 <string>Option to specify video device to use for the chosen video output. Leave blank to use the default device.</string>
                             </property>
                         </widget>
-                        <widget class="QLineEdit" row="2" column="1">
+                        <widget class="QLineEdit" row="1" column="1">
                             <property name="name">
                                 <cstring>c_device</cstring>
                             </property>
@@ -159,9 +145,9 @@
                                 <string>Option to specify video device to use for the chosen video output. Leave blank to use the default device.</string>
                             </property>
                         </widget>
-                        <widget class="QLabel" row="3" column="0">
+                        <widget class="QLabel" row="2" column="0">
                             <property name="name">
-                                <cstring>l_video_codec</cstring>
+                                <cstring>l_codec</cstring>
                             </property>
                             <property name="text">
                                 <string>Cod&amp;ec</string>
@@ -179,7 +165,7 @@
                                 <string>Option that lists available codecs and lets you choose the one to be used for decoding video. Auto is the recommended choice, it lets MPlayer decide which codec to use automatically. If you need to tell MPlayer to use a particular codec for a given file or stream, set this option in File Properties.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="3" column="1">
+                        <widget class="QComboBox" row="2" column="1">
                             <property name="name">
                                 <cstring>c_codec</cstring>
                             </property>
@@ -198,23 +184,9 @@
                                 <string>Option that lists available codecs and lets you choose the one to be used for decoding video. Auto is the recommended choice, it lets MPlayer decide which codec to use automatically. If you need to tell MPlayer to use a particular codec for a given file or stream, set this option in File Properties.</string>
                             </property>
                         </widget>
-                        <widget class="QCheckBox" row="4" column="1">
+                        <widget class="QLabel" row="3" column="0">
                             <property name="name">
-                                <cstring>c_codec_fallback</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Fa&amp;ll back on others</string>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Specify whether to use other codecs if the chosen one fails</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to specify whether to use other codecs if the chosen one fails.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="5" column="0">
-                            <property name="name">
-                                <cstring>l_video_scaler</cstring>
+                                <cstring>l_scaler</cstring>
                             </property>
                             <property name="text">
                                 <string>&amp;Scaler</string>
@@ -232,7 +204,7 @@
                                 <string>Option to specify the video scaler to be used when doing software scaling. Software scaling consumes considerable amount of system resources, so unless you have plenty of them and software scaling gives you better image quality, you should choose a video output above that uses hardware scaling.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="5" column="1">
+                        <widget class="QComboBox" row="3" column="1">
                             <property name="name">
                                 <cstring>c_scaler</cstring>
                             </property>

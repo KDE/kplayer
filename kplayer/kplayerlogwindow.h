@@ -16,6 +16,7 @@
 #ifndef KPLAYERLOGWINDOW_H
 #define KPLAYERLOGWINDOW_H
 
+#include <kaction.h>
 #include <ktextedit.h>
 #include <qdockwindow.h>
 
@@ -27,7 +28,7 @@ class KPlayerLogWidget : public KTextEdit
    Q_OBJECT
 
 public: 
-  KPlayerLogWidget (QWidget* parent = 0, const char* name = 0);
+  KPlayerLogWidget (KActionCollection* ac, QWidget* parent = 0, const char* name = 0);
 
   /** Returns whether there is an error in the log. */
   bool hasError (void)
@@ -35,13 +36,34 @@ public:
   /** Sets an error condition. */
   void setError (bool);
 
+  /** Returns the popup menu. */
+  QPopupMenu* popupMenu (void) const
+    { return m_popup; }
+  /** Sets the popup menu. */
+  void setPopupMenu (QPopupMenu* menu)
+    { m_popup = menu; }
+
+  /** Retrieves an action from the action collection by name. */
+  KAction* action (const char* name) const
+    { return m_ac -> action (name); }
+
 public slots:
   virtual void clear (void);
+
+protected slots:
+  /** Updates actions according to the current state. */
+  void updateActions (void);
 
 protected:
   virtual void showEvent (QShowEvent*);
   virtual void resizeEvent (QResizeEvent*);
+  /** Displays the right click popup menu. */
+  virtual void contextMenuEvent (QContextMenuEvent*);
 
+  /** Action collection. */
+  KActionCollection* m_ac;
+  /** Popup menu. */
+  QPopupMenu* m_popup;
   /** Error condition flag. */
   bool m_error;
   /** Error location. */
@@ -51,21 +73,20 @@ protected:
 /**The KPlayer log window.
   *@author kiriuja
   */
-
 class KPlayerLogWindow : public QDockWindow
 {
    Q_OBJECT
 
 public: 
-  KPlayerLogWindow (QWidget* parent = 0, const char* name = 0);
+  KPlayerLogWindow (KActionCollection* ac, QWidget* parent = 0, const char* name = 0);
 
-  KPlayerLogWidget* kPlayerLogWidget (void)
+  void initialize (QPopupMenu* menu);
+
+  KPlayerLogWidget* logWidget (void)
     { return (KPlayerLogWidget*) widget(); }
 
   void addLine (const QString& line)
     { ((KPlayerLogWidget*) widget()) -> append (line); }
-  void clear (void)
-    { ((KPlayerLogWidget*) widget()) -> clear(); }
   bool isEmpty (void)
     { return ((KPlayerLogWidget*) widget()) -> text().isEmpty(); }
 

@@ -60,6 +60,80 @@
                         </property>
                         <widget class="QLabel" row="0" column="0">
                             <property name="name">
+                                <cstring>l_track</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Track</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_track_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video track to play</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the video track to play.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="0" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set ID</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_track_set</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video track to play</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the video track to play.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="0" column="2">
+                            <property name="name">
+                                <cstring>c_track</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video track to play</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the video track to play.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="0">
+                            <property name="name">
                                 <cstring>l_contrast</cstring>
                             </property>
                             <property name="text">
@@ -76,90 +150,6 @@
                             </property>
                             <property name="whatsThis" stdset="0">
                                 <string>Option to adjust video contrast level for this file. Default uses the same contrast as for other files, Set To adjusts contrast to the given level, Add and Subtract turn contrast up and down respectively by the given amount. It is easier to set this option by moving contrast slider while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QComboBox" row="0" column="1">
-                            <item>
-                                <property name="text">
-                                    <string>default</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>set to</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>add</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>subtract</string>
-                                </property>
-                            </item>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="name">
-                                <cstring>c_contrast_set</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Video contrast level for this file</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to adjust video contrast level for this file. Default uses the same contrast as for other files, Set To adjusts contrast to the given level, Add and Subtract turn contrast up and down respectively by the given amount. It is easier to set this option by moving contrast slider while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="0" column="2">
-                            <property name="name">
-                                <cstring>c_contrast</cstring>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Video contrast level for this file</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to adjust video contrast level for this file. Default uses the same contrast as for other files, Set To adjusts contrast to the given level, Add and Subtract turn contrast up and down respectively by the given amount. It is easier to set this option by moving contrast slider while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="0" column="3">
-                            <property name="name">
-                                <cstring>l_empty</cstring>
-                            </property>
-                            <property name="text">
-                                <string></string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="1" column="0">
-                            <property name="name">
-                                <cstring>l_brightness</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Bri&amp;ghtness</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_brightness_set</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Video brightness level for this file</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to adjust video brightness level for this file. Default uses the same brightness as for other files, Set To adjusts brightness to the given level, Add and Subtract turn brightness up and down respectively by the given amount. It is easier to set this option by moving brightness slider while holding Shift key down.</string>
                             </property>
                         </widget>
                         <widget class="QComboBox" row="1" column="1">
@@ -183,27 +173,27 @@
                                     <string>subtract</string>
                                 </property>
                             </item>
+                            <property name="name">
+                                <cstring>c_contrast_set</cstring>
+                            </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
-                                    <hsizetype>0</hsizetype>
+                                    <hsizetype>3</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
-                            <property name="name">
-                                <cstring>c_brightness_set</cstring>
-                            </property>
                             <property name="toolTip" stdset="0">
-                                <string>Video brightness level for this file</string>
+                                <string>Video contrast level for this file</string>
                             </property>
                             <property name="whatsThis" stdset="0">
-                                <string>Option to adjust video brightness level for this file. Default uses the same brightness as for other files, Set To adjusts brightness to the given level, Add and Subtract turn brightness up and down respectively by the given amount. It is easier to set this option by moving brightness slider while holding Shift key down.</string>
+                                <string>Option to adjust video contrast level for this file. Default uses the same contrast as for other files, Set To adjusts contrast to the given level, Add and Subtract turn contrast up and down respectively by the given amount. It is easier to set this option by moving contrast slider while holding Shift key down.</string>
                             </property>
                         </widget>
                         <widget class="QLineEdit" row="1" column="2">
                             <property name="name">
-                                <cstring>c_brightness</cstring>
+                                <cstring>c_contrast</cstring>
                             </property>
                             <property name="maximumSize">
                                 <size>
@@ -212,30 +202,46 @@
                                 </size>
                             </property>
                             <property name="toolTip" stdset="0">
-                                <string>Video brightness level for this file</string>
+                                <string>Video contrast level for this file</string>
                             </property>
                             <property name="whatsThis" stdset="0">
-                                <string>Option to adjust video brightness level for this file. Default uses the same brightness as for other files, Set To adjusts brightness to the given level, Add and Subtract turn brightness up and down respectively by the given amount. It is easier to set this option by moving brightness slider while holding Shift key down.</string>
+                                <string>Option to adjust video contrast level for this file. Default uses the same contrast as for other files, Set To adjusts contrast to the given level, Add and Subtract turn contrast up and down respectively by the given amount. It is easier to set this option by moving contrast slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="3">
+                            <property name="name">
+                                <cstring>l_empty</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string></string>
                             </property>
                         </widget>
                         <widget class="QLabel" row="2" column="0">
                             <property name="name">
-                                <cstring>l_hue</cstring>
+                                <cstring>l_brightness</cstring>
                             </property>
                             <property name="text">
-                                <string>&amp;Hue</string>
+                                <string>Bri&amp;ghtness</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignLeft</set>
                             </property>
                             <property name="buddy" stdset="0">
-                                <cstring>c_hue_set</cstring>
+                                <cstring>c_brightness_set</cstring>
                             </property>
                             <property name="toolTip" stdset="0">
-                                <string>Video hue for this file</string>
+                                <string>Video brightness level for this file</string>
                             </property>
                             <property name="whatsThis" stdset="0">
-                                <string>Option to adjust video hue for this file. Default uses the same hue as for other files, Set To adjusts hue to the given level, Add and Subtract turn hue up and down respectively by the given amount. It is easier to set this option by moving hue slider while holding Shift key down.</string>
+                                <string>Option to adjust video brightness level for this file. Default uses the same brightness as for other files, Set To adjusts brightness to the given level, Add and Subtract turn brightness up and down respectively by the given amount. It is easier to set this option by moving brightness slider while holding Shift key down.</string>
                             </property>
                         </widget>
                         <widget class="QComboBox" row="2" column="1">
@@ -259,27 +265,27 @@
                                     <string>subtract</string>
                                 </property>
                             </item>
+                            <property name="name">
+                                <cstring>c_brightness_set</cstring>
+                            </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
-                                    <hsizetype>0</hsizetype>
+                                    <hsizetype>3</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
-                            <property name="name">
-                                <cstring>c_hue_set</cstring>
-                            </property>
                             <property name="toolTip" stdset="0">
-                                <string>Video hue for this file</string>
+                                <string>Video brightness level for this file</string>
                             </property>
                             <property name="whatsThis" stdset="0">
-                                <string>Option to adjust video hue for this file. Default uses the same hue as for other files, Set To adjusts hue to the given level, Add and Subtract turn hue up and down respectively by the given amount. It is easier to set this option by moving hue slider while holding Shift key down.</string>
+                                <string>Option to adjust video brightness level for this file. Default uses the same brightness as for other files, Set To adjusts brightness to the given level, Add and Subtract turn brightness up and down respectively by the given amount. It is easier to set this option by moving brightness slider while holding Shift key down.</string>
                             </property>
                         </widget>
                         <widget class="QLineEdit" row="2" column="2">
                             <property name="name">
-                                <cstring>c_hue</cstring>
+                                <cstring>c_brightness</cstring>
                             </property>
                             <property name="maximumSize">
                                 <size>
@@ -288,30 +294,30 @@
                                 </size>
                             </property>
                             <property name="toolTip" stdset="0">
-                                <string>Video hue for this file</string>
+                                <string>Video brightness level for this file</string>
                             </property>
                             <property name="whatsThis" stdset="0">
-                                <string>Option to adjust video hue for this file. Default uses the same hue as for other files, Set To adjusts hue to the given level, Add and Subtract turn hue up and down respectively by the given amount. It is easier to set this option by moving hue slider while holding Shift key down.</string>
+                                <string>Option to adjust video brightness level for this file. Default uses the same brightness as for other files, Set To adjusts brightness to the given level, Add and Subtract turn brightness up and down respectively by the given amount. It is easier to set this option by moving brightness slider while holding Shift key down.</string>
                             </property>
                         </widget>
                         <widget class="QLabel" row="3" column="0">
                             <property name="name">
-                                <cstring>l_saturation</cstring>
+                                <cstring>l_hue</cstring>
                             </property>
                             <property name="text">
-                                <string>Saturatio&amp;n</string>
+                                <string>&amp;Hue</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignLeft</set>
                             </property>
                             <property name="buddy" stdset="0">
-                                <cstring>c_saturation_set</cstring>
+                                <cstring>c_hue_set</cstring>
                             </property>
                             <property name="toolTip" stdset="0">
-                                <string>Video saturation level for this file</string>
+                                <string>Video hue for this file</string>
                             </property>
                             <property name="whatsThis" stdset="0">
-                                <string>Option to adjust video saturation level for this file. Default uses the same saturation as for other files, Set To adjusts saturation to the given level, Add and Subtract turn saturation up and down respectively by the given amount. It is easier to set this option by moving saturation slider while holding Shift key down.</string>
+                                <string>Option to adjust video hue for this file. Default uses the same hue as for other files, Set To adjusts hue to the given level, Add and Subtract turn hue up and down respectively by the given amount. It is easier to set this option by moving hue slider while holding Shift key down.</string>
                             </property>
                         </widget>
                         <widget class="QComboBox" row="3" column="1">
@@ -335,15 +341,52 @@
                                     <string>subtract</string>
                                 </property>
                             </item>
+                            <property name="name">
+                                <cstring>c_hue_set</cstring>
+                            </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
-                                    <hsizetype>0</hsizetype>
+                                    <hsizetype>3</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video hue for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video hue for this file. Default uses the same hue as for other files, Set To adjusts hue to the given level, Add and Subtract turn hue up and down respectively by the given amount. It is easier to set this option by moving hue slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="3" column="2">
                             <property name="name">
+                                <cstring>c_hue</cstring>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video hue for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video hue for this file. Default uses the same hue as for other files, Set To adjusts hue to the given level, Add and Subtract turn hue up and down respectively by the given amount. It is easier to set this option by moving hue slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="4" column="0">
+                            <property name="name">
+                                <cstring>l_saturation</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Saturatio&amp;n</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
                                 <cstring>c_saturation_set</cstring>
                             </property>
                             <property name="toolTip" stdset="0">
@@ -353,7 +396,46 @@
                                 <string>Option to adjust video saturation level for this file. Default uses the same saturation as for other files, Set To adjusts saturation to the given level, Add and Subtract turn saturation up and down respectively by the given amount. It is easier to set this option by moving saturation slider while holding Shift key down.</string>
                             </property>
                         </widget>
-                        <widget class="QLineEdit" row="3" column="2">
+                        <widget class="QComboBox" row="4" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set to</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>add</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>subtract</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_saturation_set</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video saturation level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust video saturation level for this file. Default uses the same saturation as for other files, Set To adjusts saturation to the given level, Add and Subtract turn saturation up and down respectively by the given amount. It is easier to set this option by moving saturation slider while holding Shift key down.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="4" column="2">
                             <property name="name">
                                 <cstring>c_saturation</cstring>
                             </property>
@@ -370,7 +452,7 @@
                                 <string>Option to adjust video saturation level for this file. Default uses the same saturation as for other files, Set To adjusts saturation to the given level, Add and Subtract turn saturation up and down respectively by the given amount. It is easier to set this option by moving saturation slider while holding Shift key down.</string>
                             </property>
                         </widget>
-                        <widget class="QLabel" row="4" column="0">
+                        <widget class="QLabel" row="5" column="0">
                             <property name="name">
                                 <cstring>l_codec</cstring>
                             </property>
@@ -390,7 +472,7 @@
                                 <string>Option that lists available codecs and lets you choose the one to be used for this file. Default uses the option from KPlayer Settings, Auto lets MPlayer decide which codec to use automatically.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="4" column="1" colspan="3">
+                        <widget class="QComboBox" row="5" column="1" colspan="3">
                             <property name="name">
                                 <cstring>c_codec</cstring>
                             </property>
@@ -407,60 +489,6 @@
                             </property>
                             <property name="whatsThis" stdset="0">
                                 <string>Option that lists available codecs and lets you choose the one to be used for this file. Default uses the option from KPlayer Settings, Auto lets MPlayer decide which codec to use automatically.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="5" column="0">
-                            <property name="name">
-                                <cstring>l_fallback</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Fa&amp;llback</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_fallback</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Specify whether to use other codecs if the chosen one fails</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to specify whether to use other codecs if the chosen one fails. Default uses the option from KPlayer Settings.</string>
-                            </property>
-                        </widget>
-                        <widget class="QComboBox" row="5" column="1">
-                            <item>
-                                <property name="text">
-                                    <string>default</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>yes</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>no</string>
-                                </property>
-                            </item>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="name">
-                                <cstring>c_fallback</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Specify whether to use other codecs if the chosen one fails</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to specify whether to use other codecs if the chosen one fails. Default uses the option from KPlayer Settings.</string>
                             </property>
                         </widget>
                         <widget class="QLabel" row="6" column="0">
@@ -484,16 +512,19 @@
                             </property>
                         </widget>
                         <widget class="QLineEdit" row="6" column="1">
+                            <property name="name">
+                                <cstring>c_bitrate</cstring>
+                            </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
-                                    <hsizetype>4</hsizetype>
+                                    <hsizetype>3</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
-                            <property name="name">
-                                <cstring>c_bitrate</cstring>
+                            <property name="readOnly">
+                                <bool>true</bool>
                             </property>
                             <property name="toolTip" stdset="0">
                                 <string>Video bitrate of this file</string>
@@ -540,16 +571,19 @@
                             </property>
                         </widget>
                         <widget class="QLineEdit" row="7" column="1">
+                            <property name="name">
+                                <cstring>c_framerate</cstring>
+                            </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
-                                    <hsizetype>4</hsizetype>
+                                    <hsizetype>3</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
-                            <property name="name">
-                                <cstring>c_framerate</cstring>
+                            <property name="readOnly">
+                                <bool>true</bool>
                             </property>
                             <property name="toolTip" stdset="0">
                                 <string>Video frame rate of this file</string>
@@ -575,6 +609,417 @@
                                 <string>Property that shows video frame rate of this file.</string>
                             </property>
                         </widget>
+                        <widget class="QLabel" row="8" column="0">
+                            <property name="name">
+                                <cstring>l_input</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Input</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_input_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video card input ID</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the video card input ID to use for capturing video.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="8" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set to</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_input_set</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video card input ID</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the video card input ID to use for capturing video.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="8" column="2">
+                            <property name="name">
+                                <cstring>c_input</cstring>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video card input ID</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the video card input ID to use for capturing video.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="9" column="0">
+                            <property name="name">
+                                <cstring>l_format</cstring>
+                            </property>
+                            <property name="text">
+                                <string>F&amp;ormat</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_format</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Output format to request from the device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the output format to request from the device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="9" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>411p</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>422p</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>444p</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>abgr</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>argb</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>bg4b</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>bgr1</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>bgr15</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>bgr16</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>bgr24</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>bgr32</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>bgr4</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>bgr8</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>bgra</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>clpl</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>hm12</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>i420</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>if09</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>iyuv</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>nv12</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>nv21</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>rg4b</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>rgb1</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>rgb15</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>rgb16</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>rgb24</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>rgb32</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>rgb4</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>rgb8</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>rgba</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>uyvy</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>y8</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>y800</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>yuy2</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>yv12</cstring>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <cstring>yvu9</cstring>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_format</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Output format to request from the device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the output format to request from the device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="10" column="0">
+                            <property name="name">
+                                <cstring>l_norm</cstring>
+                            </property>
+                            <property name="text">
+                                <string>No&amp;rm</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_norm</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video norm to request from the device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the video norm to request from the device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="10" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>NTSC</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>NTSC-JP</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>PAL</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>PAL-60</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>PAL-BG</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>PAL-DK</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>PAL-I</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>PAL-M</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>PAL-N</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>PAL-NC</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>SECAM</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set ID</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_norm</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video norm to request from the device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the video norm to request from the device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="10" column="2">
+                            <property name="name">
+                                <cstring>c_norm_id</cstring>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Video norm to request from the device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the video norm to request from the device.</string>
+                            </property>
+                        </widget>
                     </grid>
                 </widget>
             </vbox>
@@ -582,6 +1027,12 @@
     </grid>
 </widget>
 <connections>
+    <connection>
+        <sender>c_track_set</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesVideoPage</receiver>
+        <slot>trackChanged(int)</slot>
+    </connection>
     <connection>
         <sender>c_contrast_set</sender>
         <signal>activated(int)</signal>
@@ -612,13 +1063,28 @@
         <receiver>KPlayerPropertiesVideoPage</receiver>
         <slot>codecChanged(int)</slot>
     </connection>
+    <connection>
+        <sender>c_input_set</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesVideoPage</receiver>
+        <slot>inputChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_norm</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesVideoPage</receiver>
+        <slot>normChanged(int)</slot>
+    </connection>
 </connections>
 <slots>
+    <slot access="protected">trackChanged(int)</slot>
     <slot access="protected">contrastChanged(int)</slot>
     <slot access="protected">brightnessChanged(int)</slot>
     <slot access="protected">hueChanged(int)</slot>
     <slot access="protected">saturationChanged(int)</slot>
     <slot access="protected">codecChanged(int)</slot>
+    <slot access="protected">inputChanged(int)</slot>
+    <slot access="protected">normChanged(int)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="0"/>
 </UI>

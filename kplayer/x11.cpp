@@ -16,15 +16,20 @@
 #include <X11/Xlib.h>
 #include <kdebug.h>
 
+#ifdef DEBUG
+#include <kdebug.h>
+kdbgstream kdDebugTime (void);
+#define DEBUG_KPLAYER_GRAB
 //#define DEBUG_KPLAYER_X11
 //#define DEBUG_KPLAYER_FOCUS
-//#define DEBUG_KPLAYER_KEY
+#define DEBUG_KPLAYER_KEY
 //#define DEBUG_KPLAYER_RESIZE
+//#define DEBUG_KPLAYER_CLIENT
+#endif
 
-#ifdef NDEBUG
-#define kdDebugTime kndDebug
-#else
-kdbgstream kdDebugTime (void);
+#ifdef DEBUG_KPLAYER_CLIENT
+extern Atom qt_xdnd_position;
+extern Atom qt_xdnd_status;
 #endif
 
 /*bool KPlayerX11TestGrab (Display* display, int winid)
@@ -38,14 +43,19 @@ kdbgstream kdDebugTime (void);
       status == AlreadyGrabbed  ? "AlreadyGrabbed" :
       status == GrabFrozen      ? "GrabFrozen" :
       status == GrabInvalidTime ? "GrabInvalidTime" : "Unknown";
+#ifdef DEBUG_KPLAYER_GRAB
     kdDebugTime() << "Grab failed, status: " << s << "\n";
+#endif
     return false;
   }
+#define DEBUG_KPLAYER_GRAB
   kdDebugTime() << "Grab succeeded\n";
+#endif
   XUngrabPointer (display, CurrentTime);
   return true;
 }*/
 
+extern void KPlayerSetControlShiftState (bool control, bool shift);
 extern void KPlayerWidgetResizeHandler (bool);
 extern void KPlayerWidgetMapHandler (uint);
 extern void KPlayerWidgetUnmapHandler (uint);
@@ -54,7 +64,7 @@ typedef int (*QX11EventFilter) (XEvent*);
 
 static QX11EventFilter PreviousX11EventFilter = 0;
 
-#ifdef DEBUG_KPLAYER_RESIZE
+#ifdef DEBUG_KPLAYER_KEY
 
 const char* KPlayerX11EventTypeNames [LASTEvent] = {
   "EVENT0",
@@ -94,6 +104,10 @@ const char* KPlayerX11EventTypeNames [LASTEvent] = {
   "MappingNotify"
 };
 
+#endif
+
+#ifdef DEBUG_KPLAYER_RESIZE
+
 const char* KPlayerX11EventModeNames [4] = {
   "NotifyNormal",
   "NotifyGrab",
@@ -132,18 +146,35 @@ int KPlayerX11EventFilter (XEvent* event)
     if ( event -> type == FocusIn && ev -> mode == NotifyUngrab
         || event -> type == FocusOut && ev -> mode == NotifyGrab && ev -> detail == NotifyAncestor )
     {
+#ifdef DEBUG_KPLAYER_GRAB
       kdDebugTime() << "Calling KPlayerWidgetResizeHandler (" << (ev -> mode == NotifyGrab) << ")\n";
+#endif
       KPlayerWidgetResizeHandler (ev -> mode == NotifyGrab);
     }
   }
-#ifdef DEBUG_KPLAYER_KEY
   else if ( event -> type == KeyPress || event -> type == KeyRelease )
   {
     XKeyEvent* ev = (XKeyEvent*) event;
+#ifdef DEBUG_KPLAYER_KEY
     kdDebugTime() << "X11 " << KPlayerX11EventTypeNames [event -> type] << " " << ev -> window << " " 
       << ev -> send_event << " " << ev -> serial << " root " << ev -> root << " subwindow "
       << ev -> subwindow << " " << ev -> x << "x" << ev -> y << " " << ev -> x_root << "x" << ev -> y_root
       << " keycode " << ev -> keycode << " state " << ev -> state << " same " << ev -> same_screen << "\n";
+#endif
+    KPlayerSetControlShiftState ((ev -> state & ControlMask) == ControlMask, (ev -> state & ShiftMask) == ShiftMask);
+    if ( ev -> state == 5 )
+      ev -> state = 4;
+  }
+#ifdef DEBUG_KPLAYER_CLIENT
+  else if ( event -> type == ClientMessage && (event -> xclient.message_type == qt_xdnd_position
+    || event -> xclient.message_type == qt_xdnd_status) )
+  {
+    XClientMessageEvent* ev = (XClientMessageEvent*) event;
+    kdDebugTime() << "X11 ClientMessage " << ev -> message_type << " " << ev -> window << " " 
+      << ev -> send_event << " " << ev -> serial << " format " << ev -> format << " window " << ev -> data.l[0]
+      << " flags " << ev -> data.l[1] << " position " << ((ev -> data.l[2] & 0xffff0000) >> 16)
+      << "x" << (ev -> data.l[2] & 0x0000ffff) << " size " << ((ev -> data.l[3] & 0xffff0000) >> 16)
+      << "x" << (ev -> data.l[3] & 0x0000ffff) << " action " << ev -> data.l[4] << "\n";
   }
 #endif
 #ifdef DEBUG_KPLAYER_RESIZE

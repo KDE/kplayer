@@ -16,35 +16,45 @@
 #include <dcopclient.h>
 #include <kapplication.h>
 #include <kconfig.h>
+#include <kcursor.h>
 #include <klocale.h>
+#include <kmainwindow.h>
 #include <krecentdocument.h>
 #include <kurlrequester.h>
 #include <kurlrequesterdlg.h>
+#include <qpopupmenu.h>
 #include <qregexp.h>
 
-#include <kdebug.h>
+#ifdef DEBUG
+#define DEBUG_KPLAYER_ENGINE
+#endif
 
 #include "kplayerengine.h"
 #include "kplayerengine.moc"
+#include "kplayeractionlist.h"
 #include "kplayerpropertiesdialog.h"
 #include "kplayersettings.h"
 #include "kplayerslideraction.h"
 #include "kplayerwidget.h"
 
-#define DEBUG_KPLAYER_ENGINE
-
 KPlayerEngine* KPlayerEngine::m_engine = 0;
 
 static QRegExp re_extension ("\\.[^/.]+$");
-static QRegExp re_driver ("([A-Za-z0-9]+)\\s+(\\S.*)");
-static QRegExp re_codec ("([A-Za-z0-9]+)\\s+\\S+\\s+\\S+\\s+(\\S.*)");
+static QRegExp re_driver ("^\\s+([A-Za-z0-9]+)\\s+(\\S.*)");
+static QRegExp re_codec ("^([A-Za-z0-9]+)\\s+\\S+\\s+\\S+\\s+(\\S.*)");
+static QRegExp re_demuxer ("^\\s*([A-Za-z0-9]+)\\s+\\d+\\s+(\\S.*)");
 static QRegExp re_multiple ("\\s+"), re_trailing (" $");
-static QRegExp re_brackets (" ?\\[.*\\]"), re_parentheses (" ?\\(..+\\)");
+static QRegExp re_brackets (" ?\\[.*\\]"), re_parentheses (" ?\\((?:..+|\\?)\\)");
 static QRegExp re_audio ("[- ](?:audio[- ])?(?:decoder|codec|output|out)s?", false);
 static QRegExp re_video ("[- ](?:video[- ])?(?:decoder|codec|output|out)s?", false);
 static QRegExp re_s ("'s", false), re_layer ("layer-", false);
 static QRegExp re_dash (" - ", false);
 static QRegExp re_writer (" writer", false);
+static QRegExp re_demux (" demuxer", false);
+static QRegExp re_sega (" for Sega Saturn CD-ROM games", false);
+static QRegExp re_smjpeg ("smjpeg", false);
+static QRegExp re_tv_card ("Tv card", false);
+static QRegExp re_lmlm (" Compression Card stream", false);
 static QRegExp re_xv ("/XV$", false), re_vidix (" \\(VIDIX\\)", false);
 static QRegExp re_xover ("General X11 driver for overlay capable video output drivers", false);
 static QRegExp re_opengl ("\\(OpenGL\\)", false);
@@ -53,12 +63,6 @@ static QRegExp re_matroxg (" G200/G400/G450/G550", false);
 static QRegExp re_macintosh ("Macintosh Audio Compression and Expansion", false);
 static QRegExp re_amu ("Avid Meridien Uncompressed", false);
 static QRegExp re_speech ("Windows Media Audio 9 Speech", false);
-static QRegExp re_split ("\\s*[,;:. ]\\s*");
-static QRegExp re_dvb ("^((?:[Dd][Vv][Bb]|[Tt][Vv])://)([^/]*[A-Z][^/]*)$");
-static QRegExp re_vo ("^(?:Available video output drivers|Íàëè÷íè âèäåî äðàéâåðè|Dostupné ovladaèe video výstupu|Verfügbare Videoausgabetreiber|Tilgængelige videodrivere|ÄéáèÝóéìïé ïäçãïß ãéá Ýîïäï âßíôåï|Drivers de salida de vídeo disponibles|Pilotes de sortie vidéo disponibles|Rendelkezésre álló video meghajtók|Driver di output video disponibili|Í­¸ú¤Ê±ÇÁü½ÐÎÏ¥É¥é¥¤¥Ð|ê°€ëŠ¥í•œ ë¹„ë””ì˜¤ ì¶œë ¥ ë“œë¼ì´ë²„|Ð”Ð¾ÑÑ‚Ð°Ð¿Ð½Ð¸ Ð¸Ð·Ð»ÐµÐ·Ð½Ð¸ Ð²Ð¸Ð´ÐµÐ¾ Ð´Ñ€Ð°Ñ˜Ð²ÐµÑ€Ð¸|Beschikbare video output drivers|Dostêpne sterowniki video|Drivers de saída de vídeo disponíveis|Plugin-uri de ieºire video disponibile|äÏÓÔÕÐÎÙÅ ÄÒÁÊ×ÅÒÁ ×Ù×ÏÄÁ ×ÉÄÅÏ|Dostupné video výstupné ovládaèe|Video  Çýkýþ  sürücüleri kullanýlabilir|äÏÓÔÕÐÎ¦ ÍÏÄÕÌ¦ ×¦ÄÅÏ ×É×ÏÄÕ|¿ÉÓÃµÄÊÓÆµÊä³öÇý¶¯|¥i¥Îªºµø°T¿é¥XÅX°Êµ\\{¦¡:): *$", false);
-static QRegExp re_vc ("^(?:Available video codecs|Íàëè÷íè âèäåî äåêîäåðè|Dostupné video kodeky|Verfügbare Videocodecs|Tilgængelige video-codecs|ÄéáèÝóéìá codecs âßíôåï|Codecs de vídeo disponibles|Codecs vidéo disponibles|Rendelkezésre álló video codec-ek|Codec video disponibili|Í­¸ú¤Ê±ÇÁü¥³¡¼¥Ç¥Ã¥¯|ê°€ëŠ¥í•œ ë¹„ë””ì˜¤ ì½”ë±|Ð”Ð¾ÑÑ‚Ð°Ð¿Ð½Ð¸ Ð²Ð¸Ð´ÐµÐ¾ ÐºÐ¾Ð´ÐµÑ†Ð¸|Beschikbare video codecs|Dostêpne kodeki video|Codecs de vídeo disponíveis|Codec-uri video disponibile|äÏÓÔÕÐÎÙÅ ×ÉÄÅÏ ËÏÄÅËÉ|Dostupné video kodeky|Video Codecleri kullanýlabilir|äÏÓÔÕÐÎ¦ ×¦ÄÅÏ ËÏÄÅËÉ|¿ÉÓÃµÄÊÓÆµ½âÂëÆ÷|¥i¥Îªºµø°T codecs): *$", false);
-static QRegExp re_ao ("^(?:Available audio output drivers|Íàëè÷íè àóäèî äðàéâåðè|Dostupné ovladaèe audio výstupu|Verfügbare Audioausgabetreiber|Tilgængelige lyddrivere|ÄéáèÝóéìïé ïäçãïß ãéá Ýîïäï Þ÷ïõ|Drivers de salida de audio disponibles|Pilotes de sortie audio disponibles|Rendelkezésre álló audio meghajtók|Driver di output audio disponibili|Í­¸ú¤Ê²»À¼½ÐÎÏ¥É¥é¥¤¥Ð|ê°€ëŠ¥í•œ ì˜¤ë””ì˜¤ ì¶œë ¥ ë“œë¦¬ì•„ë²„|Ð”Ð¾ÑÑ‚Ð°Ð¿Ð½Ð¸ Ð¸Ð·Ð»ÐµÐ·Ð½Ð¸ Ð°ÑƒÐ´Ð¸Ð¾ Ð´Ñ€Ð°Ñ˜Ð²ÐµÑ€Ð¸|Beschikbare audio output drivers|Dostêpne sterowniki audio|Drivers de saída de audio disponíveis|Plugin-uri de ieºire audio disponibile|äÏÓÔÕÐÎÙÅ ÄÒÁÊ×ÅÒÁ ×Ù×ÏÄÁ Ú×ÕËÁ|Dostupné audio výstupné ovládaèe|Ses  Çýkýþ sürücüleri kullanýlabilir|äÏÓÔÕÐÎ¦ ÍÏÄÕÌ¦ ÁÕÄ¦Ï ×É×ÏÄÕ|¿ÉÓÃµÄÒôÆµÊä³öÇý¶¯|¥i¥Îªº­µ®Ä¿é¥XÅX°Êµ\\{¦¡): *$", false);
-static QRegExp re_ac ("^(?:Available audio codecs|Íàëè÷íè àóäèî äåêîäåðè|Dostupné audio kodeky|Verfügbare Audiocodecs|Tilgængelige lyd-codecs|ÄéáèÝóéìá codecs Þ÷ïõ|Codecs de audio disponibles|Codecs audio disponibles|Rendelkezésre álló audio codec-ek|Codec audio disponibili|Í­¸ú¤Ê²»À¼¥³¡¼¥Ç¥Ã¥¯|ê°€ëŠ¥í•œ ì˜¤ë””ì˜¤ ì½”ë±|Ð”Ð¾ÑÑ‚Ð°Ð¿Ð½Ð¸ Ð°ÑƒÐ´Ð¸Ð¾ ÐºÐ¾Ð´ÐµÑ†Ð¸|Beschikbare audio codecs|Dostêpne kodeki audio|Codecs de audio disponíveis|Codec-uri audio disponibile|äÏÓÔÕÐÎÙÅ ÁÕÄÉÏ ËÏÄÅËÉ|Dostupné audio kodeky|Ses codecleri kullanýlabilir|äÏÓÔÕÐÎ¦ ÁÕÄ¦Ï ËÏÄÅËÉ|¿ÉÓÃµÄÒôÆµ½âÂëÆ÷|¥i¥Îªº­µ®Ä codecs): *$", false);
 
 int listIndex (const QStringList& sl, const QString& str)
 {
@@ -90,21 +94,21 @@ KPlayerEngine::KPlayerEngine (KActionCollection* ac, QWidget* parent, const char
   m_light = config == 0;
   m_progress_factor = 0;
   m_stop = m_updating = m_zooming = m_enable_screen_saver = false;
-  if ( light() )
-    m_config = new KConfig ("kplayerrc");
-  else
-    m_config = config;
-  m_playlist_config = new KConfig ("kplayerplaylistrc");
+  m_config = light() ? new KConfig ("kplayerrc") : config;
+  m_store = new KConfig ("kplayerlibraryrc");
+  m_meta = new KConfig ("kplayerplaylistrc");
+  m_configuration = new KPlayerConfiguration;
+  configuration() -> setup();
   m_settings = new KPlayerSettings;
   m_process = new KPlayerProcess;
   m_workspace = new KPlayerWorkspace (parent, name);
-  m_widget = m_workspace -> widget();
-  connect (m_workspace, SIGNAL (resized()), this, SLOT (workspaceResized()));
-  connect (m_process, SIGNAL (stateChanged(KPlayerProcess::State, KPlayerProcess::State)), this, SLOT (playerStateChanged(KPlayerProcess::State, KPlayerProcess::State)));
-  connect (m_process, SIGNAL (progressChanged(float, KPlayerProcess::ProgressType)), this, SLOT (playerProgressChanged(float, KPlayerProcess::ProgressType)));
-  connect (m_process, SIGNAL (infoAvailable()), this, SLOT (playerInfoAvailable()));
-  connect (m_process, SIGNAL (sizeAvailable()), this, SLOT (playerSizeAvailable()));
-  connect (m_settings, SIGNAL (refresh()), this, SLOT (refreshSettings()));
+  m_widget = workspace() -> widget();
+  connect (workspace(), SIGNAL (resized()), this, SLOT (workspaceResized()));
+  connect (process(), SIGNAL (stateChanged(KPlayerProcess::State, KPlayerProcess::State)), this, SLOT (playerStateChanged(KPlayerProcess::State, KPlayerProcess::State)));
+  connect (process(), SIGNAL (progressChanged(float, KPlayerProcess::ProgressType)), this, SLOT (playerProgressChanged(float, KPlayerProcess::ProgressType)));
+  connect (process(), SIGNAL (infoAvailable()), this, SLOT (playerInfoAvailable()));
+  connect (process(), SIGNAL (sizeAvailable()), this, SLOT (playerSizeAvailable()));
+  connect (configuration(), SIGNAL (updated()), this, SLOT (refreshSettings()));
   setupActions();
   m_audio_drivers
     << "mpegpes: DVB"
@@ -339,7 +343,45 @@ KPlayerEngine::KPlayerEngine (KActionCollection* ac, QWidget* parent, const char
     << "rawi420: RAW I420"
     << "rawyvu9: RAW YVU9"
     << "null: Null";
-  getDriversCodecs();
+  m_demuxers
+    << "rawaudio: Raw audio"
+    << "rawvideo: Raw video"
+    << "tv: TV card"
+    << "mf: Image files"
+    << "avi: AVI"
+    << "y4m: YUV4MPEG2"
+    << "asv: ASF"
+    << "nsv: NullsoftVideo"
+    << "nuv: NuppelVideo"
+    << "real: Realmedia"
+    << "smjpeg: SMJPEG"
+    << "mkv: Matroska"
+    << "realaudio: Realaudio"
+    << "vqf: TwinVQ"
+    << "mov: Quicktime/MP4"
+    << "vivo: Vivo"
+    << "fli: Autodesk FLIC"
+    << "film: FILM/CPK"
+    << "roq: RoQ"
+    << "gif: GIF"
+    << "ogg: Ogg"
+    << "avs: Avisynth"
+    << "pva: PVA"
+    << "mpegts: MPEG-TS"
+    << "lmlm4: LMLM4 MPEG4"
+    << "mpegps: MPEG PS"
+    << "mpegpes: MPEG PES"
+    << "mpeges: MPEG ES"
+    << "mpeggxf: MPEG ES in GXF"
+    << "mpeg4es: MPEG4 ES"
+    << "h264es: H.264 ES"
+    << "rawdv: Raw DV"
+    << "mpc: Musepack"
+    << "audio: Audio"
+    << "tivo: TiVo"
+    << "rtp: LIVE555 RTP"
+    << "aac: AAC";
+  getLists();
 }
 
 KPlayerEngine::~KPlayerEngine()
@@ -349,64 +391,43 @@ KPlayerEngine::~KPlayerEngine()
 #endif
   enableScreenSaver();
   kill();
-  if ( m_process )
-    delete m_process;
-  m_process = 0;
-  if ( m_settings )
+  if ( process() )
+    delete process();
+  if ( settings() )
   {
-    if ( m_settings -> properties() )
-      disconnect (m_settings -> properties(), SIGNAL (refresh()), this, SLOT (refreshProperties()));
-    disconnect (m_settings, SIGNAL (refresh()), this, SLOT (refreshSettings()));
-    m_settings -> save();
-    delete m_settings;
-    m_settings = 0;
+    disconnect (settings() -> properties(), SIGNAL (updated()), this, SLOT (refreshProperties()));
+    delete settings();
   }
-  if ( light() && m_config )
+  if ( configuration() )
+  {
+    disconnect (configuration(), SIGNAL (updated()), this, SLOT (refreshSettings()));
+    configuration() -> commit();
+    delete configuration();
+  }
+  if ( light() && config() )
     delete m_config;
-  m_config = 0;
-  if ( m_playlist_config )
-    delete m_playlist_config;
-  m_playlist_config = 0;
-  m_workspace = 0;
-  m_widget = 0;
-  m_ac = 0;
+  if ( store() )
+    delete store();
+  if ( meta() )
+    delete meta();
 }
 
 void KPlayerEngine::initialize (KActionCollection* ac, QWidget* parent, const char* name, KConfig* config)
 {
-  if ( ! m_engine )
+  if ( ! engine() )
+  {
+    KPlayerMedia::initialize();
     m_engine = new KPlayerEngine (ac, parent, name, config);
+  }
 }
 
 void KPlayerEngine::terminate (void)
 {
-  if ( m_engine )
-    delete m_engine;
-  m_engine = 0;
-}
-
-KPlayerProperties* KPlayerEngine::reference (KURL url)
-{
-  KPlayerProperties* properties;
-  if ( m_map.contains (url.url()) )
+  if ( engine() )
   {
-    properties = m_map [url.url()];
-    properties -> reference();
-  }
-  else
-  {
-    properties = new KPlayerProperties (url);
-    m_map.insert (url.url(), properties);
-  }
-  return properties;
-}
-
-void KPlayerEngine::dereference (KPlayerProperties* properties)
-{
-  if ( properties -> dereference() )
-  {
-    m_map.remove (properties -> url().url());
-    delete properties;
+    delete engine();
+    m_engine = 0;
+    KPlayerMedia::terminate();
   }
 }
 
@@ -415,7 +436,9 @@ void KPlayerEngine::setupActions (void)
   if ( ! m_ac )
     return;
 
-  kdDebugTime() << "Creating engine actions\n";
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "KPlayerEngine::setupActions\n";
+#endif
   KAction* action;
   action = new KAction (i18n("&Properties..."), "properties", ALT + Key_Return, this, SLOT (fileProperties()), m_ac, "file_properties");
   action -> setStatusText (i18n("Opens the File Properties dialog"));
@@ -456,13 +479,13 @@ void KPlayerEngine::setupActions (void)
   KToggleAction* toggle = new KToggleAction (i18n("&Mute"), "mute", CTRL + Key_Backslash, this, SLOT (mute()), m_ac, "audio_mute");
   toggle -> setStatusText (i18n("Turns the sound on/off"));
   toggle -> setWhatsThis (i18n("Mute command turns the sound on or off."));
-  if ( m_settings -> mute() )
+  if ( configuration() -> mute() )
     toggle -> setChecked (true);
 
   toggle = new KToggleAction (i18n("Maintain &Aspect"), "viewmagfit", CTRL + Key_A, this, SLOT (maintainAspect()), m_ac, "view_maintain_aspect");
   toggle -> setStatusText (i18n("Maintains the video aspect ratio"));
   toggle -> setWhatsThis (i18n("Maintain Aspect command toggles the option to maintain the video aspect ratio."));
-  if ( m_settings -> maintainAspect() )
+  if ( settings() -> maintainAspect() )
     toggle -> setChecked (true);
 
   m_updating = true;
@@ -492,12 +515,12 @@ void KPlayerEngine::setupActions (void)
   action = new KAction (i18n("&Load Subtitles..."), 0, CTRL + Key_S, this, SLOT (fileOpenSubtitles()), m_ac, "subtitles_load");
   action -> setStatusText (i18n("Opens a subtitle file"));
   action -> setWhatsThis (i18n("Load Subtitles command displays the standard Open File dialog and lets you choose a subtitle file to use with the current file or URL. If you load subtitles when video is playing, KPlayer will restart playback with the subtitles. By default it will also remember the subtitles you choose in the current file properties. This command is available for video files."));
-  action = new KAction (i18n("Load Su&btitle URL..."), 0, 0, this, SLOT (fileOpenSubtitleUrl()), m_ac, "subtitles_load_url");
+  /*action = new KAction (i18n("Load Su&btitle URL..."), 0, 0, this, SLOT (fileOpenSubtitleUrl()), m_ac, "subtitles_load_url");
   action -> setStatusText (i18n("Opens a subtitle URL"));
   action -> setWhatsThis (i18n("Load Subtitle URL command displays the standard Open URL dialog and lets you type or paste in a subtitle URL to use with the current file or URL. If you load subtitles when video is playing, KPlayer will restart playback with the subtitles. By default it will also remember the subtitles you choose in the current file properties. This command is available for video files."));
   action = new KAction (i18n("U&nload Subtitles"), 0, 0, this, SLOT (fileUnloadSubtitles()), m_ac, "subtitles_unload");
   action -> setStatusText (i18n("Unloads subtitles"));
-  action -> setWhatsThis (i18n("Unload Subtitles command unloads the currently loaded subtitles, and if video is playing, restarts playback without subtitles. This command is available when subtitles are loaded."));
+  action -> setWhatsThis (i18n("Unload Subtitles command unloads the currently loaded subtitles, and if video is playing, restarts playback without subtitles. This command is available when subtitles are loaded."));*/
 
   action = new KToggleAction (i18n("&Full Screen"), "window_fullscreen", CTRL + Key_F, this, SLOT (fullScreen()), m_ac, "view_full_screen");
   action -> setStatusText (i18n("Switches to full screen mode"));
@@ -547,7 +570,7 @@ void KPlayerEngine::setupActions (void)
   toggle = new KToggleAction (i18n("Maintain Original &Aspect"), 0, 0, this, SLOT (maintainOriginalAspect()), m_ac, "view_original_aspect");
   toggle -> setStatusText (i18n("Maintains the original video aspect ratio"));
   toggle -> setWhatsThis (i18n("Maintain Original Aspect command toggles the option to maintain the original video aspect ratio of the current file."));
-  if ( m_settings -> maintainAspect() )
+  if ( settings() -> maintainAspect() )
     toggle -> setChecked (true);
   toggle -> setExclusiveGroup ("aspect");
   toggle = new KToggleAction (i18n("Maintain &Current Aspect"), 0, 0, this, SLOT (maintainCurrentAspect()), m_ac, "view_current_aspect");
@@ -630,9 +653,6 @@ void KPlayerEngine::setupActions (void)
   toggle -> setWhatsThis (i18n("Hard Frame Dropping command toggles the hard frame dropping option. If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. The hard option drops frames more aggressively than the soft one, and may sometimes break decoding. The Frame drop option can also be set on the Advanced page either globally in KPlayer Settings or for a particular file in the File Properties."));
   toggle -> setExclusiveGroup ("framedrop");
 
-  toggle = new KToggleAction (i18n("&Show"), 0, 0, this, SLOT (subtitlesShow()), m_ac, "subtitles_show");
-  toggle -> setStatusText (i18n("Turns subtitle display on/off"));
-  toggle -> setWhatsThis (i18n("Show command shows or hides the subtitles."));
   action = new KAction (i18n("Move &Down"), 0, CTRL + Key_Comma, this, SLOT (subtitlesMoveDown()), m_ac, "subtitles_move_down");
   action -> setStatusText (i18n("Moves subtitles down"));
   action -> setWhatsThis (i18n("Move Down command moves the subtitles down."));
@@ -646,6 +666,16 @@ void KPlayerEngine::setupActions (void)
   action -> setStatusText (i18n("Increases subtitle delay"));
   action -> setWhatsThis (i18n("Increase Delay command increases the delay of subtitles relative to video."));
 
+  m_video_action_list = new KPlayerTrackActionList (i18n("Track %1"), i18n("Selects %1 video track"),
+    i18n("Video %1 command switches to the selected video track."), this, "video_streams");
+  connect (m_video_action_list, SIGNAL (activated (int)), SLOT (videoStream (int)));
+  m_audio_action_list = new KPlayerTrackActionList (i18n("Track %1"), i18n("Selects %1 audio track"),
+    i18n("Audio %1 command switches to the selected audio track."), this, "audio_streams");
+  connect (m_audio_action_list, SIGNAL (activated (int)), SLOT (audioStream (int)));
+  m_subtitle_action_list = new KPlayerSubtitleTrackActionList (i18n("Track %1"), i18n("Selects %1 subtitle track"),
+    i18n("Subtitles %1 command switches to the selected subtitle track."), this, "subtitle_streams");
+  connect (m_subtitle_action_list, SIGNAL (activated (int)), SLOT (subtitleStream (int)));
+
   refreshSettings();
   enablePlayerActions();
   enableVideoActions();
@@ -656,63 +686,92 @@ void KPlayerEngine::refreshSettings (void)
   if ( ! m_ac )
     return;
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine: Refreshing settings\n";
+  kdDebugTime() << "KPlayerEngine::refreshSettings\n";
 #endif
   m_updating = true;
-  int value = m_settings -> volume();
-  sliderAction ("audio_volume") -> slider() -> setup (m_settings -> volumeMinimum(),
-    m_settings -> volumeMaximum(), value, m_settings -> volumeMarks(), m_settings -> volumeMarks(), 1);
-  popupAction ("popup_volume") -> slider() -> setup (m_settings -> volumeMinimum(),
-    m_settings -> volumeMaximum(), value, m_settings -> volumeMarks(), m_settings -> volumeMarks(), 1);
-  m_process -> volume (m_settings -> actualVolume());
+  int value = settings() -> volume();
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "  Volume " << value << "\n";
+#endif
+  sliderAction ("audio_volume") -> slider() -> setup (configuration() -> volumeMinimum(),
+    configuration() -> volumeMaximum(), value, configuration() -> volumeMarks(),
+    configuration() -> volumeMarks(), 1);
+  popupAction ("popup_volume") -> slider() -> setup (configuration() -> volumeMinimum(),
+    configuration() -> volumeMaximum(), value, configuration() -> volumeMarks(),
+    configuration() -> volumeMarks(), 1);
+  process() -> volume (settings() -> actualVolume());
   if ( light() )
   {
     m_updating = false;
     return;
   }
-  value = m_settings -> contrast();
-  sliderAction ("video_contrast") -> slider() -> setup (m_settings -> contrastMinimum(),
-    m_settings -> contrastMaximum(), value, m_settings -> contrastMarks(), m_settings -> contrastMarks(), 1);
-  popupAction ("popup_contrast") -> slider() -> setup (m_settings -> contrastMinimum(),
-    m_settings -> contrastMaximum(), value, m_settings -> contrastMarks(), m_settings -> contrastMarks(), 1);
-  m_process -> contrast (value);
-  value = m_settings -> brightness();
-  sliderAction ("video_brightness") -> slider() -> setup (m_settings -> brightnessMinimum(),
-    m_settings -> brightnessMaximum(), value, m_settings -> brightnessMarks(), m_settings -> brightnessMarks(), 1);
-  popupAction ("popup_brightness") -> slider() -> setup (m_settings -> brightnessMinimum(),
-    m_settings -> brightnessMaximum(), value, m_settings -> brightnessMarks(), m_settings -> brightnessMarks(), 1);
-  m_process -> brightness (value);
-  value = m_settings -> hue();
-  sliderAction ("video_hue") -> slider() -> setup (m_settings -> hueMinimum(),
-    m_settings -> hueMaximum(), value, m_settings -> hueMarks(), m_settings -> hueMarks(), 1);
-  popupAction ("popup_hue") -> slider() -> setup (m_settings -> hueMinimum(),
-    m_settings -> hueMaximum(), value, m_settings -> hueMarks(), m_settings -> hueMarks(), 1);
-  m_process -> hue (value);
-  value = m_settings -> saturation();
-  sliderAction ("video_saturation") -> slider() -> setup (m_settings -> saturationMinimum(),
-    m_settings -> saturationMaximum(), value, m_settings -> saturationMarks(), m_settings -> saturationMarks(), 1);
-  popupAction ("popup_saturation") -> slider() -> setup (m_settings -> saturationMinimum(),
-    m_settings -> saturationMaximum(), value, m_settings -> saturationMarks(), m_settings -> saturationMarks(), 1);
-  m_process -> saturation (value);
-  if ( m_settings -> hasLength() )
+  value = settings() -> contrast();
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "  Contrast " << value << "\n";
+#endif
+  sliderAction ("video_contrast") -> slider() -> setup (configuration() -> contrastMinimum(),
+    configuration() -> contrastMaximum(), value, configuration() -> contrastMarks(),
+    configuration() -> contrastMarks(), 1);
+  popupAction ("popup_contrast") -> slider() -> setup (configuration() -> contrastMinimum(),
+    configuration() -> contrastMaximum(), value, configuration() -> contrastMarks(),
+    configuration() -> contrastMarks(), 1);
+  process() -> contrast (value);
+  value = settings() -> brightness();
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "  Brightness " << value << "\n";
+#endif
+  sliderAction ("video_brightness") -> slider() -> setup (configuration() -> brightnessMinimum(),
+    configuration() -> brightnessMaximum(), value, configuration() -> brightnessMarks(),
+    configuration() -> brightnessMarks(), 1);
+  popupAction ("popup_brightness") -> slider() -> setup (configuration() -> brightnessMinimum(),
+    configuration() -> brightnessMaximum(), value, configuration() -> brightnessMarks(),
+    configuration() -> brightnessMarks(), 1);
+  process() -> brightness (value);
+  value = settings() -> hue();
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "  Hue " << value << "\n";
+#endif
+  sliderAction ("video_hue") -> slider() -> setup (configuration() -> hueMinimum(),
+    configuration() -> hueMaximum(), value, configuration() -> hueMarks(), configuration() -> hueMarks(), 1);
+  popupAction ("popup_hue") -> slider() -> setup (configuration() -> hueMinimum(),
+    configuration() -> hueMaximum(), value, configuration() -> hueMarks(), configuration() -> hueMarks(), 1);
+  process() -> hue (value);
+  value = settings() -> saturation();
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "  Saturation " << value << "\n";
+#endif
+  sliderAction ("video_saturation") -> slider() -> setup (configuration() -> saturationMinimum(),
+    configuration() -> saturationMaximum(), value, configuration() -> saturationMarks(),
+    configuration() -> saturationMarks(), 1);
+  popupAction ("popup_saturation") -> slider() -> setup (configuration() -> saturationMinimum(),
+    configuration() -> saturationMaximum(), value, configuration() -> saturationMarks(),
+    configuration() -> saturationMarks(), 1);
+  process() -> saturation (value);
+  if ( properties() -> hasLength() )
   {
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebugTime() << "  Length " << properties() -> length() << "\n";
+#endif
     KPlayerSlider* slider = sliderAction ("player_progress") -> slider();
-    slider -> setTickInterval (slider -> maxValue() * m_settings -> progressMarks() / 100);
-    slider -> setPageStep (m_settings -> fastSeek() * m_progress_factor);
+    slider -> setTickInterval (slider -> maxValue() * configuration() -> progressMarks() / 100);
+    slider -> setPageStep (properties() -> fastSeek() * m_progress_factor);
     if ( slider -> pageStep() == 0 )
       slider -> setPageStep (slider -> tickInterval());
-    slider -> setLineStep (m_settings -> normalSeek() * m_progress_factor);
+    slider -> setLineStep (properties() -> normalSeek() * m_progress_factor);
     if ( slider -> lineStep() == 0 )
       slider -> setLineStep (1);
   }
   m_updating = false;
-  value = m_settings -> frameDrop();
+  value = settings() -> frameDrop();
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "  Frame drop " << value << "\n";
+#endif
   toggleAction ("player_soft_frame_drop") -> setChecked (value == 1);
   toggleAction ("player_hard_frame_drop") -> setChecked (value == 2);
-  m_process -> frameDrop (value);
-  if ( m_settings -> setInitialDisplaySize() )
+  process() -> frameDrop (value);
+  if ( settings() -> setInitialDisplaySize() )
     emit initialSize();
-  if ( m_settings -> originalAspect().isValid() )
+  if ( properties() -> originalAspect().isValid() )
   {
     setDisplaySize();
     refreshAspect();
@@ -724,59 +783,59 @@ void KPlayerEngine::refreshProperties (void)
   if ( ! m_ac )
     return;
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine: Refreshing properties\n";
+  kdDebugTime() << "KPlayerEngine::refreshProperties\n";
 #endif
   setVolume();
-  m_process -> audioDelay (m_settings -> audioDelay(), true);
+  process() -> audioDelay (settings() -> audioDelay(), true);
   setContrast();
   setBrightness();
   setHue();
   setSaturation();
-  bool show = m_settings -> subtitleVisibility();
-  bool subtitles = m_settings -> hasSubtitles();
-  if ( subtitles )
-    m_process -> showSubtitles (show);
-  if ( ! light() )
-    toggleAction ("subtitles_show") -> setChecked (show && subtitles);
-  m_process -> subtitleMove (m_settings -> subtitlePosition(), true);
-  m_process -> subtitleDelay (m_settings -> subtitleDelay(), true);
-  int value = m_settings -> frameDrop();
+  process() -> subtitleMove (settings() -> subtitlePosition(), true);
+  process() -> subtitleDelay (settings() -> subtitleDelay(), true);
+  int value = settings() -> frameDrop();
   if ( ! light() )
   {
+    m_video_action_list -> update (properties() -> videoIDs(), properties() -> videoID());
+    m_audio_action_list -> update (properties() -> audioIDs(), properties() -> audioID());
+    m_subtitle_action_list -> update (settings() -> showSubtitles(), properties() -> subtitleIDs(),
+      properties() -> subtitleID(), properties() -> vobsubIDs(), properties() -> vobsubID(),
+      settings() -> subtitles(), settings() -> currentSubtitles(), settings() -> showExternalSubtitles());
     toggleAction ("player_soft_frame_drop") -> setChecked (value == 1);
     toggleAction ("player_hard_frame_drop") -> setChecked (value == 2);
   }
-  m_process -> frameDrop (value);
-  if ( m_settings -> setInitialDisplaySize() )
+  process() -> frameDrop (value);
+  if ( settings() -> setInitialDisplaySize() )
     emit initialSize();
-  if ( m_settings -> originalAspect().isValid() )
+  if ( properties() -> originalAspect().isValid() )
     setDisplaySize();
-  if ( ! light() )
-    toggleAction ("view_full_screen") -> setChecked (m_settings -> fullScreen());
   enableVideoActions();
+  if ( ! light() )
+    toggleAction ("view_full_screen") -> setChecked (properties() -> fullScreen()
+      && toggleAction ("view_full_screen") -> isEnabled());
   refreshAspect();
 }
 
 void KPlayerEngine::refreshAspect (void)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine: Refreshing aspect: " << m_settings -> aspect().width() << "x" << m_settings -> aspect().height()
-    << " " << m_settings -> maintainAspect() << "\n";
+  kdDebugTime() << "Engine: Refreshing aspect: " << settings() -> aspect().width() << "x" << settings() -> aspect().height()
+    << " " << settings() -> maintainAspect() << "\n";
 #endif
-  toggleAction ("view_maintain_aspect") -> setChecked (m_settings -> maintainAspect());
+  toggleAction ("view_maintain_aspect") -> setChecked (settings() -> maintainAspect());
   if ( light() )
     return;
   toggleAction ("view_original_aspect") -> setChecked (false);
   toggleAction ("view_current_aspect") -> setChecked (false);
   toggleAction ("view_aspect_4_3") -> setChecked (false);
   toggleAction ("view_aspect_16_9") -> setChecked (false);
-  if ( ! m_settings -> maintainAspect() )
+  if ( ! settings() -> maintainAspect() )
     return;
-  if ( m_settings -> isAspect (m_settings -> originalSize()) )
+  if ( settings() -> isAspect (properties() -> originalSize()) )
     toggleAction ("view_original_aspect") -> setChecked (true);
-  else if ( m_settings -> isAspect (QSize (4, 3)) )
+  else if ( settings() -> isAspect (QSize (4, 3)) )
     toggleAction ("view_aspect_4_3") -> setChecked (true);
-  else if ( m_settings -> isAspect (QSize (16, 9)) )
+  else if ( settings() -> isAspect (QSize (16, 9)) )
     toggleAction ("view_aspect_16_9") -> setChecked (true);
   else
     toggleAction ("view_current_aspect") -> setChecked (true);
@@ -792,6 +851,8 @@ void KPlayerEngine::playerStateChanged (KPlayerProcess::State state, KPlayerProc
   toggleAction ("player_pause") -> setChecked (state == KPlayerProcess::Paused);
   enablePlayerActions();
   enableVideoActions();
+  widget() -> setCursor (state == KPlayerProcess::Playing && properties() -> hasVideo() ? KCursor::blankCursor()
+    : KCursor::arrowCursor());
   if ( state == KPlayerProcess::Playing )
     disableScreenSaver();
   else
@@ -813,11 +874,11 @@ void KPlayerEngine::playerProgressChanged (float progress, KPlayerProcess::Progr
     if ( value > maxValue )
     {
       slider -> setMaxValue (value);
-      slider -> setTickInterval (slider -> maxValue() * m_settings -> progressMarks() / 100);
-      slider -> setPageStep (m_settings -> fastSeek() * m_progress_factor);
+      slider -> setTickInterval (slider -> maxValue() * configuration() -> progressMarks() / 100);
+      slider -> setPageStep (properties() -> fastSeek() * m_progress_factor);
       if ( slider -> pageStep() == 0 )
         slider -> setPageStep (slider -> tickInterval());
-      slider -> setLineStep (m_settings -> normalSeek() * m_progress_factor);
+      slider -> setLineStep (properties() -> normalSeek() * m_progress_factor);
       if ( slider -> lineStep() == 0 )
         slider -> setLineStep (1);
     }
@@ -831,27 +892,27 @@ void KPlayerEngine::playerInfoAvailable (void)
   if ( ! m_ac )
     return;
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine: Info available. Detected length: " << m_settings -> length() << "\n";
+  kdDebugTime() << "Engine: Info available. Detected length: " << properties() -> length() << "\n";
 #endif
   m_updating = true;
   KPlayerSlider* slider = sliderAction ("player_progress") -> slider();
   // QRangeControl breaks if its range is more than 524287
-  if ( m_settings -> length() > 50000 )
+  if ( properties() -> length() > 50000 )
     m_progress_factor = 1;
-  else if ( m_settings -> length() > 5000 )
+  else if ( properties() -> length() > 5000 )
     m_progress_factor = 10;
   else
     m_progress_factor = 100;
-  slider -> setMaxValue (int (m_settings -> length() * m_progress_factor + 0.5));
-  slider -> setTickInterval (slider -> maxValue() * m_settings -> progressMarks() / 100);
-  slider -> setPageStep (m_settings -> fastSeek() * m_progress_factor);
+  slider -> setMaxValue (int (properties() -> length() * m_progress_factor + 0.5));
+  slider -> setTickInterval (slider -> maxValue() * configuration() -> progressMarks() / 100);
+  slider -> setPageStep (properties() -> fastSeek() * m_progress_factor);
   if ( slider -> pageStep() == 0 )
     slider -> setPageStep (slider -> tickInterval());
-  slider -> setLineStep (m_settings -> normalSeek() * m_progress_factor);
+  slider -> setLineStep (properties() -> normalSeek() * m_progress_factor);
   if ( slider -> lineStep() == 0 )
     slider -> setLineStep (1);
-  if ( m_settings -> hasLength() )
-    playerProgressChanged (m_process -> position(), KPlayerProcess::Position);
+  if ( properties() -> hasLength() )
+    playerProgressChanged (process() -> position(), KPlayerProcess::Position);
   m_updating = false;
   enablePlayerActions();
 }
@@ -860,19 +921,20 @@ void KPlayerEngine::playerSizeAvailable (void)
 {
   if ( ! m_ac )
     return;
-  if ( ! m_settings -> originalSize().isValid() && m_settings -> properties() )
-    m_settings -> properties() -> setOriginalSize (QSize (0, 0));
+  if ( ! properties() -> hasOriginalSize() )
+    settings() -> properties() -> setHasVideo (false);
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine: Size Available. Video size " << m_settings -> originalSize().width() << "x" << m_settings -> originalSize().height() << "\n";
+  kdDebugTime() << "Engine: Size Available. Video size " << properties() -> originalSize().width() << "x" << properties() -> originalSize().height() << "\n";
 #endif
-  if ( m_settings -> setInitialDisplaySize() )
+  if ( settings() -> setInitialDisplaySize() )
   {
     emit initialSize();
     setDisplaySize();
   }
-  if ( ! light() )
-    toggleAction ("view_full_screen") -> setChecked (m_settings -> fullScreen());
   enableVideoActions();
+  if ( ! light() )
+    toggleAction ("view_full_screen") -> setChecked (properties() -> fullScreen()
+      && toggleAction ("view_full_screen") -> isEnabled());
   refreshAspect();
 }
 
@@ -884,8 +946,8 @@ void KPlayerEngine::enablePlayerActions (void)
   kdDebugTime() << "Engine: Enabling player actions\n";
 #endif
   KPlayerProcess::State state = kPlayerProcess() -> state();
-  action ("file_properties") -> setEnabled (! m_settings -> url().isEmpty());
-  action ("player_play") -> setEnabled (! m_settings -> url().isEmpty()
+  action ("file_properties") -> setEnabled (! properties() -> url().isEmpty());
+  action ("player_play") -> setEnabled (! properties() -> url().isEmpty()
     && state != KPlayerProcess::Running && state != KPlayerProcess::Playing);
   bool busy = state != KPlayerProcess::Idle;
   action ("player_pause") -> setEnabled (busy);
@@ -898,14 +960,14 @@ void KPlayerEngine::enablePlayerActions (void)
   action ("player_fast_backward") -> setEnabled (busy);
   action ("player_start") -> setEnabled (busy);
   m_updating = true;
-  busy = busy && m_settings -> hasLength();
+  busy = busy && properties() -> hasLength();
   if ( ! busy )
   {
     QMouseEvent me1 (QEvent::MouseButtonRelease, QPoint (0, 0), QPoint (0, 0), Qt::LeftButton,
-      m_settings -> shift() ? Qt::ShiftButton | Qt::LeftButton : Qt::LeftButton);
+      settings() -> shift() ? Qt::ShiftButton | Qt::LeftButton : Qt::LeftButton);
     QApplication::sendEvent (sliderAction ("player_progress") -> slider(), &me1);
     QMouseEvent me2 (QEvent::MouseButtonRelease, QPoint (0, 0), QPoint (0, 0), Qt::MidButton,
-      m_settings -> shift() ? Qt::ShiftButton | Qt::MidButton : Qt::MidButton);
+      settings() -> shift() ? Qt::ShiftButton | Qt::MidButton : Qt::MidButton);
     QApplication::sendEvent (sliderAction ("player_progress") -> slider(), &me2);
   }
   sliderAction ("player_progress") -> slider() -> setEnabled (busy);
@@ -929,11 +991,11 @@ void KPlayerEngine::enableVideoActions (void)
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Engine: Enabling video actions\n";
 #endif
-  bool video = m_settings -> hasVideo();
+  bool video = properties() -> hasVideo();
   action ("view_maintain_aspect") -> setEnabled (video);
   if ( light() )
     return;
-  action ("view_full_screen") -> setEnabled (video || m_settings -> fullScreen());
+  action ("view_full_screen") -> setEnabled (video || settings() -> fullScreen());
   action ("view_original_aspect") -> setEnabled (video);
   action ("view_current_aspect") -> setEnabled (video);
   action ("view_aspect_4_3") -> setEnabled (video);
@@ -968,13 +1030,12 @@ void KPlayerEngine::enableSubtitleActions (void)
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Engine: Enabling subtitle actions\n";
 #endif
-  bool video = m_settings -> hasVideo();
-  bool subtitles = m_settings -> hasSubtitles();
+  bool video = properties() -> hasVideo();
+  bool subtitles = video && settings() -> showSubtitles();
   bool playing = subtitles && kPlayerProcess() -> state() == KPlayerProcess::Playing;
   action ("subtitles_load") -> setEnabled (video);
-  action ("subtitles_load_url") -> setEnabled (video);
-  action ("subtitles_unload") -> setEnabled (subtitles);
-  action ("subtitles_show") -> setEnabled (playing);
+  //action ("subtitles_load_url") -> setEnabled (video);
+  //action ("subtitles_unload") -> setEnabled (subtitles);
   action ("subtitles_move_down") -> setEnabled (playing);
   action ("subtitles_move_up") -> setEnabled (playing);
   action ("subtitles_delay_decrease") -> setEnabled (playing);
@@ -988,17 +1049,17 @@ void KPlayerEngine::enableZoomActions (void)
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Engine: Enabling zoom actions\n";
 #endif
-  toggleAction ("view_zoom_1_2") -> setChecked (m_settings -> isZoomFactor (1, 2));
-  toggleAction ("view_zoom_1_1") -> setChecked (m_settings -> isZoomFactor (1));
-  toggleAction ("view_zoom_3_2") -> setChecked (m_settings -> isZoomFactor (3, 2));
-  toggleAction ("view_zoom_2_1") -> setChecked (m_settings -> isZoomFactor (2));
-  toggleAction ("view_zoom_5_2") -> setChecked (m_settings -> isZoomFactor (5, 2));
-  toggleAction ("view_zoom_3_1") -> setChecked (m_settings -> isZoomFactor (3));
-  bool canZoom = ! m_settings -> fullScreen() && m_settings -> hasVideo();
+  toggleAction ("view_zoom_1_2") -> setChecked (settings() -> isZoomFactor (1, 2));
+  toggleAction ("view_zoom_1_1") -> setChecked (settings() -> isZoomFactor (1));
+  toggleAction ("view_zoom_3_2") -> setChecked (settings() -> isZoomFactor (3, 2));
+  toggleAction ("view_zoom_2_1") -> setChecked (settings() -> isZoomFactor (2));
+  toggleAction ("view_zoom_5_2") -> setChecked (settings() -> isZoomFactor (5, 2));
+  toggleAction ("view_zoom_3_1") -> setChecked (settings() -> isZoomFactor (3));
+  bool canZoom = ! settings() -> fullScreen() && properties() -> hasVideo();
 #ifdef DEBUG_KPLAYER_ENGINE
-  if ( m_settings -> fullScreen() )
+  if ( settings() -> fullScreen() )
     kdDebugTime() << "Full screen, no zoom\n";
-  if ( ! m_settings -> hasVideo() )
+  if ( ! properties() -> hasVideo() )
     kdDebugTime() << "Video size empty, no zoom\n";
 #endif
   toggleAction ("view_zoom_in") -> setEnabled (canZoom);
@@ -1013,14 +1074,16 @@ void KPlayerEngine::enableZoomActions (void)
 
 void KPlayerEngine::disableScreenSaver (void)
 {
-  if ( ! m_settings -> disableScreenSaver() || ! m_settings -> hasVideo() )
+  if ( ! properties() -> hasVideo() )
     return;
   QByteArray data, reply;
   QCString type;
   if ( ! kapp -> dcopClient() -> call ("kdesktop", "KScreensaverIface", "isEnabled()", data, type, reply)
       || type != "bool" )
   {
-    kdWarning() << "Could not get screen saver status\n";
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebugTime() << "Could not get screen saver status\n";
+#endif
     return;
   }
   QDataStream replyStream (reply, IO_ReadOnly);
@@ -1071,35 +1134,38 @@ void KPlayerEngine::load (KURL url)
 #endif
   if ( ! m_ac || url.path().isEmpty() && url.host().isEmpty() )
     return;
-  if ( url == m_settings -> url() )
+  if ( url == properties() -> url() )
   {
     play();
     return;
   }
   kill();
-  if ( m_settings -> shift() )
+  if ( settings() -> shift() )
     stop();
   else
     m_stop = false;
-  if ( m_settings -> properties() )
-    disconnect (m_settings -> properties(), SIGNAL (refresh()), this, SLOT (refreshProperties()));
-  m_settings -> load (url);
-  m_process -> load (url);
-  connect (m_settings -> properties(), SIGNAL (refresh()), this, SLOT (refreshProperties()));
+  if ( settings() -> properties() )
+    disconnect (settings() -> properties(), SIGNAL (updated()), this, SLOT (refreshProperties()));
+  settings() -> load (url);
+  process() -> load (url);
+  connect (settings() -> properties(), SIGNAL (updated()), this, SLOT (refreshProperties()));
   playerProgressChanged (0, KPlayerProcess::Position);
-  if ( m_settings -> subtitleAutoload() )
+  settings() -> clearSubtitles();
+  if ( properties() -> hasNormalSubtitles() )
+    settings() -> addSubtitlePath (properties() -> subtitleUrlString());
+  if ( properties() -> subtitleAutoload() )
     autoloadSubtitles();
   refreshProperties();
-  if ( m_settings -> hasVideo() || m_settings -> originalAspect().isValid() )
+  if ( properties() -> hasVideo() || properties() -> originalAspect().isValid() )
     playerSizeAvailable();
-  if ( m_settings -> hasLength() ) // || m_settings -> shift()
+  if ( properties() -> hasLength() ) // || settings() -> shift()
     playerInfoAvailable();
   else
-    m_process -> get_info();
+    process() -> get_info();
   if ( ! m_stop )
   {
-    m_process -> play();
-    if ( m_settings -> originalAspect().isValid() )
+    process() -> play();
+    if ( properties() -> originalAspect().isValid() )
       setDisplaySize();
   }
 #ifdef DEBUG_KPLAYER_ENGINE
@@ -1110,77 +1176,91 @@ void KPlayerEngine::load (KURL url)
 
 void KPlayerEngine::autoloadSubtitles (void)
 {
+  static QRegExp re_split ("\\s*[,;:. ]\\s*");
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Autoloading subtitles\n";
 #endif
+  if ( ! properties() -> url().isLocalFile() )
+    return;
+  QString urls (properties() -> subtitleUrlString());
   QStringList exts;
-  if ( m_settings -> autoloadOtherSubtitles() )
-    exts = QStringList::split (re_split, m_settings -> autoloadExtensionList());
-  if ( m_settings -> autoloadAqtSubtitles() )
-    exts.append ("aqt");
-  if ( m_settings -> autoloadJssSubtitles() )
-    exts.append ("jss");
-  if ( m_settings -> autoloadRtSubtitles() )
-    exts.append ("rt");
-  if ( m_settings -> autoloadSmiSubtitles() )
-    exts.append ("smi");
-  if ( m_settings -> autoloadSrtSubtitles() )
-    exts.append ("srt");
-  if ( m_settings -> autoloadSsaSubtitles() )
-    exts.append ("ssa");
-  if ( m_settings -> autoloadSubSubtitles() )
-    exts.append ("sub");
-  if ( m_settings -> autoloadTxtSubtitles() )
-    exts.append ("txt");
-  if ( m_settings -> autoloadUtfSubtitles() )
-    exts.append ("utf");
-  QString urls (m_settings -> url().path()), urlc (urls);
-  bool has_ext = re_extension.search (urls) >= 0;
-  QFileInfo fi;
-  for ( QStringList::Iterator it = exts.begin(); it != exts.end(); ++ it )
+  if ( configuration() -> autoloadOtherSubtitles() )
   {
-    QString ext ("." + (*it).lower());
-    QString extu (ext.upper());
-    if ( has_ext )
+    QStringList list (QStringList::split (re_split, configuration() -> autoloadExtensionList()));
+    QStringList::ConstIterator extiterator (exts.constBegin()), end (exts.constEnd());
+    while ( extiterator != end )
     {
-      urlc.replace (re_extension, ext);
-#ifdef DEBUG_KPLAYER_ENGINE
-      kdDebugTime() << "Autoloading " << urlc << "\n";
-#endif
-      fi.setFile (urlc);
-      if ( fi.exists() && fi.isReadable() )
-      {
-        m_settings -> setSubtitlePath (urlc);
-        return;
-      }
-      urlc.replace (re_extension, extu);
-#ifdef DEBUG_KPLAYER_ENGINE
-      kdDebugTime() << "Autoloading " << urlc << "\n";
-#endif
-      fi.setFile (urlc);
-      if ( fi.exists() && fi.isReadable() )
-      {
-        m_settings -> setSubtitlePath (urlc);
-        return;
-      }
+      if ( ! (*extiterator).isEmpty() )
+        exts.append ('.' + *extiterator);
+      ++ extiterator;
     }
+  }
+  if ( configuration() -> autoloadAqtSubtitles() )
+    exts.append (".aqt");
+  if ( configuration() -> autoloadAssSubtitles() )
+    exts.append (".ass");
+  if ( configuration() -> autoloadJsSubtitles() )
+    exts.append (".js");
+  if ( configuration() -> autoloadJssSubtitles() )
+    exts.append (".jss");
+  if ( configuration() -> autoloadRtSubtitles() )
+    exts.append (".rt");
+  if ( configuration() -> autoloadSmiSubtitles() )
+    exts.append (".smi");
+  if ( configuration() -> autoloadSrtSubtitles() )
+    exts.append (".srt");
+  if ( configuration() -> autoloadSsaSubtitles() )
+    exts.append (".ssa");
+  if ( configuration() -> autoloadSubSubtitles() )
+    exts.append (".sub");
+  if ( configuration() -> autoloadTxtSubtitles() )
+    exts.append (".txt");
+  if ( configuration() -> autoloadUtfSubtitles() )
+  {
+    exts.append (".utf");
+    exts.append (".utf8");
+    exts.append (".utf-8");
+  }
+  if ( configuration() -> autoloadVobsubSubtitles() )
+  {
+    exts.append (".idx");
+    exts.append (".ifo");
+  }
+  QString filename (properties() -> url().fileName());
+  QString basename (filename.section ('.', 0, -2));
+  QDir dir (properties() -> url().directory(), QString::null, QDir::Name | QDir::IgnoreCase, QDir::Files);
 #ifdef DEBUG_KPLAYER_ENGINE
-    kdDebugTime() << "Autoloading " << urls << ext << "\n";
+  kdDebugTime() << " File name " << filename << "\n";
+  kdDebugTime() << " Base name " << basename << "\n";
 #endif
-    fi.setFile (urls + ext);
-    if ( fi.exists() && fi.isReadable() )
-    {
-      m_settings -> setSubtitlePath (urls + ext);
-      return;
-    }
+  const QFileInfoList* list = dir.entryInfoList();
+  if ( list )
+  {
 #ifdef DEBUG_KPLAYER_ENGINE
-    kdDebugTime() << "Autoloading " << urls << extu << "\n";
+    kdDebugTime() << " Directory " << dir.path() << "\n";
 #endif
-    fi.setFile (urls + extu);
-    if ( fi.exists() && fi.isReadable() )
+    QFileInfoListIterator fileinfoiterator (*list);
+    while ( QFileInfo* info = fileinfoiterator.current() )
     {
-      m_settings -> setSubtitlePath (urls + extu);
-      return;
+      QString name (info -> fileName());
+      if ( name != filename && info -> filePath() != urls && name.startsWith (basename, false)
+        && info -> exists() && info -> isReadable() )
+      {
+        QStringList::ConstIterator extiterator (exts.constBegin()), end (exts.constEnd());
+        while ( extiterator != end )
+        {
+          if ( name.endsWith (*extiterator, false) )
+          {
+#ifdef DEBUG_KPLAYER_ENGINE
+            kdDebugTime() << " Autoloaded " << info -> filePath() << "\n";
+#endif
+            settings() -> addSubtitlePath (info -> filePath());
+            break;
+          }
+          ++ extiterator;
+        }
+      }
+      ++ fileinfoiterator;
     }
   }
 }
@@ -1190,23 +1270,21 @@ void KPlayerEngine::loadSubtitle (KURL url)
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Engine::loadSubtitle (" << url.prettyURL() << ")\n";
 #endif
-  if ( url.path().isEmpty() )
-    url = KURL();
-  bool new_url = url != m_settings -> subtitleUrl()
-    && (! url.isEmpty() || ! m_settings -> subtitleUrl().isEmpty());
+  if ( url.path().isEmpty() || url == properties() -> subtitleUrl() )
+    return;
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Subtitle '" << url.url() << "'\n";
   kdDebugTime() << "         '" << url.prettyURL (0, KURL::StripFileProtocol) << "'\n";
 #endif
-  if ( new_url )
-    m_settings -> setSubtitleUrl (url);
-  KToggleAction* action = toggleAction ("subtitles_show");
-  if ( ! action -> isChecked() )
-    action -> activate();
-  if ( ! new_url )
-    return;
-  if ( m_process -> state() != KPlayerProcess::Idle )
-    m_process -> restart();
+  properties() -> setSubtitleUrl (url);
+  QString subtitles (properties() -> subtitleUrlString());
+  if ( settings() -> subtitles().find (subtitles) == settings() -> subtitles().end() )
+    settings() -> addSubtitlePath (subtitles);
+  properties() -> setShowSubtitles (true);
+  properties() -> resetSubtitleID();
+  properties() -> resetVobsubID();
+  properties() -> commit();
+  process() -> subtitles();
   enableSubtitleActions();
 }
 
@@ -1217,7 +1295,7 @@ void KPlayerEngine::fileOpenSubtitles (void)
     loadSubtitle (url);
 }
 
-void KPlayerEngine::fileOpenSubtitleUrl (void)
+/*void KPlayerEngine::fileOpenSubtitleUrl (void)
 {
   KURL url (openSubtitleUrl());
   if ( ! url.path().isEmpty() )
@@ -1227,54 +1305,59 @@ void KPlayerEngine::fileOpenSubtitleUrl (void)
 void KPlayerEngine::fileUnloadSubtitles (void)
 {
   loadSubtitle (KURL());
-}
+}*/
 
 void KPlayerEngine::fileProperties (void)
 {
-  if ( m_settings -> properties() )
-    KPlayerPropertiesDialog (m_settings -> properties()).exec();
+  if ( properties() -> url().isValid() )
+  {
+    KPlayerPropertiesDialog* dialog = KPlayerPropertiesDialog::createDialog (properties());
+    dialog -> setup (properties() -> url());
+    dialog -> exec();
+    delete dialog;
+  }
 }
 
 void KPlayerEngine::fullScreen (void)
 {
-  m_settings -> setFullScreen (toggleAction ("view_full_screen") -> isChecked());
+  settings() -> setFullScreen (toggleAction ("view_full_screen") -> isChecked());
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine::fullScreen (" << m_settings -> fullScreen() << ")\n";
+  kdDebugTime() << "Engine::fullScreen (" << settings() -> fullScreen() << ")\n";
 #endif
   setDisplaySize();
 }
 
 void KPlayerEngine::normal (void)
 {
-  m_settings -> setMaximized (false);
-  m_settings -> setFullScreen (false);
+  settings() -> setMaximized (false);
+  settings() -> setFullScreen (false);
   toggleAction ("view_full_screen") -> setChecked (false);
 }
 
 void KPlayerEngine::zoomIn (void)
 {
-  if ( ! m_settings -> properties() || m_settings -> properties() -> originalSize().isEmpty() )
+  if ( ! properties() -> hasOriginalSize() )
     return;
   normal();
-  m_settings -> setDisplaySize (m_settings -> displaySize() + m_settings -> properties() -> originalSize() / 2);
+  settings() -> setDisplaySize (settings() -> displaySize() + properties() -> originalSize() / 2);
   setDisplaySize (true);
 }
 
 void KPlayerEngine::zoomOut (void)
 {
-  if ( ! m_settings -> properties() || m_settings -> properties() -> originalSize().isEmpty() )
+  if ( ! properties() -> hasOriginalSize() )
     return;
   normal();
-  m_settings -> setDisplaySize (m_settings -> displaySize() - m_settings -> properties() -> originalSize() / 2);
+  settings() -> setDisplaySize (settings() -> displaySize() - properties() -> originalSize() / 2);
   setDisplaySize (true);
 }
 
 void KPlayerEngine::zoomTo (int m, int d)
 {
-  if ( ! m_settings -> properties() || m_settings -> properties() -> originalSize().isEmpty() )
+  if ( ! properties() -> hasOriginalSize() )
     return;
   normal();
-  m_settings -> setDisplaySize (m_settings -> properties() -> originalSize() * m / d);
+  settings() -> setDisplaySize (properties() -> originalSize() * m / d);
   setDisplaySize (true);
 }
 
@@ -1310,10 +1393,9 @@ void KPlayerEngine::zoom31 (void)
 
 void KPlayerEngine::wheel (int delta, int state)
 {
-  if ( ! m_settings -> maximized() && ! m_settings -> fullScreen() && m_settings -> properties()
-      && ! m_settings -> properties() -> originalSize().isEmpty() )
+  if ( ! settings() -> maximized() && ! settings() -> fullScreen() && properties() -> hasOriginalSize() )
   {
-    m_settings -> setDisplaySize (m_settings -> displaySize() + m_settings -> properties() -> originalSize() * delta / 1200);
+    settings() -> setDisplaySize (settings() -> displaySize() + properties() -> originalSize() * delta / 1200);
     setDisplaySize (true);
   }
   else if ( (state & Qt::ControlButton) == Qt::ControlButton )
@@ -1334,65 +1416,65 @@ void KPlayerEngine::wheel (int delta, int state)
 
 void KPlayerEngine::doubleClick (void)
 {
-  if ( stopped() || ! m_settings -> hasVideo() )
+  if ( stopped() || ! properties() -> hasVideo() )
     return;
-  m_settings -> setFullScreen (! m_settings -> fullScreen());
+  settings() -> setFullScreen (! settings() -> fullScreen());
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine::doubleClick (" << m_settings -> fullScreen() << ")\n";
+  kdDebugTime() << "Engine::doubleClick (" << settings() -> fullScreen() << ")\n";
 #endif
   setDisplaySize();
 }
 
 void KPlayerEngine::maintainAspect (void)
 {
-  maintainAspect (toggleAction ("view_maintain_aspect") -> isChecked(), m_settings -> originalAspect());
+  maintainAspect (toggleAction ("view_maintain_aspect") -> isChecked(), properties() -> originalAspect());
 }
 
 void KPlayerEngine::maintainOriginalAspect (void)
 {
-  maintainAspect (toggleAction ("view_original_aspect") -> isChecked(), m_settings -> originalSize());
+  maintainAspect (toggleAction ("view_original_aspect") -> isChecked(), properties() -> originalSize());
 }
 
 void KPlayerEngine::maintainCurrentAspect (void)
 {
-  maintainAspect (toggleAction ("view_current_aspect") -> isChecked(), m_settings -> displaySize());
-  if ( m_settings -> maintainAspect() )
+  maintainAspect (toggleAction ("view_current_aspect") -> isChecked(), settings() -> displaySize());
+  if ( settings() -> maintainAspect() )
     toggleAction ("view_current_aspect") -> setChecked (true);
 }
 
 void KPlayerEngine::aspect43 (void)
 {
   maintainAspect (toggleAction ("view_aspect_4_3") -> isChecked(), QSize (4, 3));
-  if ( m_settings -> maintainAspect() )
+  if ( settings() -> maintainAspect() )
     toggleAction ("view_aspect_4_3") -> setChecked (true);
 }
 
 void KPlayerEngine::aspect169 (void)
 {
   maintainAspect (toggleAction ("view_aspect_16_9") -> isChecked(), QSize (16, 9));
-  if ( m_settings -> maintainAspect() )
+  if ( settings() -> maintainAspect() )
     toggleAction ("view_aspect_16_9") -> setChecked (true);
 }
 
 void KPlayerEngine::play (void)
 {
-  if ( m_process -> state() == KPlayerProcess::Paused )
-    m_process -> pause();
-  else if ( m_process -> state() == KPlayerProcess::Idle )
+  if ( process() -> state() == KPlayerProcess::Paused )
+    process() -> pause();
+  else if ( process() -> state() == KPlayerProcess::Idle )
   {
-    if ( m_settings -> shift() )
+    if ( settings() -> shift() )
       kill();
     m_stop = false;
-    m_process -> play();
-    if ( m_settings -> originalAspect().isValid() )
+    process() -> play();
+    if ( properties() -> originalAspect().isValid() )
       setDisplaySize();
   }
 }
 
 void KPlayerEngine::pause (void)
 {
-  if ( m_process -> state() != KPlayerProcess::Idle )
-    m_process -> pause();
+  if ( process() -> state() != KPlayerProcess::Idle )
+    process() -> pause();
   else
   {
     KToggleAction* action = toggleAction ("player_pause");
@@ -1404,39 +1486,39 @@ void KPlayerEngine::pause (void)
 void KPlayerEngine::stop (void)
 {
   m_stop = true;
-  m_process -> stop();
+  process() -> stop();
   setDisplaySize();
 }
 
 void KPlayerEngine::kill (void)
 {
   m_stop = true;
-  m_process -> kill();
+  process() -> kill();
 }
 
 void KPlayerEngine::forward (void)
 {
-  m_process -> relativeSeek (m_settings -> normalSeek());
+  process() -> relativeSeek (properties() -> normalSeek());
 }
 
 void KPlayerEngine::fastForward (void)
 {
-  m_process -> relativeSeek (m_settings -> fastSeek());
+  process() -> relativeSeek (properties() -> fastSeek());
 }
 
 void KPlayerEngine::backward (void)
 {
-  m_process -> relativeSeek (- m_settings -> normalSeek());
+  process() -> relativeSeek (- properties() -> normalSeek());
 }
 
 void KPlayerEngine::fastBackward (void)
 {
-  m_process -> relativeSeek (- m_settings -> fastSeek());
+  process() -> relativeSeek (- properties() -> fastSeek());
 }
 
 void KPlayerEngine::start (void)
 {
-  m_process -> absoluteSeek (0);
+  process() -> absoluteSeek (0);
 }
 
 void KPlayerEngine::progressChanged (int progress)
@@ -1444,16 +1526,16 @@ void KPlayerEngine::progressChanged (int progress)
   if ( m_updating || ! m_progress_factor )
     return;
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Seek to " << progress << ": " << m_process -> position() << " => " << ((progress + m_progress_factor / 2) / m_progress_factor) << " / " << m_settings -> length() << "\n";
+  kdDebugTime() << "Seek to " << progress << ": " << process() -> position() << " => " << ((progress + m_progress_factor / 2) / m_progress_factor) << " / " << properties() -> length() << "\n";
 #endif
-  m_process -> absoluteSeek ((progress + m_progress_factor / 2) / m_progress_factor);
+  process() -> absoluteSeek ((progress + m_progress_factor / 2) / m_progress_factor);
 }
 
 void KPlayerEngine::volumeChanged (int volume)
 {
   if ( m_updating )
     return;
-  m_settings -> setVolume (volume);
+  settings() -> setVolume (volume);
   setVolume();
 }
 
@@ -1461,7 +1543,7 @@ void KPlayerEngine::contrastChanged (int contrast)
 {
   if ( m_updating )
     return;
-  m_settings -> setContrast (contrast);
+  settings() -> setContrast (contrast);
   setContrast();
 }
 
@@ -1469,7 +1551,7 @@ void KPlayerEngine::brightnessChanged (int brightness)
 {
   if ( m_updating )
     return;
-  m_settings -> setBrightness (brightness);
+  settings() -> setBrightness (brightness);
   setBrightness();
 }
 
@@ -1477,7 +1559,7 @@ void KPlayerEngine::hueChanged (int hue)
 {
   if ( m_updating )
     return;
-  m_settings -> setHue (hue);
+  settings() -> setHue (hue);
   setHue();
 }
 
@@ -1485,25 +1567,25 @@ void KPlayerEngine::saturationChanged (int saturation)
 {
   if ( m_updating )
     return;
-  m_settings -> setSaturation (saturation);
+  settings() -> setSaturation (saturation);
   setSaturation();
 }
 
 void KPlayerEngine::setVolume (void)
 {
   m_updating = true;
-  int volume = m_settings -> volume();
+  int volume = settings() -> volume();
   sliderAction ("audio_volume") -> slider() -> setValue (volume);
   popupAction ("popup_volume") -> slider() -> setValue (volume);
-  m_process -> volume (m_settings -> actualVolume());
+  process() -> volume (settings() -> actualVolume());
   m_updating = false;
 }
 
 void KPlayerEngine::setContrast (void)
 {
   m_updating = true;
-  int contrast = m_settings -> contrast();
-  m_process -> contrast (contrast);
+  int contrast = settings() -> contrast();
+  process() -> contrast (contrast);
   if ( ! light() )
   {
     sliderAction ("video_contrast") -> slider() -> setValue (contrast);
@@ -1515,8 +1597,8 @@ void KPlayerEngine::setContrast (void)
 void KPlayerEngine::setBrightness (void)
 {
   m_updating = true;
-  int brightness = m_settings -> brightness();
-  m_process -> brightness (brightness);
+  int brightness = settings() -> brightness();
+  process() -> brightness (brightness);
   if ( ! light() )
   {
     sliderAction ("video_brightness") -> slider() -> setValue (brightness);
@@ -1528,8 +1610,8 @@ void KPlayerEngine::setBrightness (void)
 void KPlayerEngine::setHue (void)
 {
   m_updating = true;
-  int hue = m_settings -> hue();
-  m_process -> hue (hue);
+  int hue = settings() -> hue();
+  process() -> hue (hue);
   if ( ! light() )
   {
     sliderAction ("video_hue") -> slider() -> setValue (hue);
@@ -1541,8 +1623,8 @@ void KPlayerEngine::setHue (void)
 void KPlayerEngine::setSaturation (void)
 {
   m_updating = true;
-  int saturation = m_settings -> saturation();
-  m_process -> saturation (saturation);
+  int saturation = settings() -> saturation();
+  process() -> saturation (saturation);
   if ( ! light() )
   {
     sliderAction ("video_saturation") -> slider() -> setValue (saturation);
@@ -1553,128 +1635,154 @@ void KPlayerEngine::setSaturation (void)
 
 void KPlayerEngine::volumeIncrease (void)
 {
-  m_settings -> setVolume (m_settings -> volume() + m_settings -> volumeStep());
+  settings() -> setVolume (settings() -> volume() + configuration() -> volumeStep());
   setVolume();
 }
 
 void KPlayerEngine::volumeDecrease (void)
 {
-  m_settings -> setVolume (m_settings -> volume() - m_settings -> volumeStep());
+  settings() -> setVolume (settings() -> volume() - configuration() -> volumeStep());
   setVolume();
 }
 
 void KPlayerEngine::mute (void)
 {
-  m_settings -> setMute (toggleAction ("audio_mute") -> isChecked());
-  m_process -> volume (m_settings -> actualVolume());
+  configuration() -> setMute (toggleAction ("audio_mute") -> isChecked());
+  process() -> volume (settings() -> actualVolume());
 }
 
 void KPlayerEngine::audioDelayIncrease (void)
 {
-  m_settings -> setAudioDelay (m_settings -> audioDelay() + m_settings -> audioDelayStep());
-  m_process -> audioDelay (m_settings -> audioDelayStep());
+  settings() -> setAudioDelay (settings() -> audioDelay() + configuration() -> audioDelayStep());
+  process() -> audioDelay (configuration() -> audioDelayStep());
 }
 
 void KPlayerEngine::audioDelayDecrease (void)
 {
-  m_settings -> setAudioDelay (m_settings -> audioDelay() - m_settings -> audioDelayStep());
-  m_process -> audioDelay (- m_settings -> audioDelayStep());
+  settings() -> setAudioDelay (settings() -> audioDelay() - configuration() -> audioDelayStep());
+  process() -> audioDelay (- configuration() -> audioDelayStep());
+}
+
+void KPlayerEngine::audioStream (int index)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "KPlayerEngine::audioStream\n";
+  kdDebugTime() << " Index  " << index << "\n";
+#endif
+  properties() -> setAudioIDOption (index + 1);
+  process() -> audioID (properties() -> audioID());
+}
+
+void KPlayerEngine::videoStream (int index)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "KPlayerEngine::videoStream\n";
+  kdDebugTime() << " Index  " << index << "\n";
+#endif
+  properties() -> setVideoIDOption (index + 1);
+  process() -> restart();
+}
+
+void KPlayerEngine::subtitleStream (int index)
+{
+  if ( index || settings() -> showSubtitles() )
+  {
+    int count = properties() -> subtitleIDs().count() + properties() -> vobsubIDs().count();
+    if ( index > count )
+      properties() -> setSubtitleUrl (settings() -> subtitles() [index - count - 1]);
+    properties() -> setSubtitleOption (index);
+    process() -> subtitles();
+    enableSubtitleActions();
+  }
 }
 
 void KPlayerEngine::softFrameDrop (void)
 {
   int drop = toggleAction ("player_soft_frame_drop") -> isChecked() ? 1 : 0;
-  m_settings -> setFrameDrop (drop);
-  m_process -> frameDrop (drop);
+  settings() -> setFrameDrop (drop);
+  process() -> frameDrop (drop);
 }
 
 void KPlayerEngine::hardFrameDrop (void)
 {
   int drop = toggleAction ("player_hard_frame_drop") -> isChecked() ? 2 : 0;
-  m_settings -> setFrameDrop (drop);
-  m_process -> frameDrop (drop);
-}
-
-void KPlayerEngine::subtitlesShow (void)
-{
-  bool show = toggleAction ("subtitles_show") -> isChecked();
-  m_settings -> setSubtitleVisibility (show);
-  m_process -> showSubtitles (show);
+  settings() -> setFrameDrop (drop);
+  process() -> frameDrop (drop);
 }
 
 void KPlayerEngine::subtitlesMoveDown (void)
 {
-  m_settings -> setSubtitlePosition (m_settings -> subtitlePosition() + m_settings -> subtitlePositionStep());
-  m_process -> subtitleMove (m_settings -> subtitlePositionStep());
+  settings() -> setSubtitlePosition (settings() -> subtitlePosition() + configuration() -> subtitlePositionStep());
+  process() -> subtitleMove (configuration() -> subtitlePositionStep());
 }
 
 void KPlayerEngine::subtitlesMoveUp (void)
 {
-  m_settings -> setSubtitlePosition (m_settings -> subtitlePosition() - m_settings -> subtitlePositionStep());
-  m_process -> subtitleMove (- m_settings -> subtitlePositionStep());
+  settings() -> setSubtitlePosition (settings() -> subtitlePosition() - configuration() -> subtitlePositionStep());
+  process() -> subtitleMove (- configuration() -> subtitlePositionStep());
 }
 
 void KPlayerEngine::subtitlesDelayDecrease (void)
 {
-  m_settings -> setSubtitleDelay (m_settings -> subtitleDelay() - m_settings -> subtitleDelayStep());
-  m_process -> subtitleDelay (- m_settings -> subtitleDelayStep());
+  settings() -> setSubtitleDelay (settings() -> subtitleDelay() - configuration() -> subtitleDelayStep());
+  process() -> subtitleDelay (- configuration() -> subtitleDelayStep());
 }
 
 void KPlayerEngine::subtitlesDelayIncrease (void)
 {
-  m_settings -> setSubtitleDelay (m_settings -> subtitleDelay() + m_settings -> subtitleDelayStep());
-  m_process -> subtitleDelay (m_settings -> subtitleDelayStep());
+  settings() -> setSubtitleDelay (settings() -> subtitleDelay() + configuration() -> subtitleDelayStep());
+  process() -> subtitleDelay (configuration() -> subtitleDelayStep());
 }
 
 void KPlayerEngine::contrastIncrease (void)
 {
-  m_settings -> setContrast (m_settings -> contrast() + m_settings -> contrastStep());
+  settings() -> setContrast (settings() -> contrast() + configuration() -> contrastStep());
   setContrast();
 }
 
 void KPlayerEngine::contrastDecrease (void)
 {
-  m_settings -> setContrast (m_settings -> contrast() - m_settings -> contrastStep());
+  settings() -> setContrast (settings() -> contrast() - configuration() -> contrastStep());
   setContrast();
 }
 
 void KPlayerEngine::brightnessIncrease (void)
 {
-  m_settings -> setBrightness (m_settings -> brightness() + m_settings -> brightnessStep());
+  settings() -> setBrightness (settings() -> brightness() + configuration() -> brightnessStep());
   setBrightness();
 }
 
 void KPlayerEngine::brightnessDecrease (void)
 {
-  m_settings -> setBrightness (m_settings -> brightness() - m_settings -> brightnessStep());
+  settings() -> setBrightness (settings() -> brightness() - configuration() -> brightnessStep());
   setBrightness();
 }
 
 void KPlayerEngine::hueIncrease (void)
 {
-  m_settings -> setHue (m_settings -> hue() + m_settings -> hueStep());
+  settings() -> setHue (settings() -> hue() + configuration() -> hueStep());
   setHue();
 }
 
 void KPlayerEngine::hueDecrease (void)
 {
-  m_settings -> setHue (m_settings -> hue() - m_settings -> hueStep());
+  settings() -> setHue (settings() -> hue() - configuration() -> hueStep());
   setHue();
 }
 
 void KPlayerEngine::saturationIncrease (void)
 {
-  m_settings -> setSaturation (m_settings -> saturation() + m_settings -> saturationStep());
+  settings() -> setSaturation (settings() -> saturation() + configuration() -> saturationStep());
   setSaturation();
 }
 
 void KPlayerEngine::saturationDecrease (void)
 {
-  m_settings -> setSaturation (m_settings -> saturation() - m_settings -> saturationStep());
+  settings() -> setSaturation (settings() -> saturation() - configuration() -> saturationStep());
   setSaturation();
 }
 
-KURL::List KPlayerEngine::openFiles (QWidget* parent)
+KURL::List KPlayerEngine::openFiles (const QString& title, QWidget* parent)
 {
   static QString filter = i18n("*|All files\n*.avi *.AVI|AVI files\n*.mpg *.mpeg *.MPG *.MPEG|MPEG files\n*.ogg *.OGG|OGG files\n*.mp3 *.MP3|MP3 files");
   KConfig* config = kPlayerConfig();
@@ -1691,7 +1799,7 @@ KURL::List KPlayerEngine::openFiles (QWidget* parent)
   KPlayerFileDialog dlg (dir, filter, parent, "filedialog");
   dlg.setOperationMode (KFileDialog::Opening);
   dlg.setMode (KFile::Files | KFile::ExistingOnly);
-  dlg.setCaption (i18n("Open"));
+  dlg.setCaption (title);
   if ( width > 0 && height > 0 )
     dlg.resize (width, height);
     //dlg.setGeometry (x, y, width, height);
@@ -1711,8 +1819,9 @@ KURL::List KPlayerEngine::openFiles (QWidget* parent)
   return dlg.selectedURLs();
 }
 
-KURL KPlayerEngine::openUrl (QWidget* parent)
+KURL::List KPlayerEngine::openUrl (const QString& title, QWidget* parent)
 {
+  KURL::List list;
   KConfig* config = kPlayerConfig();
   config -> setGroup ("Dialog Options");
   QString dir = config -> readEntry ("Open URL");
@@ -1721,27 +1830,29 @@ KURL KPlayerEngine::openUrl (QWidget* parent)
   int width = config -> readNumEntry ("Open URL Width");
   int height = config -> readNumEntry ("Open URL Height");
   KURLRequesterDlg dlg (dir, parent, "filedialog", true);
-  dlg.setCaption (i18n("Open URL"));
+  dlg.setCaption (title);
   if ( width > 0 && height > 0 )
     dlg.resize (width, height);
     //dlg.setGeometry (x, y, width, height);
   dlg.exec();
-  KURL url (dlg.result() == QDialog::Accepted && re_dvb.search (dlg.urlRequester() -> url()) >= 0 ?
-    KURL::fromPathOrURL (re_dvb.cap (1) + "kplayer/" + re_dvb.cap (2)) : dlg.selectedURL());
-  if ( ! url.isEmpty() && ! url.isMalformed() )
+  KURL url (dlg.selectedURL());
+  if ( ! url.isEmpty() && url.isValid() )
+  {
+    list.append (url);
     KRecentDocument::add (url);
+  }
   if ( dlg.result() == QDialog::Accepted )
     config -> writeEntry ("Open URL", url.isLocalFile() ? url.path() : url.url());
 //config -> writeEntry ("Open URL Left", dlg.x());
 //config -> writeEntry ("Open URL Top", dlg.y());
   config -> writeEntry ("Open URL Width", dlg.width());
   config -> writeEntry ("Open URL Height", dlg.height());
-  return url;
+  return list;
 }
 
 KURL KPlayerEngine::openSubtitle (QWidget* parent)
 {
-  static QString filter = i18n("*|All files\n*.aqt *.AQT *.jss *.JSS *.rt *.RT *.smi *.SMI *.srt *.SRT *.ssa *.SSA *.sub *.SUB *.txt *.TXT *.utf *.UTF|All subtitle files\n*.aqt *.AQT|AQT files\n*.jss *.JSS|JSS files\n*.rt *.RT|RT files\n*.smi *.SMI|SMI files\n*.srt *.SRT|SRT files\n*.ssa *.SSA|SSA files\n*.sub *.SUB|SUB files\n*.txt *.TXT|TXT files\n*.utf *.UTF|UTF files");
+  static QString filter = i18n("*|All files\n*.aqt *.AQT *.ass *.ASS *.js *.JS *.jss *.JSS *.rt *.RT *.smi *.SMI *.srt *.SRT *.ssa *.SSA *.sub *.SUB *.txt *.TXT *.utf *.UTF *.idx *.IDX *.ifo *.IFO|All subtitle files\n*.aqt *.AQT|AQT files\n*.ass *.ASS|ASS files\n*.js *.JS|JS files\n*.jss *.JSS|JSS files\n*.rt *.RT|RT files\n*.smi *.SMI|SMI files\n*.srt *.SRT|SRT files\n*.ssa *.SSA|SSA files\n*.sub *.SUB|SUB files\n*.txt *.TXT|TXT files\n*.utf *.UTF *.utf8 *.UTF8 *.utf-8 *.UTF-8|UTF files\n*.idx *.IDX *.ifo *.IFO|VobSub files");
   KConfig* config = kPlayerConfig();
   config -> setGroup ("Dialog Options");
   QString dir = config -> readEntry ("Open Subtitle Directory");
@@ -1752,7 +1863,7 @@ KURL KPlayerEngine::openSubtitle (QWidget* parent)
   KPlayerFileDialog dlg (dir, filter, parent, "filedialog");
   dlg.setOperationMode (KFileDialog::Opening);
   dlg.setMode (KFile::File | KFile::ExistingOnly);
-  dlg.setCaption (i18n("Open Subtitles"));
+  dlg.setCaption (i18n("Load Subtitles"));
   if ( width > 0 && height > 0 )
     dlg.resize (width, height);
     //dlg.setGeometry (x, y, width, height);
@@ -1764,13 +1875,13 @@ KURL KPlayerEngine::openSubtitle (QWidget* parent)
   config -> writeEntry ("Open Subtitle Height", dlg.height());
   KURL url (dlg.selectedURL());
 #ifdef DEBUG_KPLAYER_ENGINE
-  if ( ! url.isEmpty() && ! url.isMalformed() )
+  if ( ! url.isEmpty() && url.isValid() )
     kdDebugTime() << "Subtitle '" << dlg.selectedFile() << "'\n";
 #endif
   return url;
 }
 
-KURL KPlayerEngine::openSubtitleUrl (QWidget* parent)
+/*KURL KPlayerEngine::openSubtitleUrl (QWidget* parent)
 {
   KConfig* config = kPlayerConfig();
   config -> setGroup ("Dialog Options");
@@ -1786,7 +1897,7 @@ KURL KPlayerEngine::openSubtitleUrl (QWidget* parent)
     //dlg.setGeometry (x, y, width, height);
   dlg.exec();
   KURL url (dlg.selectedURL());
-  if ( ! url.isEmpty() && ! url.isMalformed() )
+  if ( ! url.isEmpty() && url.isValid() )
     KRecentDocument::add (url);
   if ( dlg.result() == QDialog::Accepted )
     config -> writeEntry ("Open Subtitle URL", url.isLocalFile() ? url.path() : url.url());
@@ -1795,194 +1906,161 @@ KURL KPlayerEngine::openSubtitleUrl (QWidget* parent)
   config -> writeEntry ("Open Subtitle URL Width", dlg.width());
   config -> writeEntry ("Open Subtitle URL Height", dlg.height());
   return url;
-}
+}*/
 
-void KPlayerEngine::getDriversCodecs (QString path)
+void KPlayerEngine::getLists (QString path)
 {
   if ( path.isEmpty() )
-    path = m_settings -> executablePath();
+    path = properties() -> executablePath();
   if ( path == m_path )
     return;
   m_path = path;
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "KPlayerEngine::getDriversCodecs (" << path << ")\n";
+  kdDebugTime() << "KPlayerEngine::getLists (" << path << ")\n";
 #endif
-  m_audio_codecs_ready = m_audio_drivers_ready = m_video_codecs_ready = m_video_drivers_ready = false;
-  m_player_ac = new KPlayerLineOutputProcess;
-  *m_player_ac << path << "-ac" << "help";
-  QApplication::connect (m_player_ac, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    this, SLOT (receivedAudioCodec (KPlayerLineOutputProcess*, char*, int)));
-  QApplication::connect (m_player_ac, SIGNAL (processExited (KProcess*)),
-    this, SLOT (audioCodecProcessExited (KProcess*)));
-  m_player_ac -> start (KProcess::NotifyOnExit, KProcess::All);
-  m_player_ao = new KPlayerLineOutputProcess;
-  *m_player_ao << path << "-ao" << "help";
-  QApplication::connect (m_player_ao, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    this, SLOT (receivedAudioDriver (KPlayerLineOutputProcess*, char*, int)));
-  QApplication::connect (m_player_ao, SIGNAL (processExited (KProcess*)),
-    this, SLOT (audioDriverProcessExited (KProcess*)));
-  m_player_ao -> start (KProcess::NotifyOnExit, KProcess::All);
-  m_player_vc = new KPlayerLineOutputProcess;
-  *m_player_vc << path << "-vc" << "help";
-  QApplication::connect (m_player_vc, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    this, SLOT (receivedVideoCodec (KPlayerLineOutputProcess*, char*, int)));
-  QApplication::connect (m_player_vc, SIGNAL (processExited (KProcess*)),
-    this, SLOT (videoCodecProcessExited (KProcess*)));
-  m_player_vc -> start (KProcess::NotifyOnExit, KProcess::All);
-  m_player_vo = new KPlayerLineOutputProcess;
-  *m_player_vo << path << "-vo" << "help";
-  QApplication::connect (m_player_vo, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    this, SLOT (receivedVideoDriver (KPlayerLineOutputProcess*, char*, int)));
-  QApplication::connect (m_player_vo, SIGNAL (processExited (KProcess*)),
-    this, SLOT (videoDriverProcessExited (KProcess*)));
-  m_player_vo -> start (KProcess::NotifyOnExit, KProcess::All);
+  m_audio_codecs_ready = m_audio_drivers_ready = m_video_codecs_ready = m_video_drivers_ready = m_demuxers_ready = false;
+  m_player = new KPlayerLineOutputProcess;
+  *m_player << path << "-identify" << "-ac" << "help" << "-ao" << "help"
+    << "-vc" << "help" << "-vo" << "help" << "-demuxer" << "help";
+  connect (m_player, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
+    SLOT (receivedOutput (KPlayerLineOutputProcess*, char*, int)));
+  connect (m_player, SIGNAL (processExited (KProcess*)), SLOT (processExited (KProcess*)));
+  m_player -> start (KProcess::NotifyOnExit, KProcess::All);
 }
 
-void KPlayerEngine::receivedAudioCodec (KPlayerLineOutputProcess*, char* str, int)
+void KPlayerEngine::receivedOutput (KPlayerLineOutputProcess*, char* str, int)
 {
-  if ( ! m_audio_codecs_ready && re_ac.search (str) >= 0 )
-  {
-    m_audio_codecs.clear();
-    m_audio_codecs_ready = true;
-    return;
-  }
-  if ( ! m_audio_codecs_ready || re_codec.search (str) < 0 )
-    return;
-#ifdef DEBUG_KPLAYER_ENGINE
-  kdDebug() << str << "\n";
-#endif
-  QString desc (re_codec.cap(2));
-  desc.replace (re_multiple, " ");
-  desc.replace (re_trailing, "");
-  desc.replace (re_brackets, "");
-  desc.replace (re_parentheses, "");
-  desc.replace (re_audio, "");
-  desc.replace (re_s, "");
-  desc.replace (re_layer, "layer ");
-  desc.replace (re_speech, "WMA 9 Speech");
-  desc.replace (re_macintosh, "Macintosh Audio Comp. and Exp.");
-  m_audio_codecs += re_codec.cap(1) + ": " + desc;
-}
-
-void KPlayerEngine::audioCodecProcessExited (KProcess* proc)
-{
-  if ( proc == m_player_ac )
-    m_player_ac = 0;
-  delete proc;
-  if ( (m_audio_codecs_ready || m_audio_drivers_ready || m_video_codecs_ready || m_video_drivers_ready)
-      && ! m_player_ac && ! m_player_ao && ! m_player_vc && ! m_player_vo )
-    emit refresh();
-}
-
-void KPlayerEngine::receivedAudioDriver (KPlayerLineOutputProcess*, char* str, int)
-{
-  if ( ! m_audio_drivers_ready && re_ao.search (str) >= 0 )
-  {
-    m_audio_drivers.clear();
-    m_audio_drivers_ready = true;
-    return;
-  }
-  if ( ! m_audio_drivers_ready || re_driver.search (str) < 0 )
-    return;
-#ifdef DEBUG_KPLAYER_ENGINE
-  kdDebug() << str << "\n";
-#endif
-  QString desc (re_driver.cap(2));
-  desc.replace (re_multiple, " ");
-  desc.replace (re_trailing, "");
-  desc.replace (re_brackets, "");
-  desc.replace (re_parentheses, "");
-  desc.replace (re_audio, "");
-  desc.replace (re_s, "");
-  desc.replace (re_layer, "layer ");
-  desc.replace (re_writer, "");
-  m_audio_drivers += re_driver.cap(1) + ": " + desc;
-}
-
-void KPlayerEngine::audioDriverProcessExited (KProcess* proc)
-{
-  if ( proc == m_player_ao )
-    m_player_ao = 0;
-  delete proc;
-  if ( (m_audio_codecs_ready || m_audio_drivers_ready || m_video_codecs_ready || m_video_drivers_ready)
-      && ! m_player_ac && ! m_player_ao && ! m_player_vc && ! m_player_vo )
-    emit refresh();
-}
-
-void KPlayerEngine::receivedVideoCodec (KPlayerLineOutputProcess*, char* str, int)
-{
-  if ( ! m_video_codecs_ready && re_vc.search (str) >= 0 )
-  {
-    m_video_codecs.clear();
-    m_video_codecs_ready = true;
-    return;
-  }
-  if ( ! m_video_codecs_ready || re_codec.search (str) < 0 )
-    return;
-#ifdef DEBUG_KPLAYER_ENGINE
-  kdDebug() << str << "\n";
-#endif
-  QString desc (re_codec.cap(2));
-  desc.replace (re_multiple, " ");
-  desc.replace (re_trailing, "");
-  desc.replace (re_brackets, "");
-  desc.replace (re_parentheses, "");
-  desc.replace (re_video, "");
-  desc.replace (re_s, "");
-  desc.replace (re_layer, "layer ");
-  desc.replace (re_amu, "AMU");
-  m_video_codecs += re_codec.cap(1) + ": " + desc;
-}
-
-void KPlayerEngine::videoCodecProcessExited (KProcess* proc)
-{
-  if ( proc == m_player_vc )
-    m_player_vc = 0;
-  delete proc;
-  if ( (m_audio_codecs_ready || m_audio_drivers_ready || m_video_codecs_ready || m_video_drivers_ready)
-      && ! m_player_ac && ! m_player_ao && ! m_player_vc && ! m_player_vo )
-    emit refresh();
-}
-
-void KPlayerEngine::receivedVideoDriver (KPlayerLineOutputProcess*, char* str, int)
-{
-  if ( ! m_video_drivers_ready && re_vo.search (str) >= 0 )
+  if ( strcmp (str, "ID_VIDEO_OUTPUTS") == 0 )
   {
     m_video_drivers.clear();
     m_video_drivers_ready = true;
-    return;
+    m_audio_codecs_ready = m_audio_drivers_ready = m_video_codecs_ready = m_demuxers_ready = false;
   }
-  if ( ! m_video_drivers_ready || re_driver.search (str) < 0 )
-    return;
+  else if ( strcmp (str, "ID_VIDEO_CODECS") == 0 )
+  {
+    m_video_codecs.clear();
+    m_video_codecs_ready = true;
+    m_audio_codecs_ready = m_audio_drivers_ready = m_video_drivers_ready = m_demuxers_ready = false;
+  }
+  else if ( strcmp (str, "ID_AUDIO_OUTPUTS") == 0 )
+  {
+    m_audio_drivers.clear();
+    m_audio_drivers_ready = true;
+    m_audio_codecs_ready = m_video_codecs_ready = m_video_drivers_ready = m_demuxers_ready = false;
+  }
+  else if ( strcmp (str, "ID_AUDIO_CODECS") == 0 )
+  {
+    m_audio_codecs.clear();
+    m_audio_codecs_ready = true;
+    m_audio_drivers_ready = m_video_codecs_ready = m_video_drivers_ready = m_demuxers_ready = false;
+  }
+  else if ( strcmp (str, "ID_DEMUXERS") == 0 )
+  {
+    m_demuxers.clear();
+    m_demuxers_ready = true;
+    m_audio_codecs_ready = m_audio_drivers_ready = m_video_codecs_ready = m_video_drivers_ready = false;
+  }
+  else if ( m_audio_codecs_ready && re_codec.search (str) >= 0 )
+  {
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebug() << str << "\n";
+    kdDebug() << str << "\n";
 #endif
-  QString desc (re_driver.cap(2));
-  desc.replace (re_multiple, " ");
-  desc.replace (re_trailing, "");
-  desc.replace (re_xv, "/XVideo");
-  desc.replace (re_vidix, "/VIDIX");
-  desc.replace (re_xover, "X11 overlay");
-  desc.replace (re_opengl, "OpenGL");
-  desc.replace (re_matrox, "Matrox overlay in");
-  desc.replace (re_matroxg, "");
-  desc.replace (re_brackets, "");
-  desc.replace (re_parentheses, "");
-  desc.replace (re_video, "");
-  desc.replace (re_s, "");
-  desc.replace (re_layer, "layer ");
-  desc.replace (re_dash, " ");
-  m_video_drivers += re_driver.cap(1) + ": " + desc;
+    QString desc (re_codec.cap(2));
+    desc.replace (re_multiple, " ");
+    desc.replace (re_trailing, "");
+    desc.replace (re_brackets, "");
+    desc.replace (re_parentheses, "");
+    desc.replace (re_audio, "");
+    desc.replace (re_s, "");
+    desc.replace (re_layer, "layer ");
+    desc.replace (re_speech, "WMA 9 Speech");
+    desc.replace (re_macintosh, "Macintosh Audio Comp. and Exp.");
+    m_audio_codecs += re_codec.cap(1) + ": " + desc;
+  }
+  else if ( m_audio_drivers_ready && re_driver.search (str) >= 0 )
+  {
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebug() << str << "\n";
+#endif
+    QString desc (re_driver.cap(2));
+    desc.replace (re_multiple, " ");
+    desc.replace (re_trailing, "");
+    desc.replace (re_brackets, "");
+    desc.replace (re_parentheses, "");
+    desc.replace (re_audio, "");
+    desc.replace (re_s, "");
+    desc.replace (re_layer, "layer ");
+    desc.replace (re_writer, "");
+    m_audio_drivers += re_driver.cap(1) + ": " + desc;
+  }
+  else if ( m_video_codecs_ready && re_codec.search (str) >= 0 )
+  {
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebug() << str << "\n";
+#endif
+    QString desc (re_codec.cap(2));
+    desc.replace (re_multiple, " ");
+    desc.replace (re_trailing, "");
+    desc.replace (re_brackets, "");
+    desc.replace (re_parentheses, "");
+    desc.replace (re_video, "");
+    desc.replace (re_s, "");
+    desc.replace (re_layer, "layer ");
+    desc.replace (re_amu, "AMU");
+    m_video_codecs += re_codec.cap(1) + ": " + desc;
+  }
+  else if ( m_video_drivers_ready && re_driver.search (str) >= 0 )
+  {
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebug() << str << "\n";
+#endif
+    QString desc (re_driver.cap(2));
+    desc.replace (re_multiple, " ");
+    desc.replace (re_trailing, "");
+    desc.replace (re_xv, "/XVideo");
+    desc.replace (re_vidix, "/VIDIX");
+    desc.replace (re_xover, "X11 overlay");
+    desc.replace (re_opengl, "OpenGL");
+    desc.replace (re_matrox, "Matrox overlay in");
+    desc.replace (re_matroxg, "");
+    desc.replace (re_brackets, "");
+    desc.replace (re_parentheses, "");
+    desc.replace (re_video, "");
+    desc.replace (re_s, "");
+    desc.replace (re_layer, "layer ");
+    desc.replace (re_dash, " ");
+    m_video_drivers += re_driver.cap(1) + ": " + desc;
+  }
+  else if ( m_demuxers_ready && re_demuxer.search (str) >= 0 )
+  {
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebug() << str << "\n";
+#endif
+    QString desc (re_demuxer.cap(2));
+    desc.replace (re_parentheses, "");
+    desc.replace (re_demux, "");
+    desc.replace (re_sega, "");
+    desc.replace (re_smjpeg, "SMJPEG");
+    desc.replace (re_tv_card, "TV card");
+    desc.replace (re_lmlm, "");
+    if ( desc == "mf" )
+      desc = "Image files";
+    m_demuxers += re_demuxer.cap(1) + ": " + desc;
+  }
 }
 
-void KPlayerEngine::videoDriverProcessExited (KProcess* proc)
+void KPlayerEngine::processExited (KProcess* proc)
 {
-  if ( proc == m_player_vo )
-    m_player_vo = 0;
+  if ( proc == m_player )
+    m_player = 0;
   delete proc;
-  if ( (m_audio_codecs_ready || m_audio_drivers_ready || m_video_codecs_ready || m_video_drivers_ready)
-      && ! m_player_ac && ! m_player_ao && ! m_player_vc && ! m_player_vo )
-    emit refresh();
+  m_audio_codecs.sort();
+  m_audio_drivers.sort();
+  m_video_codecs.sort();
+  m_video_drivers.sort();
+  m_demuxers.sort();
+  if ( m_audio_codecs_ready || m_audio_drivers_ready || m_video_codecs_ready || m_video_drivers_ready || m_demuxers_ready )
+    emit updated();
 }
 
 void KPlayerEngine::maintainAspect (bool maintain, QSize aspect)
@@ -1992,7 +2070,7 @@ void KPlayerEngine::maintainAspect (bool maintain, QSize aspect)
 #endif
   if ( aspect.isEmpty() )
     maintain = false;
-  m_settings -> setMaintainAspect (maintain, aspect);
+  settings() -> setMaintainAspect (maintain, aspect);
   refreshAspect();
   setDisplaySize();
 }
@@ -2003,18 +2081,19 @@ void KPlayerEngine::setDisplaySize (bool user_zoom, bool user_resize)
   kdDebugTime() << "Engine::setDisplaySize (" << user_zoom << ", " << user_resize << ")\n";
 #endif
   if ( ! light() )
-    toggleAction ("view_full_screen") -> setChecked (m_settings -> fullScreen());
+    toggleAction ("view_full_screen") -> setChecked (properties() -> fullScreen()
+      && toggleAction ("view_full_screen") -> isEnabled());
   m_zooming = true;
   emit syncronize (user_resize);
   m_zooming = false;
-  QSize size (m_settings -> adjustDisplaySize (user_zoom, user_resize));
-  if ( user_zoom || ! m_settings -> constrainedSize() )
+  QSize size (settings() -> adjustDisplaySize (user_zoom, user_resize));
+  if ( user_zoom || ! settings() -> constrainedSize() )
   {
     m_zooming = true;
     emit zoom();
     m_zooming = false;
   }
-  m_workspace -> setDisplaySize (size);
+  workspace() -> setDisplaySize (size);
   enableZoomActions();
 }
 

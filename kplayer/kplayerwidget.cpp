@@ -16,7 +16,10 @@
 #include <klocale.h>
 #include <qwhatsthis.h>
 
-#include <kdebug.h>
+#ifdef DEBUG
+#define DEBUG_KPLAYER_WIDGET
+#define DEBUG_KPLAYER_WORKSPACE
+#endif
 
 #include "kplayerwidget.h"
 #include "kplayerwidget.moc"
@@ -30,9 +33,6 @@ void KPlayerX11ClearExposeWindow (uint id);
 void KPlayerX11SendConfigureEvent (uint id, int w, int h);
 void KPlayerSetX11EventFilter (void);
 void KPlayerResetX11EventFilter (void);
-
-#define DEBUG_KPLAYER_WIDGET
-#define DEBUG_KPLAYER_WORKSPACE
 
 // WM_NORMAL_HINTS, XSizeHints, XSetWMNormalHints() ???
 

@@ -32,7 +32,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <kdebug.h>
+#ifdef DEBUG
+#define DEBUG_KPLAYER_PROCESS
+//#define DEBUG_KPLAYER_PROGRESS
+#define DEBUG_KPLAYER_HELPER
+//#define DEBUG_KPLAYER_LINEOUT
+//#define DEBUG_KPLAYER_KIOSLAVE
+//#define DEBUG_KPLAYER_DUMP
+#endif
 
 #include "kplayerprocess.h"
 #include "kplayerprocess.moc"
@@ -42,13 +49,6 @@
 
 #define MIN_VIDEO_LENGTH 5
 
-#define DEBUG_KPLAYER_PROCESS
-//#define DEBUG_KPLAYER_PROGRESS
-#define DEBUG_KPLAYER_HELPER
-//#define DEBUG_KPLAYER_LINEOUT
-//#define DEBUG_KPLAYER_KIOSLAVE
-//#define DEBUG_KPLAYER_DUMP
-
 #ifdef DEBUG_KPLAYER_DUMP
 static QFile s_dump (QDir::homeDirPath() + "/kioslave.dump");
 #endif
@@ -56,32 +56,21 @@ static QFile s_dump (QDir::homeDirPath() + "/kioslave.dump");
 static QRegExp re_ext ("^[A-Za-z0-9]+$");
 static QRegExp re_a_or_v ("^[AV]: *([0-9,:.-]+)");
 static QRegExp re_a_and_v ("^A: *([0-9,:.-]+) +V: *([0-9,:.-]+)");
-static QRegExp re_video ("^V(?:IDE)?O: *\\S+ +(\\d+)x(\\d+)");
-static QRegExp re_vo ("^V(?:IDE)?O:.* => +(\\d+)x(\\d+)");
-static QRegExp re_vbr ("^VIDEO:.* (\\d+,?\\d*) *fps *(\\d+),?\\d* *kbps");
-static QRegExp re_abr ("^AUDIO:.*\\((\\d+),?\\d* *kbit\\)");
-static QRegExp re_vc ("^Selected video codec: \\[([A-Za-z0-9,:.-]+)\\]");
-static QRegExp re_ac ("^Selected audio codec: \\[([A-Za-z0-9,:.-]+)\\]");
 static QRegExp re_start ("^(?:Start playing|Starting playback|Zaèínám pøehrávat|Starte Wiedergabe|Påbegynder afspilning|Åêêßíçóç áíáğáñáãùãŞò|Empezando reproducción|Démarre la lecture|Lejátszás indítása|Inizio la riproduzione|ºÆÀ¸³«»Ï|ì¬ìƒì„ ì‹œì‘í•©ë‹ˆë‹¤|ĞŸĞ¾Ñ‡Ğ½ÑƒĞ²Ğ° Ğ¿Ğ»ĞµÑ˜Ğ±ĞµĞºĞ¾Ñ‚|Start afspelen|Starter avspilling|Zaczynam odtwarzanie|Iníciando reprodução|Rulez|îÁŞÁÌÏ ×ÏcĞÒÏÉÚ×ÅÄÅÎÉÑ|Zaèínam prehráva»|Çalmaya başlanıyor|ğÏŞÁÔÏË ĞÒÏÇÒÁ×ÁÎÎÑ|¿ªÊ¼²¥·Å|¶\\}©l¼½©ñ)\\.\\.\\.", false);
 //static QRegExp re_playing ("(?:^(?:Playing|Pøehrávám|Spiele|Afspiller|ÁíáğáñáãùãŞ ôïõ|Reproduciendo|Joue|In riproduzione|ĞŸÑƒÑˆÑ‚ĞµĞ½Ğ¾|Bezig met het afspelen van|Spiller|Odtwarzam|Reproduzindo|Rulez|ğÒÏÉÇÒÙ×ÁÎÉÅ|Prehrávam|ğÒÏÇÒÁ×ÁÎÎÑ|²¥·Å|¥¿¦b¼½©ñ) | (?:lejátszása|¤òºÆÀ¸Ãæ|ì¬ìƒ ì¤‘|Çalınıyor)\\.*$)", false);
 static QRegExp re_exiting ("^(?:Exiting|Èçëèçàì|Konèím|Beende| ?Afslutter| ?¸îïäïò|Saliendo|Sortie|Kilépek|In uscita|½ªÎ»¤·¤Æ¤¤¤Ş¤¹|ì¢…ë£Œí•©ë‹ˆë‹¤.|Ğ˜Ğ·Ğ»ĞµĞ³ÑƒĞ|Bezig met afsluiten|Avslutter|Wychodzê|Saindo|Ieºire|÷ÙÈÏÄÉÍ|Konèím|Çıkılıyor|÷ÉÈÏÄÉÍÏ|ÕıÔÚÍË³ö|¥¿¦b°h¥X)", false);
 static QRegExp re_quit ("^(?:Exiting|Èçëèçàì|Konèím|Beende| ?Afslutter| ?¸îïäïò|Saliendo|Sortie|Kilépek|In uscita|½ªÎ»¤·¤Æ¤¤¤Ş¤¹|ì¢…ë£Œí•©ë‹ˆë‹¤.|Ğ˜Ğ·Ğ»ĞµĞ³ÑƒĞ|Bezig met afsluiten|Avslutter|Wychodzê|Saindo|Ieºire|÷ÙÈÏÄÉÍ|Konèím|Çıkılıyor|÷ÉÈÏÄÉÍÏ|ÕıÔÚÍË³ö|¥¿¦b°h¥X)\\.\\.\\. \\((?:Quit|Êğàé|Konec|Ende|Afslut|Êëåßóéìï|Salida\\.?|Fin|Kilépés|Uscita|½ªÎ»|ì¢…ë£Œ|ĞÑ‚ĞºĞ°Ğ¶Ğ¸|Stop|Avslutt|Wyj¶cie|Sair|Ieºire|÷ÙÈÏÄ|Koniec|Çıkış|÷ÉÈ¦Ä|ÍË³ö|Â÷¶\\})\\)", false);
 static QRegExp re_success ("^(?:Exiting|Èçëèçàì|Konèím|Beende| ?Afslutter| ?¸îïäïò|Saliendo|Sortie|Kilépek|In uscita|½ªÎ»¤·¤Æ¤¤¤Ş¤¹|Á¾·áÇÕ´Ï´Ù|ĞĞ·Ğ»ĞµĞ³ÑĞ²Ğ°|Bezig met afsluiten|Avslutter|Wychodzê|Saindo|Ieºire|÷ÙÈÏÄÉÍ|Konèím|Çıkılıyor|÷ÉÈÏÄÉÍÏ|ÕıÔÚÍË³ö|¥¿¦b°h¥X)\\.\\.\\. \\((?:End of file|Êğàé íà ôàéëà|Konec souboru|Ende der Datei|Slut på filen|Ôİëïò ôïõ áñ÷åßïõ|Fin del archivo\\.?|Fin du fichier|Vége a file-nak|Fine del file|¥Õ¥¡¥¤¥ë¤ÎËöÃ¼¤Ç¤¹|íŒŒì¼ì˜ ë|ĞšÑ€Ğ°Ñ˜ Ğ½Ğ° Ğ´Ğ°Ñ‚Ğ¾Ñ‚ĞµĞºĞ°Ñ‚Ğ°|Einde van bestand|Slutt på filen|Koniec pliku|Fim do arquivo|Sfârºit fiºier|ëÏÎÅÃ ÆÁÊÌÁ|Koniec súboru|Dosyanın Sonu|ë¦ÎÅÃØ ÆÁÊÌÕ|ÎÄ¼ş½áÊø|ÀÉ®×¥½ºİ)\\)", false);
-static QRegExp re_ans_length ("^ANS_LENGTH=(\\d+)$");
 static QRegExp re_cache_fill ("^Cache fill: *([0-9]+[.,]?[0-9]*) *%", false);
 static QRegExp re_generating_index ("^Generating Index: *([0-9]+[.,]?[0-9]*) *%", false);
 static QRegExp re_mpeg12 ("mpeg[12]", false);
 static QRegExp re_version ("^MPlayer *0\\.9.* \\(C\\) ");
-static QRegExp re_crash ("MPlayer.*(?:crashed|havaroval|stürzte|ist abgestürzt|fik en alvorlig|êáôİññåõóå|se detuvo|a planté|egy 'illegális utasítást'|röpke|elcrashelt|è stato interrotto|è andato in crash|¤ÏÉÔ|¤ÏÁÛÄê|ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤|Ğ¿Ğ°Ğ´Ğ½Ğ°|crashte|zakoñczy³|zakoñczy³|falhou|a murit|ÓÌÏÍÁÌÓÑ|zhavaroval|±ÀÀ£|·í¤F¡C)");
-static QRegExp re_dvd_vcd ("^(?:vcd|dvd|dvb|tv|cdda|cddb)://", false);
-static QRegExp re_dvb_hack ("^((?:vcd|dvd|dvb|tv|cdda|cddb)://)kplayer/(.*)$", false);
-static QRegExp re_paused ("^ *[=-]+ *(?:PAUSE|ÏÀÓÇÀ|POZASTAVENO|ĞÁÕÓÇ|PAUSA|SZÜNET|Ää»ß|ì ì‹œë©ˆì¶¤|ĞŸĞĞ£Ğ—Ğ|GEPAUZEERD|PAUZA|PAUSADO|PAUZÃ|ğòéïóôáîï÷ìåîï|DURAKLADI|ğáõúá|ÔİÍ£|¼È°±) *[=-]+ *$");
-//static QRegExp re_reading ("^Reading config file", false);
+static QRegExp re_crash ("^ID_SIGNAL=([0-9]+)$");
+static QRegExp re_paused ("^ID_PAUSED$");
 
 static QCString command_quit ("quit\n");
 static QCString command_pause ("pause\n");
 static QCString command_visibility ("sub_visibility\n");
-static QCString command_length ("get_time_length\n");
 static QCString command_seek_100 ("seek 100 1\n");
 static QCString command_seek_99 ("seek 99 1\n");
 static QCString command_seek_95 ("seek 95 1\n");
@@ -258,6 +247,16 @@ void KPlayerLineOutputProcess::receivedOutput (KProcess* proc, char* str, int le
 //kdDebugTime() << "normal return\n";
 }
 
+inline KPlayerSettings* KPlayerProcess::settings (void) const
+{
+  return KPlayerEngine::engine() -> settings();
+}
+
+inline KPlayerTrackProperties* KPlayerProcess::properties (void) const
+{
+  return settings() -> properties();
+}
+
 KPlayerProcess::KPlayerProcess (void)
 {
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -267,16 +266,19 @@ KPlayerProcess::KPlayerProcess (void)
   m_temporary_file = 0;
   m_state = Idle;
   m_pausing = m_paused = m_quit = m_kill = m_seek = m_success = m_size_sent = m_info_available = false;
-  m_delayed_player = m_delayed_helper = m_sent = m_send_seek = m_send_length = false;
+  m_delayed_player = m_delayed_helper = m_sent = m_send_seek = false;
   m_seekable = m_09_version = m_first_chunk = false;
   m_position = m_max_position = m_helper_position = 0;
   m_seek_origin = - MIN_VIDEO_LENGTH;
-  m_helper_seek = m_helper_seek_count = m_ans_length = m_absolute_seek = m_seek_count = m_sent_count = m_cache_size = 0;
+  m_helper_seek = m_helper_seek_count = m_absolute_seek = m_seek_count = m_sent_count = m_cache_size = 0;
   m_slave_job = m_temp_job = 0;
   m_send_volume = m_send_contrast = m_send_brightness = m_send_hue = m_send_saturation = false;
-  m_send_frame_drop = m_send_subtitle_visibility = false;
+  m_send_frame_drop = m_send_audio_id = m_send_subtitle_load = m_send_subtitle_visibility = false;
   m_send_audio_delay = m_send_subtitle_delay = m_send_subtitle_position = 0;
   m_audio_delay = m_subtitle_delay = m_subtitle_position = 0;
+  m_audio_id = m_subtitle_index = -1;
+  m_send_subtitle_index = -2;
+  m_subtitle_visibility = true;
   m_fifo_handle = -1;
   m_fifo_offset = 0;
   m_fifo_notifier = 0;
@@ -284,7 +286,6 @@ KPlayerProcess::KPlayerProcess (void)
   QString home (QDir::homeDirPath());
   QDir (home).mkdir (".mplayer");
   m_cache.setAutoDelete (true);
-  //connect (kPlayerSettings(), SIGNAL (refresh()), this, SLOT (refreshSettings()));
 }
 
 KPlayerProcess::~KPlayerProcess()
@@ -309,29 +310,11 @@ KPlayerProcess::~KPlayerProcess()
   removeDataFifo();
 }
 
-/*void KPlayerProcess::refreshSettings (void)
-{
-#ifdef DEBUG_KPLAYER_PROCESS
-  kdDebugTime() << "Process::refreshSettings\n";
-#endif
-  if ( ! kPlayerSettings() -> useKioslave() || kPlayerSettings() -> useTemporaryFile() )
-    return;
-  if ( m_temp_job )
-    m_temp_job -> kill (false);
-  if ( m_temporary_file )
-  {
-    m_temporary_file -> close();
-    m_temporary_file -> unlink();
-    delete m_temporary_file;
-    m_temporary_file = 0;
-  }
-}*/
-
 void KPlayerProcess::transferTemporaryFile (void)
 {
-  if ( kPlayerSettings() -> useKioslave() && kPlayerSettings() -> useTemporaryFile() && ! m_temporary_file )
+  if ( properties() -> useKioslave() && properties() -> useTemporaryFile() && ! m_temporary_file )
   {
-    QFileInfo fi (kPlayerSettings() -> url().fileName());
+    QFileInfo fi (properties() -> url().fileName());
     QString extension (fi.extension(false).lower());
     if ( ! extension.isEmpty() )
       extension = "." + extension;
@@ -344,7 +327,7 @@ void KPlayerProcess::transferTemporaryFile (void)
     }
     kdDebugTime() << "Process: Creating temp job\n";
 #endif
-    m_temp_job = KIO::get (kPlayerSettings() -> url(), false, false);
+    m_temp_job = KIO::get (properties() -> url(), false, false);
     m_temp_job -> setWindow (kPlayerWorkspace());
     m_temp_job -> addMetaData ("PropagateHttpHeader", "true");
     connect (m_temp_job, SIGNAL (data (KIO::Job*, const QByteArray&)), this, SLOT (transferTempData (KIO::Job*, const QByteArray&)));
@@ -360,8 +343,8 @@ void KPlayerProcess::load (KURL)
 {
   m_position = 0;
   m_delayed_player = m_delayed_helper = false;
-  m_size_sent = kPlayerSettings() -> hasVideo() || kPlayerSettings() -> originalSize().isValid();
-  m_info_available = kPlayerSettings() -> hasLength();
+  m_size_sent = properties() -> hasVideo() || properties() -> hasNoVideo();
+  m_info_available = properties() -> hasLength();
   if ( m_temp_job )
     m_temp_job -> kill (false);
   if ( m_temporary_file )
@@ -380,8 +363,8 @@ void KPlayerProcess::setState (State state)
     return;
   State previous = m_state;
   m_state = state;
-  if ( previous == Running && state == Playing && ! kPlayerSettings() -> subtitleVisibility() )
-    showSubtitles (false);
+  //if ( previous == Running && state == Playing && ! settings() -> subtitleVisibility() )
+  //  showSubtitles (false);
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Process: New state: " << state << ", previous state: " << previous << ", position: " << m_position << "\n";
 #endif
@@ -393,7 +376,7 @@ void KPlayerProcess::setState (State state)
 
 QString KPlayerProcess::positionString (void) const
 {
-  QString l (kPlayerSettings() -> lengthString()), p (timeString (position(), true));
+  QString l (properties() -> lengthString()), p (timeString (position(), true));
   return l.isEmpty() ? p : p + " / " + l;
 }
 
@@ -425,14 +408,13 @@ void KPlayerProcess::get_info (void)
   kdDebugTime() << "Process: Get info\n";
 #endif
   m_info_available = m_delayed_helper = m_kill = false;
-  m_helper_seek = m_helper_seek_count = m_ans_length = 0;
+  m_helper_seek = m_helper_seek_count = 0;
   m_helper_position = 0;
-  KPlayerSettings* settings = kPlayerSettings();
-  if ( settings -> url().isEmpty() || re_dvd_vcd.search (settings -> url().url()) >= 0 )
+  if ( properties() -> url().isEmpty() || ! properties() -> deviceOption().isEmpty() )
     return;
-  if ( settings -> useKioslave() )
+  if ( properties() -> useKioslave() )
   {
-    if ( ! settings -> useTemporaryFile() )
+    if ( ! properties() -> useTemporaryFile() )
       return;
     if ( m_temporary_file && m_temporary_file -> handle() >= 0 )
     {
@@ -441,11 +423,11 @@ void KPlayerProcess::get_info (void)
     }
   }
   m_helper = new KPlayerLineOutputProcess;
-  *m_helper << settings -> executablePath() << "-slave" << "-ao" << "null" << "-vo" << "null";
-  if ( settings -> cache() == 1 || ! settings -> url().isLocalFile() && ! settings -> useKioslave() )
+  *m_helper << properties() -> executablePath() << "-slave" << "-ao" << "null" << "-vo" << "null";
+  if ( properties() -> cache() == 1 || ! properties() -> url().isLocalFile() && ! properties() -> useKioslave() )
     *m_helper << "-nocache";
-  else if ( settings -> cache() == 2 )
-    *m_helper << "-cache" << QString().setNum (settings -> cacheSize());
+  else if ( properties() -> cache() == 2 )
+    *m_helper << "-cache" << QString().setNum (properties() -> cacheSize());
   QApplication::connect (m_helper, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
     this, SLOT (receivedHelperLine (KPlayerLineOutputProcess*, char*, int)));
   if ( ! run (m_helper) )
@@ -464,8 +446,7 @@ void KPlayerProcess::play (void)
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Process: Play\n";
 #endif
-  KPlayerSettings* settings = kPlayerSettings();
-  if ( settings -> url().isEmpty() || ! settings -> properties() )
+  if ( properties() -> url().isEmpty() )
     return;
   m_position = 0;
   emit progressChanged (m_position, Position);
@@ -479,20 +460,19 @@ void KPlayerProcess::start (void)
 #endif
   if ( m_slave_job )
     m_slave_job -> kill (false);
-  KPlayerSettings* settings = kPlayerSettings();
   m_position = m_max_position = 0;
   m_seek_count = m_cache_size = m_sent_count = 0;
   m_pausing = m_paused = m_quit = m_kill = m_09_version = m_delayed_player = m_first_chunk = false;
   m_seek = m_success = m_send_seek = m_sent = false;
   m_send_volume = m_send_contrast = m_send_brightness = m_send_hue = m_send_saturation = false;
-  m_send_frame_drop = m_send_subtitle_visibility = false;
+  m_send_frame_drop = m_send_audio_id = m_send_subtitle_load = m_send_subtitle_visibility = false;
   m_send_audio_delay = m_send_subtitle_delay = m_send_subtitle_position = 0;
-  m_show_subtitles = m_seekable = true;
-  m_send_length = ! settings -> hasLength();
+  m_send_subtitle_index = -2;
+  m_seekable = m_subtitle_visibility = true;
   m_cache.clear();
   setState (Running);
   transferTemporaryFile();
-  if ( settings -> useKioslave() && settings -> useTemporaryFile()
+  if ( properties() -> useKioslave() && properties() -> useTemporaryFile()
     && m_temporary_file && m_temporary_file -> handle() >= 0 )
   {
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -501,7 +481,7 @@ void KPlayerProcess::start (void)
     m_delayed_player = true;
     return;
   }
-/*if ( m_helper && re_dvd_vcd.search (settings -> url().url()) >= 0 )
+/*if ( m_helper && re_dvd_vcd.search (settings() -> url().url()) >= 0 )
   {
     m_delayed_play = true;
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -510,45 +490,83 @@ void KPlayerProcess::start (void)
     return;
   }*/
   m_player = new KPlayerLineOutputProcess;
-  *m_player << settings -> executablePath() << "-zoom" << "-noautosub" << "-wid" << QCString().setNum (kPlayerWidget() -> winId());
-  QString driver (settings -> videoDriverString());
+  *m_player << properties() -> executablePath() << "-zoom" << "-noautosub" << "-slave"
+    << "-wid" << QCString().setNum (kPlayerWidget() -> winId());
+  QString driver (properties() -> videoDriverString());
   if ( ! driver.isEmpty() )
-    *m_player << "-vo" << driver;
-  driver = settings -> audioDriverString();
+  {
+    if ( driver.startsWith ("xvmc") )
+      driver = "xvmc:ck=set" + driver.mid (4);
+    else if ( driver.startsWith ("xv") )
+      driver = "xv:ck=set" + driver.mid (2);
+    *m_player << "-vo" << driver << "-colorkey" << "0x000000";
+  }
+  driver = properties() -> audioDriverString();
   if ( ! driver.isEmpty() )
     *m_player << "-ao" << driver;
-  *m_player << "-osdlevel" << QCString().setNum (settings -> osdLevel());
-  *m_player << "-contrast" << QCString().setNum (settings -> contrast());
-  *m_player << "-brightness" << QCString().setNum (settings -> brightness());
-  *m_player << "-hue" << QCString().setNum (settings -> hue());
-  *m_player << "-saturation" << QCString().setNum (settings -> saturation());
-  if ( settings -> frameDrop() == 1 )
+  *m_player << "-osdlevel" << QCString().setNum (properties() -> osdLevel());
+  *m_player << "-contrast" << QCString().setNum (settings() -> contrast());
+  *m_player << "-brightness" << QCString().setNum (settings() -> brightness());
+  *m_player << "-hue" << QCString().setNum (settings() -> hue());
+  *m_player << "-saturation" << QCString().setNum (settings() -> saturation());
+  if ( settings() -> frameDrop() == 0 )
+    *m_player << "-noframedrop";
+  else if ( settings() -> frameDrop() == 1 )
     *m_player << "-framedrop";
-  else if ( settings -> frameDrop() == 2 )
+  else if ( settings() -> frameDrop() == 2 )
     *m_player << "-hardframedrop";
-  if ( settings -> useKioslave() && (! settings -> useTemporaryFile() || ! m_temporary_file)
-      && settings -> properties() -> cacheOption() == -1 && settings -> cacheDefault() == 0 )
+  int cache = properties() -> cache();
+  if ( cache == 0 && properties() -> useKioslave() && (! properties() -> useTemporaryFile() || ! m_temporary_file) )
     *m_player << "-cache" << "1024";
-  else if ( settings -> cache() == 2 )
-    *m_player << "-cache" << QString().setNum (settings -> cacheSize());
-  else if ( settings -> cache() == 1 )
+  else if ( cache == 2 )
+    *m_player << "-cache" << QString().setNum (properties() -> cacheSize());
+  else if ( cache == 1 )
     *m_player << "-nocache";
-  if ( settings -> videoScaler() > 0 )
-    *m_player << "-sws" << QCString().setNum (settings -> videoScaler());
-  m_audio_delay = settings -> audioDelay();
+  if ( properties() -> videoScaler() > 0 )
+    *m_player << "-sws" << QCString().setNum (properties() -> videoScaler());
+  m_audio_delay = settings() -> audioDelay();
   if ( m_audio_delay != 0 )
     *m_player << "-delay" << QCString().setNum (m_audio_delay);
-  m_subtitle_delay = settings -> subtitleDelay();
-  if ( m_subtitle_delay != 0 && ! settings -> subtitleUrl().isEmpty() )
+  if ( properties() -> hasVideoID() )
+    *m_player << "-vid" << QCString().setNum (properties() -> videoID());
+  m_audio_id = properties() -> audioID();
+  if ( m_audio_id > -1 )
+    *m_player << "-aid" << QCString().setNum (m_audio_id);
+  m_subtitles.clear();
+  if ( settings() -> hasSubtitles() && settings() -> showSubtitles() )
+  {
+    m_subtitle_index = properties() -> subtitleIndex();
+    if ( properties() -> hasSubtitleID() )
+      *m_player << "-sid" << QCString().setNum (properties() -> subtitleID());
+    else if ( properties() -> hasVobsubID() )
+      *m_player << "-vobsubid" << QCString().setNum (properties() -> vobsubID());
+    else
+    {
+      QString urls (settings() -> currentSubtitles());
+      if ( properties() -> vobsubSubtitles() )
+        *m_player << "-vobsub" << urls;
+      else if ( urls.find (',') < 0 )
+        *m_player << "-sub" << urls;
+      else
+      {
+        m_subtitle_index = -1;
+        m_send_subtitle_load = true;
+      }
+    }
+  }
+  else
+    m_subtitle_index = -1;
+  m_subtitle_delay = settings() -> subtitleDelay();
+  if ( m_subtitle_delay != 0 )
     *m_player << "-subdelay" << QCString().setNum (m_subtitle_delay);
-  m_subtitle_position = settings -> subtitlePosition();
-  if ( m_subtitle_position != 100 && ! settings -> subtitleUrl().isEmpty() )
+  m_subtitle_position = settings() -> subtitlePosition();
+  if ( m_subtitle_position != 100 )
     *m_player << "-subpos" << QCString().setNum (m_subtitle_position);
-  if ( settings -> videoDoubleBuffering() )
+  if ( properties() -> videoDoubleBuffering() )
     *m_player << "-double";
-  if ( settings -> videoDirectRendering() && settings -> subtitleUrl().isEmpty() )
+  if ( properties() -> videoDirectRendering() && ! settings() -> showSubtitles() )
     *m_player << "-dr";
-  if ( settings -> videoDriver() != "sdl" && settings -> videoDriver() != "svga" )
+  if ( properties() -> videoDriver() != "sdl" && properties() -> videoDriver() != "svga" )
   {
     QString path (KGlobal::dirs() -> findResource ("appdata", "input.conf"));
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -567,10 +585,7 @@ void KPlayerProcess::start (void)
     kdDebugTime() << "Input.conf: '" << path << "'\n";
 #endif
   }
-  if ( ! settings -> subtitleUrl().isEmpty() )
-    *m_player << "-sub" << (settings -> subtitleUrl().isLocalFile() ? settings -> subtitleUrl().path() : settings -> subtitleUrl().url());
-  *m_player << "-slave";
-  if ( settings -> useKioslave() && (! settings -> useTemporaryFile() || ! m_temporary_file) )
+  if ( properties() -> useKioslave() && (! properties() -> useTemporaryFile() || ! m_temporary_file) )
   {
     if ( m_temporary_file )
     {
@@ -579,7 +594,7 @@ void KPlayerProcess::start (void)
       delete m_temporary_file;
       m_temporary_file = 0;
     }
-    QString ext (settings -> properties() -> type());
+    QString ext (properties() -> extension());
     if ( re_ext.search (ext) >= 0 )
       ext.prepend ('.');
     else
@@ -587,12 +602,18 @@ void KPlayerProcess::start (void)
     m_fifo_name = QFile::encodeName (QDir::homeDirPath() + "/.mplayer/kpstream" + ext);
     removeDataFifo();
 #ifdef HAVE_MKFIFO
-    int rv = ::mkfifo (m_fifo_name, S_IRUSR | S_IWUSR);
+#ifdef DEBUG_KPLAYER_PROCESS
+    int rv =
+#endif
+    ::mkfifo (m_fifo_name, S_IRUSR | S_IWUSR);
 #ifdef DEBUG_KPLAYER_PROCESS
     kdDebugTime() << "Process: mkfifo " << m_fifo_name << " returned " << rv << "\n";
 #endif
 #else
-    int rv = ::mknod (m_fifo_name, S_IFIFO | S_IRUSR | S_IWUSR, 0);
+#ifdef DEBUG_KPLAYER_PROCESS
+    int rv =
+#endif
+    ::mknod (m_fifo_name, S_IFIFO | S_IRUSR | S_IWUSR, 0);
 #ifdef DEBUG_KPLAYER_PROCESS
     kdDebugTime() << "Process: mknod " << m_fifo_name << " returned " << rv << "\n";
 #endif
@@ -613,28 +634,24 @@ void KPlayerProcess::start (void)
     setState (Idle);
     return;
   }
-//#ifdef DEBUG_KPLAYER_PROCESS
-//if ( ! settings -> hasLength() && re_dvd_vcd.search (settings -> url().url()) >= 0 )
-//  kdDebugTime() << "Process: Will send get_time_length for '" << settings -> url().url() << "'\n";
-//#endif
-  if ( settings -> useKioslave() && (! settings -> useTemporaryFile() || ! m_temporary_file) )
+  if ( properties() -> useKioslave() && (! properties() -> useTemporaryFile() || ! m_temporary_file) )
   {
 #ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Will send get_time_length for '" << settings -> url().url() << "'\n";
+    kdDebugTime() << "Process: Will send get_time_length for '" << properties() -> url().url() << "'\n";
     kdDebugTime() << "Process: Creating slave job\n";
 #endif
-    m_slave_job = KIO::get (settings -> url(), false, false);
+    m_slave_job = KIO::get (properties() -> url(), false, false);
     m_slave_job -> setWindow (kPlayerWorkspace());
     m_slave_job -> addMetaData ("PropagateHttpHeader", "true");
     connect (m_slave_job, SIGNAL (data (KIO::Job*, const QByteArray&)), this, SLOT (transferData (KIO::Job*, const QByteArray&)));
     connect (m_slave_job, SIGNAL (result (KIO::Job*)), this, SLOT (transferDone (KIO::Job*)));
     connect (m_slave_job, SIGNAL (infoMessage (KIO::Job*, const QString&)), this, SLOT (transferInfoMessage (KIO::Job*, const QString&)));
-    m_cache_size = settings -> cache() == 2 ? settings -> cacheSize() * 1024 : 1048576;
+    m_cache_size = properties() -> cache() == 2 ? properties() -> cacheSize() * 1024 : 1048576;
     m_first_chunk = true;
 #ifdef DEBUG_KPLAYER_PROCESS
     kdDebugTime() << "Process: Cache size: " << m_cache_size << "\n";
 #endif
-    m_seekable = settings -> playlist();
+    m_seekable = properties() -> playlist();
   }
 }
 
@@ -643,7 +660,7 @@ void KPlayerProcess::restart (void)
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Process: Restart\n";
 #endif
-  if ( m_temp_job || ! m_player || ! kPlayerSettings() -> properties() )
+  if ( m_temp_job || ! m_player || properties() -> url().isEmpty() || state() == KPlayerProcess::Idle )
     return;
   m_quit = true;
   m_cache.clear();
@@ -661,34 +678,33 @@ bool KPlayerProcess::run (KPlayerLineOutputProcess* player)
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Process: Run\n";
 #endif
-  KPlayerSettings* settings = kPlayerSettings();
-  QString codec (settings -> videoCodecString());
+  QString codec (properties() -> videoCodecString());
   if ( ! codec.isEmpty() )
     *player << "-vc" << codec;
-  codec = settings -> audioCodecString();
+  codec = properties() -> audioCodecString();
   if ( ! codec.isEmpty() )
     *player << "-ac" << codec;
-  if ( settings -> buildNewIndex() == 0 )
+  codec = properties() -> demuxerString();
+  if ( ! codec.isEmpty() )
+    *player << "-demuxer" << codec;
+  if ( properties() -> buildNewIndex() == 0 )
     *player << "-idx";
-  else if ( settings -> buildNewIndex() == 2 )
+  else if ( properties() -> buildNewIndex() == 2 )
     *player << "-forceidx";
-  *player << "-noquiet";
-  if ( ! settings -> commandLine().isEmpty() )
-    *player << QStringList::split (QChar (' '), settings -> commandLine());
-  if ( settings -> playlist() )
+  *player << "-noquiet" << "-identify";
+  if ( ! properties() -> commandLine().isEmpty() )
+    *player << QStringList::split (QChar (' '), properties() -> commandLine());
+  codec = properties() -> deviceSetting();
+  if ( ! codec.isEmpty() )
+    *player << properties() -> deviceOption() << codec;
+  if ( properties() -> playlist() )
     *player << "-playlist";
   else
     *player << "--";
-  if ( settings -> useKioslave() )
-    *player << (settings -> useTemporaryFile() && m_temporary_file ? QFile::encodeName (m_temporary_file -> name()) : m_fifo_name);
-  else if ( settings -> url().isLocalFile() )
-    *player << settings -> url().path();
-  else if ( re_dvb_hack.search (settings -> url().url()) >= 0 )
-    *player << (re_dvb_hack.cap (1) + KURL::decode_string (re_dvb_hack.cap (2)));
-  else if ( re_dvd_vcd.search (settings -> url().url()) >= 0 )
-    *player << KURL::decode_string (settings -> url().url());
+  if ( properties() -> useKioslave() )
+    *player << (properties() -> useTemporaryFile() && m_temporary_file ? QFile::encodeName (m_temporary_file -> name()) : m_fifo_name);
   else
-    *player << settings -> url().url();
+    *player << properties() -> urlString();
   QApplication::connect (player, SIGNAL (processExited (KProcess*)),
     this, SLOT (playerProcessExited (KProcess*)));
 //QApplication::connect (player, SIGNAL (receivedStderrLine (KPlayerLineOutputProcess*, char*, int)),
@@ -853,11 +869,11 @@ void KPlayerProcess::absoluteSeek (int seconds)
   }
   QCString s ("seek ");
   // broken codec workaround
-  if ( kPlayerSettings() -> length() >= MIN_VIDEO_LENGTH
-    && re_mpeg12.search (kPlayerSettings() -> properties() -> videoCodecValue()) >= 0
-    && re_dvd_vcd.search (kPlayerSettings() -> url().url()) < 0 )
+  if ( properties() -> length() >= MIN_VIDEO_LENGTH
+    && re_mpeg12.search (properties() -> videoCodec()) >= 0
+    && properties() -> deviceOption().isEmpty() )
   {
-    seconds = limit (int (float (seconds) / kPlayerSettings() -> properties() -> length() * 100 + 0.5), 0, 100);
+    seconds = limit (int (float (seconds) / properties() -> length() * 100 + 0.5), 0, 100);
     s += QCString().setNum (seconds) + " 1\n";
   }
   else
@@ -877,11 +893,11 @@ void KPlayerProcess::relativeSeek (int seconds)
     return;
   QCString s ("seek ");
   // broken codec workaround
-  if ( (seconds > 4 || seconds < -4) && kPlayerSettings() -> length() >= MIN_VIDEO_LENGTH
-    && re_mpeg12.search (kPlayerSettings() -> properties() -> videoCodecValue()) >= 0
-    && re_dvd_vcd.search (kPlayerSettings() -> url().url()) < 0 )
+  if ( (seconds > 4 || seconds < -4) && properties() -> length() >= MIN_VIDEO_LENGTH
+    && re_mpeg12.search (properties() -> videoCodec()) >= 0
+    && properties() -> deviceOption().isEmpty() )
   {
-    //seconds = limit (int ((m_position + seconds) / kPlayerSettings() -> properties() -> length() * 100 + 0.5), 0, 100);
+    //seconds = limit (int ((m_position + seconds) / properties() -> length() * 100 + 0.5), 0, 100);
     //s += QCString().setNum (seconds) + " 1\n";
     //if ( m_send_seek )
     //  m_absolute_seek += seconds;
@@ -990,21 +1006,6 @@ void KPlayerProcess::saturation (int saturation)
   m_send_saturation = false;
 }
 
-void KPlayerProcess::showSubtitles (bool show)
-{
-  if ( ! m_player || m_quit || state() != Playing && state() != Running || kPlayerSettings() -> subtitleUrl().isEmpty() || m_show_subtitles == show )
-    return;
-  if ( m_sent || state() == Running )
-  {
-    m_send_subtitle_visibility = ! m_send_subtitle_visibility;
-    return;
-  }
-  if ( ! m_send_subtitle_visibility )
-    sendPlayerCommand (command_visibility);
-  m_send_subtitle_visibility = false;
-  m_show_subtitles = show;
-}
-
 void KPlayerProcess::subtitleMove (int position, bool absolute)
 {
   if ( ! m_player || m_quit || state() != Playing && state() != Running )
@@ -1051,6 +1052,72 @@ void KPlayerProcess::subtitleDelay (float delay, bool absolute)
   m_send_subtitle_delay = 0;
 }
 
+void KPlayerProcess::subtitleIndex (int index)
+{
+  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+    return;
+  if ( m_sent || state() == Running )
+  {
+    m_send_subtitle_index = index;
+    return;
+  }
+  if ( index != m_subtitle_index )
+  {
+    QCString s ("sub_select ");
+    s += QCString().setNum (index) + "\n";
+    sendPlayerCommand (s);
+    m_subtitle_index = index;
+  }
+  m_send_subtitle_index = -2;
+  if ( index == -1 == m_subtitle_visibility )
+    subtitleVisibility();
+  else
+    m_send_subtitle_visibility = false;
+}
+
+void KPlayerProcess::subtitleVisibility (void)
+{
+  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+    return;
+  if ( m_sent || state() == Running )
+  {
+    m_send_subtitle_visibility = true;
+    return;
+  }
+  sendPlayerCommand (command_visibility);
+  m_subtitle_visibility = ! m_subtitle_visibility;
+  m_send_subtitle_visibility = false;
+}
+
+void KPlayerProcess::subtitles (void)
+{
+  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+    return;
+  int index = properties() -> subtitleIndex();
+  int count = properties() -> subtitleIDs().count() + properties() -> vobsubIDs().count();
+  if ( index < count )
+  {
+    subtitleIndex (index);
+    return;
+  }
+  QString subtitle (settings() -> currentSubtitles());
+  index = m_subtitles.findIndex (subtitle);
+  if ( index >= 0 )
+  {
+    subtitleIndex (index + count);
+    return;
+  }
+  if ( m_sent || state() == Running )
+  {
+    m_send_subtitle_load = true;
+    return;
+  }
+  QCString s ("sub_load ");
+  s += '"' + subtitle.utf8() + "\"\n";
+  sendPlayerCommand (s);
+  m_send_subtitle_load = false;
+}
+
 void KPlayerProcess::audioDelay (float delay, bool absolute)
 {
   if ( ! m_player || m_quit || state() != Playing && state() != Running )
@@ -1072,6 +1139,31 @@ void KPlayerProcess::audioDelay (float delay, bool absolute)
   s += QCString().setNum (- delay) + "\n";
   sendPlayerCommand (s);
   m_send_audio_delay = 0;
+}
+
+void KPlayerProcess::audioID (int id)
+{
+  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+    return;
+  if ( m_sent || state() == Running )
+  {
+    m_send_audio_id = true;
+    return;
+  }
+  if ( id != m_audio_id )
+  {
+    QRegExp demuxers (KPlayerEngine::engine() -> configuration() -> switchAudioDemuxers());
+    if ( demuxers.search (properties() -> demuxer()) >= 0 )
+    {
+      QCString s ("switch_audio ");
+      s += QCString().setNum (id) + "\n";
+      sendPlayerCommand (s);
+      m_audio_id = id;
+    }
+    else
+      restart();
+  }
+  m_send_audio_id = false;
 }
 
 void KPlayerProcess::transferData (KIO::Job* job, const QByteArray& data)
@@ -1187,7 +1279,7 @@ void KPlayerProcess::transferDone (KIO::Job* job)
         errorString = job -> errorString();
         if ( errorString.isEmpty() )
         {
-          KURL url (kPlayerSettings() -> url());
+          KURL url (properties() -> url());
           errorString = job -> detailedErrorStrings (&url).first();
         }
       }
@@ -1264,7 +1356,7 @@ void KPlayerProcess::transferTempDone (KIO::Job* job)
       QString errorString (job -> errorString());
       if ( ! errorString.isEmpty() )
         emit messageReceived (errorString);
-      KURL url (kPlayerSettings() -> url());
+      KURL url (settings() -> url());
       QStringList errors (job -> detailedErrorStrings (&url));
       for ( QStringList::Iterator it = errors.begin(); it != errors.end(); ++ it )
         if ( ! (*it).isEmpty() )
@@ -1447,12 +1539,12 @@ void KPlayerProcess::playerProcessExited (KProcess *proc)
 #endif
     delete m_player;
     m_player = 0;
-    if ( kPlayerSettings() -> properties() && m_success && ! m_seek && m_position >= MIN_VIDEO_LENGTH )
+    if ( m_success && ! m_seek && m_position >= MIN_VIDEO_LENGTH && m_position > properties() -> length() / 40 )
     {
-      kPlayerSettings() -> properties() -> setLength (m_position);
+      properties() -> setLength (m_position);
       m_info_available = true;
       emit infoAvailable();
-      kPlayerSettings() -> properties() -> save();
+      properties() -> commit();
     }
     m_cache.clear();
     if ( m_slave_job )
@@ -1469,12 +1561,9 @@ void KPlayerProcess::playerProcessExited (KProcess *proc)
 #endif
     delete m_helper;
     m_helper = 0;
-    if ( kPlayerSettings() -> properties() && m_helper_seek < 500 && m_helper_position >= MIN_VIDEO_LENGTH )
-      kPlayerSettings() -> properties() -> setLength (m_helper_position);
-    if ( kPlayerSettings() -> properties()
-        && (kPlayerSettings() -> properties() -> length() < MIN_VIDEO_LENGTH * 4 && m_ans_length > MIN_VIDEO_LENGTH * 10
-        || kPlayerSettings() -> properties() -> length() == 0 && m_ans_length > 0) )
-      kPlayerSettings() -> properties() -> setLength (m_ans_length);
+    if ( m_helper_seek < 500 && m_helper_position >= MIN_VIDEO_LENGTH
+        && m_helper_position > properties() -> length() / 40 )
+      properties() -> setLength (m_helper_position);
     m_info_available = true;
     if ( ! m_kill )
       emit infoAvailable();
@@ -1483,8 +1572,8 @@ void KPlayerProcess::playerProcessExited (KProcess *proc)
       emit sizeAvailable();
       m_size_sent = true;
     }
-    if ( ! m_kill && kPlayerSettings() -> properties() )
-      kPlayerSettings() -> properties() -> save();
+    if ( ! m_kill && properties() -> url().isValid() )
+      properties() -> commit();
     /*if ( m_delayed_play && ! m_player )
     {
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -1500,24 +1589,6 @@ void KPlayerProcess::playerProcessExited (KProcess *proc)
     kdDebugTime() << "Process: Stray MPlayer process exited\n";
 #endif
   }
-}
-
-float KPlayerProcess::stringToFloat (QString stime)
-{
-  int comma = stime.find (',');
-  if ( comma >= 0 )
-    stime [comma] = '.';
-  QStringList sl = QStringList::split (':', stime);
-  int i = 0, n = 0;
-  if ( sl.count() > 4 || sl.count() < 1 )
-    return 0;
-  if ( sl.count() > 3 )
-    n = sl[i++].toInt() * 86400;
-  if ( sl.count() > 2 )
-    n += sl[i++].toInt() * 3600;
-  if ( sl.count() > 1 )
-    n += sl[i++].toInt() * 60;
-  return sl[i].toFloat() + n;
 }
 
 void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* str, int len)
@@ -1544,46 +1615,6 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
     kdDebugTime() << "Process: MPlayer 0.9x detected\n";
 #endif
   }
-  if ( re_vo.search (str) >= 0 )
-  {
-    if ( ! kPlayerSettings() -> hasVideo() )
-      m_size_sent = false;
-    if ( kPlayerSettings() -> properties() )
-    {
-      kPlayerSettings() -> properties() -> setOriginalSize (QSize (re_vo.cap(1).toInt(), re_vo.cap(2).toInt()));
-#ifdef DEBUG_KPLAYER_PROCESS
-      kdDebugTime() << "Process: Adjusted Width " << kPlayerSettings() -> properties() -> originalSize().width() << " Height " << kPlayerSettings() -> properties() -> originalSize().height() << "\n";
-#endif
-    }
-    if ( ! m_size_sent && ! m_quit )
-    {
-      emit sizeAvailable();
-      m_size_sent = true;
-    }
-  }
-  else if ( kPlayerSettings() -> properties() && kPlayerSettings() -> properties() -> originalSize().isEmpty() && re_video.search (str) >= 0 )
-  {
-    if ( ! kPlayerSettings() -> hasVideo() )
-      m_size_sent = false;
-    kPlayerSettings() -> properties() -> setOriginalSize (QSize (re_video.cap(1).toInt(), re_video.cap(2).toInt()));
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Width " << kPlayerSettings() -> properties() -> originalSize().width() << " Height " << kPlayerSettings() -> properties() -> originalSize().height() << "\n";
-#endif
-  }
-  if ( kPlayerSettings() -> properties() && kPlayerSettings() -> properties() -> length() <= 0
-    && re_ans_length.search (str) >= 0 )
-  {
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Player: Matched ans_length: " << re_ans_length.cap (1) << " in " << re_ans_length.cap (0) << "\n";
-#endif
-    kPlayerSettings() -> properties() -> setLength (re_ans_length.cap (1).toInt());
-    m_info_available = true;
-    if ( ! m_quit )
-    {
-      emit infoAvailable();
-      kPlayerSettings() -> properties() -> save();
-    }
-  }
   if ( re_paused.search (str) >= 0 )
   {
     m_paused = true;
@@ -1591,9 +1622,38 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
     m_sent = false;
     setState (Paused);
   }
-//if ( m_state == Running && ! m_slave_job && m_fifo_handle < 0 && ! m_cache.isEmpty() && ! m_fifo_name.isEmpty()
-//    && (re_reading.search (str) >= 0 || re_playing.search (str) >= 0 || re_start.search (str) >= 0) )
-//  sendFifoData();
+  if ( strncmp (str, "ID_FILE_SUB_FILENAME=", 21) == 0 && str[21] )
+  {
+    m_subtitles.append (str + 21);
+#ifdef DEBUG_KPLAYER_PROCESS
+    kdDebugTime() << "Process: Subtitle file " << m_subtitles.last() << "\n";
+#endif
+    if ( settings() -> showExternalSubtitles() && settings() -> currentSubtitles() == m_subtitles.last() )
+      subtitleIndex (properties() -> subtitleIDs().count() + properties() -> vobsubIDs().count() + m_subtitles.count() - 1);
+  }
+  else if ( m_state < Playing || strncmp (str, "ID_", 3) == 0 )
+  {
+    QSize size (properties() -> originalSize());
+    bool hadVideo = properties() -> hasVideo();
+    bool hadLength = properties() -> hasLength();
+    properties() -> extractMeta (str, true);
+    if ( ! hadLength && properties() -> hasLength() )
+    {
+      m_info_available = true;
+      if ( ! m_quit )
+      {
+        emit infoAvailable();
+        properties() -> commit();
+      }
+    }
+    if ( properties() -> hasVideo() && (! hadVideo || size != properties() -> originalSize()) )
+      m_size_sent = false;
+    if ( ! m_quit && ! m_size_sent && properties() -> heightAdjusted() )
+    {
+      emit sizeAvailable();
+      m_size_sent = true;
+    }
+  }
   if ( m_state == Running && (m_pausing || m_send_seek) && ! m_sent && ! m_quit && re_start.search (str) >= 0 )
   {
     if ( m_send_seek )
@@ -1618,36 +1678,10 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
   if ( re_exiting.search (str) >= 0 && re_quit.search (str) < 0 && re_success.search (str) < 0 && ! m_quit )
     emit errorDetected();
   if ( re_crash.search (str) >= 0 )
-    emit errorDetected();
-  if ( kPlayerSettings() -> properties() && re_vbr.search (str) >= 0 )
   {
-    kPlayerSettings() -> properties() -> setFramerate (stringToFloat (re_vbr.cap(1)));
-    kPlayerSettings() -> properties() -> setVideoBitrate (re_vbr.cap(2).toInt());
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Framerate " << kPlayerSettings() -> properties() -> framerate() << "\n";
-    kdDebugTime() << "Process: Video bitrate " << kPlayerSettings() -> properties() -> videoBitrate() << "\n";
-#endif
-  }
-  if ( kPlayerSettings() -> properties() && re_abr.search (str) >= 0 )
-  {
-    kPlayerSettings() -> properties() -> setAudioBitrate (re_abr.cap(1).toInt());
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Audio bitrate " << kPlayerSettings() -> properties() -> audioBitrate() << "\n";
-#endif
-  }
-  if ( kPlayerSettings() -> properties() && re_vc.search (str) >= 0 )
-  {
-    kPlayerSettings() -> properties() -> setVideoCodecValue (re_vc.cap(1));
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Video codec " << kPlayerSettings() -> properties() -> videoCodecValue() << "\n";
-#endif
-  }
-  if ( kPlayerSettings() -> properties() && re_ac.search (str) >= 0 )
-  {
-    kPlayerSettings() -> properties() -> setAudioCodecValue (re_ac.cap(1));
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Audio codec " << kPlayerSettings() -> properties() -> audioCodecValue() << "\n";
-#endif
+    int sig = re_crash.cap(1).toInt();
+    if ( sig <= 15 && ! m_quit || sig < 9 || sig > 9 && sig < 15 )
+      emit errorDetected();
   }
 //kdDebugTime() << "matching a_or_v regex\n";
   if ( re_a_or_v.search (str) >= 0 )
@@ -1662,8 +1696,8 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
         emit sizeAvailable();
         m_size_sent = true;
       }
-      if ( ! m_quit && kPlayerSettings() -> properties() )
-        kPlayerSettings() -> properties() -> save();
+      if ( ! m_quit )
+        properties() -> commit();
       setState (Playing);
       m_send_volume = m_send_contrast = m_send_brightness = m_send_hue = m_send_saturation = true;
     }
@@ -1676,55 +1710,33 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
 #endif
       sendPlayerCommand (command_quit);
     }
-    if ( m_send_volume && ! m_sent )
+    if ( m_send_subtitle_load && ! m_sent )
     {
 #ifdef DEBUG_KPLAYER_PROCESS
-      kdDebugTime() << "Process: Sending volume\n";
+      kdDebugTime() << "Process: Sending subtitles\n";
 #endif
-      volume (kPlayerSettings() -> volume());
+      subtitles();
     }
-    if ( m_send_frame_drop && ! m_sent )
+    if ( m_send_subtitle_index > -2 && ! m_sent )
     {
 #ifdef DEBUG_KPLAYER_PROCESS
-      kdDebugTime() << "Process: Sending frame drop\n";
+      kdDebugTime() << "Process: Sending subtitle index\n";
 #endif
-      frameDrop (kPlayerSettings() -> frameDrop());
-    }
-    if ( m_send_contrast && ! m_sent )
-    {
-#ifdef DEBUG_KPLAYER_PROCESS
-      kdDebugTime() << "Process: Sending contrast\n";
-#endif
-      contrast (kPlayerSettings() -> contrast());
-    }
-    if ( m_send_brightness && ! m_sent )
-    {
-#ifdef DEBUG_KPLAYER_PROCESS
-      kdDebugTime() << "Process: Sending brightness\n";
-#endif
-      brightness (kPlayerSettings() -> brightness());
-    }
-    if ( m_send_hue && ! m_sent )
-    {
-#ifdef DEBUG_KPLAYER_PROCESS
-      kdDebugTime() << "Process: Sending hue\n";
-#endif
-      hue (kPlayerSettings() -> hue());
-    }
-    if ( m_send_saturation && ! m_sent )
-    {
-#ifdef DEBUG_KPLAYER_PROCESS
-      kdDebugTime() << "Process: Sending saturation\n";
-#endif
-      saturation (kPlayerSettings() -> saturation());
+      subtitleIndex (m_send_subtitle_index);
     }
     if ( m_send_subtitle_visibility && ! m_sent )
     {
 #ifdef DEBUG_KPLAYER_PROCESS
       kdDebugTime() << "Process: Sending subtitle visibility\n";
 #endif
-      sendPlayerCommand (command_visibility);
-      m_send_subtitle_visibility = false;
+      subtitleVisibility();
+    }
+    if ( m_send_audio_id && ! m_sent )
+    {
+#ifdef DEBUG_KPLAYER_PROCESS
+      kdDebugTime() << "Process: Sending audio ID\n";
+#endif
+      audioID (properties() -> audioID());
     }
     if ( (m_send_audio_delay >= 0.001 || m_send_audio_delay <= - 0.001) && ! m_sent )
     {
@@ -1756,6 +1768,48 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
       sendPlayerCommand (s);
       m_send_subtitle_position = 0;
     }
+    if ( m_send_volume && ! m_sent )
+    {
+#ifdef DEBUG_KPLAYER_PROCESS
+      kdDebugTime() << "Process: Sending volume\n";
+#endif
+      volume (settings() -> actualVolume());
+    }
+    if ( m_send_frame_drop && ! m_sent )
+    {
+#ifdef DEBUG_KPLAYER_PROCESS
+      kdDebugTime() << "Process: Sending frame drop\n";
+#endif
+      frameDrop (settings() -> frameDrop());
+    }
+    if ( m_send_contrast && ! m_sent )
+    {
+#ifdef DEBUG_KPLAYER_PROCESS
+      kdDebugTime() << "Process: Sending contrast\n";
+#endif
+      contrast (settings() -> contrast());
+    }
+    if ( m_send_brightness && ! m_sent )
+    {
+#ifdef DEBUG_KPLAYER_PROCESS
+      kdDebugTime() << "Process: Sending brightness\n";
+#endif
+      brightness (settings() -> brightness());
+    }
+    if ( m_send_hue && ! m_sent )
+    {
+#ifdef DEBUG_KPLAYER_PROCESS
+      kdDebugTime() << "Process: Sending hue\n";
+#endif
+      hue (settings() -> hue());
+    }
+    if ( m_send_saturation && ! m_sent )
+    {
+#ifdef DEBUG_KPLAYER_PROCESS
+      kdDebugTime() << "Process: Sending saturation\n";
+#endif
+      saturation (settings() -> saturation());
+    }
 //  kdDebugTime() << "regex matched\n";
     if ( re_a_and_v.search (str) >= 0 )
     {
@@ -1769,9 +1823,8 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
       ftime = stringToFloat (re_a_or_v.cap (1));
 //    kdDebugTime() << "match: " << re_a_or_v.cap (1) << "ftime: " << ftime << "\n";
     }
-//  if ( kPlayerSettings() -> properties() && ftime > kPlayerSettings() -> properties() -> length() && ftime >= MIN_VIDEO_LENGTH && kPlayerSettings() -> properties() -> length() > 0 )
-    if ( kPlayerSettings() -> properties() && ftime > kPlayerSettings() -> properties() -> length() && kPlayerSettings() -> properties() -> length() >= MIN_VIDEO_LENGTH )
-      kPlayerSettings() -> properties() -> setLength (ftime);
+    if ( ftime > properties() -> length() && properties() -> length() >= MIN_VIDEO_LENGTH )
+      properties() -> setLength (ftime);
     if ( ftime != m_position )
     {
       m_position = ftime;
@@ -1791,7 +1844,7 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
         emit progressChanged (m_position, Position);
         m_seek_count = 0;
       }
-//    kdDebugTime() << "position: " << m_position << " length: " << kPlayerSettings() -> properties() -> length() << "\n";
+//    kdDebugTime() << "position: " << m_position << " length: " << properties() -> length() << "\n";
     }
     if ( m_pausing && ! m_quit && ! m_sent )
     {
@@ -1815,11 +1868,6 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
       kdDebugTime() << "Process: Sending seek to " << m_absolute_seek << ". Position " << position() << " origin " << m_seek_origin << " sent " << m_sent << " count " << m_seek_count << "\n";
 #endif
       absoluteSeek (m_absolute_seek);
-    }
-    if ( m_send_length && ! m_sent && ! kPlayerSettings() -> hasLength() )
-    {
-      sendPlayerCommand (command_length);
-      m_send_length = false;
     }
   }
   else if ( re_cache_fill.search (str) >= 0 )
@@ -1867,64 +1915,24 @@ void KPlayerProcess::receivedHelperLine (KPlayerLineOutputProcess* proc, char* s
 #ifdef DEBUG_KPLAYER_HELPER
   kdDebugTime() << "helper >> " << str << "\n";
 #endif
-//kdDebugTime() << "matching video regex\n";
-  if ( kPlayerSettings() -> properties() && re_vo.search (str) >= 0 )
+  bool hadVideo = properties() -> hasVideo();
+  bool hadLength = properties() -> hasLength();
+  properties() -> extractMeta (str, false);
+  if ( ! hadLength && properties() -> hasLength() )
   {
-    kPlayerSettings() -> properties() -> setOriginalSize (QSize (re_vo.cap(1).toInt(), re_vo.cap(2).toInt()));
-#ifdef DEBUG_KPLAYER_HELPER
-    kdDebugTime() << "Adjusted Width " << kPlayerSettings() -> properties() -> originalSize().width() << " Height " << kPlayerSettings() -> properties() -> originalSize().height() << "\n";
-#endif
-    if ( ! m_size_sent && ! m_kill )
-    {
-      emit sizeAvailable();
-      m_size_sent = true;
-    }
+    m_info_available = true;
+    if ( ! m_kill )
+      emit infoAvailable();
+    properties() -> commit();
   }
-  else if ( kPlayerSettings() -> properties() && kPlayerSettings() -> properties() -> originalSize().isEmpty() && re_video.search (str) >= 0 )
+  if ( m_helper_seek == 1 && properties() -> hasLength() )
+    m_helper_seek_count = 9;
+  if ( ! hadVideo && properties() -> hasVideo() )
+    m_size_sent = false;
+  if ( ! m_kill && ! m_size_sent && properties() -> heightAdjusted() )
   {
-    kPlayerSettings() -> properties() -> setOriginalSize (QSize (re_video.cap(1).toInt(), re_video.cap(2).toInt()));
-#ifdef DEBUG_KPLAYER_HELPER
-    kdDebugTime() << "Width " << kPlayerSettings() -> properties() -> originalSize().width() << " Height " << kPlayerSettings() -> properties() -> originalSize().height() << "\n";
-#endif
-  }
-  if ( re_ans_length.search (str) >= 0 )
-  {
-#ifdef DEBUG_KPLAYER_HELPER
-    kdDebugTime() << "Helper: Matched ans_length: " << re_ans_length.cap (1) << " in " << re_ans_length.cap (0) << "\n";
-#endif
-    m_ans_length = re_ans_length.cap (1).toInt();
-    if ( m_helper_seek == 1 )
-      m_helper_seek_count = 9;
-  }
-  if ( kPlayerSettings() -> properties() && ! kPlayerSettings() -> properties() -> videoBitrate() && re_vbr.search (str) >= 0 )
-  {
-    kPlayerSettings() -> properties() -> setFramerate (stringToFloat (re_vbr.cap(1)));
-    kPlayerSettings() -> properties() -> setVideoBitrate (re_vbr.cap(2).toInt());
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Framerate " << kPlayerSettings() -> properties() -> framerate() << "\n";
-    kdDebugTime() << "Process: Video bitrate " << kPlayerSettings() -> properties() -> videoBitrate() << "\n";
-#endif
-  }
-  if ( kPlayerSettings() -> properties() && ! kPlayerSettings() -> properties() -> audioBitrate() && re_abr.search (str) >= 0 )
-  {
-    kPlayerSettings() -> properties() -> setAudioBitrate (re_abr.cap(1).toInt());
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Audio bitrate " << kPlayerSettings() -> properties() -> audioBitrate() << "\n";
-#endif
-  }
-  if ( kPlayerSettings() -> properties() && kPlayerSettings() -> properties() -> videoCodecValue().isEmpty() && re_vc.search (str) >= 0 )
-  {
-    kPlayerSettings() -> properties() -> setVideoCodecValue (re_vc.cap(1));
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Video codec " << kPlayerSettings() -> properties() -> videoCodecValue() << "\n";
-#endif
-  }
-  if ( kPlayerSettings() -> properties() && kPlayerSettings() -> properties() -> audioCodecValue().isEmpty() && re_ac.search (str) >= 0 )
-  {
-    kPlayerSettings() -> properties() -> setAudioCodecValue (re_ac.cap(1));
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Audio codec " << kPlayerSettings() -> properties() -> audioCodecValue() << "\n";
-#endif
+    emit sizeAvailable();
+    m_size_sent = true;
   }
 //kdDebugTime() << "matching a_or_v regex\n";
   if ( re_a_or_v.search (str) >= 0 )
@@ -1957,68 +1965,59 @@ void KPlayerProcess::receivedHelperLine (KPlayerLineOutputProcess* proc, char* s
     else
     {
       if ( m_helper_seek > 0 && m_helper_seek < 500 && ftime >= MIN_VIDEO_LENGTH
-          && kPlayerSettings() -> properties() && ftime > kPlayerSettings() -> properties() -> length()
-          && kPlayerSettings() -> properties() -> length() > 0 )
-        kPlayerSettings() -> properties() -> setLength (ftime);
+          && properties() -> hasLength() && ftime > properties() -> length() )
+        properties() -> setLength (ftime);
       if ( ftime != m_helper_position )
       {
         m_helper_position = ftime;
 #ifdef DEBUG_KPLAYER_HELPER
-        if ( kPlayerSettings() -> properties() )
-          kdDebugTime() << "helper position: " << m_helper_position << " length: " << kPlayerSettings() -> properties() -> length() << "\n";
+        kdDebugTime() << "helper position: " << m_helper_position << " length: " << properties() -> length() << "\n";
 #endif
       }
       if ( m_helper_seek > 0 && m_helper_seek < 500 && ftime >= MIN_VIDEO_LENGTH )
       {
         float estlength = ftime * 100 / m_helper_seek;
-        if ( kPlayerSettings() -> properties() && kPlayerSettings() -> properties() -> length() < estlength )
+        if ( properties() -> length() < estlength )
         {
-          kPlayerSettings() -> properties() -> setLength (estlength);
+          properties() -> setLength (estlength);
           m_info_available = true;
-          emit infoAvailable();
+          if ( ! m_kill )
+            emit infoAvailable();
         }
 #ifdef DEBUG_KPLAYER_HELPER
-        if ( kPlayerSettings() -> properties() )
-          kdDebugTime() << "estimated length: " << kPlayerSettings() -> properties() -> length() << "\n";
+        kdDebugTime() << "estimated length: " << properties() -> length() << "\n";
 #endif
       }
     }
     if ( m_helper_seek == 0 && ! sent )
-    {
-      sendHelperCommand (command_length);
-      m_helper_seek = 1;
-      m_helper_seek_count = 0;
-      sent = true;
-    }
-    if ( m_helper_seek == 1 && ! sent )
     {
       sendHelperCommand (command_seek_99);
       m_helper_seek = 99;
       m_helper_seek_count = 0;
       sent = true;
     }
-    if ( m_helper_seek == 99 && ! sent && kPlayerSettings() -> properties() && kPlayerSettings() -> properties() -> length() < MIN_VIDEO_LENGTH )
+    if ( m_helper_seek == 99 && ! sent && properties() -> length() < MIN_VIDEO_LENGTH )
     {
       sendHelperCommand (command_seek_95);
       m_helper_seek = 95;
       m_helper_seek_count = 0;
       sent = true;
     }
-    if ( m_helper_seek == 95 && ! sent && kPlayerSettings() -> properties() && kPlayerSettings() -> properties() -> length() < MIN_VIDEO_LENGTH )
+    if ( m_helper_seek == 95 && ! sent && properties() -> length() < MIN_VIDEO_LENGTH )
     {
       sendHelperCommand (command_seek_90);
       m_helper_seek = 90;
       m_helper_seek_count = 0;
       sent = true;
     }
-    if ( m_helper_seek == 90 && ! sent && kPlayerSettings() -> properties() && kPlayerSettings() -> properties() -> length() < MIN_VIDEO_LENGTH )
+    if ( m_helper_seek == 90 && ! sent && properties() -> length() < MIN_VIDEO_LENGTH )
     {
       sendHelperCommand (command_seek_50);
       m_helper_seek = 50;
       m_helper_seek_count = 0;
       sent = true;
     }
-    if ( m_helper_seek < 100 && kPlayerSettings() -> properties() && kPlayerSettings() -> properties() -> length() >= MIN_VIDEO_LENGTH )
+    if ( m_helper_seek < 100 && properties() -> length() >= MIN_VIDEO_LENGTH )
     {
       sendHelperCommand (command_seek_100);
       m_helper_seek = 100;
@@ -2033,9 +2032,3 @@ void KPlayerProcess::receivedHelperLine (KPlayerLineOutputProcess* proc, char* s
     }
   }
 }
-
-/*void KPlayerProcess::receivedStderrLine (KPlayerLineOutputProcess*, char* str, int len)
-{
-  write (STDERR_FILENO, str, len);
-  write (STDERR_FILENO, "\n", 1);
-}*/

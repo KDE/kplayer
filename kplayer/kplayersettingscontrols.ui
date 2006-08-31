@@ -228,20 +228,6 @@
                         <string>Option to choose whether to automatically remember the audio delay setting in file properties for the currently loaded file. If this option is selected, KPlayer will remember the audio delay in the current file's properties, then automatically reset the audio delay when another file is loaded. If this option is not selected, you can still make KPlayer remember the audio delay by holding down the Shift key when changing it.</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="8" column="1">
-                    <property name="name">
-                        <cstring>c_frame_drop</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Frame dro&amp;p</string>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string>Remember frame dropping option in the file properties for the current file</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Option to choose whether to automatically remember the frame dropping option in the file properties for the currently loaded file. If this option is selected, KPlayer will remember the frame dropping option in the current file's properties, then automatically reset frame dropping to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember frame dropping option by holding down the Shift key when choosing it from the Player menu.</string>
-                    </property>
-                </widget>
                 <widget class="QCheckBox" row="1" column="2">
                     <property name="name">
                         <cstring>c_contrast</cstring>
@@ -300,34 +286,6 @@
                 </widget>
                 <widget class="QCheckBox" row="5" column="2">
                     <property name="name">
-                        <cstring>c_subtitle_url</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Subtitle &amp;URL</string>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string>Remember the subtitle URL in the file properties for the current file</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Option to choose whether to automatically remember the subtitle URL in the file properties for the currently loaded file. If this option is not selected, you can still make KPlayer remember subtitles by holding down the Shift key when loading them by using Load Subtitles or Load Subtitle URL command on File menu.</string>
-                    </property>
-                </widget>
-                <widget class="QCheckBox" row="6" column="2">
-                    <property name="name">
-                        <cstring>c_subtitle_visibility</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Subtitle v&amp;isibility</string>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string>Remember subtitle visibility in the file properties for the current file</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Option to choose whether to automatically remember subtitle visibility in the file properties for the currently loaded file. If this option is not selected, you can still make KPlayer remember subtitle visibility by holding down the Shift key when changing it using Show command on Player/Subtitles menu.</string>
-                    </property>
-                </widget>
-                <widget class="QCheckBox" row="7" column="2">
-                    <property name="name">
                         <cstring>c_subtitle_position</cstring>
                     </property>
                     <property name="text">
@@ -340,7 +298,7 @@
                         <string>Option to choose whether to automatically remember the subtitles' vertical position in the file properties for the currently loaded file. If this option is selected, KPlayer will remember the subtitles' position in the current file's properties, then automatically reset the subtitles' position when another file is loaded. If this option is not selected, you can still make KPlayer remember the subtitles' position by holding down the Shift key when changing it.</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="8" column="2">
+                <widget class="QCheckBox" row="6" column="2">
                     <property name="name">
                         <cstring>c_subtitle_delay</cstring>
                     </property>
@@ -352,6 +310,20 @@
                     </property>
                     <property name="whatsThis" stdset="0">
                         <string>Option to choose whether to automatically remember the subtitle delay in the file properties for the currently loaded file. If this option is selected, KPlayer will remember the subtitle delay in the current file's properties, then automatically reset the subtitle delay when another file is loaded. If this option is not selected, you can still make KPlayer remember the subtitle delay by holding down the Shift key when changing it.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="7" column="2">
+                    <property name="name">
+                        <cstring>c_frame_drop</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Frame dro&amp;p</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Remember frame dropping option in the file properties for the current file</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to choose whether to automatically remember the frame dropping option in the file properties for the currently loaded file. If this option is selected, KPlayer will remember the frame dropping option in the current file's properties, then automatically reset frame dropping to the previous setting when another file is loaded. If this option is not selected, you can still make KPlayer remember frame dropping option by holding down the Shift key when choosing it from the Player menu.</string>
                     </property>
                 </widget>
             </grid>

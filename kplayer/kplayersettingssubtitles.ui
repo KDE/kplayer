@@ -224,7 +224,7 @@
                         <string></string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="1" column="1" rowspan="1" colspan="2">
+                <widget class="QCheckBox" row="1" column="1" colspan="2">
                     <property name="name">
                         <cstring>c_subtitles_aqt</cstring>
                     </property>
@@ -246,6 +246,46 @@
                 </widget>
                 <widget class="QCheckBox" row="1" column="3">
                     <property name="name">
+                        <cstring>c_subtitles_ass</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>85</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>&amp;ass</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load ASS subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load ASS subtitles by looking for subtitle files with the same name as the currently loaded file and ASS or ass extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="1" column="4">
+                    <property name="name">
+                        <cstring>c_subtitles_js</cstring>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>85</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>&amp;js</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load JS subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load JS subtitles by looking for subtitle files with the same name as the currently loaded file and JS or js extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="2" column="1" colspan="2">
+                    <property name="name">
                         <cstring>c_subtitles_jss</cstring>
                     </property>
                     <property name="minimumSize">
@@ -264,7 +304,7 @@
                         <string>Option to automatically load JSS subtitles by looking for subtitle files with the same name as the currently loaded file and JSS or jss extension.</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="1" column="4">
+                <widget class="QCheckBox" row="2" column="3">
                     <property name="name">
                         <cstring>c_subtitles_rt</cstring>
                     </property>
@@ -278,7 +318,7 @@
                         <string>Option to automatically load RT subtitles by looking for subtitle files with the same name as the currently loaded file and RT or rt extension.</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="2" column="1" rowspan="1" colspan="2">
+                <widget class="QCheckBox" row="2" column="4">
                     <property name="name">
                         <cstring>c_subtitles_smi</cstring>
                     </property>
@@ -298,7 +338,7 @@
                         <string>Option to automatically load SMI subtitles by looking for subtitle files with the same name as the currently loaded file and SMI or smi extension.</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="2" column="3">
+                <widget class="QCheckBox" row="3" column="1" colspan="2">
                     <property name="name">
                         <cstring>c_subtitles_srt</cstring>
                     </property>
@@ -318,7 +358,7 @@
                         <string>Option to automatically load SRT subtitles by looking for subtitle files with the same name as the currently loaded file and SRT or srt extension.</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="2" column="4">
+                <widget class="QCheckBox" row="3" column="3">
                     <property name="name">
                         <cstring>c_subtitles_ssa</cstring>
                     </property>
@@ -332,7 +372,7 @@
                         <string>Option to automatically load SSA subtitles by looking for subtitle files with the same name as the currently loaded file and SSA or ssa extension.</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="3" column="1" rowspan="1" colspan="2">
+                <widget class="QCheckBox" row="3" column="4">
                     <property name="name">
                         <cstring>c_subtitles_sub</cstring>
                     </property>
@@ -352,7 +392,7 @@
                         <string>Option to automatically load SUB subtitles by looking for subtitle files with the same name as the currently loaded file and SUB or sub extension.</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="3" column="3">
+                <widget class="QCheckBox" row="4" column="1" colspan="2">
                     <property name="name">
                         <cstring>c_subtitles_txt</cstring>
                     </property>
@@ -372,7 +412,7 @@
                         <string>Option to automatically load TXT subtitles by looking for subtitle files with the same name as the currently loaded file and TXT or txt extension.</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="3" column="4">
+                <widget class="QCheckBox" row="4" column="3">
                     <property name="name">
                         <cstring>c_subtitles_utf</cstring>
                     </property>
@@ -383,10 +423,24 @@
                         <string>Automatically load UTF subtitles</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>Option to automatically load UTF subtitles by looking for subtitle files with the same name as the currently loaded file and UTF or utf extension.</string>
+                        <string>Option to automatically load UTF subtitles by looking for subtitle files with the same name as the currently loaded file and a UTF, utf, UTF8, utf8, UTF-8, or utf-8 extension.</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="4" column="1" rowspan="1" colspan="2">
+                <widget class="QCheckBox" row="4" column="4">
+                    <property name="name">
+                        <cstring>c_subtitles_vobsub</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;vobsub</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Automatically load VobSub subtitles</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to automatically load VobSub subtitles by looking for subtitle files with the same name as the currently loaded file and an IDX, idx, IFO, or ifo extension.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="5" column="1" colspan="2">
                     <property name="name">
                         <cstring>c_subtitles_other</cstring>
                     </property>
@@ -406,7 +460,7 @@
                         <string>Option to automatically load subtitle files with extensions you enter in text field below, separated by commas, semicolons, colons, periods or spaces.</string>
                     </property>
                 </widget>
-                <widget class="QLabel" row="5" column="1">
+                <widget class="QLabel" row="6" column="1">
                     <property name="name">
                         <cstring>c_spacer_2</cstring>
                     </property>
@@ -434,7 +488,7 @@
                         <string></string>
                     </property>
                 </widget>
-                <widget class="QLineEdit" row="5" column="2" rowspan="1" colspan="3">
+                <widget class="QLineEdit" row="6" column="2" rowspan="1" colspan="3">
                     <property name="name">
                         <cstring>c_subtitles_list</cstring>
                     </property>

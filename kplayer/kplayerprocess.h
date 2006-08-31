@@ -24,6 +24,8 @@
 #include <qobject.h>
 #include <qptrlist.h>
 
+class KPlayerTrackProperties;
+class KPlayerSettings;
 class KTempFile;
 
 /**KProcess extension, handles line output.
@@ -106,128 +108,105 @@ class KPlayerProcess : public QObject
   Q_OBJECT
 
 public: 
-  /** The process states.
-    */
+  /** The process states. */
   enum State
   {
-    /** mplayer process is not running
-      */
+    /** mplayer process is not running */
     Idle,
-    /** mplayer process is running but has not started playing yet
-      */
+    /** mplayer process is running but has not started playing yet */
     Running,
-    /** mplayer is playing the current file
-      */
+    /** mplayer is playing the current file */
     Playing,
-    /** mplayer is paused
-      */
+    /** mplayer is paused */
     Paused
   };
 
-  /** The progress type values.
-    */
+  /** The progress type values. */
   enum ProgressType
   {
-    /** position progress
-      */
+    /** position progress */
     Position,
-    /** cache fill progress
-      */
+    /** cache fill progress */
     CacheFill,
-    /** index generation progress
-      */
+    /** index generation progress */
     IndexGeneration,
-    /** file transfer progress
-     */
+    /** file transfer progress */
     FileTransfer
   };
 
-  /** Constructs the objects and sets the initial property values.
-    */
+  /** Constructs the objects and sets the initial property values. */
   KPlayerProcess (void);
-  /** Frees up the allocated memory.
-    */
+  /** Frees up the allocated memory. */
   virtual ~KPlayerProcess();
 
-  /** Starts temporary file transfer.
-   */
+  /** Starts temporary file transfer. */
   void load (KURL);
-  /** Retrieves information on the current file.
-    */
+  /** Retrieves information on the current file. */
   void get_info (void);
-  /** Starts playback from the beginning.
-    */
+  /** Starts playback from the beginning. */
   void play (void);
-  /** Runs mplayer on the current file.
-    */
+
+  /** Runs mplayer on the current file. */
   void start (void);
-  /** Restarts playback of the current file at the current position.
-    */
+  /** Restarts playback of the current file at the current position. */
   void restart (void);
-  /** Pauses playback.
-    */
+
+  /** Pauses playback. */
   void pause (void);
-  /** Stops playback.
-    */
+  /** Stops playback. */
   void stop (void);
-  /** Detaches the mplayer process.
-    */
+  /** Detaches the mplayer process. */
   void kill (void);
-  /** The current process state.
-    */
+
+  /** The current process state. */
   KPlayerProcess::State state (void) const
     { return m_state; }
-  /** Move to the time position given.
-    */
+
+  /** Move to the time position given. */
   void absoluteSeek (int);
-  /** Move by the time difference given.
-    */
+  /** Move by the time difference given. */
   void relativeSeek (int);
 
-  /** Changes volume level.
-    */
-  void volume (int);
-  /** Current position in seconds.
-    */
+  /** Current position in seconds. */
   float position (void) const
     { return m_position; }
-  /** Current position as string.
-    */
+  /** Current position as string. */
   QString positionString (void) const;
-  /** Changes the frame dropping setting.
-    */
-  void frameDrop (int);
-  /** Changes brightness level.
-    */
-  void brightness (int);
-  /** Changes contrast level.
-    */
-  void contrast (int);
-  /** Changes hue level.
-    */
-  void hue (int);
-  /** Changes saturation level.
-    */
-  void saturation (int);
-  /** Shows or hides subtitles.
-    */
-  void showSubtitles (bool);
-  /** Moves subtitles vertically.
-   */
-  void subtitleMove (int, bool = false);
-  /** Adjusts subtitle delay.
-   */
-  void subtitleDelay (float, bool = false);
-  /** Adjusts audio delay.
-   */
-  void audioDelay (float, bool = false);
 
-  /** Returns whether the file information is available.
-   */
+  /** Changes volume level. */
+  void volume (int);
+  /** Adjusts audio delay. */
+  void audioDelay (float, bool = false);
+  /** Sets audio ID. */
+  void audioID (int id);
+
+  /** Changes brightness level. */
+  void brightness (int);
+  /** Changes contrast level. */
+  void contrast (int);
+  /** Changes hue level. */
+  void hue (int);
+  /** Changes saturation level. */
+  void saturation (int);
+
+  /** Moves subtitles vertically. */
+  void subtitleMove (int, bool = false);
+  /** Adjusts subtitle delay. */
+  void subtitleDelay (float, bool = false);
+  /** Selects subtitle index. */
+  void subtitleIndex (int index);
+  /** Toggles subtitle visibility. */
+  void subtitleVisibility (void);
+  /** Loads subtitles if necessary and selects them. */
+  void subtitles (void);
+
+  /** Changes the frame dropping setting. */
+  void frameDrop (int);
+
+  /** Returns whether the file information is available. */
   bool isInfoAvailable (void)
     { return m_info_available; }
-  /** Returns whether a 0.9x version of MPlayer was detected.
-   */
+  /** Returns whether a 0.9x version of MPlayer was detected. */
   bool is09Version (void)
     { return m_09_version; }
   /** Returns true unless playing directly from KIOSlave. */
@@ -238,164 +217,130 @@ public slots:
   void progressSliderReleased (void);
 
 protected:
-  /** Sends the given command to the MPlayer process.
-   */
+  /** Settings. */
+  KPlayerSettings* settings (void) const;
+  /** Properties. */
+  KPlayerTrackProperties* properties (void) const;
+
+  /** Sends the given command to the MPlayer process. */
   void sendPlayerCommand (QCString&);
-  /** Sends the given command to the MPlayer helper process.
-   */
+  /** Sends the given command to the MPlayer helper process. */
   void sendHelperCommand (QCString&);
   /** Closes and unlinks the named pipe. */
   void removeDataFifo (void);
 
-  /** The pointer to the mplayer process object.
-    */
+  /** The pointer to the mplayer process object. */
   KPlayerLineOutputProcess* m_player;
-  /** The pointer to the mplayer process used to get file info.
-    */
+  /** The pointer to the mplayer process used to get file info. */
   KPlayerLineOutputProcess* m_helper;
 
-  /** Current position.
-    */
+  /** Current position. */
   float m_position;
-  /** Current state.
-    */
+  /** Current state. */
   KPlayerProcess::State m_state;
-  /** Indicates whether the file information is available.
-   */
+  /** Indicates whether the file information is available. */
   bool m_info_available;
-  /** Indicates if a 0.9x version of MPlayer was detected.
-   */
+  /** Indicates if a 0.9x version of MPlayer was detected. */
   bool m_09_version;
 
-  /** Prepares and runs the given process.
-    */
+  /** Prepares and runs the given process. */
   bool run (KPlayerLineOutputProcess* player);
-  /** Stops the given process.
-    */
+  /** Stops the given process. */
   void stop (KPlayerLineOutputProcess** player, bool* quit, bool send_quit = false);
-  /** Sets the process state and emits the stateChanged signal.
-    */
+  /** Sets the process state and emits the stateChanged signal. */
   void setState (KPlayerProcess::State);
-  /** Starts temporary file transfer.
-   */
+  /** Starts temporary file transfer. */
   void transferTemporaryFile (void);
 
-  /** Name of named pipe used to send data to MPlayer.
-   */
+  /** Name of named pipe used to send data to MPlayer. */
   QCString m_fifo_name;
-  /** Handle of named pipe used to send data to MPlayer.
-   */
+  /** Handle of named pipe used to send data to MPlayer. */
   int m_fifo_handle;
-  /** Offset of data to send.
-   */
+  /** Offset of data to send. */
   uint m_fifo_offset;
-  /** Fifo notifier object.
-   */
+  /** Fifo notifier object. */
   QSocketNotifier* m_fifo_notifier;
   /** Fifo timer object. */
   QTimer* m_fifo_timer;
 
-  /** Transfer job.
-   */
+  /** Transfer job. */
   KIO::TransferJob* m_slave_job;
-  /** Temporary file transfer job.
-   */
+  /** Temporary file transfer job. */
   KIO::TransferJob* m_temp_job;
-  /** Cached transfer data.
-   */
+  /** Cached transfer data. */
   QPtrList<QByteArray> m_cache;
-  /** Temporary file from KIOSlave.
-   */
+  /** Temporary file from KIOSlave. */
   KTempFile* m_temporary_file;
 
-  /** Current subtitle visibility.
-   */
-  bool m_show_subtitles;
-  /** Current subtitle position.
-   */
+  /** Current subtitle position. */
   int m_subtitle_position;
-  /** Current subtitle delay.
-   */
+  /** Current subtitle delay. */
   float m_subtitle_delay;
-  /** Current audio delay.
-   */
+  /** Current subtitle index. */
+  int m_subtitle_index;
+  /** Current list of external subtitles. */
+  QStringList m_subtitles;
+
+  /** Current audio delay. */
   float m_audio_delay;
+  /** Current audio ID. */
+  int m_audio_id;
 
   // Following should really be private
   /** Cache size for transfer job data. */
   uint m_cache_size;
   /** Only cache the first chunk of data. */
   bool m_first_chunk;
-  int m_helper_seek, m_helper_seek_count, m_ans_length, m_absolute_seek, m_seek_count;
+  int m_helper_seek, m_helper_seek_count, m_absolute_seek, m_seek_count;
   float m_helper_position, m_max_position, m_seek_origin;
-  bool m_pausing, m_paused, m_quit, m_kill, m_size_sent, m_sent, m_send_seek, m_send_length;
+  bool m_pausing, m_paused, m_quit, m_kill, m_size_sent, m_sent, m_send_seek;
   bool m_seek, m_seekable, m_success, m_delayed_player, m_delayed_helper;
   bool m_send_volume, m_send_contrast, m_send_brightness, m_send_hue, m_send_saturation;
-  bool m_send_frame_drop, m_send_subtitle_visibility;
+  bool m_send_frame_drop, m_send_audio_id, m_send_subtitle_load;
+  bool m_subtitle_visibility, m_send_subtitle_visibility;
   float m_send_audio_delay, m_send_subtitle_delay;
-  int m_send_subtitle_position, m_sent_count;
-
-  /** Converts a string to a floating point number, replacing a comma with a decimal point.
-   */
-  static float stringToFloat (QString);
+  int m_send_subtitle_position, m_send_subtitle_index, m_sent_count;
 
 protected slots:
-  /** Receives notification when the mplayer process exits.
-    */
+  /** Receives notification when the mplayer process exits. */
   void playerProcessExited (KProcess*);
-  /** Receives notification when mplayer sends something to stdout.
-    */
+  /** Receives notification when mplayer sends something to stdout. */
   void receivedStdoutLine (KPlayerLineOutputProcess*, char*, int);
-  /** Receives notification when the mplayer helper process sends something to stdout.
-    */
+  /** Receives notification when the mplayer helper process sends something to stdout. */
   void receivedHelperLine (KPlayerLineOutputProcess*, char*, int);
-  /** Receives notification when mplayer sends something to stderr.
-    */
+  /** Receives notification when mplayer sends something to stderr. */
 //void receivedStderrLine (KPlayerLineOutputProcess*, char*, int);
-  /** Receives notification when the data has been written to the fifo.
-    */
+  /** Receives notification when the data has been written to the fifo. */
   void playerDataWritten (int);
-  /** Transfers data from a KIOSlave to an MPlayer process.
-   */
+  /** Transfers data from a KIOSlave to an MPlayer process. */
   void transferData (KIO::Job*, const QByteArray&);
-  /** Transfers data from a KIOSlave to a temporary file.
-   */
+  /** Transfers data from a KIOSlave to a temporary file. */
   void transferTempData (KIO::Job*, const QByteArray&);
-  /** Emits file transfer progress signal.
-   */
+  /** Emits file transfer progress signal. */
   void transferProgress (KIO::Job*, unsigned long);
   /** Emits message received signal. */
   void transferInfoMessage (KIO::Job*, const QString&);
-  /** Processes the result of a slave transfer job.
-   */
+  /** Processes the result of a slave transfer job. */
   void transferDone (KIO::Job*);
-  /** Processes the result of a temporary file transfer job.
-   */
+  /** Processes the result of a temporary file transfer job. */
   void transferTempDone (KIO::Job*);
-  /** Receives the refresh signal from KPlayerSettings. Stops temporary file transfer if needed.
-   */
+  /** Receives the refresh signal from KPlayerSettings. Stops temporary file transfer if needed. */
   //void refreshSettings (void);
   /** Sends data to MPlayer through named pipe. */
   void sendFifoData (void);
 
 signals:
-  /** Emitted when KPlayer state has changed.
-    */
+  /** Emitted when KPlayer state has changed. */
   void stateChanged (KPlayerProcess::State, KPlayerProcess::State);
-  /** Emitted when mplayer progress needs to be updated.
-    */
+  /** Emitted when mplayer progress needs to be updated. */
   void progressChanged (float, KPlayerProcess::ProgressType);
-  /** Emitted when mplayer process used to get file information has finished.
-    */
+  /** Emitted when mplayer process used to get file information has finished. */
   void infoAvailable (void);
-  /** Emitted when the video size becomes known.
-    */
+  /** Emitted when the video size becomes known. */
   void sizeAvailable (void);
-  /** Emitted when a message is received from the mplayer process.
-   */
+  /** Emitted when a message is received from the mplayer process. */
   void messageReceived (QString);
-  /** Emitted when MPlayer fails to play a file.
-   */
+  /** Emitted when MPlayer fails to play a file. */
   void errorDetected (void);
 };
 

@@ -1,16 +1,17 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kplayer" version="4">
+<kpartgui name="kplayer" version="15">
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <Action name="file_open"/>
     <Action name="file_open_url"/>
-    <Action name="file_open_recent"/>
-    <Separator lineSeparator="true"/>
+    <Menu name="play_list"><text>Play &amp;List</text>
+      <ActionList name="play_list"/>
+    </Menu>
+    <Menu name="file_recent"><text>Play &amp;Recent</text>
+      <ActionList name="file_recent"/>
+    </Menu>
+    <ActionList name="file_devices"/>
     <Action name="subtitles_load"/>
-    <Action name="subtitles_load_url"/>
-    <Action name="subtitles_unload"/>
-    <Separator lineSeparator="true"/>
-    <Action name="file_clear_log"/>
     <Separator lineSeparator="true"/>
     <Action name="file_properties"/>
     <Separator lineSeparator="true"/>
@@ -39,16 +40,22 @@
     <Action name="player_pause"/>
     <Action name="player_stop"/>
     <Separator lineSeparator="true"/>
-    <Action name="player_forward"/>
-    <Action name="player_fast_forward"/>
-    <Action name="player_backward"/>
-    <Action name="player_fast_backward"/>
-    <Action name="player_start"/>
+    <Action name="player_next"/>
+    <Action name="player_previous"/>
     <Separator lineSeparator="true"/>
-    <Action name="player_soft_frame_drop"/>
-    <Action name="player_hard_frame_drop"/>
+    <Action name="player_loop"/>
+    <Action name="player_shuffle"/>
     <Separator lineSeparator="true"/>
+    <Menu name="seek"><text>P&amp;osition</text>
+      <Action name="player_forward"/>
+      <Action name="player_fast_forward"/>
+      <Separator lineSeparator="true"/>
+      <Action name="player_backward"/>
+      <Action name="player_fast_backward"/>
+      <Action name="player_start"/>
+    </Menu>
     <Menu name="audio"><text>&amp;Audio</text>
+      <ActionList name="audio_streams"/>
       <Action name="audio_volume_down"/>
       <Action name="audio_volume_up"/>
       <Action name="audio_mute"/>
@@ -57,6 +64,7 @@
       <Action name="audio_delay_up"/>
     </Menu>
     <Menu name="video"><text>&amp;Video</text>
+      <ActionList name="video_streams"/>
       <Action name="video_contrast_down"/>
       <Action name="video_contrast_up"/>
       <Separator lineSeparator="true"/>
@@ -69,43 +77,67 @@
       <Action name="video_saturation_down"/>
       <Action name="video_saturation_up"/>
     </Menu>
-    <Menu name="subtitles"><text>Subt&amp;itles</text>
-      <Action name="subtitles_show"/>
-      <Separator lineSeparator="true"/>
+    <Menu name="subtitles"><text>S&amp;ubtitles</text>
+      <ActionList name="subtitle_streams"/>
       <Action name="subtitles_move_down"/>
       <Action name="subtitles_move_up"/>
       <Separator lineSeparator="true"/>
       <Action name="subtitles_delay_decrease"/>
       <Action name="subtitles_delay_increase"/>
     </Menu>
+    <Menu name="advanced"><text>A&amp;dvanced</text>
+      <Action name="player_soft_frame_drop"/>
+      <Action name="player_hard_frame_drop"/>
+    </Menu>
   </Menu>
-  <Menu name="playlist" noMerge="1"><text>P&amp;laylist</text>
-    <Action name="playlist_show"/>
-    <Action name="playlist_editor"/>
-    <Action name="playlist_toolbar"/>
+  <Menu name="library" noMerge="1"><text>&amp;Library</text>
     <Separator lineSeparator="true"/>
-    <Action name="playlist_next"/>
-    <Action name="playlist_previous"/>
+    <Action name="library_play"/>
+    <Action name="library_play_next"/>
+    <Action name="library_queue"/>
+    <Action name="library_queue_next"/>
+    <Menu name="library_add_to"><text>Add &amp;to</text>
+      <ActionList name="library_add_to_playlist"/>
+      <Action name="library_add_to_new_playlist"/>
+      <Action name="library_add_to_playlists"/>
+      <Action name="library_add_to_collection"/>
+    </Menu>
     <Separator lineSeparator="true"/>
-    <Action name="playlist_loop"/>
-    <Action name="playlist_shuffle"/>
+    <Menu name="library_add"><text>&amp;Add</text>
+      <Action name="library_add_files"/>
+      <Action name="library_add_url"/>
+      <Action name="library_add_group"/>
+    </Menu>
+    <Action name="library_select_all"/>
+    <Action name="library_move_up"/>
+    <Action name="library_move_down"/>
+    <Action name="library_remove"/>
     <Separator lineSeparator="true"/>
-    <Action name="playlist_lock"/>
-    <Action name="playlist_selection"/>
-    <Action name="playlist_transitory"/>
-    <Action name="playlist_playlist"/>
+    <Action name="library_rename"/>
+    <Menu name="library_edit"><text>&amp;Edit</text>
+      <ActionList name="library_edit"/>
+    </Menu>
+    <Action name="library_properties"/>
     <Separator lineSeparator="true"/>
-    <Action name="playlist_rename"/>
-    <Action name="playlist_properties"/>
-    <Separator lineSeparator="true"/>
-    <Action name="playlist_move_up"/>
-    <Action name="playlist_move_down"/>
-    <Action name="playlist_remove"/>
-    <Action name="playlist_clear"/>
+    <Menu name="library_columns"><text>&amp;Columns</text>
+      <ActionList name="library_columns"/>
+    </Menu>
+    <Menu name="library_go"><text>&amp;Go</text>
+      <ActionList name="library_history"/>
+      <ActionList name="library_go_to_list"/>
+      <Action name="library_go_back"/>
+      <Action name="library_go_forward"/>
+      <Action name="library_go_up"/>
+      <Action name="library_go_down"/>
+      <Action name="library_go_to_origin"/>
+    </Menu>
   </Menu>
   <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
     <Action name="options_show_menubar"/>
     <Action name="options_show_statusbar"/>
+    <Separator lineSeparator="true"/>
+    <Action name="options_show_playlist"/>
+    <Action name="options_show_library"/>
     <Action name="options_show_log"/>
     <Separator lineSeparator="true"/>
     <Action name="options_show_toolbar"/>
@@ -118,10 +150,11 @@
     <Action name="settings_saturation_toolbar"/>
     <Separator lineSeparator="true"/>
     <Action name="options_configure_keybinding"/>
+    <Action name="options_configure_toolbars"/>
     <Action name="options_configure"/>
   </Menu>
 </MenuBar>
-<ToolBar name="mainToolBar" noMerge="1">
+<ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
   <Action name="file_open"/>
   <Action name="file_open_url"/>
   <Action name="file_properties"/>
@@ -141,49 +174,48 @@
   <Action name="popup_hue"/>
   <Action name="popup_saturation"/>
 </ToolBar>
-<ToolBar name="volumeToolBar">
-  <Action name="settings_volume_toolbar"/>
-  <Action name="audio_volume"/>
-  <Action name="audio_mute"/>
+<ToolBar name="playlistToolBar"><text>Playlist Toolbar</text>
+  <Action name="player_previous"/>
+  <Action name="player_next"/>
+  <Action name="player_list"/>
+  <Action name="player_loop"/>
+  <Action name="player_shuffle"/>
 </ToolBar>
-<ToolBar name="contrastToolBar">
-  <Action name="settings_contrast_toolbar"/>
-  <Action name="video_contrast"/>
-</ToolBar>
-<ToolBar name="brightnessToolBar">
-  <Action name="settings_brightness_toolbar"/>
-  <Action name="video_brightness"/>
-</ToolBar>
-<ToolBar name="hueToolBar">
-  <Action name="settings_hue_toolbar"/>
-  <Action name="video_hue"/>
-</ToolBar>
-<ToolBar name="saturationToolBar">
-  <Action name="settings_saturation_toolbar"/>
-  <Action name="video_saturation"/>
-</ToolBar>
-<ToolBar name="progressToolBar">
+<ToolBar name="progressToolBar"><text>Progress Toolbar</text>
   <Action name="player_fast_backward"/>
   <Action name="player_progress"/>
   <Action name="player_fast_forward"/>
 </ToolBar>
-<ToolBar name="playlistToolBar">
-  <Action name="playlist_previous"/>
-  <Action name="playlist_next"/>
-  <Action name="playlist_list"/>
-  <Action name="playlist_loop"/>
-  <Action name="playlist_shuffle"/>
+<ToolBar name="volumeToolBar"><text>Volume Toolbar</text>
+  <Action name="settings_volume_toolbar"/>
+  <Action name="audio_volume"/>
+  <Action name="audio_mute"/>
 </ToolBar>
-<ToolBar name="editorToolBar">
-  <Action name="playlist_lock"/>
-  <Action name="playlist_move_up"/>
-  <Action name="playlist_move_down"/>
-  <Action name="playlist_remove"/>
-  <Action name="playlist_clear"/>
+<ToolBar name="contrastToolBar"><text>Contrast Toolbar</text>
+  <Action name="settings_contrast_toolbar"/>
+  <Action name="video_contrast"/>
+</ToolBar>
+<ToolBar name="brightnessToolBar"><text>Brightness Toolbar</text>
+  <Action name="settings_brightness_toolbar"/>
+  <Action name="video_brightness"/>
+</ToolBar>
+<ToolBar name="hueToolBar"><text>Hue Toolbar</text>
+  <Action name="settings_hue_toolbar"/>
+  <Action name="video_hue"/>
+</ToolBar>
+<ToolBar name="saturationToolBar"><text>Saturation Toolbar</text>
+  <Action name="settings_saturation_toolbar"/>
+  <Action name="video_saturation"/>
 </ToolBar>
 <Menu name="player_popup">
   <Action name="file_open"/>
   <Action name="file_open_url"/>
+  <Menu name="play_list"><text>Play &amp;List</text>
+    <ActionList name="play_list"/>
+  </Menu>
+  <Menu name="file_recent"><text>Play &amp;Recent</text>
+    <ActionList name="file_recent"/>
+  </Menu>
   <Separator lineSeparator="true"/>
   <Action name="file_properties"/>
   <Separator lineSeparator="true"/>
@@ -197,9 +229,10 @@
   <Menu name="showhide"><text>&amp;Settings</text>
     <Action name="options_show_menubar"/>
     <Action name="options_show_statusbar"/>
+    <Separator lineSeparator="true"/>
+    <Action name="options_show_playlist"/>
+    <Action name="options_show_library"/>
     <Action name="options_show_log"/>
-    <Action name="playlist_show"/>
-    <Action name="playlist_editor"/>
     <Separator lineSeparator="true"/>
     <Action name="options_show_toolbar"/>
     <Action name="settings_progress_toolbar"/>
@@ -208,19 +241,78 @@
   <Separator lineSeparator="true"/>
   <Action name="file_quit"/>
 </Menu>
+<Menu name="library_popup">
+  <Action name="library_play"/>
+  <Action name="library_play_next"/>
+  <Action name="library_queue"/>
+  <Action name="library_queue_next"/>
+  <Menu name="library_add_to"><text>Add &amp;to</text>
+    <ActionList name="library_add_to_playlist"/>
+    <Action name="library_add_to_new_playlist"/>
+    <Action name="library_add_to_playlists"/>
+    <Action name="library_add_to_collection"/>
+  </Menu>
+  <Separator lineSeparator="true"/>
+  <Menu name="library_add"><text>&amp;Add</text>
+    <Action name="library_add_files"/>
+    <Action name="library_add_url"/>
+    <Action name="library_add_group"/>
+  </Menu>
+  <Action name="library_select_all"/>
+  <Action name="library_move_up"/>
+  <Action name="library_move_down"/>
+  <Action name="library_remove"/>
+  <Separator lineSeparator="true"/>
+  <Action name="library_rename"/>
+  <Menu name="library_edit"><text>&amp;Edit</text>
+    <ActionList name="library_edit"/>
+  </Menu>
+  <Action name="library_properties"/>
+  <Separator lineSeparator="true"/>
+  <Menu name="library_columns"><text>&amp;Columns</text>
+    <ActionList name="library_columns"/>
+  </Menu>
+  <Menu name="library_go"><text>&amp;Go</text>
+    <ActionList name="library_history"/>
+    <ActionList name="library_go_to_list"/>
+    <Action name="library_go_back"/>
+    <Action name="library_go_forward"/>
+    <Action name="library_go_up"/>
+    <Action name="library_go_down"/>
+    <Action name="library_go_to_origin"/>
+  </Menu>
+</Menu>
 <Menu name="playlist_popup">
-  <Action name="playlist_play"/>
+  <Action name="file_open"/>
+  <Action name="file_open_url"/>
+  <Menu name="play_list"><text>Play &amp;List</text>
+    <ActionList name="play_list"/>
+  </Menu>
+  <Menu name="file_recent"><text>Play &amp;Recent</text>
+    <ActionList name="file_recent"/>
+  </Menu>
+  <ActionList name="file_devices"/>
   <Separator lineSeparator="true"/>
-  <Action name="playlist_rename"/>
-  <Action name="playlist_properties"/>
+  <Action name="player_next"/>
+  <Action name="player_previous"/>
+  <Action name="player_loop"/>
+  <Action name="player_shuffle"/>
   <Separator lineSeparator="true"/>
-  <Action name="playlist_lock"/>
-  <Action name="playlist_selection"/>
-  <Separator lineSeparator="true"/>
-  <Action name="playlist_move_up"/>
-  <Action name="playlist_move_down"/>
-  <Separator lineSeparator="true"/>
-  <Action name="playlist_remove"/>
-  <Action name="playlist_clear"/>
+  <Action name="playlist_edit"/>
+  <Menu name="playlist_add"><text>&amp;Add</text>
+    <Action name="playlist_add_files"/>
+    <Action name="playlist_add_url"/>
+  </Menu>
+  <Menu name="playlist_add_to"><text>Add &amp;to</text>
+    <ActionList name="playlist_add_to_playlist"/>
+    <Action name="playlist_add_to_new_playlist"/>
+    <Action name="playlist_add_to_playlists"/>
+    <Action name="playlist_add_to_collection"/>
+  </Menu>
+</Menu>
+<Menu name="log_popup">
+  <Action name="log_select_all"/>
+  <Action name="log_copy"/>
+  <Action name="log_clear"/>
 </Menu>
 </kpartgui>

@@ -22,18 +22,15 @@
 
 #include "kplayerprocess.h"
 
-class KConfig;
-class KProcess;
-class KPlayerLineOutputProcess;
-class KPlayerProcess;
-class KPlayerProperties;
+class KPlayerConfiguration;
+class KPlayerPopupSliderAction;
+class KPlayerSliderAction;
 class KPlayerSettings;
+class KPlayerSubtitleTrackActionList;
+class KPlayerTrackActionList;
+class KPlayerTrackProperties;
 class KPlayerWidget;
 class KPlayerWorkspace;
-class KPlayerSliderAction;
-class KPlayerPopupSliderAction;
-class KURL;
-class KURL::List;
 
 int listIndex (const QStringList&, const QString&);
 
@@ -45,16 +42,12 @@ class KPlayerFileDialog : public KFileDialog
    Q_OBJECT
 
 public: 
-  /** The dialog constructor.
-      Parameters are passed to the KFileDialog constructor. */
+  /** Constructor. Parameters are passed to the KFileDialog constructor. */
   KPlayerFileDialog (const QString& dir, const QString& filter, QWidget* parent, const char* name);
 
-  /** Returns the last used directory.
-    */
+  /** Returns the last used directory. */
   QString directory (void)
-  {
-    return ops -> url().path (-1);
-  }
+    { return ops -> url().path (-1); }
 };
 
 /** The KPlayer engine.
@@ -68,133 +61,136 @@ public:
   KPlayerEngine (KActionCollection* ac, QWidget* parent, const char* name, KConfig*);
   virtual ~KPlayerEngine();
 
-  /** Returns whether the engine is running in the KPart mode.
-   */
+  /** Returns whether the engine is running in the KPart mode. */
   bool light (void)
     { return m_light; }
 
-  /** Returns whether playback is being stopped at user request.
-   */
+  /** Returns whether playback is being stopped at user request. */
   bool stopped (void)
     { return m_stop; }
 
-  /** Starts loading of all mplayer drivers and codecs. The refresh signal is emitted when loading finishes.
-   */
-  void getDriversCodecs (QString = QString::null);
+  /** Stops the player and the helper. */
+  void kill (void);
 
-  /** Creates actions and connects signals to slots.
-   */
+  /** Starts loading of all mplayer drivers and codecs.
+   * The updated signal is emitted when loading finishes. */
+  void getLists (QString = QString::null);
+
+  /** Creates actions and connects signals to slots. */
   void setupActions (void);
-  /** Enables or disables player actions.
-    */
+  /** Enables or disables player actions. */
   void enablePlayerActions (void);
-  /** Enables or disables video actions.
-    */
+  /** Enables or disables video actions. */
   void enableVideoActions (void);
-  /** Enables or disables subtitle actions.
-    */
+  /** Enables or disables subtitle actions. */
   void enableSubtitleActions (void);
-  /** Enables or disables, checks or unchecks zoom actions.
-    */
+  /** Enables or disables, checks or unchecks zoom actions. */
   void enableZoomActions (void);
 
-  /** Loads the given URL and optionally starts playback.
-    */
+  /** Loads the given URL and optionally starts playback. */
   void load (KURL);
-  /** Autoloads subtitles as specified in the settings.
-   */
+  /** Autoloads subtitles as specified in the settings. */
   void autoloadSubtitles (void);
-  /** Loads the given subtitle URL and restarts playback if needed.
-   */
+  /** Loads the given subtitle URL and restarts playback if needed. */
   void loadSubtitle (KURL);
 
   /** Displays the open file dialog and lets the user choose a file or files.
       Returns the list of chosen URLs or an empty list if the user did not choose any. */
-  KURL::List openFiles (QWidget* = 0);
+  KURL::List openFiles (const QString& title, QWidget* = 0);
   /** Displays the URL requester dialog and lets the user enter a URL.
       Returns the entered URL or an empty URL if the user did not enter any. */
-  KURL openUrl (QWidget* = 0);
+  KURL::List openUrl (const QString& title, QWidget* = 0);
   /** Displays the open file dialog and lets the user choose a subtitle file.
       Returns the chosen URL or an empty URL if the user did not choose any. */
   KURL openSubtitle (QWidget* = 0);
   /** Displays the URL requester dialog and lets the user enter a subtitle URL.
       Returns the entered URL or an empty URL if the user did not enter any. */
-  KURL openSubtitleUrl (QWidget* = 0);
+  //KURL openSubtitleUrl (QWidget* = 0);
 
-  /** Retrieves an action from the actionCollection by name.
-    */
+  /** Retrieves an action from the actionCollection by name. */
   KAction* action (const char* name) const
     { return m_ac -> action (name); }
-  /** Retrieves a toggle action from the actionCollection by name.
-    */
+  /** Retrieves a toggle action from the actionCollection by name. */
   KToggleAction* toggleAction (const char* name) const
     { return (KToggleAction*) action (name); }
-  /** Retrieves a slider action from the actionCollection by name.
-    */
+  /** Retrieves a slider action from the actionCollection by name. */
   KPlayerSliderAction* sliderAction (const char* name) const
     { return (KPlayerSliderAction*) action (name); }
-  /** Retrieves a slider action from the actionCollection by name.
-    */
+  /** Retrieves a slider action from the actionCollection by name. */
   KPlayerPopupSliderAction* popupAction (const char* name) const
     { return (KPlayerPopupSliderAction*) action (name); }
 
-  /** Sets the sound volume.
-    */
+  /** Returns the video action list. */
+  KPlayerTrackActionList* videoActionList (void) const
+    { return m_video_action_list; }
+  /** Returns the audio action list. */
+  KPlayerTrackActionList* audioActionList (void) const
+    { return m_audio_action_list; }
+  /** Returns the subtitle action list. */
+  KPlayerSubtitleTrackActionList* subtitleActionList (void) const
+    { return m_subtitle_action_list; }
+
+  /** Sets the sound volume. */
   void setVolume (void);
-  /** Sets the video contrast.
-    */
+  /** Sets the video contrast. */
   void setContrast (void);
-  /** Sets the video brightness.
-    */
+  /** Sets the video brightness. */
   void setBrightness (void);
-  /** Sets the video hue.
-    */
+  /** Sets the video hue. */
   void setHue (void);
-  /** Sets the video saturation.
-    */
+  /** Sets the video saturation. */
   void setSaturation (void);
 
-  /** Initializes the engine.
-   */
+  /** Initializes the engine. */
   static void initialize (KActionCollection* ac, QWidget* parent, const char* name = 0, KConfig* = 0);
-  /** Terminates the engine.
-   */
+  /** Terminates the engine. */
   static void terminate (void);
 
-  /** Returns the static engine object.
-   */
-  static KPlayerEngine* kPlayerEngine (void)
+  /** Returns the static engine object. */
+  static KPlayerEngine* engine (void)
     { return m_engine; }
 
-  /** Returns the settings object.
-   */
-  KPlayerSettings* kPlayerSettings (void) const
-    { return m_settings; }
-
-  /** Returns the widget object.
-   */
-  KPlayerWidget* kPlayerWidget (void) const
+  /** Returns the widget object. */
+  KPlayerWidget* widget (void) const
     { return m_widget; }
 
-  /** Returns the widget object.
-   */
-  KPlayerWorkspace* kPlayerWorkspace (void) const
+  /** Returns the workspace object. */
+  KPlayerWorkspace* workspace (void) const
     { return m_workspace; }
 
-  /** Returns the process object.
-   */
-  KPlayerProcess* kPlayerProcess (void) const
+  /** Returns the process object. */
+  KPlayerProcess* process (void) const
     { return m_process; }
 
-  /** Returns the config object.
-   */
-  KConfig* kPlayerConfig (void) const
-    { return m_config; }
+  /** Returns the settings object. */
+  KPlayerSettings* settings (void) const
+    { return m_settings; }
 
-  /** Returns the playlist config object.
-   */
-  KConfig* kPlayerPlaylistConfig (void) const
-    { return m_playlist_config; }
+  /** Returns the properties object. */
+  KPlayerTrackProperties* properties (void) const;
+
+  /** Returns the configuration object. */
+  KPlayerConfiguration* configuration (void)
+    { return m_configuration; }
+
+  /** Returns the config object. */
+  KConfig* config (void)
+    { return m_config; }
+  /** Returns the store object. */
+  KConfig* store (void)
+    { return m_store; }
+  /** Returns the meta information object. */
+  KConfig* meta (void)
+    { return m_meta; }
+  /** Returns the meta information storage set to the given group. */
+  KConfig* meta (const QString& group)
+  {
+    meta() -> setGroup (group);
+    return meta();
+  }
+  /** Returns the value of the given key with the given default. */
+  QString meta (const QString& group, const QString& key, const QString& value = QString::null)
+    { return meta (group) -> readEntry (key, value); }
 
   KActionCollection* actionCollection (void) const
    { return m_ac; }
@@ -206,391 +202,303 @@ public:
   void maintainAspect (bool maintain, QSize aspect);
   void refreshAspect (void);
 
-  /** Resets full screen and maximized states.
-   */
+  /** Resets full screen and maximized states. */
   void normal (void);
-  /** Zoom to the given factor.
-   */
+  /** Zoom to the given factor. */
   void zoomTo (int m, int d = 1);
-  /** Zoom or seek on mouse wheel event.
-   */
+  /** Zoom or seek on mouse wheel event. */
   void wheel (int delta, int state);
   /** Toggle full screen on double click. */
   void doubleClick (void);
 
-  /** Disables screen saver if it is enabled.
-   */
+  /** Disables screen saver if it is enabled. */
   void disableScreenSaver (void);
-  /** Enables screen saver if it was disabled.
-   */
+  /** Enables screen saver if it was disabled. */
   void enableScreenSaver (void);
+
+  int demuxerCount (void) const
+    { return m_demuxers.count(); }
+  const QString& demuxerName (int index) const
+    { return m_demuxers [index]; }
+  int demuxerIndex (const QString& codec) const
+    { return listIndex (m_demuxers, codec); }
 
   int audioCodecCount (void) const
     { return m_audio_codecs.count(); }
-  QString audioCodecName (int index) const
+  const QString& audioCodecName (int index) const
     { return m_audio_codecs[index]; }
-  int audioCodecIndex (QString codec) const
+  int audioCodecIndex (const QString& codec) const
     { return listIndex (m_audio_codecs, codec); }
 
   int audioDriverCount (void) const
     { return m_audio_drivers.count(); }
-  QString audioDriverName (int index) const
+  const QString& audioDriverName (int index) const
     { return m_audio_drivers[index]; }
-  int audioDriverIndex (QString driver) const
+  int audioDriverIndex (const QString& driver) const
     { return listIndex (m_audio_drivers, driver); }
 
   int videoCodecCount (void) const
     { return m_video_codecs.count(); }
-  QString videoCodecName (int index) const
+  const QString& videoCodecName (int index) const
     { return m_video_codecs[index]; }
-  int videoCodecIndex (QString codec) const
+  int videoCodecIndex (const QString& codec) const
     { return listIndex (m_video_codecs, codec); }
 
   int videoDriverCount (void) const
     { return m_video_drivers.count(); }
-  QString videoDriverName (int index) const
+  const QString& videoDriverName (int index) const
     { return m_video_drivers[index]; }
-  int videoDriverIndex (QString driver) const
+  int videoDriverIndex (const QString& driver) const
     { return listIndex (m_video_drivers, driver); }
 
 public slots:
-  /** Handles workspace resized event.
-    */
+  /** Handles workspace resized event. */
   void workspaceResized (void);
-  /** Receives the refresh signal from KPlayerSettings. Updates the settings.
-   */
+  /** Receives the updated signal from KPlayerSettings. Updates the settings. */
   void refreshSettings (void);
-  /** Receives the refresh signal from KPlayerProperties. Updates the settings.
-   */
+  /** Receives the updated signal from KPlayerProperties. Updates the settings. */
   void refreshProperties (void);
 
-  /** Receives the stateChanged signal from KPlayerProcess.
-    */
+  /** Receives the stateChanged signal from KPlayerProcess. */
   void playerStateChanged (KPlayerProcess::State, KPlayerProcess::State);
-  /** Receives the progressChanged signal from KPlayerProcess.
-    */
+  /** Receives the progressChanged signal from KPlayerProcess. */
   void playerProgressChanged (float, KPlayerProcess::ProgressType);
-  /** Receives the infoAvailable signal from KPlayerProcess.
-    */
+  /** Receives the infoAvailable signal from KPlayerProcess. */
   void playerInfoAvailable (void);
-  /** Receives the sizeAvailable signal from KPlayerProcess.
-    */
+  /** Receives the sizeAvailable signal from KPlayerProcess. */
   void playerSizeAvailable (void);
 
   /** Displays the Open Subtitle File dialog and loads the chosen subtitles.
-      Restarts playback if a file was playing.
-    */
+      Restarts playback if a file was playing. */
   void fileOpenSubtitles (void);
   /** Displays the Open Subtitle URL dialog and loads the chosen subtitles.
-      Restarts playback if a file was playing.
-    */
-  void fileOpenSubtitleUrl (void);
+      Restarts playback if a file was playing. */
+  //void fileOpenSubtitleUrl (void);
   /** Unloads subtitles and prevents subtitle autoloading.
-      Restarts playback if a file was playing.
-    */
-  void fileUnloadSubtitles (void);
-  /** Opens File Properties dialog.
-    */
+      Restarts playback if a file was playing. */
+  //void fileUnloadSubtitles (void);
+  /** Opens File Properties dialog. */
   void fileProperties (void);
 
-  /** Toggles full screen mode.
-    */
+  /** Toggles full screen mode. */
   void fullScreen (void);
-  /** Scales video up.
-    */
+  /** Scales video up. */
   void zoomIn (void);
-  /** Scales video down.
-    */
+  /** Scales video down. */
   void zoomOut (void);
-  /** Scales video to 50%.
-    */
+  /** Scales video to 50%. */
   void zoom12 (void);
-  /** Scales video to 100%.
-    */
+  /** Scales video to 100%. */
   void zoom11 (void);
-  /** Scales video to 150%.
-    */
+  /** Scales video to 150%. */
   void zoom32 (void);
-  /** Scales video to 200%.
-    */
+  /** Scales video to 200%. */
   void zoom21 (void);
-  /** Scales video to 250%.
-    */
+  /** Scales video to 250%. */
   void zoom52 (void);
-  /** Scales video to 300%.
-    */
+  /** Scales video to 300%. */
   void zoom31 (void);
-  /** Toggles the option of maintaining the video aspect ratio.
-    */
+  /** Toggles the option of maintaining the video aspect ratio. */
   void maintainAspect (void);
-  /** Toggles the option of maintaining the original video aspect ratio.
-    */
+  /** Toggles the option of maintaining the original video aspect ratio. */
   void maintainOriginalAspect (void);
-  /** Toggles the option of maintaining the current video aspect ratio.
-    */
+  /** Toggles the option of maintaining the current video aspect ratio. */
   void maintainCurrentAspect (void);
-  /** Forces 4 to 3 video aspect ratio.
-    */
+  /** Forces 4 to 3 video aspect ratio. */
   void aspect43 (void);
-  /** Forces 16 to 9 video aspect ratio.
-    */
+  /** Forces 16 to 9 video aspect ratio. */
   void aspect169 (void);
 
-  /** Plays the currently loaded file.
-    */
+  /** Plays the currently loaded file. */
   void play (void);
-  /** Pauses the player.
-    */
+  /** Pauses the player. */
   void pause (void);
-  /** Stops the player.
-    */
+  /** Stops the player. */
   void stop (void);
-  /** Stops the player and the helper.
-    */
-  void kill (void);
-  /** Seeks forward.
-    */
+
+  /** Seeks forward. */
   void forward (void);
-  /** Seeks forward fast.
-    */
+  /** Seeks forward fast. */
   void fastForward (void);
-  /** Seeks backward.
-    */
+  /** Seeks backward. */
   void backward (void);
-  /** Seeks backward fast.
-    */
+  /** Seeks backward fast. */
   void fastBackward (void);
-  /** Seeks to the beginning.
-    */
+  /** Seeks to the beginning. */
   void start (void);
 
-  /** Increases the volume.
-    */
+  /** Increases the volume. */
   void volumeIncrease (void);
-  /** Decreases the volume.
-    */
+  /** Decreases the volume. */
   void volumeDecrease (void);
-  /** Toggles audio playback.
-    */
+  /** Toggles audio playback. */
   void mute (void);
-  /** Increases the audio delay.
-    */
+  /** Increases the audio delay. */
   void audioDelayIncrease (void);
-  /** Decreases the audio delay.
-    */
+  /** Decreases the audio delay. */
   void audioDelayDecrease (void);
+  /** Sets the audio stream. */
+  void audioStream (int index);
 
-  /** Toggle the soft frame dropping option.
-    */
+  /** Toggle the soft frame dropping option. */
   void softFrameDrop (void);
-  /** Toggle the hard frame dropping option.
-    */
+  /** Toggle the hard frame dropping option. */
   void hardFrameDrop (void);
 
-  /** Shows or hides subtitles.
-    */
-  void subtitlesShow (void);
-  /** Moves subtitles down.
-    */
+  /** Moves subtitles down. */
   void subtitlesMoveDown (void);
-  /** Moves subtitles up.
-    */
+  /** Moves subtitles up. */
   void subtitlesMoveUp (void);
-  /** Decreases subtitle delay.
-    */
+  /** Decreases subtitle delay. */
   void subtitlesDelayDecrease (void);
-  /** Increases subtitle delay.
-    */
+  /** Increases subtitle delay. */
   void subtitlesDelayIncrease (void);
+  /** Sets the subtitle stream. */
+  void subtitleStream (int index);
 
-  /** Increases the video brightness.
-    */
+  /** Increases the video brightness. */
   void brightnessIncrease (void);
-  /** Decreases the video brightness.
-    */
+  /** Decreases the video brightness. */
   void brightnessDecrease (void);
-  /** Increases the video contrast.
-    */
+  /** Increases the video contrast. */
   void contrastIncrease (void);
-  /** Decreases the video contrast.
-    */
+  /** Decreases the video contrast. */
   void contrastDecrease (void);
-  /** Increases the video hue.
-    */
+  /** Increases the video hue. */
   void hueIncrease (void);
-  /** Decreases the video hue.
-    */
+  /** Decreases the video hue. */
   void hueDecrease (void);
-  /** Increases the video saturation.
-    */
+  /** Increases the video saturation. */
   void saturationIncrease (void);
-  /** Decreases the video saturation.
-    */
+  /** Decreases the video saturation. */
   void saturationDecrease (void);
+  /** Sets the video stream. */
+  void videoStream (int index);
 
-  /** Moves to the position chosen.
-    */
+  /** Moves to the position chosen. */
   void progressChanged (int);
-  /** Changes the volume level.
-    */
+  /** Changes the volume level. */
   void volumeChanged (int);
-  /** Changes the video brightness.
-    */
+  /** Changes the video brightness. */
   void brightnessChanged (int);
-  /** Changes the video contrast.
-    */
+  /** Changes the video contrast. */
   void contrastChanged (int);
-  /** Changes the video hue.
-    */
+  /** Changes the video hue. */
   void hueChanged (int);
-  /** Changes the video saturation.
-    */
+  /** Changes the video saturation. */
   void saturationChanged (int);
 
-  KPlayerProperties* reference (KURL);
-  void dereference (KPlayerProperties*);
-
 protected:
-  QMap<QString, KPlayerProperties*> m_map;
   QString m_path;
 
-  KPlayerLineOutputProcess* m_player_ac;
-  KPlayerLineOutputProcess* m_player_ao;
-  KPlayerLineOutputProcess* m_player_vc;
-  KPlayerLineOutputProcess* m_player_vo;
+  /** Video track action list. */
+  KPlayerTrackActionList* m_video_action_list;
+  /** Audio track action list. */
+  KPlayerTrackActionList* m_audio_action_list;
+  /** Subtitle track action list. */
+  KPlayerSubtitleTrackActionList* m_subtitle_action_list;
+
+  KPlayerLineOutputProcess* m_player;
 
   bool m_audio_codecs_ready;
   bool m_audio_drivers_ready;
   bool m_video_codecs_ready;
   bool m_video_drivers_ready;
+  bool m_demuxers_ready;
 
+  /** List of available audio codecs. */
   QStringList m_audio_codecs;
+  /** List of available audio drivers. */
   QStringList m_audio_drivers;
+  /** List of available video codecs. */
   QStringList m_video_codecs;
+  /** List of available video drivers. */
   QStringList m_video_drivers;
+  /** List of available demuxers. */
+  QStringList m_demuxers;
 
-  /** The static engine object.
-   */
+  /** The static engine object. */
   static KPlayerEngine* m_engine;
-  /** The settings object.
-   */
-  KPlayerSettings* m_settings;
-  /** The config object.
-   */
+  /** Main config. */
   KConfig* m_config;
-  /** The playlist config object.
-   */
-  KConfig* m_playlist_config;
-  /** The process object.
-   */
+  /** Store config. */
+  KConfig* m_store;
+  /** Meta config. */
+  KConfig* m_meta;
+  /** Configuration properties. */
+  KPlayerConfiguration* m_configuration;
+  /** The settings object. */
+  KPlayerSettings* m_settings;
+  /** The process object. */
   KPlayerProcess* m_process;
-  /** The widget object.
-   */
+  /** The widget object. */
   KPlayerWidget* m_widget;
-  /** The workspace object.
-   */
+  /** The workspace object. */
   KPlayerWorkspace* m_workspace;
-  /** The action collection object.
-   */
+  /** The action collection object. */
   KActionCollection* m_ac;
 
   // Following should be private
-  /** Indicates what actions should be used.
-   */
+  /** Indicates what actions should be used. */
   bool m_light;
-  /** Indicates whether screen saver needs to be reenabled.
-   */
+  /** Indicates whether screen saver needs to be reenabled. */
   bool m_enable_screen_saver;
-  /** Recursion prevention.
-   */
+  /** Recursion prevention. */
   bool m_updating;
-  /** Recursion prevention.
-   */
+  /** Recursion prevention. */
   bool m_zooming;
-  /** Work around QRangeControl bug.
-   */
+  /** Work around QRangeControl bug. */
   int m_progress_factor;
-  /** Do not play any more URLs.
-   */
+  /** Do not play any more URLs. */
   bool m_stop;
 
 signals:
-  /** Emitted to let the main window syncronize full screen and maximized settings.
-   */
+  /** Emitted to let the main window syncronize full screen and maximized settings. */
   void syncronize (bool);
-  /** Emitted when display size changes.
-   */
+  /** Emitted when display size changes. */
   void zoom (void);
-  /** Emitted when the workspace size needs adjustment.
-   */
+  /** Emitted when the workspace size needs adjustment. */
   void correctSize (void);
-  /** Emitted when the original display size of a file becomes known.
-   */
+  /** Emitted when the original display size of a file becomes known. */
   void initialSize (void);
-  /** Emitted when all drivers and codecs have been loaded.
-   */
-  void refresh (void);
+  /** Emitted when all drivers and codecs have been loaded. */
+  void updated (void);
 
 protected slots:
-  /** Processes an MPlayer audio codec line.
-    */
-  void receivedAudioCodec (KPlayerLineOutputProcess*, char*, int);
-  /** Processes an MPlayer audio driver line.
-    */
-  void receivedAudioDriver (KPlayerLineOutputProcess*, char*, int);
-  /** Processes an MPlayer video codec line.
-    */
-  void receivedVideoCodec (KPlayerLineOutputProcess*, char*, int);
-  /** Processes an MPlayer video driver line.
-    */
-  void receivedVideoDriver (KPlayerLineOutputProcess*, char*, int);
-  /** Finishes refreshing audio codecs.
-    */
-  void audioCodecProcessExited (KProcess*);
-  /** Finishes refreshing audio drivers.
-    */
-  void audioDriverProcessExited (KProcess*);
-  /** Finishes refreshing video codecs.
-    */
-  void videoCodecProcessExited (KProcess*);
-  /** Finishes refreshing video drivers.
-    */
-  void videoDriverProcessExited (KProcess*);
+  /** Processes an MPlayer output line. */
+  void receivedOutput (KPlayerLineOutputProcess*, char*, int);
+  /** Finishes refreshing lists. */
+  void processExited (KProcess*);
 };
 
 inline KPlayerEngine* kPlayerEngine (void)
 {
-  return KPlayerEngine::kPlayerEngine();
+  return KPlayerEngine::engine();
 }
 
 inline KPlayerProcess* kPlayerProcess (void)
 {
-  return kPlayerEngine() -> kPlayerProcess();
+  return kPlayerEngine() -> process();
 }
 
 inline KConfig* kPlayerConfig (void)
 {
-  return kPlayerEngine() -> kPlayerConfig();
-}
-
-inline KConfig* kPlayerPlaylistConfig (void)
-{
-  return kPlayerEngine() -> kPlayerPlaylistConfig();
+  return kPlayerEngine() -> config();
 }
 
 inline KPlayerSettings* kPlayerSettings (void)
 {
-  return kPlayerEngine() -> kPlayerSettings();
+  return kPlayerEngine() -> settings();
 }
 
 inline KPlayerWidget* kPlayerWidget (void)
 {
-  return kPlayerEngine() -> kPlayerWidget();
+  return kPlayerEngine() -> widget();
 }
 
 inline KPlayerWorkspace* kPlayerWorkspace (void)
 {
-  return kPlayerEngine() -> kPlayerWorkspace();
+  return kPlayerEngine() -> workspace();
 }
 
 #endif

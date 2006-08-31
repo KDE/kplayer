@@ -20,6 +20,10 @@
 #include <qpopupmenu.h>
 #include <dcopclient.h>
 
+#ifdef DEBUG
+#define DEBUG_KPLAYER_KPART
+#endif
+
 #include "kplayerpart.h"
 #include "kplayerpart.moc"
 #include "kplayerengine.h"
@@ -48,7 +52,7 @@ KPlayerPart::KPlayerPart (QWidget* wparent, const char* wname, QObject* parent, 
   m_toolbar_names << "progressToolBar" << "volumeToolBar";
   m_toolbar_actions << "settings_progress_toolbar" << "settings_volume_toolbar";*/
   KPlayerEngine::initialize (actionCollection(), wparent, wname);
-  kPlayerSettings() -> setResizeAutomatically (false);
+  KPlayerEngine::engine() -> configuration() -> setResizeAutomatically (false);
   setInstance (KPlayerPartFactory::instance());
 //connect (kPlayerProcess(), SIGNAL (stateChanged(KPlayerProcess::State)), this, SLOT (playerStateChanged(KPlayerProcess::State)));
 //connect (kPlayerProcess(), SIGNAL (infoAvailable()), this, SLOT (playerInfoAvailable()));
@@ -56,9 +60,11 @@ KPlayerPart::KPlayerPart (QWidget* wparent, const char* wname, QObject* parent, 
   setWidget (kPlayerWorkspace());
   initActions();
   setXMLFile ("kplayerpartui.rc");
+#ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "XML File: '" << xmlFile() << "'\n";
   //m_extension = new KPlayerBrowserExtension (this);
   kdDebugTime() << "KPlayerPart: creating popup menu\n";
+#endif
   m_popup_menu = new QPopupMenu (wparent);
   action ("player_launch") -> plug (m_popup_menu);
   m_popup_menu -> insertSeparator();
@@ -71,7 +77,9 @@ KPlayerPart::KPlayerPart (QWidget* wparent, const char* wname, QObject* parent, 
   action ("file_properties") -> plug (m_popup_menu);
   //if ( KGlobalSettings::insertTearOffHandle() )
   //  m_popup_menu -> insertTearOffHandle();
+#ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "KPlayerPart: created popup menu with " << m_popup_menu -> count() << "items\n";
+#endif
 /*readOptions();
   KToolBar* toolbar = toolBar (PROGRESS_TOOLBAR);
   if ( toolbar )
@@ -86,7 +94,9 @@ KPlayerPart::KPlayerPart (QWidget* wparent, const char* wname, QObject* parent, 
     sliderAction (m_toolbar_actions [1]) -> slider() -> setOrientation (toolbar -> orientation());
   }
   enablePlayerActions();
-  kdDebugTime() << "Constructor OK\n";*/
+#ifdef DEBUG_KPLAYER_KPART
+  kdDebugTime() << "Constructor OK\n";
+#endif*/
 }
 
 KPlayerPart::~KPlayerPart()
@@ -108,7 +118,9 @@ KAboutData* KPlayerPart::createAboutData (void)
 
 bool KPlayerPart::openURL (const KURL& url)
 {
+#ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "Open URL\n";
+#endif
   emit setWindowCaption (url.prettyURL());
   kPlayerEngine() -> load (url);
   return true;
@@ -117,7 +129,9 @@ bool KPlayerPart::openURL (const KURL& url)
 /*
 bool KPlayerPart::closeURL (void)
 {
+#ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "Close URL\n";
+#endif
 //saveOptions();
   return true;
 }
@@ -127,23 +141,29 @@ bool KPlayerPart::closeURL (void)
 //{
 //index -= PROGRESS_TOOLBAR;
 /*QObject* toolbar = sliderAction (m_toolbar_actions [index]) -> slider() -> parent();
+#ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "Name: '" << toolbar -> name() << "'\n";
   if ( toolbar && toolbar -> inherits ("KToolBar") )
     kdDebugTime() << "Got parent\n";
   if ( toolbar )
     kdDebugTime() << "KPlayerSlider parent class name: " << toolbar -> className() << "\n";
+#endif
   if ( toolbar && toolbar -> inherits ("KToolBar") )
     return (KToolBar*) toolbar;*/
+#ifdef DEBUG_KPLAYER_KPART
   /*if ( qApp )
     kdDebugTime() << "App OK\n";
   if ( qApp && qApp -> mainWidget() )
     kdDebugTime() << "Main widget OK\n";*/
+#endif
 //if ( ! qApp || ! qApp -> mainWidget() )
 //  return 0;
+#ifdef DEBUG_KPLAYER_KPART
   /*if ( qApp -> mainWidget() -> child (m_toolbar_names [index]) )
     kdDebugTime() << "Child OK\n";
   if ( qApp -> mainWidget() -> child (m_toolbar_names [index], "KToolBar") )
     kdDebugTime() << "KToolBar OK\n";*/
+#endif
 //return (KToolBar*) qApp -> mainWidget() -> child (m_toolbar_names [index], "KToolBar");
 //}
 
@@ -159,7 +179,9 @@ void KPlayerPart::initActions (void)
 /*
 void KPlayerPart::saveOptions (void)
 {
+#ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "Saving options\n";
+#endif
   KConfig* config = kPlayerConfig();
   config -> setGroup ("General Options");
   config -> writeEntry (QString (m_toolbar_names [0]) + " Part Visible", m_toolbar_visible [0]);
@@ -168,14 +190,18 @@ void KPlayerPart::saveOptions (void)
 
 void KPlayerPart::readOptions (void)
 {
+#ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "Reading options\n";
+#endif
   KPlayerSettings* settings = kPlayerSettings();
   KConfig* config = kPlayerConfig();
   config -> setGroup ("General Options");
   m_toolbar_visible[0] = config -> readBoolEntry (QString (m_toolbar_names[0]) + " Part Visible", m_toolbar_visible[0]);
   toggleAction (m_toolbar_actions [0]) -> setChecked (m_toolbar_visible [0]);
+#ifdef DEBUG_KPLAYER_KPART
   if ( toolBar (PROGRESS_TOOLBAR) )
     kdDebugTime() << "Toolbar OK\n";
+#endif
   KToolBar* toolbar = toolBar (PROGRESS_TOOLBAR);
   if ( toolbar )
   {
@@ -226,7 +252,9 @@ void KPlayerPart::disableToolbar (int index)
 
 void KPlayerPart::enablePlayerActions (void)
 {
+#ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "Enable Toolbar\n";
+#endif
   if ( kPlayerSettings() -> hasLength() )
     enableToolbar (PROGRESS_TOOLBAR);
   else
@@ -238,14 +266,16 @@ void KPlayerPart::launchKPlayer (void)
 {
   kPlayerEngine() -> stop();
   KProcess process;
-  process << "kplayer" << kPlayerSettings() -> url().url();
+  process << "kplayer" << KPlayerEngine::engine() -> properties() -> url().url();
   process.start (KProcess::DontCare);
   process.detach();
 }
 
 void KPlayerPart::widgetContextMenu (QContextMenuEvent* event)
 {
+#ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "KPlayerPart context menu\n";
+#endif
   QPopupMenu* popup = 0;
   if ( factory() )
     popup = (QPopupMenu*) factory() -> container ("player_popup", this);
@@ -253,7 +283,9 @@ void KPlayerPart::widgetContextMenu (QContextMenuEvent* event)
     popup = m_popup_menu;
   if ( popup )
   {
+#ifdef DEBUG_KPLAYER_KPART
     kdDebugTime() << "KPlayerPart: displaying popup menu\n";
+#endif
     popup -> popup (event -> globalPos());
     event -> accept();
   }
@@ -288,7 +320,9 @@ void KPlayerPart::viewVolumeToolbar (void)
 
 void KPlayerPart::playerStateChanged (KPlayerProcess::State state)
 {
+#ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "State change received: " << state << "\n";
+#endif
 //enablePlayerActions();
 }
 

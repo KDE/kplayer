@@ -26,14 +26,14 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <kdebug.h>
+#ifdef DEBUG
+#define DEBUG_KPLAYER_SETTINGS_DIALOG
+#endif
 
 #include "kplayersettingsdialog.h"
 #include "kplayersettingsdialog.moc"
 #include "kplayerengine.h"
 #include "kplayersettings.h"
-
-#define DEBUG_KPLAYER_SETTINGS_DIALOG
 
 static QString s_default_entry (i18n("%1 (%2)"));
 static QRegExp re_key_value ("^([^:]+): *(.*)$");
@@ -44,13 +44,9 @@ KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
 //m_initial_move = false;
   QApplication::connect (this, SIGNAL (aboutToShowPage (QWidget*)), this, SLOT (pageAboutToShow(QWidget*)));
   QFrame* frame = addPage (i18n("General"), i18n("General Settings"));
-  QVBoxLayout* layout = new QVBoxLayout (frame, 0, 0);
+  QBoxLayout* layout = new QVBoxLayout (frame, 0, 0);
   layout -> setAutoAdd (true);
   m_general = new KPlayerSettingsGeneral (frame, "general");
-  frame = addPage (i18n("Playlist"), i18n("Playlist Settings"));
-  layout = new QVBoxLayout (frame, 0, 0);
-  layout -> setAutoAdd (true);
-  m_playlist = new KPlayerSettingsPlaylist (frame, "playlist");
   frame = addPage (i18n("Controls"), i18n("Control Settings"));
   layout = new QVBoxLayout (frame, 0, 0);
   layout -> setAutoAdd (true);
@@ -67,10 +63,6 @@ KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
   layout = new QVBoxLayout (frame, 0, 0);
   layout -> setAutoAdd (true);
   m_subtitles = new KPlayerSettingsSubtitles (frame, "subtitles");
-  frame = addPage (i18n("Messages"), i18n("Message Settings"));
-  layout = new QVBoxLayout (frame, 0, 0);
-  layout -> setAutoAdd (true);
-  m_messages = new KPlayerSettingsMessages (frame, "messages");
   frame = addPage (i18n("Advanced"), i18n("Advanced Settings"));
   layout = new QVBoxLayout (frame, 0, 0);
   layout -> setAutoAdd (true);
@@ -111,6 +103,9 @@ KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
       item -> setOpen (true);
     view -> setMinimumSize (view -> sizeHint());
   }
+  layout = (QBoxLayout*) child (0, "QHBoxLayout");
+  if ( layout )
+    layout -> insertSpacing (0, 6);
   KConfig* config = kPlayerConfig();
   config -> setGroup ("General Options");
   QString name (config -> readEntry ("Settings Dialog Page"));
@@ -155,7 +150,7 @@ KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
 
 KPlayerSettingsDialog::~KPlayerSettingsDialog (void)
 {
-  kPlayerEngine() -> getDriversCodecs();
+  kPlayerEngine() -> getLists();
   KConfig* config = kPlayerConfig();
   config -> setGroup ("General Options");
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
@@ -229,16 +224,14 @@ void KPlayerSettingsDialog::slotDefault (void)
   if ( KMessageBox::warningYesNo (this, i18n("All configuration settings will be reset.\n\nAre you sure?"))
       != KMessageBox::Yes )
     return;
-  kPlayerSettings() -> defaults();
-  kPlayerSettings() -> save();
+  configuration() -> defaults();
+  configuration() -> commit();
   m_general -> load();
-  m_playlist -> load();
   m_controls -> load();
   m_video -> load();
   m_audio -> load();
   m_sliders -> load();
   m_subtitles -> load();
-  m_messages -> load();
   m_advanced -> load();
   m_progress -> load();
   m_volume -> load();
@@ -246,21 +239,13 @@ void KPlayerSettingsDialog::slotDefault (void)
   m_brightness -> load();
   m_hue -> load();
   m_saturation -> load();
-  setButtonCancelText (i18n("&Close"));
+  setButtonCancel (KStdGuiItem::close());
   KDialogBase::slotDefault();
 }
 
 void KPlayerSettingsDialog::pageAboutToShow (QWidget* page)
 {
-  m_advanced -> refresh();
-  /*setHelp (page == m_general -> parent() ? "settings-general" : page == m_playlist -> parent() ? "settings-playlist"
-    : page == m_controls -> parent() ? "settings-controls" : page == m_progress -> parent() ? "settings-progress"
-    : page == m_volume -> parent() ? "settings-volume" : page == m_contrast -> parent() ? "settings-contrast"
-    : page == m_brightness -> parent() ? "settings-brightness" : page == m_hue -> parent() ? "settings-hue"
-    : page == m_saturation -> parent() ? "settings-saturation" : page == m_sliders -> parent() ? "settings-sliders"
-    : page == m_messages -> parent() ? "settings-messages" : page == m_subtitles -> parent() ? "settings-subtitles"
-    : page == m_audio -> parent() ? "settings-audio" : page == m_video -> parent() ? "settings-video"
-    : page == m_advanced -> parent() ? "settings-advanced" : "settings");*/
+  m_advanced -> refreshLists();
   QObject* object = page -> child (0, "QFrame");
   KConfig* config = kPlayerConfig();
   config -> setGroup ("General Options");
@@ -280,14 +265,18 @@ void KPlayerSettingsDialog::slotOk (void)
   KDialogBase::slotOk();
 }
 
+void dumpObject (const QObject* object, int indent, int depth = 20);
+
 void KPlayerSettingsDialog::slotApply (void)
 {
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsDialog::slotApply\n";
+  dumpObject (this, 0);
+#endif
   m_advanced -> save();
   m_audio -> save();
   m_controls -> save();
   m_general -> save();
-  m_playlist -> save();
-  m_messages -> save();
   m_sliders -> save();
   m_subtitles -> save();
   m_video -> save();
@@ -297,59 +286,82 @@ void KPlayerSettingsDialog::slotApply (void)
   m_brightness -> save();
   m_hue -> save();
   m_saturation -> save();
-  kPlayerSettings() -> save();
-  setButtonCancelText (i18n("&Close"));
+  configuration() -> commit();
+  setButtonCancel (KStdGuiItem::close());
   KDialogBase::slotApply();
 }
 
 KPlayerSettingsAdvanced::KPlayerSettingsAdvanced (QWidget* parent, const char* name)
   : KPlayerSettingsAdvancedPage (parent, name)
 {
+  loadLists();
   load();
-}
-
-void KPlayerSettingsAdvanced::load (void)
-{
-  KPlayerSettings* settings = kPlayerSettings();
-  c_executable_path -> setText (settings -> executablePathDefault());
-  c_command_line -> setText (settings -> commandLineDefault());
-  c_frame_drop -> setCurrentItem (settings -> frameDropDefault());
-  c_use_cache -> setCurrentItem (settings -> cacheDefault());
-  cacheChanged (c_use_cache -> currentItem());
-  c_build_index -> setCurrentItem (settings -> buildNewIndexDefault());
-  c_osd_level -> setCurrentItem (settings -> osdLevelDefault());
-  c_use_temporary_file -> setChecked (settings -> useTemporaryFileDefault());
-  c_use_kioslave_for_http -> setChecked (settings -> useKioslaveForHttp());
-  c_use_kioslave_for_ftp -> setChecked (settings -> useKioslaveForFtp());
-  c_use_kioslave_for_smb -> setChecked (settings -> useKioslaveForSmb());
-}
-
-void KPlayerSettingsAdvanced::save (void)
-{
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setExecutablePathDefault (c_executable_path -> text());
-  settings -> setCommandLineDefault (c_command_line -> text());
-  settings -> setFrameDropDefault (c_frame_drop -> currentItem());
-  settings -> setCacheDefault (c_use_cache -> currentItem());
-  if ( c_use_cache -> currentItem() == 2 )
-    settings -> setCacheSizeDefault (c_cache_size -> text().toLong());
-  settings -> setBuildNewIndexDefault (c_build_index -> currentItem());
-  settings -> setOsdLevelDefault (c_osd_level -> currentItem());
-  settings -> setUseTemporaryFileDefault (c_use_temporary_file -> isChecked());
-  settings -> setUseKioslaveForHttp (c_use_kioslave_for_http -> isChecked());
-  settings -> setUseKioslaveForFtp (c_use_kioslave_for_ftp -> isChecked());
-  settings -> setUseKioslaveForSmb (c_use_kioslave_for_smb -> isChecked());
+  QApplication::connect (kPlayerEngine(), SIGNAL (updated()), this, SLOT (refresh()));
 }
 
 void KPlayerSettingsAdvanced::refresh (void)
 {
-  kPlayerEngine() -> getDriversCodecs (c_executable_path -> text());
+  int index = c_demuxer -> currentItem();
+  if ( index > 0 )
+    index = engine() -> demuxerIndex (listEntry (c_demuxer)) + 1;
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "Demuxer: " << c_demuxer -> currentText() << " => " << index << " / " << kPlayerEngine() -> demuxerCount() << "\n";
+#endif
+  loadLists();
+  c_demuxer -> setCurrentItem (index);
+}
+
+void KPlayerSettingsAdvanced::loadLists (void)
+{
+  if ( engine() -> demuxerCount() )
+  {
+    c_demuxer -> clear();
+    c_demuxer -> insertItem (i18n("auto"));
+    for ( int i = 0; i < engine() -> demuxerCount(); i ++ )
+      c_demuxer -> insertItem (engine() -> demuxerName (i));
+  }
+}
+
+void KPlayerSettingsAdvanced::load (void)
+{
+  c_executable_path -> setText (configuration() -> executablePath());
+  c_command_line -> setText (configuration() -> commandLine());
+  c_demuxer -> setCurrentItem (engine() -> demuxerIndex (configuration() -> demuxer()) + 1);
+  c_frame_drop -> setCurrentItem (configuration() -> frameDrop());
+  c_use_cache -> setCurrentItem (configuration() -> cache());
+  cacheChanged (c_use_cache -> currentItem());
+  c_build_index -> setCurrentItem (configuration() -> buildNewIndex());
+  c_osd_level -> setCurrentItem (configuration() -> osdLevel());
+  c_use_temporary_file -> setChecked (configuration() -> useTemporaryFile());
+  c_use_kioslave_for_http -> setChecked (configuration() -> useKioslaveForHttp());
+  c_use_kioslave_for_ftp -> setChecked (configuration() -> useKioslaveForFtp());
+  c_use_kioslave_for_smb -> setChecked (configuration() -> useKioslaveForSmb());
+}
+
+void KPlayerSettingsAdvanced::save (void)
+{
+  configuration() -> setExecutablePath (c_executable_path -> text());
+  configuration() -> setCommandLine (c_command_line -> text());
+  configuration() -> setDemuxer (listEntry (c_demuxer));
+  configuration() -> setFrameDrop (c_frame_drop -> currentItem());
+  configuration() -> setCache (c_use_cache -> currentItem(), labs (c_cache_size -> text().toInt()));
+  configuration() -> setBuildNewIndex (c_build_index -> currentItem());
+  configuration() -> setOsdLevel (c_osd_level -> currentItem());
+  configuration() -> setUseTemporaryFile (c_use_temporary_file -> isChecked());
+  configuration() -> setUseKioslaveForHttp (c_use_kioslave_for_http -> isChecked());
+  configuration() -> setUseKioslaveForFtp (c_use_kioslave_for_ftp -> isChecked());
+  configuration() -> setUseKioslaveForSmb (c_use_kioslave_for_smb -> isChecked());
+}
+
+void KPlayerSettingsAdvanced::refreshLists (void)
+{
+  engine() -> getLists (c_executable_path -> text());
 }
 
 void KPlayerSettingsAdvanced::cacheChanged (int cache)
 {
   if ( cache == 2 )
-    c_cache_size -> setText (QString::number (kPlayerSettings() -> cacheSizeDefault()));
+    c_cache_size -> setText (QString::number (configuration() -> cacheSize()));
   else
     c_cache_size -> setText ("");
   c_cache_size -> setEnabled (cache == 2);
@@ -366,17 +378,17 @@ KPlayerSettingsAudio::KPlayerSettingsAudio (QWidget* parent, const char* name)
 {
   loadLists();
   load();
-  QApplication::connect (kPlayerEngine(), SIGNAL (refresh()), this, SLOT (refresh()));
+  QApplication::connect (kPlayerEngine(), SIGNAL (updated()), this, SLOT (refresh()));
 }
 
 void KPlayerSettingsAudio::refresh (void)
 {
   int dindex = c_driver -> currentItem();
   if ( dindex > 0 )
-    dindex = kPlayerEngine() -> audioDriverIndex (listEntry (c_driver)) + 1;
+    dindex = engine() -> audioDriverIndex (listEntry (c_driver)) + 1;
   int cindex = c_codec -> currentItem();
   if ( cindex > 0 )
-    cindex = kPlayerEngine() -> audioCodecIndex (listEntry (c_codec)) + 1;
+    cindex = engine() -> audioCodecIndex (listEntry (c_codec)) + 1;
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
   kdDebugTime() << "Audio Driver: " << c_driver -> currentText() << " => " << dindex << " / " << kPlayerEngine() -> audioDriverCount() << "\n";
   kdDebugTime() << "Audio Codec: " << c_codec -> currentText() << " => " << cindex << " / " << kPlayerEngine() -> audioCodecCount() << "\n";
@@ -385,64 +397,47 @@ void KPlayerSettingsAudio::refresh (void)
   c_driver -> setCurrentItem (dindex);
   driverChanged (dindex);
   c_codec -> setCurrentItem (cindex);
-  codecChanged (cindex);
 }
 
 void KPlayerSettingsAudio::loadLists (void)
 {
-  if ( kPlayerEngine() -> audioCodecCount() )
+  if ( engine() -> audioCodecCount() )
   {
     c_codec -> clear();
     c_codec -> insertItem (i18n("auto"));
-    for ( int i = 0; i < kPlayerEngine() -> audioCodecCount(); i ++ )
-      c_codec -> insertItem (kPlayerEngine() -> audioCodecName (i));
+    for ( int i = 0; i < engine() -> audioCodecCount(); i ++ )
+      c_codec -> insertItem (engine() -> audioCodecName (i));
   }
-  if ( kPlayerEngine() -> audioDriverCount() )
+  if ( engine() -> audioDriverCount() )
   {
     c_driver -> clear();
     c_driver -> insertItem (i18n("auto"));
-    for ( int i = 0; i < kPlayerEngine() -> audioDriverCount(); i ++ )
-      c_driver -> insertItem (kPlayerEngine() -> audioDriverName (i));
+    for ( int i = 0; i < engine() -> audioDriverCount(); i ++ )
+      c_driver -> insertItem (engine() -> audioDriverName (i));
   }
 }
 
 void KPlayerSettingsAudio::load (void)
 {
-  c_driver -> setCurrentItem (kPlayerEngine() -> audioDriverIndex (kPlayerSettings() -> audioDriverDefault()) + 1);
+  c_driver -> setCurrentItem (engine() -> audioDriverIndex (configuration() -> audioDriver()) + 1);
   driverChanged (c_driver -> currentItem());
-  c_codec -> setCurrentItem (kPlayerEngine() -> audioCodecIndex (kPlayerSettings() -> audioCodecDefault()) + 1);
-  codecChanged (c_codec -> currentItem());
-  c_delay_step -> setText (QString::number (kPlayerSettings() -> audioDelayStep()));
+  c_codec -> setCurrentItem (engine() -> audioCodecIndex (configuration() -> audioCodec()) + 1);
+  c_delay_step -> setText (QString::number (configuration() -> audioDelayStep()));
 }
 
 void KPlayerSettingsAudio::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setAudioDriverDefault (listEntry (c_driver));
+  configuration() -> setAudioDriver (listEntry (c_driver));
   if ( c_driver -> currentItem() > 0 )
-  {
-    settings -> setAudioDriverFallbackDefault (c_driver_fallback -> isChecked());
-    settings -> setAudioDeviceDefault (c_device -> text());
-  }
-  settings -> setAudioCodecDefault (listEntry (c_codec));
-  if ( c_codec -> currentItem() > 0 )
-    settings -> setAudioCodecFallbackDefault (c_codec_fallback -> isChecked());
-  settings -> setAudioDelayStep (fabs (c_delay_step -> text().toFloat()));
+    configuration() -> setAudioDevice (c_device -> text());
+  configuration() -> setAudioCodec (listEntry (c_codec));
+  configuration() -> setAudioDelayStep (fabs (c_delay_step -> text().toFloat()));
 }
 
 void KPlayerSettingsAudio::driverChanged (int index)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_driver_fallback -> setChecked (index > 0 && settings -> audioDriverFallbackDefault());
-  c_driver_fallback -> setEnabled (index > 0);
-  c_device -> setText (index > 0 ? settings -> audioDeviceDefault() : "");
+  c_device -> setText (index > 0 ? configuration() -> audioDevice() : "");
   c_device -> setEnabled (index > 0);
-}
-
-void KPlayerSettingsAudio::codecChanged (int index)
-{
-  c_codec_fallback -> setChecked (index > 0 && kPlayerSettings() -> audioCodecFallbackDefault());
-  c_codec_fallback -> setEnabled (index > 0);
 }
 
 KPlayerSettingsControls::KPlayerSettingsControls (QWidget* parent, const char* name)
@@ -453,52 +448,46 @@ KPlayerSettingsControls::KPlayerSettingsControls (QWidget* parent, const char* n
 
 void KPlayerSettingsControls::load (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_shift -> setChecked (settings -> rememberWithShift());
-  c_size -> setChecked (settings -> rememberSize());
-  rememberSizeChanged (settings -> rememberSize());
-  c_full_screen -> setChecked (settings -> rememberFullScreen());
-  c_maximized -> setChecked (settings -> rememberMaximized());
-  c_maintain_aspect -> setChecked (settings -> rememberMaintainAspect());
-  c_volume -> setChecked (settings -> rememberVolume());
-  c_audio_delay -> setChecked (settings -> rememberAudioDelay());
-  c_frame_drop -> setChecked (settings -> rememberFrameDrop());
-  c_contrast -> setChecked (settings -> rememberContrast());
-  c_brightness -> setChecked (settings -> rememberBrightness());
-  c_hue -> setChecked (settings -> rememberHue());
-  c_saturation -> setChecked (settings -> rememberSaturation());
-  c_subtitle_url -> setChecked (settings -> rememberSubtitleUrl());
-  c_subtitle_visibility -> setChecked (settings -> rememberSubtitleVisibility());
-  c_subtitle_position -> setChecked (settings -> rememberSubtitlePosition());
-  c_subtitle_delay -> setChecked (settings -> rememberSubtitleDelay());
+  c_shift -> setChecked (configuration() -> rememberWithShift());
+  c_size -> setChecked (configuration() -> rememberSize());
+  rememberSizeChanged (configuration() -> rememberSize());
+  c_full_screen -> setChecked (configuration() -> rememberFullScreen());
+  c_maximized -> setChecked (configuration() -> rememberMaximized());
+  c_maintain_aspect -> setChecked (configuration() -> rememberMaintainAspect());
+  c_volume -> setChecked (configuration() -> rememberVolume());
+  c_audio_delay -> setChecked (configuration() -> rememberAudioDelay());
+  c_frame_drop -> setChecked (configuration() -> rememberFrameDrop());
+  c_contrast -> setChecked (configuration() -> rememberContrast());
+  c_brightness -> setChecked (configuration() -> rememberBrightness());
+  c_hue -> setChecked (configuration() -> rememberHue());
+  c_saturation -> setChecked (configuration() -> rememberSaturation());
+  c_subtitle_position -> setChecked (configuration() -> rememberSubtitlePosition());
+  c_subtitle_delay -> setChecked (configuration() -> rememberSubtitleDelay());
 }
 
 void KPlayerSettingsControls::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setRememberWithShift (c_shift -> isChecked());
-  settings -> setRememberSize (c_size -> isChecked());
-  if ( ! settings -> rememberSize() )
-    settings -> setRememberAspect (c_aspect -> isChecked());
-  settings -> setRememberFullScreen (c_full_screen -> isChecked());
-  settings -> setRememberMaximized (c_maximized -> isChecked());
-  settings -> setRememberMaintainAspect (c_maintain_aspect -> isChecked());
-  settings -> setRememberVolume (c_volume -> isChecked());
-  settings -> setRememberAudioDelay (c_audio_delay -> isChecked());
-  settings -> setRememberFrameDrop (c_frame_drop -> isChecked());
-  settings -> setRememberContrast (c_contrast -> isChecked());
-  settings -> setRememberBrightness (c_brightness -> isChecked());
-  settings -> setRememberHue (c_hue -> isChecked());
-  settings -> setRememberSaturation (c_saturation -> isChecked());
-  settings -> setRememberSubtitleUrl (c_subtitle_url -> isChecked());
-  settings -> setRememberSubtitleVisibility (c_subtitle_visibility -> isChecked());
-  settings -> setRememberSubtitlePosition (c_subtitle_position -> isChecked());
-  settings -> setRememberSubtitleDelay (c_subtitle_delay -> isChecked());
+  configuration() -> setRememberWithShift (c_shift -> isChecked());
+  configuration() -> setRememberSize (c_size -> isChecked());
+  if ( ! configuration() -> rememberSize() )
+    configuration() -> setRememberAspect (c_aspect -> isChecked());
+  configuration() -> setRememberFullScreen (c_full_screen -> isChecked());
+  configuration() -> setRememberMaximized (c_maximized -> isChecked());
+  configuration() -> setRememberMaintainAspect (c_maintain_aspect -> isChecked());
+  configuration() -> setRememberVolume (c_volume -> isChecked());
+  configuration() -> setRememberAudioDelay (c_audio_delay -> isChecked());
+  configuration() -> setRememberFrameDrop (c_frame_drop -> isChecked());
+  configuration() -> setRememberContrast (c_contrast -> isChecked());
+  configuration() -> setRememberBrightness (c_brightness -> isChecked());
+  configuration() -> setRememberHue (c_hue -> isChecked());
+  configuration() -> setRememberSaturation (c_saturation -> isChecked());
+  configuration() -> setRememberSubtitlePosition (c_subtitle_position -> isChecked());
+  configuration() -> setRememberSubtitleDelay (c_subtitle_delay -> isChecked());
 }
 
 void KPlayerSettingsControls::rememberSizeChanged (bool checked)
 {
-  c_aspect -> setChecked (checked || kPlayerSettings() -> rememberAspect());
+  c_aspect -> setChecked (checked || configuration() -> rememberAspect());
   c_aspect -> setEnabled (! checked);
 }
 
@@ -510,93 +499,37 @@ KPlayerSettingsGeneral::KPlayerSettingsGeneral (QWidget* parent, const char* nam
 
 void KPlayerSettingsGeneral::load (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_resize_automatically -> setChecked (settings -> resizeAutomatically());
-  resizeAutomaticallyChanged (settings -> resizeAutomatically());
-  c_recent_file_list_size -> setText (QString::number (settings -> recentFileListSize()));
-  c_show_file_path -> setChecked (settings -> showFilePath());
-  c_show_open_dialog -> setChecked (settings -> showOpenDialog());
-  c_disable_screen_saver -> setChecked (settings -> disableScreenSaver());
+  c_resize_automatically -> setChecked (configuration() -> resizeAutomatically());
+  resizeAutomaticallyChanged (configuration() -> resizeAutomatically());
+  c_playlist_menu_size -> setText (QString::number (configuration() -> playlistMenuSize()));
+  c_recent_menu_size -> setText (QString::number (configuration() -> recentMenuSize()));
+  c_recent_list_size -> setText (QString::number (configuration() -> recentListSize()));
+  c_cache_size_limit -> setText (QString::number (configuration() -> cacheSizeLimit()));
+  c_allow_duplicate_entries -> setChecked (configuration() -> allowDuplicateEntries());
+  c_show_messages_on_error -> setChecked (configuration() -> showMessagesOnError());
 }
 
 void KPlayerSettingsGeneral::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setResizeAutomatically (c_resize_automatically -> isChecked());
-  if ( settings -> resizeAutomatically() )
-    settings -> setMinimumInitialWidth (labs (c_minimum_initial_width -> text().toLong()));
-  settings -> setRecentFileListSize (labs (c_recent_file_list_size -> text().toLong()));
-  settings -> setShowFilePath (c_show_file_path -> isChecked());
-  settings -> setShowOpenDialog (c_show_open_dialog -> isChecked());
-  settings -> setDisableScreenSaver (c_disable_screen_saver -> isChecked());
+  configuration() -> setResizeAutomatically (c_resize_automatically -> isChecked());
+  if ( configuration() -> resizeAutomatically() )
+    configuration() -> setMinimumInitialWidth (labs (c_minimum_initial_width -> text().toInt()));
+  configuration() -> setPlaylistMenuSize (labs (c_playlist_menu_size -> text().toInt()));
+  configuration() -> setRecentMenuSize (labs (c_recent_menu_size -> text().toInt()));
+  configuration() -> setRecentListSize (labs (c_recent_list_size -> text().toInt()));
+  configuration() -> setCacheSizeLimit (labs (c_cache_size_limit -> text().toInt()));
+  configuration() -> setAllowDuplicateEntries (c_allow_duplicate_entries -> isChecked());
+  configuration() -> setShowMessagesOnError (c_show_messages_on_error -> isChecked());
 }
 
 void KPlayerSettingsGeneral::resizeAutomaticallyChanged (bool resizeAutomaticallyChecked)
 {
-  KPlayerSettings* settings = kPlayerSettings();
   if ( resizeAutomaticallyChecked )
-    c_minimum_initial_width -> setText (QString::number (settings -> minimumInitialWidth()));
+    c_minimum_initial_width -> setText (QString::number (configuration() -> minimumInitialWidth()));
   else
     c_minimum_initial_width -> setText ("");
   c_minimum_initial_width -> setEnabled (resizeAutomaticallyChecked);
   l_minimum_initial_width -> setEnabled (resizeAutomaticallyChecked);
-}
-
-KPlayerSettingsPlaylist::KPlayerSettingsPlaylist (QWidget* parent, const char* name)
-  : KPlayerSettingsPlaylistPage (parent, name)
-{
-  load();
-}
-
-void KPlayerSettingsPlaylist::load (void)
-{
-  KPlayerSettings* settings = kPlayerSettings();
-  c_start_playing -> setChecked (settings -> startPlayingImmediately());
-  startPlayingChanged (settings -> startPlayingImmediately());
-  c_allow_duplicate_entries -> setChecked (settings -> allowDuplicateEntries());
-  c_playlist_size_limit -> setText (QString::number (settings -> playlistSizeLimit()));
-  c_cache_size_limit -> setText (QString::number (settings -> cacheSizeLimit()));
-}
-
-void KPlayerSettingsPlaylist::save (void)
-{
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setStartPlayingImmediately (c_start_playing -> isChecked());
-  if ( settings -> startPlayingImmediately() )
-    settings -> setStartPlayingOnlyIfIdle (c_only_if_idle -> isChecked());
-  settings -> setAllowDuplicateEntries (c_allow_duplicate_entries -> isChecked());
-  settings -> setPlaylistSizeLimit (labs (c_playlist_size_limit -> text().toLong()));
-  settings -> setCacheSizeLimit (labs (c_cache_size_limit -> text().toLong()));
-}
-
-void KPlayerSettingsPlaylist::startPlayingChanged (bool checked)
-{
-  c_only_if_idle -> setChecked (checked && kPlayerSettings() -> startPlayingOnlyIfIdle());
-  c_only_if_idle -> setEnabled (checked);
-}
-
-KPlayerSettingsMessages::KPlayerSettingsMessages (QWidget* parent, const char* name)
-  : KPlayerSettingsMessagesPage (parent, name)
-{
-  load();
-}
-
-void KPlayerSettingsMessages::load (void)
-{
-  KPlayerSettings* settings = kPlayerSettings();
-  c_show_on_error -> setChecked (settings -> showMessagesOnError());
-  c_show_before -> setChecked (settings -> showMessagesBeforePlaying());
-  c_show_after -> setChecked (settings -> showMessagesAfterPlaying());
-  c_clear_before -> setChecked (settings -> clearMessagesBeforePlaying());
-}
-
-void KPlayerSettingsMessages::save (void)
-{
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setShowMessagesOnError (c_show_on_error -> isChecked());
-  settings -> setShowMessagesBeforePlaying (c_show_before -> isChecked());
-  settings -> setShowMessagesAfterPlaying (c_show_after -> isChecked());
-  settings -> setClearMessagesBeforePlaying (c_clear_before -> isChecked());
 }
 
 KPlayerSettingsSliders::KPlayerSettingsSliders (QWidget* parent, const char* name)
@@ -607,16 +540,14 @@ KPlayerSettingsSliders::KPlayerSettingsSliders (QWidget* parent, const char* nam
 
 void KPlayerSettingsSliders::load (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_preferred_slider_length -> setText (QString::number (settings -> preferredSliderLength()));
-  c_minimum_slider_length -> setText (QString::number (settings -> minimumSliderLength()));
+  c_preferred_slider_length -> setText (QString::number (configuration() -> preferredSliderLength()));
+  c_minimum_slider_length -> setText (QString::number (configuration() -> minimumSliderLength()));
 }
 
 void KPlayerSettingsSliders::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setPreferredSliderLength (labs (c_preferred_slider_length -> text().toLong()));
-  settings -> setMinimumSliderLength (labs (c_minimum_slider_length -> text().toLong()));
+  configuration() -> setPreferredSliderLength (labs (c_preferred_slider_length -> text().toInt()));
+  configuration() -> setMinimumSliderLength (labs (c_minimum_slider_length -> text().toInt()));
 }
 
 KPlayerSettingsSubtitles::KPlayerSettingsSubtitles (QWidget* parent, const char* name)
@@ -627,40 +558,41 @@ KPlayerSettingsSubtitles::KPlayerSettingsSubtitles (QWidget* parent, const char*
 
 void KPlayerSettingsSubtitles::load (void)
 {
-  c_position_step -> setText (QString::number (kPlayerSettings() -> subtitlePositionStep()));
-  c_delay_step -> setText (QString::number (kPlayerSettings() -> subtitleDelayStep()));
-  c_subtitles_autoload -> setChecked (kPlayerSettings() -> subtitleAutoloadDefault());
-  autoloadSubtitlesChanged (kPlayerSettings() -> subtitleAutoloadDefault());
+  c_position_step -> setText (QString::number (configuration() -> subtitlePositionStep()));
+  c_delay_step -> setText (QString::number (configuration() -> subtitleDelayStep()));
+  c_subtitles_autoload -> setChecked (configuration() -> subtitleAutoload());
+  autoloadSubtitlesChanged (configuration() -> subtitleAutoload());
 }
 
 void KPlayerSettingsSubtitles::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setSubtitlePositionStep (labs (c_position_step -> text().toLong()));
-  settings -> setSubtitleDelayStep (fabs (c_delay_step -> text().toFloat()));
-  settings -> setSubtitleAutoloadDefault (c_subtitles_autoload -> isChecked());
-  if ( settings -> subtitleAutoloadDefault() )
+  configuration() -> setSubtitlePositionStep (labs (c_position_step -> text().toInt()));
+  configuration() -> setSubtitleDelayStep (fabs (c_delay_step -> text().toFloat()));
+  configuration() -> setSubtitleAutoload (c_subtitles_autoload -> isChecked());
+  if ( configuration() -> subtitleAutoload() )
   {
-    settings -> setAutoloadAqtSubtitles (c_subtitles_aqt -> isChecked());
-    settings -> setAutoloadJssSubtitles (c_subtitles_jss -> isChecked());
-    settings -> setAutoloadRtSubtitles (c_subtitles_rt -> isChecked());
-    settings -> setAutoloadSmiSubtitles (c_subtitles_smi -> isChecked());
-    settings -> setAutoloadSrtSubtitles (c_subtitles_srt -> isChecked());
-    settings -> setAutoloadSsaSubtitles (c_subtitles_ssa -> isChecked());
-    settings -> setAutoloadSubSubtitles (c_subtitles_sub -> isChecked());
-    settings -> setAutoloadTxtSubtitles (c_subtitles_txt -> isChecked());
-    settings -> setAutoloadUtfSubtitles (c_subtitles_utf -> isChecked());
-    settings -> setAutoloadOtherSubtitles (c_subtitles_other -> isChecked());
-    if ( settings -> autoloadOtherSubtitles() )
-      settings -> setAutoloadExtensionList (c_subtitles_list -> text());
+    configuration() -> setAutoloadAqtSubtitles (c_subtitles_aqt -> isChecked());
+    configuration() -> setAutoloadAssSubtitles (c_subtitles_ass -> isChecked());
+    configuration() -> setAutoloadJsSubtitles (c_subtitles_js -> isChecked());
+    configuration() -> setAutoloadJssSubtitles (c_subtitles_jss -> isChecked());
+    configuration() -> setAutoloadRtSubtitles (c_subtitles_rt -> isChecked());
+    configuration() -> setAutoloadSmiSubtitles (c_subtitles_smi -> isChecked());
+    configuration() -> setAutoloadSrtSubtitles (c_subtitles_srt -> isChecked());
+    configuration() -> setAutoloadSsaSubtitles (c_subtitles_ssa -> isChecked());
+    configuration() -> setAutoloadSubSubtitles (c_subtitles_sub -> isChecked());
+    configuration() -> setAutoloadTxtSubtitles (c_subtitles_txt -> isChecked());
+    configuration() -> setAutoloadUtfSubtitles (c_subtitles_utf -> isChecked());
+    configuration() -> setAutoloadVobsubSubtitles (c_subtitles_vobsub -> isChecked());
+    configuration() -> setAutoloadOtherSubtitles (c_subtitles_other -> isChecked());
+    if ( configuration() -> autoloadOtherSubtitles() )
+      configuration() -> setAutoloadExtensionList (c_subtitles_list -> text());
   }
 }
 
 void KPlayerSettingsSubtitles::otherSubtitlesChanged (bool otherSubtitlesChecked)
 {
-  KPlayerSettings* settings = kPlayerSettings();
   if ( otherSubtitlesChecked )
-    c_subtitles_list -> setText (settings -> autoloadExtensionList());
+    c_subtitles_list -> setText (configuration() -> autoloadExtensionList());
   else
     c_subtitles_list -> setText ("");
   c_subtitles_list -> setEnabled (otherSubtitlesChecked);
@@ -673,23 +605,27 @@ void KPlayerSettingsSubtitles::otherSubtitlesChanged (bool otherSubtitlesChecked
 
 void KPlayerSettingsSubtitles::autoloadSubtitlesChanged (bool autoloadSubtitlesChecked)
 {
-  KPlayerSettings* settings = kPlayerSettings();
   if ( autoloadSubtitlesChecked )
   {
-    c_subtitles_aqt -> setChecked (settings -> autoloadAqtSubtitles());
-    c_subtitles_jss -> setChecked (settings -> autoloadJssSubtitles());
-    c_subtitles_rt -> setChecked (settings -> autoloadRtSubtitles());
-    c_subtitles_smi -> setChecked (settings -> autoloadSmiSubtitles());
-    c_subtitles_srt -> setChecked (settings -> autoloadSrtSubtitles());
-    c_subtitles_ssa -> setChecked (settings -> autoloadSsaSubtitles());
-    c_subtitles_sub -> setChecked (settings -> autoloadSubSubtitles());
-    c_subtitles_txt -> setChecked (settings -> autoloadTxtSubtitles());
-    c_subtitles_utf -> setChecked (settings -> autoloadUtfSubtitles());
-    c_subtitles_other -> setChecked (settings -> autoloadOtherSubtitles());
+    c_subtitles_aqt -> setChecked (configuration() -> autoloadAqtSubtitles());
+    c_subtitles_ass -> setChecked (configuration() -> autoloadAssSubtitles());
+    c_subtitles_js -> setChecked (configuration() -> autoloadJsSubtitles());
+    c_subtitles_jss -> setChecked (configuration() -> autoloadJssSubtitles());
+    c_subtitles_rt -> setChecked (configuration() -> autoloadRtSubtitles());
+    c_subtitles_smi -> setChecked (configuration() -> autoloadSmiSubtitles());
+    c_subtitles_srt -> setChecked (configuration() -> autoloadSrtSubtitles());
+    c_subtitles_ssa -> setChecked (configuration() -> autoloadSsaSubtitles());
+    c_subtitles_sub -> setChecked (configuration() -> autoloadSubSubtitles());
+    c_subtitles_txt -> setChecked (configuration() -> autoloadTxtSubtitles());
+    c_subtitles_utf -> setChecked (configuration() -> autoloadUtfSubtitles());
+    c_subtitles_vobsub -> setChecked (configuration() -> autoloadVobsubSubtitles());
+    c_subtitles_other -> setChecked (configuration() -> autoloadOtherSubtitles());
   }
   else
   {
     c_subtitles_aqt -> setChecked (false);
+    c_subtitles_ass -> setChecked (false);
+    c_subtitles_js -> setChecked (false);
     c_subtitles_jss -> setChecked (false);
     c_subtitles_rt -> setChecked (false);
     c_subtitles_smi -> setChecked (false);
@@ -698,9 +634,12 @@ void KPlayerSettingsSubtitles::autoloadSubtitlesChanged (bool autoloadSubtitlesC
     c_subtitles_sub -> setChecked (false);
     c_subtitles_txt -> setChecked (false);
     c_subtitles_utf -> setChecked (false);
+    c_subtitles_vobsub -> setChecked (false);
     c_subtitles_other -> setChecked (false);
   }
   c_subtitles_aqt -> setEnabled (autoloadSubtitlesChecked);
+  c_subtitles_ass -> setEnabled (autoloadSubtitlesChecked);
+  c_subtitles_js -> setEnabled (autoloadSubtitlesChecked);
   c_subtitles_jss -> setEnabled (autoloadSubtitlesChecked);
   c_subtitles_rt -> setEnabled (autoloadSubtitlesChecked);
   c_subtitles_smi -> setEnabled (autoloadSubtitlesChecked);
@@ -709,6 +648,7 @@ void KPlayerSettingsSubtitles::autoloadSubtitlesChanged (bool autoloadSubtitlesC
   c_subtitles_sub -> setEnabled (autoloadSubtitlesChecked);
   c_subtitles_txt -> setEnabled (autoloadSubtitlesChecked);
   c_subtitles_utf -> setEnabled (autoloadSubtitlesChecked);
+  c_subtitles_vobsub -> setEnabled (autoloadSubtitlesChecked);
   c_subtitles_other -> setEnabled (autoloadSubtitlesChecked);
   otherSubtitlesChanged (c_subtitles_other -> isChecked());
 }
@@ -718,88 +658,72 @@ KPlayerSettingsVideo::KPlayerSettingsVideo (QWidget* parent, const char* name)
 {
   loadLists();
   load();
-  QApplication::connect (kPlayerEngine(), SIGNAL (refresh()), this, SLOT (refresh()));
+  QApplication::connect (engine(), SIGNAL (updated()), this, SLOT (refresh()));
 }
 
 void KPlayerSettingsVideo::refresh (void)
 {
   int dindex = c_driver -> currentItem();
   if ( dindex > 0 )
-    dindex = kPlayerEngine() -> videoDriverIndex (listEntry (c_driver)) + 1;
+    dindex = engine() -> videoDriverIndex (listEntry (c_driver)) + 1;
   int cindex = c_codec -> currentItem();
   if ( cindex > 0 )
-    cindex = kPlayerEngine() -> videoCodecIndex (listEntry (c_codec)) + 1;
+    cindex = engine() -> videoCodecIndex (listEntry (c_codec)) + 1;
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
-  kdDebugTime() << "Video Driver: " << c_driver -> currentText() << " => " << dindex << " / " << kPlayerEngine() -> videoDriverCount() << "\n";
-  kdDebugTime() << "Video Codec: " << c_codec -> currentText() << " => " << cindex << " / " << kPlayerEngine() -> videoCodecCount() << "\n";
+  kdDebugTime() << "Video Driver: " << c_driver -> currentText()
+    << " => " << dindex << " / " << engine() -> videoDriverCount() << "\n";
+  kdDebugTime() << "Video Codec: " << c_codec -> currentText()
+    << " => " << cindex << " / " << engine() -> videoCodecCount() << "\n";
 #endif
   loadLists();
   c_driver -> setCurrentItem (dindex);
   driverChanged (dindex);
   c_codec -> setCurrentItem (cindex);
-  codecChanged (cindex);
 }
 
 void KPlayerSettingsVideo::loadLists (void)
 {
-  if ( kPlayerEngine() -> videoCodecCount() )
+  if ( engine() -> videoCodecCount() )
   {
     c_codec -> clear();
     c_codec -> insertItem (i18n("auto"));
-    for ( int i = 0; i < kPlayerEngine() -> videoCodecCount(); i ++ )
-      c_codec -> insertItem (kPlayerEngine() -> videoCodecName (i));
+    for ( int i = 0; i < engine() -> videoCodecCount(); i ++ )
+      c_codec -> insertItem (engine() -> videoCodecName (i));
   }
-  if ( kPlayerEngine() -> videoDriverCount() )
+  if ( engine() -> videoDriverCount() )
   {
     c_driver -> clear();
     c_driver -> insertItem (i18n("auto"));
-    for ( int i = 0; i < kPlayerEngine() -> videoDriverCount(); i ++ )
-      c_driver -> insertItem (kPlayerEngine() -> videoDriverName (i));
+    for ( int i = 0; i < engine() -> videoDriverCount(); i ++ )
+      c_driver -> insertItem (engine() -> videoDriverName (i));
   }
 }
 
 void KPlayerSettingsVideo::load (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_driver -> setCurrentItem (kPlayerEngine() -> videoDriverIndex (settings -> videoDriverDefault()) + 1);
+  c_driver -> setCurrentItem (engine() -> videoDriverIndex (configuration() -> videoDriver()) + 1);
   driverChanged (c_driver -> currentItem());
-  c_codec -> setCurrentItem (kPlayerEngine() -> videoCodecIndex (settings -> videoCodecDefault()) + 1);
-  codecChanged (c_codec -> currentItem());
-  c_scaler -> setCurrentItem (settings -> videoScalerDefault());
-  c_doublebuffering -> setChecked (settings -> videoDoubleBufferingDefault());
-  c_direct_rendering -> setChecked (settings -> videoDirectRenderingDefault());
+  c_codec -> setCurrentItem (engine() -> videoCodecIndex (configuration() -> videoCodec()) + 1);
+  c_scaler -> setCurrentItem (configuration() -> videoScaler());
+  c_doublebuffering -> setChecked (configuration() -> videoDoubleBuffering());
+  c_direct_rendering -> setChecked (configuration() -> videoDirectRendering());
 }
 
 void KPlayerSettingsVideo::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setVideoDriverDefault (listEntry (c_driver));
+  configuration() -> setVideoDriver (listEntry (c_driver));
   if ( c_driver -> currentItem() > 0 )
-  {
-    settings -> setVideoDriverFallbackDefault (c_driver_fallback -> isChecked());
-    settings -> setVideoDeviceDefault (c_device -> text());
-  }
-  settings -> setVideoCodecDefault (listEntry (c_codec));
-  if ( c_codec -> currentItem() > 0 )
-    settings -> setVideoCodecFallbackDefault (c_codec_fallback -> isChecked());
-  settings -> setVideoScalerDefault (c_scaler -> currentItem());
-  settings -> setVideoDoubleBufferingDefault (c_doublebuffering -> isChecked());
-  settings -> setVideoDirectRenderingDefault (c_direct_rendering -> isChecked());
+    configuration() -> setVideoDevice (c_device -> text());
+  configuration() -> setVideoCodec (listEntry (c_codec));
+  configuration() -> setVideoScaler (c_scaler -> currentItem());
+  configuration() -> setVideoDoubleBuffering (c_doublebuffering -> isChecked());
+  configuration() -> setVideoDirectRendering (c_direct_rendering -> isChecked());
 }
 
 void KPlayerSettingsVideo::driverChanged (int index)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_driver_fallback -> setChecked (index > 0 && settings -> videoDriverFallbackDefault());
-  c_driver_fallback -> setEnabled (index > 0);
-  c_device -> setText (index > 0 ? settings -> videoDeviceDefault() : "");
+  c_device -> setText (index > 0 ? configuration() -> videoDevice() : "");
   c_device -> setEnabled (index > 0);
-}
-
-void KPlayerSettingsVideo::codecChanged (int index)
-{
-  c_codec_fallback -> setChecked (index > 0 && kPlayerSettings() -> videoCodecFallbackDefault());
-  c_codec_fallback -> setEnabled (index > 0);
 }
 
 KPlayerSettingsProgress::KPlayerSettingsProgress (QWidget* parent, const char* name)
@@ -810,22 +734,20 @@ KPlayerSettingsProgress::KPlayerSettingsProgress (QWidget* parent, const char* n
 
 void KPlayerSettingsProgress::load (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_progress_seek -> setText (QString::number (settings -> progressNormalSeek()));
-  c_progress_seek_units -> setCurrentItem (settings -> progressNormalSeekUnits());
-  c_progress_fast -> setText (QString::number (settings -> progressFastSeek()));
-  c_progress_fast_units -> setCurrentItem (settings -> progressFastSeekUnits());
-  c_progress_marks -> setText (QString::number (settings -> progressMarks()));
+  c_progress_seek -> setText (QString::number (configuration() -> progressNormalSeek()));
+  c_progress_seek_units -> setCurrentItem (configuration() -> progressNormalSeekUnits());
+  c_progress_fast -> setText (QString::number (configuration() -> progressFastSeek()));
+  c_progress_fast_units -> setCurrentItem (configuration() -> progressFastSeekUnits());
+  c_progress_marks -> setText (QString::number (configuration() -> progressMarks()));
 }
 
 void KPlayerSettingsProgress::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setProgressNormalSeekUnits (c_progress_seek_units -> currentItem());
-  settings -> setProgressFastSeekUnits (c_progress_fast_units -> currentItem());
-  settings -> setProgressNormalSeek (labs (c_progress_seek -> text().toLong()));
-  settings -> setProgressFastSeek (labs (c_progress_fast -> text().toLong()));
-  settings -> setProgressMarks (labs (c_progress_marks -> text().toLong()));
+  configuration() -> setProgressNormalSeekUnits (c_progress_seek_units -> currentItem());
+  configuration() -> setProgressFastSeekUnits (c_progress_fast_units -> currentItem());
+  configuration() -> setProgressNormalSeek (labs (c_progress_seek -> text().toInt()));
+  configuration() -> setProgressFastSeek (labs (c_progress_fast -> text().toInt()));
+  configuration() -> setProgressMarks (labs (c_progress_marks -> text().toInt()));
 }
 
 KPlayerSettingsVolume::KPlayerSettingsVolume (QWidget* parent, const char* name)
@@ -836,26 +758,24 @@ KPlayerSettingsVolume::KPlayerSettingsVolume (QWidget* parent, const char* name)
 
 void KPlayerSettingsVolume::load (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_volume_minimum -> setText (QString::number (settings -> volumeMinimum()));
-  c_volume_maximum -> setText (QString::number (settings -> volumeMaximum()));
-  c_volume_marks -> setText (QString::number (settings -> volumeMarks()));
-  c_volume_step -> setText (QString::number (settings -> volumeStep()));
-  c_volume_reset -> setChecked (settings -> volumeReset());
-  resetChanged (settings -> volumeReset());
+  c_volume_minimum -> setText (QString::number (configuration() -> volumeMinimum()));
+  c_volume_maximum -> setText (QString::number (configuration() -> volumeMaximum()));
+  c_volume_marks -> setText (QString::number (configuration() -> volumeMarks()));
+  c_volume_step -> setText (QString::number (configuration() -> volumeStep()));
+  c_volume_reset -> setChecked (configuration() -> volumeReset());
+  resetChanged (configuration() -> volumeReset());
 }
 
 void KPlayerSettingsVolume::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setVolumeMinimumMaximum (c_volume_minimum -> text().toLong(), labs (c_volume_maximum -> text().toLong()));
-  settings -> setVolumeMarks (labs (c_volume_marks -> text().toLong()));
-  settings -> setVolumeStep (labs (c_volume_step -> text().toLong()));
-  settings -> setVolumeReset (c_volume_reset -> isChecked());
-  if ( settings -> volumeReset() )
+  configuration() -> setVolumeMinimumMaximum (labs (c_volume_minimum -> text().toInt()), labs (c_volume_maximum -> text().toInt()));
+  configuration() -> setVolumeMarks (labs (c_volume_marks -> text().toInt()));
+  configuration() -> setVolumeStep (labs (c_volume_step -> text().toInt()));
+  configuration() -> setVolumeReset (c_volume_reset -> isChecked());
+  if ( configuration() -> volumeReset() )
   {
-    settings -> setInitialVolume (labs (c_volume_default -> text().toLong()));
-    settings -> setVolumeEvery (c_volume_every -> currentItem());
+    configuration() -> setInitialVolume (labs (c_volume_default -> text().toInt()));
+    configuration() -> setVolumeEvery (c_volume_every -> currentItem());
   }
 }
 
@@ -863,11 +783,10 @@ void KPlayerSettingsVolume::resetChanged (bool resetChecked)
 {
   if ( resetChecked )
   {
-    KPlayerSettings* settings = kPlayerSettings();
-    c_volume_default -> setText (QString::number (settings -> initialVolume()));
+    c_volume_default -> setText (QString::number (configuration() -> initialVolume()));
     c_volume_every -> setCurrentItem (0);
     c_volume_every -> setCurrentText (i18n("file"));
-    c_volume_every -> setCurrentItem (settings -> volumeEvery());
+    c_volume_every -> setCurrentItem (configuration() -> volumeEvery());
   }
   else
   {
@@ -892,26 +811,24 @@ KPlayerSettingsContrast::KPlayerSettingsContrast (QWidget* parent, const char* n
 
 void KPlayerSettingsContrast::load (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_contrast_minimum -> setText (QString::number (settings -> contrastMinimum()));
-  c_contrast_maximum -> setText (QString::number (settings -> contrastMaximum()));
-  c_contrast_marks -> setText (QString::number (settings -> contrastMarks()));
-  c_contrast_step -> setText (QString::number (settings -> contrastStep()));
-  c_contrast_reset -> setChecked (settings -> contrastReset());
-  resetChanged (settings -> contrastReset());
+  c_contrast_minimum -> setText (QString::number (configuration() -> contrastMinimum()));
+  c_contrast_maximum -> setText (QString::number (configuration() -> contrastMaximum()));
+  c_contrast_marks -> setText (QString::number (configuration() -> contrastMarks()));
+  c_contrast_step -> setText (QString::number (configuration() -> contrastStep()));
+  c_contrast_reset -> setChecked (configuration() -> contrastReset());
+  resetChanged (configuration() -> contrastReset());
 }
 
 void KPlayerSettingsContrast::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setContrastMinimumMaximum (c_contrast_minimum -> text().toLong(), c_contrast_maximum -> text().toLong());
-  settings -> setContrastMarks (labs (c_contrast_marks -> text().toLong()));
-  settings -> setContrastStep (labs (c_contrast_step -> text().toLong()));
-  settings -> setContrastReset (c_contrast_reset -> isChecked());
-  if ( settings -> contrastReset() )
+  configuration() -> setContrastMinimumMaximum (c_contrast_minimum -> text().toInt(), c_contrast_maximum -> text().toInt());
+  configuration() -> setContrastMarks (labs (c_contrast_marks -> text().toInt()));
+  configuration() -> setContrastStep (labs (c_contrast_step -> text().toInt()));
+  configuration() -> setContrastReset (c_contrast_reset -> isChecked());
+  if ( configuration() -> contrastReset() )
   {
-    settings -> setInitialContrast (c_contrast_default -> text().toLong());
-    settings -> setContrastEvery (c_contrast_every -> currentItem());
+    configuration() -> setInitialContrast (c_contrast_default -> text().toInt());
+    configuration() -> setContrastEvery (c_contrast_every -> currentItem());
   }
 }
 
@@ -919,11 +836,10 @@ void KPlayerSettingsContrast::resetChanged (bool resetChecked)
 {
   if ( resetChecked )
   {
-    KPlayerSettings* settings = kPlayerSettings();
-    c_contrast_default -> setText (QString::number (settings -> initialContrast()));
+    c_contrast_default -> setText (QString::number (configuration() -> initialContrast()));
     c_contrast_every -> setCurrentItem (0);
     c_contrast_every -> setCurrentText (i18n("file"));
-    c_contrast_every -> setCurrentItem (settings -> contrastEvery());
+    c_contrast_every -> setCurrentItem (configuration() -> contrastEvery());
   }
   else
   {
@@ -948,26 +864,24 @@ KPlayerSettingsBrightness::KPlayerSettingsBrightness (QWidget* parent, const cha
 
 void KPlayerSettingsBrightness::load (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_brightness_minimum -> setText (QString::number (settings -> brightnessMinimum()));
-  c_brightness_maximum -> setText (QString::number (settings -> brightnessMaximum()));
-  c_brightness_marks -> setText (QString::number (settings -> brightnessMarks()));
-  c_brightness_step -> setText (QString::number (settings -> brightnessStep()));
-  c_brightness_reset -> setChecked (settings -> brightnessReset());
-  resetChanged (settings -> brightnessReset());
+  c_brightness_minimum -> setText (QString::number (configuration() -> brightnessMinimum()));
+  c_brightness_maximum -> setText (QString::number (configuration() -> brightnessMaximum()));
+  c_brightness_marks -> setText (QString::number (configuration() -> brightnessMarks()));
+  c_brightness_step -> setText (QString::number (configuration() -> brightnessStep()));
+  c_brightness_reset -> setChecked (configuration() -> brightnessReset());
+  resetChanged (configuration() -> brightnessReset());
 }
 
 void KPlayerSettingsBrightness::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setBrightnessMinimumMaximum (c_brightness_minimum -> text().toLong(), c_brightness_maximum -> text().toLong());
-  settings -> setBrightnessMarks (labs (c_brightness_marks -> text().toLong()));
-  settings -> setBrightnessStep (labs (c_brightness_step -> text().toLong()));
-  settings -> setBrightnessReset (c_brightness_reset -> isChecked());
-  if ( settings -> brightnessReset() )
+  configuration() -> setBrightnessMinimumMaximum (c_brightness_minimum -> text().toInt(), c_brightness_maximum -> text().toInt());
+  configuration() -> setBrightnessMarks (labs (c_brightness_marks -> text().toInt()));
+  configuration() -> setBrightnessStep (labs (c_brightness_step -> text().toInt()));
+  configuration() -> setBrightnessReset (c_brightness_reset -> isChecked());
+  if ( configuration() -> brightnessReset() )
   {
-    settings -> setInitialBrightness (c_brightness_default -> text().toLong());
-    settings -> setBrightnessEvery (c_brightness_every -> currentItem());
+    configuration() -> setInitialBrightness (c_brightness_default -> text().toInt());
+    configuration() -> setBrightnessEvery (c_brightness_every -> currentItem());
   }
 }
 
@@ -975,11 +889,10 @@ void KPlayerSettingsBrightness::resetChanged (bool resetChecked)
 {
   if ( resetChecked )
   {
-    KPlayerSettings* settings = kPlayerSettings();
-    c_brightness_default -> setText (QString::number (settings -> initialBrightness()));
+    c_brightness_default -> setText (QString::number (configuration() -> initialBrightness()));
     c_brightness_every -> setCurrentItem (0);
     c_brightness_every -> setCurrentText (i18n("file"));
-    c_brightness_every -> setCurrentItem (settings -> brightnessEvery());
+    c_brightness_every -> setCurrentItem (configuration() -> brightnessEvery());
   }
   else
   {
@@ -1004,26 +917,24 @@ KPlayerSettingsHue::KPlayerSettingsHue (QWidget* parent, const char* name)
 
 void KPlayerSettingsHue::load (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_hue_minimum -> setText (QString::number (settings -> hueMinimum()));
-  c_hue_maximum -> setText (QString::number (settings -> hueMaximum()));
-  c_hue_marks -> setText (QString::number (settings -> hueMarks()));
-  c_hue_step -> setText (QString::number (settings -> hueStep()));
-  c_hue_reset -> setChecked (settings -> hueReset());
-  resetChanged (settings -> hueReset());
+  c_hue_minimum -> setText (QString::number (configuration() -> hueMinimum()));
+  c_hue_maximum -> setText (QString::number (configuration() -> hueMaximum()));
+  c_hue_marks -> setText (QString::number (configuration() -> hueMarks()));
+  c_hue_step -> setText (QString::number (configuration() -> hueStep()));
+  c_hue_reset -> setChecked (configuration() -> hueReset());
+  resetChanged (configuration() -> hueReset());
 }
 
 void KPlayerSettingsHue::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setHueMinimumMaximum (c_hue_minimum -> text().toLong(), c_hue_maximum -> text().toLong());
-  settings -> setHueMarks (labs (c_hue_marks -> text().toLong()));
-  settings -> setHueStep (labs (c_hue_step -> text().toLong()));
-  settings -> setHueReset (c_hue_reset -> isChecked());
-  if ( settings -> hueReset() )
+  configuration() -> setHueMinimumMaximum (c_hue_minimum -> text().toInt(), c_hue_maximum -> text().toInt());
+  configuration() -> setHueMarks (labs (c_hue_marks -> text().toInt()));
+  configuration() -> setHueStep (labs (c_hue_step -> text().toInt()));
+  configuration() -> setHueReset (c_hue_reset -> isChecked());
+  if ( configuration() -> hueReset() )
   {
-    settings -> setInitialHue (c_hue_default -> text().toLong());
-    settings -> setHueEvery (c_hue_every -> currentItem());
+    configuration() -> setInitialHue (c_hue_default -> text().toInt());
+    configuration() -> setHueEvery (c_hue_every -> currentItem());
   }
 }
 
@@ -1031,11 +942,10 @@ void KPlayerSettingsHue::resetChanged (bool resetChecked)
 {
   if ( resetChecked )
   {
-    KPlayerSettings* settings = kPlayerSettings();
-    c_hue_default -> setText (QString::number (settings -> initialHue()));
+    c_hue_default -> setText (QString::number (configuration() -> initialHue()));
     c_hue_every -> setCurrentItem (0);
     c_hue_every -> setCurrentText (i18n("file"));
-    c_hue_every -> setCurrentItem (settings -> hueEvery());
+    c_hue_every -> setCurrentItem (configuration() -> hueEvery());
   }
   else
   {
@@ -1060,26 +970,24 @@ KPlayerSettingsSaturation::KPlayerSettingsSaturation (QWidget* parent, const cha
 
 void KPlayerSettingsSaturation::load (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  c_saturation_minimum -> setText (QString::number (settings -> saturationMinimum()));
-  c_saturation_maximum -> setText (QString::number (settings -> saturationMaximum()));
-  c_saturation_marks -> setText (QString::number (settings -> saturationMarks()));
-  c_saturation_step -> setText (QString::number (settings -> saturationStep()));
-  c_saturation_reset -> setChecked (settings -> saturationReset());
-  resetChanged (settings -> saturationReset());
+  c_saturation_minimum -> setText (QString::number (configuration() -> saturationMinimum()));
+  c_saturation_maximum -> setText (QString::number (configuration() -> saturationMaximum()));
+  c_saturation_marks -> setText (QString::number (configuration() -> saturationMarks()));
+  c_saturation_step -> setText (QString::number (configuration() -> saturationStep()));
+  c_saturation_reset -> setChecked (configuration() -> saturationReset());
+  resetChanged (configuration() -> saturationReset());
 }
 
 void KPlayerSettingsSaturation::save (void)
 {
-  KPlayerSettings* settings = kPlayerSettings();
-  settings -> setSaturationMinimumMaximum (c_saturation_minimum -> text().toLong(), c_saturation_maximum -> text().toLong());
-  settings -> setSaturationMarks (labs (c_saturation_marks -> text().toLong()));
-  settings -> setSaturationStep (labs (c_saturation_step -> text().toLong()));
-  settings -> setSaturationReset (c_saturation_reset -> isChecked());
-  if ( settings -> saturationReset() )
+  configuration() -> setSaturationMinimumMaximum (c_saturation_minimum -> text().toInt(), c_saturation_maximum -> text().toInt());
+  configuration() -> setSaturationMarks (labs (c_saturation_marks -> text().toInt()));
+  configuration() -> setSaturationStep (labs (c_saturation_step -> text().toInt()));
+  configuration() -> setSaturationReset (c_saturation_reset -> isChecked());
+  if ( configuration() -> saturationReset() )
   {
-    settings -> setInitialSaturation (c_saturation_default -> text().toLong());
-    settings -> setSaturationEvery (c_saturation_every -> currentItem());
+    configuration() -> setInitialSaturation (c_saturation_default -> text().toInt());
+    configuration() -> setSaturationEvery (c_saturation_every -> currentItem());
   }
 }
 
@@ -1087,11 +995,10 @@ void KPlayerSettingsSaturation::resetChanged (bool resetChecked)
 {
   if ( resetChecked )
   {
-    KPlayerSettings* settings = kPlayerSettings();
-    c_saturation_default -> setText (QString::number (settings -> initialSaturation()));
+    c_saturation_default -> setText (QString::number (configuration() -> initialSaturation()));
     c_saturation_every -> setCurrentItem (0);
     c_saturation_every -> setCurrentText (i18n("file"));
-    c_saturation_every -> setCurrentItem (settings -> saturationEvery());
+    c_saturation_every -> setCurrentItem (configuration() -> saturationEvery());
   }
   else
   {

@@ -18,457 +18,161 @@
 
 #include <kaction.h>
 #include <kcombobox.h>
-#include <klistview.h>
-#include <qdockwindow.h>
 
 #include "kplayerprocess.h"
-#include "kplayerproperties.h"
+#include "kplayernode.h"
+#include "kplayernodeaction.h"
 
-class KPlayerPlaylistWidget;
-class KPlayerProcess;
-
-/**Playlist item class, contains the playlist item data.
+/**The playlist combobox widget.
   *@author kiriuja
   */
-class KPlayerPlaylistItem : public QObject
+class KPlayerPlaylistCombobox : public KComboBox
 {
   Q_OBJECT
 
 public:
-  /** The KPlayerPlaylistItem constructor. Adds a new list item to the list with the given URL.
-    */
-  KPlayerPlaylistItem (const KURL&);
-  /** The KPlayerPlaylistItem destructor. Saves the playlist item data.
-    */
-  virtual ~KPlayerPlaylistItem();
+  /** The KPlayerPlaylistCombobox constructor. */
+  KPlayerPlaylistCombobox (QWidget* parent = 0, const char* name = 0);
 
-  /** Returns the properties of the playlist entry.
-   */
-  KPlayerProperties* properties (void)
-    { return m_properties; }
+  /** Configuration. */
+  KPlayerConfiguration* configuration (void) const
+    { return KPlayerEngine::engine() -> configuration(); }
 
-public slots:
-  /** Receives the refresh signal from KPlayerProperties, updates the item.
-   */
-  virtual void refresh (void);
+  /** Returns the popup menu. */
+  QPopupMenu* popupMenu (void) const
+    { return m_popup; }
+  /** Sets the popup menu. */
+  void setPopupMenu (QPopupMenu* menu)
+    { m_popup = menu; }
+
+  /** Renames the item with the given index to the given name. */
+  void renameItem (int index, const QString& name);
+
+  /** The size hint. */
+  virtual QSize sizeHint() const;
+  /** The minimum size hint. */
+  virtual QSize minimumSizeHint() const;
 
 protected:
-  /** The item properties.
-   */
-  KPlayerProperties* m_properties;
+  /** Displays the right click popup menu. */
+  virtual void contextMenuEvent (QContextMenuEvent*);
+
+  /** Popup menu. */
+  QPopupMenu* m_popup;
 };
 
 /**Playlist class, contains the list of playlist items.
   *@author kiriuja
   */
-class KPlayerPlaylist : protected QPtrList<KPlayerPlaylistItem>
+class KPlayerPlaylist : public QObject
 {
+  Q_OBJECT
+
 public:
-  /** The KPlayerPlaylist constructor. Creates an empty playlist.
-    */
-  KPlayerPlaylist (void);
-  /** The KPlayerPlaylist destructor.
-    */
+  /** The KPlayerPlaylist constructor. Creates an empty playlist. */
+  KPlayerPlaylist (KActionCollection* ac, QObject* parent = 0, const char* name = 0);
+  /** The KPlayerPlaylist destructor. */
   virtual ~KPlayerPlaylist();
 
-  /** Returns whether the playlist is empty.
-   */
-  bool isEmpty (void) const
-   { return QPtrList<KPlayerPlaylistItem>::isEmpty(); }
-  /** Returns the number of items on the playlist.
-   */
-  uint count (void) const
-   { return QPtrList<KPlayerPlaylistItem>::count(); }
-  /** Returns whether the given item is on the playlist.
-   */
-  bool has (KPlayerPlaylistItem*);
-  /** Returns whether the playlist is temporary and has autodelete option set.
-   */
-  bool isTemporary (void) const
-   { return autoDelete(); }
-  /** Sets the playlist to temporary and also sets the autodelete option.
-   */
-  void setTemporary (bool temporary)
-   { setAutoDelete (temporary); }
-
-  /** Returns whether the playlist loops.
-   */
-  bool loop (void) const
-   { return m_loop; }
-  /** Sets the playlist loop option.
-   */
-  void setLoop (bool loop)
-   { m_loop = loop; }
-  /** Returns whether the playlist is shuffled.
-   */
-  bool shuffle (void) const
-   { return m_shuffle; }
-  /** Sets the playlist shuffle option and shuffles the playlist if the option is on.
-   */
-  void setShuffle (bool shuffle);
-
-  /** Returns the index of the current item or -1 when at the list end.
-   */
-  int index (void) const
-    { return QPtrList<KPlayerPlaylistItem>::at(); }
-  /** Returns the current playlist item.
-   */
-  KPlayerPlaylistItem* current (void) const
-    { return QPtrList<KPlayerPlaylistItem>::current(); }
-  /** Returns the playlist item with the given index.
-   */
-  KPlayerPlaylistItem* item (int index)
-    { return at (index); }
-  /** Sets the current playlist item.
-   */
-  virtual void setCurrent (KPlayerPlaylistItem* item);
-  /** Sets the current playlist item.
-   */
-  void setCurrent (int index);
-
-  /** Goes to the next item on the playlist.
-   */
-  virtual bool next (void);
-  /** Goes to the previous item on the playlist.
-   */
-  virtual bool previous (void);
-  /** Removes all items from the playlist.
-   */
-  virtual void clear (void);
-
-  /** Adds the given item to the end of the playlist.
-    */
-  virtual void add (KPlayerPlaylistItem*);
-  /** Removes the given item from the playlist.
-    */
-  virtual void remove (KPlayerPlaylistItem*);
-  /** Moves the given item after the other given item.
-    */
-  virtual void move (KPlayerPlaylistItem*, KPlayerPlaylistItem*);
-  /** Renames the given item with the given name.
-   */
-  virtual void rename (KPlayerPlaylistItem*, const QString&);
-
-  /** Shuffles the playlist entries.
-   */
-  virtual void randomize (KPlayerPlaylistItem* item = 0);
-
-protected:
-  /** The loop option.
-   */
-  bool m_loop;
-  /** The shuffle option.
-   */
-  bool m_shuffle;
-};
-
-/**The playlist combobox widget.
-  *@author kiriuja
-  */
-class KPlayerPlaylistCombobox : public KComboBox, public KPlayerPlaylist
-{
-  Q_OBJECT
-
-public:
-  /** The KPlayerPlaylistCombobox constructor.
-    */
-  KPlayerPlaylistCombobox (QWidget* parent = 0, const char* name = 0);
-
-  /** Updates the name of the given item.
-   */
-  void setName (KPlayerPlaylistItem* item);
-
-  /** Sets the current playlist item.
-   */
-  virtual void setCurrent (KPlayerPlaylistItem* item);
-
-  /** Goes to the next item on the playlist.
-   */
-  virtual bool next (void);
-  /** Goes to the previous item on the playlist.
-   */
-  virtual bool previous (void);
-  /** Removes all items from the playlist.
-   */
-  virtual void clear (void);
-
-  /** Adds the given item to the end of the playlist.
-    */
-  virtual void add (KPlayerPlaylistItem*);
-  /** Removes the given item from the playlist.
-    */
-  virtual void remove (KPlayerPlaylistItem*);
-  /** Moves the given item after the other given item.
-    */
-  virtual void move (KPlayerPlaylistItem*, KPlayerPlaylistItem*);
-  /** Renames the given item with the given name.
-   */
-  virtual void rename (KPlayerPlaylistItem*, const QString&);
-
-  /** Shuffles the playlist entries.
-   */
-  virtual void randomize (KPlayerPlaylistItem* item = 0);
-
-  /** The size hint.
-   */
-  virtual QSize sizeHint() const;
-  /** The minimum size hint.
-   */
-  virtual QSize minimumSizeHint() const;
-};
-
-/**Playlist view item class, good for insertion into a list view.
-  *@author kiriuja
-  */
-class KPlayerPlaylistViewItem : public KListViewItem, public KPlayerPlaylistItem
-{
-public:
-  /** The KPlayerPlaylistViewItem constructor. Adds a new list item to the list with the given URL.
-    */
-  KPlayerPlaylistViewItem (KPlayerPlaylistWidget*, const KURL&);
-  /** The KPlayerPlaylistViewItem destructor.
-    */
-  virtual ~KPlayerPlaylistViewItem();
-
-  /** Receives the refresh signal from KPlayerProperties, updates the item.
-   */
-  virtual void refresh (void);
-
-protected:
-  /** Updates name and information columns.
-   */
-  void refreshColumns (void);
-};
-
-/**Playlist combobox action suitable for insertion into a toolbar.
-  *@author kiriuja
-  */
-class KPlayerPlaylistAction : public KWidgetAction
-{
-  Q_OBJECT
-
-public:
-  /** The KPlayerPlaylistAction constructor. Parameters are passed on to KAction.
-    */
-  KPlayerPlaylistAction (const QString& text, const KShortcut&, const QObject* receiver,
-    const char* slot, KActionCollection* parent = 0, const char* name = 0);
-  /** The KPlayerPlaylistAction destructor. Does nothing.
-    */
-  virtual ~KPlayerPlaylistAction();
-
-  /** Returns a pointer to the playlist combobox object.
-    */
-  KPlayerPlaylistCombobox* playlist (void)
-    { return (KPlayerPlaylistCombobox*) widget(); }
-
-public slots:
-  /** Selects the given item and emits the play signal.
-   */
-  void play (int index);
-};
-
-/**The KPlayer playlist widget.
-  *@author kiriuja
-  */
-class KPlayerPlaylistWidget : public KListView
-{
-  Q_OBJECT
-
-public: 
-  KPlayerPlaylistWidget (KActionCollection* ac, QWidget* parent = 0, const char* name = 0);
-  virtual ~KPlayerPlaylistWidget();
-
-  KPlayerPlaylist* playlist (void) const
-   { return m_list; }
-  void setPlaylist (KPlayerPlaylist* list)
-   { m_list = list; }
-  KActionCollection* actionCollection (void) const
-   { return m_ac; }
-  void setActionCollection (KActionCollection* collection)
-   { m_ac = collection; }
-
-  /** Retrieves an action from the actionCollection by name.
-    */
-  KAction* action (const char* name) const
-    { return m_ac -> action (name); }
-  /** Retrieves a toggle action from the actionCollection by name.
-    */
-  KToggleAction* toggleAction (const char* name) const
-    { return (KToggleAction*) action (name); }
-  /** Retrieves the playlist action from the actionCollection.
-    */
-  KPlayerPlaylistAction* playlistAction (void) const
-    { return (KPlayerPlaylistAction*) action ("playlist_list"); }
-  /** Retrieves the recent files action from the actionCollection.
-    */
-  KRecentFilesAction* recentFilesAction (void) const
-    { return (KRecentFilesAction*) action (KStdAction::stdName (KStdAction::OpenRecent)); }
-
-  /** Creates actions and connects signals to slots.
-   */
-  void setupActions (void);
-
-  /** Adds the given list of URLs to the playlist, loads it and optionally starts playback.
-    */
-  void openUrls (KURL::List);
-  /** Loads the given URL and optionally starts playback.
-    */
-  void load (KURL);
-
-  /** Returns the URL of the current item on the playlist or an empty
-      URL if at the list end. */
-  KURL current (void);
-  /** Returns the URL of the next item on the playlist or an empty
-      URL if at the list end. */
-  KURL next (void);
-  /** Returns the URL of the previous item on the playlist or an empty
-      URL if at the list end. */
-  KURL previous (void);
-
-  /** Returns whether the playlist is locked.
-   */
-  bool locked (void) const
-   { return m_locked; }
-  /** Sets the option to lock the playlist and not accept more items.
-   */
-  void setLocked (bool locked)
-   { m_locked = locked; }
-
-  /** Returns whether only the current selection is played.
-   */
-  bool selectionOnly (void) const
-   { return m_selection_only; }
-  /** Sets the option to play only the current selection.
-   */
-  void setSelectionOnly (bool selection_only);
-
-  /** Returns whether the playlist loops.
-   */
-  bool loop (void) const
-   { return m_list -> loop(); }
-  /** Sets the playlist loop option.
-   */
-  void setLoop (bool loop);
-
-  /** Returns whether the playlist is shuffled.
-   */
-  bool shuffle (void) const
-   { return m_list -> shuffle(); }
-  /** Sets the playlist shuffle option and reloads the playlist if the option is off.
-   */
-  void setShuffle (bool shuffle);
-
-  /** Returns whether the playlist is cleared before adding new entries.
-   */
-  bool transitory (void) const
-   { return m_list -> isTemporary() ? m_temp_transitory : m_main_transitory; }
-  /** Sets the option to clear the playlist before adding new entries.
-   */
-  void setTransitory (bool transitory)
-   { (m_list -> isTemporary() ? m_temp_transitory : m_main_transitory) = transitory; }
-
-  /** Save playlist contents and options to the configuration file.
-   */
-  void saveOptions (void) const;
-  /** Read playlist contents and options and initialize the playlist.
-    */
-  void readOptions (void);
-  /** Saves playlist options and removes all items.
-   */
+  /** Initializes playlist. */
+  void initialize (QPopupMenu* menu);
+  /** Releases referenced nodes. */
   void terminate (void);
 
-  /** Enables or disables the next and previous actions according to the current state.
-    */
-  void enableNextPrevious (bool same_url = false);
-  /** Enables or disables playlist actions according to the current state.
-    */
-  void enableActions (void);
+  /** Engine. */
+  KPlayerEngine* engine (void) const
+    { return KPlayerEngine::engine(); }
+  /** Configuration. */
+  KPlayerConfiguration* configuration (void) const
+    { return engine() -> configuration(); }
+  /** Settings. */
+  KPlayerSettings* settings (void) const
+    { return engine() -> settings(); }
+  /** Process. */
+  KPlayerProcess* process (void) const
+    { return engine() -> process(); }
 
-public slots:
-  /** Displays the Open File dialog and starts playing the chosen file.
-    */
-  void fileOpen (void);
-  /** Displays the Open URL dialog and starts playing from the entered URL.
-    */
-  void fileOpenUrl (void);
-  /** Opens a file from the recent files menu.
-    */
-  void fileOpenRecent (const KURL&);
-  /** Plays the current item on the playlist.
-   */
-  void playlistPlay (void);
-  /** Plays the next item on the playlist.
-   */
-  void playlistNext (void);
-  /** Plays the previous item on the playlist.
-   */
-  void playlistPrevious (void);
-  /** Toggles the option to play selection only or the entire playlist.
-   */
-  void playlistSelection (void);
-  /** Locks the playlist so no new items are added or unlocks it.
-   */
-  void playlistLock (void);
-  /** Toggles the option to loop through the list.
-   */
-  void playlistLoop (void);
-  /** Toggles the option to play items in random order.
-   */
-  void playlistShuffle (void);
-  /** Toggles the option to clear list before adding new entries.
-   */
-  void playlistTransitory (void);
+  /** Now playing node. */
+  KPlayerNowPlayingNode* nowplaying (void) const
+    { return m_nowplaying; }
 
-  /** Starts playing the current item.
-   */
-  void play (void);
-  /** Starts playing the given item.
-   */
-  void play (QListViewItem*);
-  /** Opens the Properties dialog for the current item.
-   */
-  void properties (void);
-  /** Starts renaming the current item.
-   */
-  void rename (void);
-  /** Renames the given item.
-   */
-  virtual void rename (QListViewItem*, int);
-  /** Renames the given item.
-   */
-  void rename (QListViewItem*, const QString&, int);
-  /** Moves the given item.
-   */
-  void move (QListViewItem*, QListViewItem*, QListViewItem*);
-  /** Adds items to the playlist after the given item.
-   */
-  void add (KURL::List&, KPlayerPlaylistViewItem*);
-  /** Moves the currently selected items up in the playlist.
-   */
-  void moveUp (void);
-  /** Moves the currently selected items down in the playlist.
-   */
-  void moveDown (void);
-  /** Removes the currently selected items from the playlist.
-   */
-  void remove (void);
-  /** Removes all items from the playlist.
-   */
-  virtual void clear (void);
+  /** Retrieves an action from the actionCollection by name. */
+  KAction* action (const char* name) const
+    { return m_ac -> action (name); }
+  /** Retrieves a toggle action from the actionCollection by name. */
+  KToggleAction* toggleAction (const char* name) const
+    { return (KToggleAction*) action (name); }
 
-  /** Receives the stateChanged signal from KPlayerProcess.
-    */
-  void playerStateChanged (KPlayerProcess::State, KPlayerProcess::State);
+  /** Returns the playlist action list. */
+  KPlayerContainerActionList* playlistActionList (void) const
+    { return m_playlists; }
 
-  /** Sets selection of the current item and updates playlist if the
-      selectionOnly option is set. */
-  void updateSelection (void);
+  /** Returns the recent action list. */
+  KPlayerNodeActionList* recentActionList (void) const
+    { return m_recent; }
+  /** Recents node. */
+  KPlayerRecentsNode* recent (void) const
+    { return (KPlayerRecentsNode*) recentActionList() -> node(); }
 
-  /** Adjusts the playlist to the user preferences.
-   */
-  void refreshSettings (void);
+  /** Returns the devices action list. */
+  KPlayerDevicesActionList* devicesActionList (void) const
+    { return m_devices; }
 
-  virtual void resizeEvent (QResizeEvent*);
+  /** Returns the playlist add action list. */
+  KPlayerContainerActionList* playlistAddActionList (void) const
+    { return m_playlists_add; }
+
+  /** Returns a pointer to the playlist combobox object. */
+  KPlayerPlaylistCombobox* playlist (void)
+    { return (KPlayerPlaylistCombobox*) ((KWidgetAction*) action ("player_list")) -> widget(); }
+
+  /** List of nodes. */
+  const KPlayerPlaylistNodeList& nodes (void) const
+    { return m_nodes; }
+  /** Returns whether the playlist is empty. */
+  bool isEmpty (void) const
+   { return nodes().isEmpty(); }
+  /** Returns the number of items on the playlist. */
+  uint count (void) const
+   { return nodes().count(); }
+
+  /** Returns the current node. */
+  KPlayerNode* currentNode (void) const
+    { return m_current; }
+  /** Sets the current node. */
+  void setCurrentNode (KPlayerNode* node);
+
+  /** Returns the next node. */
+  KPlayerNode* nextNode (void) const
+    { return m_next.getFirst(); }
+  /** Sets the next nodes. */
+  void setNextNodes (const KPlayerNodeList& nodes);
+  /** Adds the given nodes to the list of next nodes. */
+  void addNextNodes (const KPlayerNodeList& nodes);
+
+  /** Plays the given nodes. */
+  void play (const KPlayerNodeList& list);
+  /** Plays the given nodes after the currently played item finishes playing. */
+  void playNext (const KPlayerNodeList& list);
+  /** Queues the given nodes. */
+  void queue (const KPlayerNodeList& list);
+  /** Queues the given nodes for playing after the currently played item finishes playing. */
+  void queueNext (const KPlayerNodeList& list);
+
+  /** Puts the given list of URLs on the playlist and starts playback. */
+  void playUrls (const KURL::List& list);
+  /** Puts the given list of URLs on the playlist and plays them after the currently played item finishes playing. */
+  void playNextUrls (const KURL::List& list);
+  /** Adds the given list of URLs to the end of the playlist. */
+  void queueUrls (const KURL::List& list);
+  /** Adds the given list of URLs to the playlist and plays them after the currently played item finishes playing. */
+  void queueNextUrls (const KURL::List& list);
+
+  /** Shuffles the playlist entries. */
+  void randomize (KPlayerNode* node = 0);
+
+  /** Checks the given list of URLs for validity. */
+  static bool checkUrls (const KURL::List& list);
 
 signals:
   /** Emitted when playback starts. */
@@ -480,63 +184,98 @@ signals:
   /** Emitted when an item is finished playing and no new item will be loaded. */
   void stopped (void);
 
+  /** Emitted when an action group is enabled or disabled. */
+  void enableActionGroup (const QString& name, bool enable);
+
+public slots:
+  /** Plays the given node. */
+  void play (KPlayerNode* node);
+  /** Plays the selected item. */
+  void play (int index);
+  /** Plays the current item. */
+  void play (void);
+
+  /** Plays the next item. */
+  void next (void);
+  /** Plays the previous item. */
+  void previous (void);
+
+  /** Toggles the option to loop through the playlist. */
+  void loop (void);
+  /** Toggles the option to play items in random order. */
+  void shuffle (void);
+
+  /** Displays the Open File dialog and starts playing the chosen file. */
+  void filePlay (void);
+  /** Displays the Open URL dialog and starts playing from the entered URL. */
+  void filePlayUrl (void);
+
+  /** Displays the Open File dialog and adds the chosen files to the playlist. */
+  void addFiles (void);
+  /** Displays the Open URL dialog and adds the entered URL to the playlist. */
+  void addUrl (void);
+
+  /** Saves the playlist as a new playlist. */
+  void addToNewPlaylist (void);
+  /** Adds the playlist items to the root playlist. */
+  void addToPlaylists (void);
+  /** Adds the playlist items to an existing playlist. */
+  void addToPlaylist (KPlayerNode*);
+  /** Adds the playlist items to the collection. */
+  void addToCollection (void);
+
+protected slots:
+  /** Adds the given nodes to the list. */
+  void added (KPlayerContainerNode*, const KPlayerNodeList& nodes, KPlayerNode* after = 0);
+  /** Removes the given nodes from the list. */
+  void removed (KPlayerContainerNode*, const KPlayerNodeList& nodes);
+  /** Updates the given node attributes. */
+  void updated (KPlayerContainerNode* parent, KPlayerNode* node);
+
+  /** Adds new nodes to the playlist combobox. */
+  void add (KPlayerPlaylistNodeList& previous);
+
+  /** Plays the next item when appropriate. */
+  void playerStateChanged (KPlayerProcess::State, KPlayerProcess::State);
+  /** Adjusts the playlist to the user preferences. */
+  void refreshSettings (void);
+
 protected:
-  /** Accepts URL drags.
-   */
-  virtual bool acceptDrag (QDropEvent*) const;
-  /** Handles the drop event.
-   */
-  virtual void contentsDropEvent (QDropEvent*);
-  virtual void focusOutEvent (QFocusEvent*);
-  virtual void focusInEvent (QFocusEvent*);
-  virtual void windowActivationChange (bool);
+  /** Populates and connects the given node. */
+  void attach (KPlayerContainerNode* node);
+  /** Vacates and disconnects the given node. */
+  void detach (KPlayerContainerNode* node);
 
-  /** Reloads the current playlist if it was temporary.
-    */
-  void reload (void);
-  /** Makes enough room for the given number of new items.
-   */
-  bool makeRoom (uint, KPlayerPlaylistViewItem* = 0);
-  /** Updates the playlist actions.
-   */
-  virtual void showEvent (QShowEvent*);
-  /** Updates the playlist actions.
-   */
-  virtual void hideEvent (QHideEvent*);
+  /** Appends the given nodes to the list. */
+  void append (const KPlayerNodeList& nodes);
+  /** Inserts the given nodes at the given location. */
+  int insert (const KPlayerNodeList& nodes, int index);
 
-  /** Enables or disables the player shortcuts to avoid clashes with the line edit.
-   */
-  void enablePlayerShortcuts (bool);
+  /** Enables or disables the next and previous actions according to the current state. */
+  void enableNextPrevious (void) const;
+  /** Updates actions according to the current state. */
+  void updateActions (void) const;
 
-  bool m_locked, m_selection_only, m_main_transitory, m_temp_transitory, m_shortcuts_enabled;
-  bool m_enable_play, m_enable_pause, m_enable_stop;
-  KPlayerPlaylist* m_list;
+  /** Now Playing node. */
+  KPlayerNowPlayingNode* m_nowplaying;
+  /** Current node. */
+  KPlayerNode* m_current;
+  /** Next nodes. */
+  KPlayerNodeList m_next;
+  /** List of nodes. */
+  KPlayerPlaylistNodeList m_nodes;
+  /** Action collection. */
   KActionCollection* m_ac;
-};
-
-/**The KPlayer playlist window.
-  *@author kiriuja
-  */
-class KPlayerPlaylistWindow : public QDockWindow
-{
-  Q_OBJECT
-
-public: 
-  KPlayerPlaylistWindow (KActionCollection* ac, QWidget* parent = 0, const char* name = 0);
-
-  KPlayerPlaylistWidget* kPlayerPlaylistWidget (void)
-    { return m_playlist_widget; }
-
-protected:
-  virtual void hideEvent (QHideEvent*);
-  virtual void focusOutEvent (QFocusEvent*);
-  virtual void focusInEvent (QFocusEvent*);
-  virtual void windowActivationChange (bool);
-
-  KPlayerPlaylistWidget* m_playlist_widget;
-
-signals:
-  void windowHidden (void);
+  /** Set next node indicator. */
+  bool m_set_next;
+  /** Playlist action list. */
+  KPlayerContainerActionList* m_playlists;
+  /** Recent action list. */
+  KPlayerNodeActionList* m_recent;
+  /** Devices action list. */
+  KPlayerDevicesActionList* m_devices;
+  /** Playlist add action list. */
+  KPlayerContainerActionList* m_playlists_add;
 };
 
 #endif

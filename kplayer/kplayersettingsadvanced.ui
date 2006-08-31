@@ -36,9 +36,6 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <property name="margin">
-            <number>0</number>
-        </property>
         <widget class="QFrame" row="0" column="0">
             <property name="name">
                 <cstring>frame1</cstring>
@@ -60,9 +57,6 @@
             <vbox>
                 <property name="name">
                     <cstring>unnamed</cstring>
-                </property>
-                <property name="margin">
-                    <number>0</number>
                 </property>
                 <widget class="QLabel">
                     <property name="name">
@@ -156,10 +150,46 @@
                         <property name="name">
                             <cstring>unnamed</cstring>
                         </property>
-                        <property name="margin">
-                            <number>0</number>
-                        </property>
                         <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>l_demuxer</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Preferred &amp;demuxer</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_demuxer</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Preferred demultiplexer for handling file formats</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows and allows you to change the demultiplexer that should be used to handle file formats. If the chosen demuxer fails on a particular file, another one may be used.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="0" column="1" colspan="3">
+                            <property name="name">
+                                <cstring>c_demuxer</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Preferred demultiplexer for handling file formats</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows and allows you to change the demultiplexer that should be used to handle file formats. If the chosen demuxer fails on a particular file, another one may be used.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="0">
                             <property name="name">
                                 <cstring>l_frame_drop</cstring>
                             </property>
@@ -179,7 +209,7 @@
                                 <string>If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. None disables dropping, Soft drops less frames, and Hard drops more frames and may sometimes break decoding. You can also choose this option for individual file or URL in File Properties.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="0" column="1">
+                        <widget class="QComboBox" row="1" column="1">
                             <item>
                                 <property name="text">
                                     <string>none</string>
@@ -205,7 +235,7 @@
                                 <string>If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. None disables dropping, Soft drops less frames, and Hard drops more frames and may sometimes break decoding. You can also choose this option for individual file or URL in File Properties.</string>
                             </property>
                         </widget>
-                        <widget class="QLabel" row="1" column="0">
+                        <widget class="QLabel" row="2" column="0">
                             <property name="name">
                                 <cstring>l_use_cache</cstring>
                             </property>
@@ -225,7 +255,7 @@
                                 <string>Option to choose whether to use cache and set its size. Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size. You can also choose this option for individual file or URL in File Properties.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="1" column="1">
+                        <widget class="QComboBox" row="2" column="1">
                             <item>
                                 <property name="text">
                                     <string>auto</string>
@@ -251,7 +281,7 @@
                                 <string>Option to choose whether to use cache and set its size. Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size. You can also choose this option for individual file or URL in File Properties.</string>
                             </property>
                         </widget>
-                        <widget class="QLineEdit" row="1" column="2">
+                        <widget class="QLineEdit" row="2" column="2">
                             <property name="name">
                                 <cstring>c_cache_size</cstring>
                             </property>
@@ -279,7 +309,7 @@
                                 <string>Option to choose whether to use cache and set its size. Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size. You can also choose this option for individual file or URL in File Properties.</string>
                             </property>
                         </widget>
-                        <widget class="QLabel" row="1" column="3">
+                        <widget class="QLabel" row="2" column="3">
                             <property name="name">
                                 <cstring>l_cache_size_kb</cstring>
                             </property>
@@ -304,7 +334,7 @@
                                 <string>Option to choose whether to use cache and set its size. Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size. You can also choose this option for individual file or URL in File Properties.</string>
                             </property>
                         </widget>
-                        <widget class="QLabel" row="2" column="0">
+                        <widget class="QLabel" row="3" column="0">
                             <property name="name">
                                 <cstring>l_build_index</cstring>
                             </property>
@@ -324,7 +354,7 @@
                                 <string>Option to choose whether to build new index for seeking. Yes builds an index if the file does not have it, No tells MPlayer not to build index, and Force makes it always build an index. You can also choose this option for individual file or URL in File Properties.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="2" column="1">
+                        <widget class="QComboBox" row="3" column="1">
                             <item>
                                 <property name="text">
                                     <string>yes</string>
@@ -373,9 +403,6 @@
                     <hbox>
                         <property name="name">
                             <cstring>unnamed</cstring>
-                        </property>
-                        <property name="margin">
-                            <number>0</number>
                         </property>
                         <widget class="QLabel">
                             <property name="name">

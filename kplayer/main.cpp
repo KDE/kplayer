@@ -18,15 +18,20 @@
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
-#include <kdebug.h>
-
 #include "kplayer.h"
 
 static const char* description = I18N_NOOP("KPlayer, a KDE media player based on MPlayer");
 
 static KCmdLineOptions options[] =
 {
-  { "+[files]", I18N_NOOP("File or list of files to play (optional)"), 0 },
+  { "play", I18N_NOOP("Play the files immediately (default)"), 0 },
+  { "queue", I18N_NOOP("Queue the files for playing"), 0 },
+  { "play-next", I18N_NOOP("Play the files after the currently played file finishes"), 0 },
+  { "queue-next", I18N_NOOP("Queue the files for playing after the currently played file"), 0 },
+  { "add-to-new-playlist", I18N_NOOP("Add the files to a new playlist"), 0 },
+  { "add-to-playlists", I18N_NOOP("Add the files to the list of playlists"), 0 },
+  { "add-to-collection", I18N_NOOP("Add the files to the multimedia collection"), 0 },
+  { "+[files]", I18N_NOOP("File(s), directory/ies, or URL(s)"), 0 },
   { 0, 0, 0 }
 };
 
