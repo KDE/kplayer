@@ -5,10 +5,14 @@ Encoding=UTF8
 
 [Desktop Action PlayNext]
 Name=Play next
+Name[pt]=Tocar o seguinte
+Name[pt_BR]=Tocar o seguinte
 Icon=kplayer
 Exec=kplayer --play-next %U
 
 [Desktop Action QueueNext]
 Name=Queue next
+Name[pt]=Seguinte em espera
+Name[pt_BR]=Seguinte em espera
 Icon=kplayer
 Exec=kplayer --queue-next %U

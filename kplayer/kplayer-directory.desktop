@@ -5,10 +5,14 @@ Encoding=UTF8
 
 [Desktop Action AddToPlaylists]
 Name=Add to playlists
+Name[pt]=Adicionar à lista de reprodução
+Name[pt_BR]=Adicionar à lista de reprodução
 Icon=kplayer
 Exec=kplayer --add-to-playlists %U
 
 [Desktop Action AddToCollection]
 Name=Add to collection
+Name[pt]=Adicionar à colecção
+Name[pt_BR]=Adicionar à colecção
 Icon=kplayer
 Exec=kplayer --add-to-collection %U
