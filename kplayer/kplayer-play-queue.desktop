@@ -6,6 +6,8 @@ X-KDE-Priority=TopLevel
 
 [Desktop Action Play]
 Name=Play
+Name[br]=Seniñ
+Name[et]=Esita
 Name[pt]=Tocar
 Name[pt_BR]=Tocar
 Icon=kplayer
@@ -13,6 +15,8 @@ Exec=kplayer %U
 
 [Desktop Action Queue]
 Name=Queue
+Name[br]=Lost
+Name[et]=Järjekorda
 Name[pt]=Fila
 Name[pt_BR]=Fila
 Icon=kplayer
