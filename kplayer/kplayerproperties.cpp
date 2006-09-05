@@ -784,7 +784,7 @@ KPlayerTranslatedStringProperty::~KPlayerTranslatedStringProperty()
 QString KPlayerTranslatedStringProperty::asString (void) const
 {
   if ( value().find ('/') < 0 )
-    return i18n(value());
+    return i18n(value().utf8());
   KMimeType::Ptr mimetype (KMimeType::mimeType (value()));
   if ( mimetype -> name() == "application/octet-stream" || mimetype -> comment().isEmpty() )
     return value();

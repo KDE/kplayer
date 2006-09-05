@@ -2498,7 +2498,7 @@ void KPlayerDiskNode::diskDetected (const QString& diskid)
   if ( ! type.isNull() )
   {
     disk() -> setType (type);
-    disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type)).arg (device() -> name()));
+    disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type.utf8())).arg (device() -> name()));
   }
   connect (media(), SIGNAL (updated()), SLOT (refresh()));
   media() -> diff (previous);
@@ -2521,7 +2521,7 @@ void KPlayerDiskNode::diskInserted (void)
       KPlayerEngine::engine() -> meta() -> deleteGroup (urls);
       m_media = m_disk = KPlayerMedia::diskProperties (m_device, urls);
       disk() -> setType (type);
-      disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type)).arg (device() -> name()));
+      disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type.utf8())).arg (device() -> name()));
       connect (media(), SIGNAL (updated()), SLOT (refresh()));
       media() -> diff (m_device);
       if ( populated() && m_url.isNull() )
@@ -2673,7 +2673,7 @@ void KPlayerDiskNode::autodetected (void)
   QString type (m_url == "cdda://" ? "Audio CD" : m_url == "dvd://" ? "DVD"
     : m_url == "vcd://" ? "Video CD" : disk() -> type());
   disk() -> setType (type);
-  disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type)).arg (device() -> name()));
+  disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type.utf8())).arg (device() -> name()));
   if ( m_detected_tracks )
     disk() -> setTracks (m_detected_tracks);
   else

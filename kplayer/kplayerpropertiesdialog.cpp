@@ -232,32 +232,32 @@ void KPlayerDevicePropertiesDialog::setupMedia (const KURL& url)
 
 KPlayerPropertiesGeneral* KPlayerDevicePropertiesDialog::createGeneralPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDeviceGeneral (frame, name);
+  return new KPlayerPropertiesDeviceGeneral (frame, name.utf8());
 }
 
 KPlayerPropertiesSize* KPlayerDevicePropertiesDialog::createSizePage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDeviceSize (frame, name);
+  return new KPlayerPropertiesDeviceSize (frame, name.utf8());
 }
 
 KPlayerPropertiesSubtitles* KPlayerDevicePropertiesDialog::createSubtitlesPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDeviceSubtitles (frame, name);
+  return new KPlayerPropertiesDeviceSubtitles (frame, name.utf8());
 }
 
 KPlayerPropertiesAudio* KPlayerDevicePropertiesDialog::createAudioPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDeviceAudio (frame, name);
+  return new KPlayerPropertiesDeviceAudio (frame, name.utf8());
 }
 
 KPlayerPropertiesVideo* KPlayerDevicePropertiesDialog::createVideoPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDeviceVideo (frame, name);
+  return new KPlayerPropertiesDeviceVideo (frame, name.utf8());
 }
 
 KPlayerPropertiesAdvanced* KPlayerDevicePropertiesDialog::createAdvancedPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDeviceAdvanced (frame, name);
+  return new KPlayerPropertiesDeviceAdvanced (frame, name.utf8());
 }
 
 KPlayerTVDevicePropertiesDialog::~KPlayerTVDevicePropertiesDialog (void)
@@ -277,22 +277,22 @@ void KPlayerTVDevicePropertiesDialog::setupMedia (const KURL& url)
 
 KPlayerPropertiesGeneral* KPlayerTVDevicePropertiesDialog::createGeneralPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesTVDeviceGeneral (frame, name);
+  return new KPlayerPropertiesTVDeviceGeneral (frame, name.utf8());
 }
 
 KPlayerPropertiesAudio* KPlayerTVDevicePropertiesDialog::createAudioPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesTVDeviceAudio (frame, name);
+  return new KPlayerPropertiesTVDeviceAudio (frame, name.utf8());
 }
 
 KPlayerPropertiesVideo* KPlayerTVDevicePropertiesDialog::createVideoPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesTVDeviceVideo (frame, name);
+  return new KPlayerPropertiesTVDeviceVideo (frame, name.utf8());
 }
 
 KPlayerPropertiesAdvanced* KPlayerTVDevicePropertiesDialog::createAdvancedPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesTVDeviceAdvanced (frame, name);
+  return new KPlayerPropertiesTVDeviceAdvanced (frame, name.utf8());
 }
 
 KPlayerDVBDevicePropertiesDialog::~KPlayerDVBDevicePropertiesDialog (void)
@@ -312,17 +312,17 @@ void KPlayerDVBDevicePropertiesDialog::setupMedia (const KURL& url)
 
 KPlayerPropertiesGeneral* KPlayerDVBDevicePropertiesDialog::createGeneralPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDVBDeviceGeneral (frame, name);
+  return new KPlayerPropertiesDVBDeviceGeneral (frame, name.utf8());
 }
 
 KPlayerPropertiesAudio* KPlayerDVBDevicePropertiesDialog::createAudioPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDVBDeviceAudio (frame, name);
+  return new KPlayerPropertiesDVBDeviceAudio (frame, name.utf8());
 }
 
 KPlayerPropertiesVideo* KPlayerDVBDevicePropertiesDialog::createVideoPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDVBDeviceVideo (frame, name);
+  return new KPlayerPropertiesDVBDeviceVideo (frame, name.utf8());
 }
 
 KPlayerDiskTrackPropertiesDialog::~KPlayerDiskTrackPropertiesDialog (void)
@@ -342,32 +342,32 @@ void KPlayerDiskTrackPropertiesDialog::setupMedia (const KURL& url)
 
 KPlayerPropertiesGeneral* KPlayerDiskTrackPropertiesDialog::createGeneralPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDiskTrackGeneral (frame, name);
+  return new KPlayerPropertiesDiskTrackGeneral (frame, name.utf8());
 }
 
 KPlayerPropertiesSize* KPlayerDiskTrackPropertiesDialog::createSizePage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesTrackSize (frame, name);
+  return new KPlayerPropertiesTrackSize (frame, name.utf8());
 }
 
 KPlayerPropertiesSubtitles* KPlayerDiskTrackPropertiesDialog::createSubtitlesPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesDiskTrackSubtitles (frame, name);
+  return new KPlayerPropertiesDiskTrackSubtitles (frame, name.utf8());
 }
 
 KPlayerPropertiesAudio* KPlayerDiskTrackPropertiesDialog::createAudioPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesTrackAudio (frame, name);
+  return new KPlayerPropertiesTrackAudio (frame, name.utf8());
 }
 
 KPlayerPropertiesVideo* KPlayerDiskTrackPropertiesDialog::createVideoPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesTrackVideo (frame, name);
+  return new KPlayerPropertiesTrackVideo (frame, name.utf8());
 }
 
 KPlayerPropertiesAdvanced* KPlayerDiskTrackPropertiesDialog::createAdvancedPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesTrackAdvanced (frame, name);
+  return new KPlayerPropertiesTrackAdvanced (frame, name.utf8());
 }
 
 KPlayerChannelPropertiesDialog::~KPlayerChannelPropertiesDialog (void)
@@ -379,12 +379,12 @@ KPlayerChannelPropertiesDialog::~KPlayerChannelPropertiesDialog (void)
 
 KPlayerPropertiesGeneral* KPlayerChannelPropertiesDialog::createGeneralPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesChannelGeneral (frame, name);
+  return new KPlayerPropertiesChannelGeneral (frame, name.utf8());
 }
 
 KPlayerPropertiesSubtitles* KPlayerChannelPropertiesDialog::createSubtitlesPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesChannelSubtitles (frame, name);
+  return new KPlayerPropertiesChannelSubtitles (frame, name.utf8());
 }
 
 KPlayerItemPropertiesDialog::~KPlayerItemPropertiesDialog (void)
@@ -396,17 +396,17 @@ KPlayerItemPropertiesDialog::~KPlayerItemPropertiesDialog (void)
 
 KPlayerPropertiesGeneral* KPlayerItemPropertiesDialog::createGeneralPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesItemGeneral (frame, name);
+  return new KPlayerPropertiesItemGeneral (frame, name.utf8());
 }
 
 KPlayerPropertiesSubtitles* KPlayerItemPropertiesDialog::createSubtitlesPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesItemSubtitles (frame, name);
+  return new KPlayerPropertiesItemSubtitles (frame, name.utf8());
 }
 
 KPlayerPropertiesAdvanced* KPlayerItemPropertiesDialog::createAdvancedPage (QFrame* frame, const QString& name)
 {
-  return new KPlayerPropertiesItemAdvanced (frame, name);
+  return new KPlayerPropertiesItemAdvanced (frame, name.utf8());
 }
 
 KPlayerPropertiesGeneral::KPlayerPropertiesGeneral (QWidget* parent, const char* name)

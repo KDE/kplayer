@@ -182,7 +182,7 @@ void KPlayerActionList::unplug (void)
 
 void KPlayerActionList::updateAction (KAction* action)
 {
-  QString text (i18n(action -> text()));
+  QString text (i18n(action -> text().utf8()));
   action -> setStatusText (m_status.arg (text));
   action -> setWhatsThis (m_whatsthis.arg (text));
   action -> setText (m_text.arg (text));
@@ -277,7 +277,7 @@ KPlayerToggleActionList::~KPlayerToggleActionList()
 void KPlayerToggleActionList::updateAction (KAction* action)
 {
   bool on = m_states [action -> text()];
-  QString text (i18n(action -> text()));
+  QString text (i18n(action -> text().utf8()));
   action -> setStatusText ((on ? m_on_status : m_status).arg (text));
   action -> setWhatsThis ((on ? m_on_whatsthis : m_whatsthis).arg (text));
   action -> setText ((on ? m_on_text : m_text).arg (text));
@@ -331,7 +331,7 @@ QString languageName (int id, QString language)
       language = I18N_NOOP("Norwegian");
     else if ( ! name.isEmpty() )
       language = name;
-    return i18n(language);
+    return i18n(language.utf8());
   }
   return locname;
 }

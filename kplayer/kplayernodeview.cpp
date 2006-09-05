@@ -2346,7 +2346,7 @@ int KPlayerListView::setupColumn (const QString& name)
   insertAttribute (m_attribute_names, name);
   int index = attributeNames().findIndex (name);
   const QString& caption (KPlayerMedia::info (name) -> caption());
-  int section = addColumn (caption.isEmpty() ? i18n(name) : caption);
+  int section = addColumn (caption.isEmpty() ? i18n(name.utf8()) : caption);
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << " +" << name << " " << index << "/" << section << "\n";
 #endif
