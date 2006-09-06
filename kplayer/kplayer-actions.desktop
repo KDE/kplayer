@@ -6,6 +6,7 @@ Encoding=UTF8
 [Desktop Action AddToNewPlaylist]
 Name=Add to new playlist
 Name[et]=Lisa uude esitusnimekirja
+Name[ga]=Cuir le seinmliosta nua
 Name[pt]=Adicionar a uma lista nova
 Name[pt_BR]=Adicionar a uma lista nova
 Icon=kplayer
