@@ -372,11 +372,17 @@ bool KPlayerSettings::setInitialDisplaySize (void)
 
 QSize KPlayerSettings::constrainSize (QSize size) const
 {
+#ifdef DEBUG_KPLAYER_SETTINGS
+  kdDebugTime() << "Settings::constrainSize " << size.width() << "x" << size.height() << "\n";
+#endif
   return adjustSize (size, size.width() * aspect().height() > size.height() * aspect().width());
 }
 
 QSize KPlayerSettings::adjustSize (QSize size, bool horizontally) const
 {
+#ifdef DEBUG_KPLAYER_SETTINGS
+  kdDebugTime() << "Settings::adjustSize " << size.width() << "x" << size.height() << " " << horizontally << "\n";
+#endif
   if ( maintainAspect() && ! aspect().isEmpty() && ! size.isEmpty() )
   {
     if ( horizontally )
@@ -384,6 +390,9 @@ QSize KPlayerSettings::adjustSize (QSize size, bool horizontally) const
     else
       size.setHeight (size.width() * aspect().height() / aspect().width());
   }
+#ifdef DEBUG_KPLAYER_SETTINGS
+  kdDebugTime() << "Settings::adjustSize " << size.width() << "x" << size.height() << "\n";
+#endif
   return size;
 }
 

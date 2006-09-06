@@ -365,9 +365,12 @@ bool KPlayerPlaylist::checkUrls (const KURL::List& urls)
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "KPlayerPlaylist::checkUrls\n";
 #endif
-  if ( ! urls.isEmpty() )
+  if ( urls.isEmpty() )
     return false;
   const KURL& url (urls.first());
+#ifdef DEBUG_KPLAYER_PLAYLIST
+  kdDebugTime() << " URL    " << url.url() << "\n";
+#endif
   if ( urls.count() == 1 && url.path().isEmpty() && url.host().isEmpty() )
     return false;
   return true;

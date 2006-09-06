@@ -33,7 +33,7 @@
 #include <qwhatsthis.h>
 
 #ifdef DEBUG
-//#define DEBUG_KPLAYER_RESIZING
+#define DEBUG_KPLAYER_RESIZING
 #define DEBUG_KPLAYER_WINDOW
 #define DEBUG_KPLAYER_NOTIFY_KEY
 //#define DEBUG_KPLAYER_NOTIFY_MOUSE

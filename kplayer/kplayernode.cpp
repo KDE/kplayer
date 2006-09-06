@@ -2907,7 +2907,9 @@ KPlayerNodeList KPlayerNodeList::fromUrlList (const KURL::List& urls)
       if ( group )
         node = KPlayerNode::getNodeByUrl (url);
     }
-    if ( ! node )
+    if ( node )
+      node -> reference();
+    else
       node = KPlayerNode::root() -> temporaryNode() -> temporaryItem (url.url());
     list.append (node);
     ++ iterator;

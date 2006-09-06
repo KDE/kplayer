@@ -3825,7 +3825,12 @@ void KPlayerItemProperties::setupMeta (void)
             if ( key == "Resolution" )
               key = "Video Size";
             if ( ! has (key) )
+            {
+#ifdef DEBUG_KPLAYER_PROPERTIES
+              kdDebugTime() << " Extracted size " << key << " " << item.value().toSize().width() << "x" << item.value().toSize().height() << "\n";
+#endif
               setSize (key, item.value().toSize());
+            }
           }
           else if ( item.type() != QVariant::Bool )
             importMeta (key, item.value().toString());
