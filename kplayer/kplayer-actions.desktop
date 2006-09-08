@@ -5,6 +5,7 @@ Encoding=UTF8
 
 [Desktop Action AddToNewPlaylist]
 Name=Add to new playlist
+Name[el]=Προσθήκη σε νέα λίστα αναπαραγωγής
 Name[et]=Lisa uude esitusnimekirja
 Name[ga]=Cuir le seinmliosta nua
 Name[pt]=Adicionar a uma lista nova
