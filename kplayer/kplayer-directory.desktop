@@ -5,6 +5,7 @@ Encoding=UTF8
 
 [Desktop Action AddToPlaylists]
 Name=Add to playlists
+Name[bg]=Добавяне към списъци
 Name[el]=Προσθήκη στις λίστες αναπαραγωγής
 Name[et]=Lisa esitusnimekirjadesse
 Name[ga]=Cuir le seinmliostaí
@@ -15,6 +16,7 @@ Exec=kplayer --add-to-playlists %U
 
 [Desktop Action AddToCollection]
 Name=Add to collection
+Name[bg]=Добавяне към колекция
 Name[el]=Προσθήκη στη συλλογή
 Name[et]=Lisa kogusse
 Name[ga]=Cuir le bailiúchán

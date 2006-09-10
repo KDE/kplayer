@@ -6,6 +6,7 @@ X-KDE-Priority=TopLevel
 
 [Desktop Action Play]
 Name=Play
+Name[bg]=Изпълнение
 Name[br]=Seniñ
 Name[el]=Αναπαραγωγή
 Name[et]=Esita
@@ -17,6 +18,7 @@ Exec=kplayer %U
 
 [Desktop Action Queue]
 Name=Queue
+Name[bg]=На опашката
 Name[br]=Lost
 Name[el]=Σε αναμονή
 Name[et]=Järjekorda
