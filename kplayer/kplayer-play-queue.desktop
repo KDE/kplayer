@@ -13,7 +13,7 @@ Name[et]=Esita
 Name[ga]=Seinn
 Name[it]=Riproduci
 Name[pt]=Tocar
-Name[pt_BR]=Tocar
+Name[pt_BR]=Reproduzir
 Icon=kplayer
 Exec=kplayer %U
 

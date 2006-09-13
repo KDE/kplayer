@@ -11,6 +11,6 @@ Name[et]=Lisa uude esitusnimekirja
 Name[ga]=Cuir le seinmliosta nua
 Name[it]=Aggiungi a una nuova scaletta
 Name[pt]=Adicionar a uma lista nova
-Name[pt_BR]=Adicionar a uma lista nova
+Name[pt_BR]=Adicionar a uma nova Lista de Reprodução
 Icon=kplayer
 Exec=kplayer --add-to-new-playlist %U

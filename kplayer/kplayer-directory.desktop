@@ -11,7 +11,7 @@ Name[et]=Lisa esitusnimekirjadesse
 Name[ga]=Cuir le seinmliostaí
 Name[it]=Aggiungi alle scalette
 Name[pt]=Adicionar à lista de reprodução
-Name[pt_BR]=Adicionar à lista de reprodução
+Name[pt_BR]=Adicionar à Lista de Reprodução
 Icon=kplayer
 Exec=kplayer --add-to-playlists %U
 
@@ -23,6 +23,6 @@ Name[et]=Lisa kogusse
 Name[ga]=Cuir le bailiúchán
 Name[it]=Aggiungi alla raccolta
 Name[pt]=Adicionar à colecção
-Name[pt_BR]=Adicionar à colecção
+Name[pt_BR]=Adicionar à coleção
 Icon=kplayer
 Exec=kplayer --add-to-collection %U

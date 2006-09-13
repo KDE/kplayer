@@ -11,7 +11,7 @@ Name[et]=Esita järgmisena
 Name[ga]=Seinn an chéad cheann eile
 Name[it]=Prossimo da riprodurre
 Name[pt]=Tocar o seguinte
-Name[pt_BR]=Tocar o seguinte
+Name[pt_BR]=Reproduzir próximo
 Icon=kplayer
 Exec=kplayer --play-next %U
 
@@ -23,6 +23,6 @@ Name[et]=Järgmisena järjekorda
 Name[ga]=Ciúáil an chéad cheann eile
 Name[it]=Prossimo da mettere in coda
 Name[pt]=Seguinte em espera
-Name[pt_BR]=Seguinte em espera
+Name[pt_BR]=Próximo em espera
 Icon=kplayer
 Exec=kplayer --queue-next %U
