@@ -14,5 +14,6 @@ Name[it]=Aggiungi a una nuova scaletta
 Name[ja]=新規プレイリストに追加
 Name[pt]=Adicionar a uma lista nova
 Name[pt_BR]=Adicionar a uma nova Lista de Reprodução
+Name[sv]=Lägg till i ny spellista
 Icon=kplayer
 Exec=kplayer --add-to-new-playlist %U

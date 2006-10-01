@@ -14,6 +14,7 @@ Name[it]=Prossimo da riprodurre
 Name[ja]=次に再生
 Name[pt]=Tocar o seguinte
 Name[pt_BR]=Reproduzir próximo
+Name[sv]=Spela nästa
 Icon=kplayer
 Exec=kplayer --play-next %U
 
@@ -28,5 +29,6 @@ Name[it]=Prossimo da mettere in coda
 Name[ja]=次にキュー
 Name[pt]=Seguinte em espera
 Name[pt_BR]=Próximo em espera
+Name[sv]=Köa nästa
 Icon=kplayer
 Exec=kplayer --queue-next %U
