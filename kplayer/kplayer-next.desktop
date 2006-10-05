@@ -6,6 +6,7 @@ Encoding=UTF8
 [Desktop Action PlayNext]
 Name=Play next
 Name[bg]=Последващо изпълнение
+Name[da]=Spil næste
 Name[el]=Αναπαραγωγή επόμενου
 Name[et]=Esita järgmisena
 Name[fr]=Jouer le morceau suivant
@@ -21,6 +22,7 @@ Exec=kplayer --play-next %U
 [Desktop Action QueueNext]
 Name=Queue next
 Name[bg]=На опашката
+Name[da]=Sæt næste i kø
 Name[el]=Σε αναμονή του επόμενου
 Name[et]=Järgmisena järjekorda
 Name[fr]=Mettre en file d'attente
