@@ -6,6 +6,7 @@ Encoding=UTF8
 [Desktop Action AddToNewPlaylist]
 Name=Add to new playlist
 Name[bg]=Добавяне към нов списък
+Name[cs]=Přidat do nového seznamu skladeb
 Name[da]=Tilføj til ny spilleliste
 Name[el]=Προσθήκη σε νέα λίστα αναπαραγωγής
 Name[et]=Lisa uude esitusnimekirja
