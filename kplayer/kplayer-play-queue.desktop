@@ -19,6 +19,7 @@ Name[ja]=再生
 Name[pt]=Tocar
 Name[pt_BR]=Reproduzir
 Name[sv]=Spela
+Name[tr]=Oynat
 Icon=kplayer
 Exec=kplayer %U
 
@@ -37,5 +38,6 @@ Name[ja]=キュー
 Name[pt]=Fila
 Name[pt_BR]=Fila
 Name[sv]=Köa
+Name[tr]=Sıraya ekle
 Icon=kplayer
 Exec=kplayer --queue %U
