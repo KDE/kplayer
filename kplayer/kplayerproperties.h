@@ -2310,6 +2310,9 @@ public:
   /** Returns the type property for the given ID. */
   QString type (const QString& id) const;
 
+  /** Returns the MSF property for the given ID. */
+  float msf (const QString& id) const;
+
   /** Returns the hidden property for the given ID. */
   bool hidden (const QString& id) const;
   /** Sets the hidden property for the given ID. */
@@ -2362,8 +2365,7 @@ public:
     { return getSizeOption ("Display Size"); }
   bool hasDisplaySize (void) const
     { return has ("Display Size"); }
-  void setDisplaySize (const QSize& size, int option)
-    { setSize ("Display Size", size, option); }
+  virtual void setDisplaySize (const QSize& size, int option);
   void resetDisplaySize (void)
     { reset ("Display Size"); }
   /** Display size as string. */
@@ -2371,14 +2373,10 @@ public:
     { return asString ("Display Size"); }
   /** Display width as string. */
   QString displayWidthString (void) const
-  {
-    return hasDisplaySize() ? QString::number (displaySize().width()) : QString::null;
-  }
+    { return hasDisplaySize() ? QString::number (getSize ("Display Size").width()) : QString::null; }
   /** Display height as string. */
   QString displayHeightString (void) const
-  {
-    return hasDisplaySize() ? QString::number (displaySize().height()) : QString::null;
-  }
+    { return hasDisplaySize() ? QString::number (getSize ("Display Size").height()) : QString::null; }
 
   const QString& channelList (void) const
     { return getString ("Channel List"); }
@@ -2817,6 +2815,8 @@ public:
 
   /** Returns the display size based on the option and the original size. */
   virtual QSize getDisplaySize (const QString& key) const;
+  /** Sets the display size and option. */
+  virtual void setDisplaySize (const QSize& size, int option);
 
   /** Returns track ID option. */
   int getTrackOption (const QString& key) const;
@@ -3280,6 +3280,14 @@ public:
     { return setBooleanOption ("Autoload Subtitles", value); }
   void resetSubtitleAutoload (void)
     { reset ("Autoload Subtitles"); }
+
+  /** Resets the meta info timer. */
+  static void resetMetaInfoTimer (void)
+    { m_meta_info_timer = 0; }
+
+protected:
+  /** Timer that prevents wasting too much time on getting meta information. */
+  static int m_meta_info_timer;
 };
 
 #ifdef DEBUG

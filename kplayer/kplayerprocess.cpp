@@ -131,7 +131,7 @@ void KPlayerLineOutputProcess::slotReceivedStderr (KProcess* proc, char* str, in
     receivedOutput (proc, str, len, m_stderr_buffer, m_stderr_buffer_length, m_stderr_line_length, false);
 }
 
-void KPlayerLineOutputProcess::receivedOutput (KProcess* proc, char* str, int len, char* buf, int blen, int llen, bool stdout)
+void KPlayerLineOutputProcess::receivedOutput (KProcess* proc, char* str, int len, char* buf, int blen, int llen, bool bstdout)
 {
   static int avlen = 0;
   static char* av = 0;
@@ -159,7 +159,7 @@ void KPlayerLineOutputProcess::receivedOutput (KProcess* proc, char* str, int le
       kdDebugTime() << "new buffer length: " << blen << "\n";
 #endif
       buf = new char [blen];
-      if ( stdout )
+      if ( bstdout )
       {
         m_stdout_buffer = buf;
         m_stdout_buffer_length = blen;
@@ -177,7 +177,7 @@ void KPlayerLineOutputProcess::receivedOutput (KProcess* proc, char* str, int le
     {
       memcpy (buf + llen, str, eol - str);
       llen += eol - str;
-      if ( stdout )
+      if ( bstdout )
         m_stdout_line_length = llen;
       else
         m_stderr_line_length = llen;
@@ -190,7 +190,7 @@ void KPlayerLineOutputProcess::receivedOutput (KProcess* proc, char* str, int le
 #ifdef DEBUG_KPLAYER_LINEOUT
       kdDebugTime() << "Sending AV Buffer On Pause: '" << av << "'\n";
 #endif
-      if ( stdout )
+      if ( bstdout )
         emit receivedStdoutLine (this, av, strlen (av) - 1);
       else
         emit receivedStderrLine (this, av, strlen (av) - 1);
@@ -213,7 +213,7 @@ void KPlayerLineOutputProcess::receivedOutput (KProcess* proc, char* str, int le
       kdDebugTime() << "AV Buffer: '" << av << "'\n";
 #endif
     }
-    else if ( stdout )
+    else if ( bstdout )
       emit receivedStdoutLine (this, buf, llen); // , *cr == '\r' ? CR : LF
     else
       emit receivedStderrLine (this, buf, llen); // , *cr == '\r' ? CR : LF
@@ -226,7 +226,7 @@ void KPlayerLineOutputProcess::receivedOutput (KProcess* proc, char* str, int le
     kdDebugTime() << "Buffer: '" << buf << "'\n";
 #endif
     llen = 0;
-    if ( stdout )
+    if ( bstdout )
       m_stdout_line_length = llen;
     else
       m_stderr_line_length = llen;
@@ -238,7 +238,7 @@ void KPlayerLineOutputProcess::receivedOutput (KProcess* proc, char* str, int le
 #ifdef DEBUG_KPLAYER_LINEOUT
     kdDebugTime() << "Sending AV Buffer: '" << av << "'\n";
 #endif
-    if ( stdout )
+    if ( bstdout )
       emit receivedStdoutLine (this, av, strlen (av) - 1);
     else
       emit receivedStderrLine (this, av, strlen (av) - 1);
@@ -499,7 +499,7 @@ void KPlayerProcess::start (void)
       driver = "xvmc:ck=set" + driver.mid (4);
     else if ( driver.startsWith ("xv") )
       driver = "xv:ck=set" + driver.mid (2);
-    *m_player << "-vo" << driver << "-colorkey" << "0x000000";
+    *m_player << "-vo" << driver << "-colorkey" << "0x010101";
   }
   driver = properties() -> audioDriverString();
   if ( ! driver.isEmpty() )
@@ -691,7 +691,7 @@ bool KPlayerProcess::run (KPlayerLineOutputProcess* player)
     *player << "-idx";
   else if ( properties() -> buildNewIndex() == 2 )
     *player << "-forceidx";
-  *player << "-noquiet" << "-identify";
+  *player << "-noquiet" << "-msglevel" << "identify=4";
   if ( ! properties() -> commandLine().isEmpty() )
     *player << QStringList::split (QChar (' '), properties() -> commandLine());
   codec = properties() -> deviceSetting();
@@ -1641,10 +1641,7 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
     {
       m_info_available = true;
       if ( ! m_quit )
-      {
         emit infoAvailable();
-        properties() -> commit();
-      }
     }
     if ( properties() -> hasVideo() && (! hadVideo || size != properties() -> originalSize()) )
       m_size_sent = false;
@@ -1923,7 +1920,6 @@ void KPlayerProcess::receivedHelperLine (KPlayerLineOutputProcess* proc, char* s
     m_info_available = true;
     if ( ! m_kill )
       emit infoAvailable();
-    properties() -> commit();
   }
   if ( m_helper_seek == 1 && properties() -> hasLength() )
     m_helper_seek_count = 9;

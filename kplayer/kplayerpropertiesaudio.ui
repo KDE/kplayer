@@ -465,7 +465,7 @@
                         </widget>
                         <widget class="QLabel" row="5" column="2">
                             <property name="name">
-                                <cstring>l_khz</cstring>
+                                <cstring>l_hz</cstring>
                             </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
@@ -476,7 +476,7 @@
                                 </sizepolicy>
                             </property>
                             <property name="text">
-                                <string>kHz</string>
+                                <string>Hz</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignLeft</set>

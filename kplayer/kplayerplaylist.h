@@ -26,7 +26,7 @@
 /**The playlist combobox widget.
   *@author kiriuja
   */
-class KPlayerPlaylistCombobox : public KComboBox
+class KPlayerPlaylistCombobox : public QComboBox
 {
   Q_OBJECT
 
@@ -45,13 +45,12 @@ public:
   void setPopupMenu (QPopupMenu* menu)
     { m_popup = menu; }
 
-  /** Renames the item with the given index to the given name. */
-  void renameItem (int index, const QString& name);
-
   /** The size hint. */
   virtual QSize sizeHint() const;
   /** The minimum size hint. */
   virtual QSize minimumSizeHint() const;
+
+  virtual void setCurrentItem (int index);
 
 protected:
   /** Displays the right click popup menu. */
@@ -276,6 +275,8 @@ protected:
   KPlayerDevicesActionList* m_devices;
   /** Playlist add action list. */
   KPlayerContainerActionList* m_playlists_add;
+  /** Play requested indicator. */
+  bool m_play_requested;
 };
 
 #endif

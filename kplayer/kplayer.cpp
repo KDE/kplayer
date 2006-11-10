@@ -53,6 +53,7 @@
 
 //void KPlayerX11SetInputFocus (uint id);
 void KPlayerX11DiscardConfigureEvents (uint id);
+void KPlayerX11GetKeyboardMouseState (uint id);
 //void KPlayerX11SendConfigureEvent (uint id, int x, int y, int w, int h);
 
 #define ID_STATUS_MSG   1
@@ -272,15 +273,15 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
         << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
 #endif
       break;
-    case QEvent::ContextMenu:
-      kPlayerSettings() -> setControl (((QContextMenuEvent*) event) -> state() & Qt::ControlButton);
-      kPlayerSettings() -> setShift (((QContextMenuEvent*) event) -> state() & Qt::ShiftButton);
 #ifdef DEBUG_KPLAYER_NOTIFY_MENU
+    case QEvent::ContextMenu:
+      //kPlayerSettings() -> setControl (((QContextMenuEvent*) event) -> state() & Qt::ControlButton);
+      //kPlayerSettings() -> setShift (((QContextMenuEvent*) event) -> state() & Qt::ShiftButton);
       kdDebugTime() << "KPlayerApplication::notify: event type " << event -> type()
         << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
         << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
-#endif
       break;
+#endif
 #ifdef DEBUG_KPLAYER_NOTIFY_DRAG
     case QEvent::DragEnter:
     case QEvent::DragMove:
@@ -442,11 +443,11 @@ KPlayer::KPlayer (QWidget *parent, const char *name) : KMainWindow (parent, name
   connect (library() -> library() -> columnActionList(), SIGNAL (updating (KPlayerActionList*)),
     SLOT (actionListUpdating (KPlayerActionList*)));
   connect (library() -> library() -> columnActionList(), SIGNAL (updated (KPlayerActionList*)),
-    SLOT (actionListUpdated (KPlayerActionList*)));
+    SLOT (libraryActionListUpdated (KPlayerActionList*)));
   connect (library() -> library() -> editActionList(), SIGNAL (updating (KPlayerActionList*)),
     SLOT (actionListUpdating (KPlayerActionList*)));
   connect (library() -> library() -> editActionList(), SIGNAL (updated (KPlayerActionList*)),
-    SLOT (actionListUpdated (KPlayerActionList*)));
+    SLOT (libraryActionListUpdated (KPlayerActionList*)));
   connect (library() -> library() -> goToActionList(), SIGNAL (updating (KPlayerActionList*)),
     SLOT (actionListUpdating (KPlayerActionList*)));
   connect (library() -> library() -> goToActionList(), SIGNAL (updated (KPlayerActionList*)),
@@ -488,7 +489,7 @@ KPlayer::KPlayer (QWidget *parent, const char *name) : KMainWindow (parent, name
   connect (process(), SIGNAL (messageReceived (QString)), SLOT (playerMessageReceived (QString)));
   connect (process(), SIGNAL (errorDetected()), SLOT (playerErrorDetected()));
   connect (configuration(), SIGNAL (updated()), SLOT (refreshSettings()));
-  connect (kPlayerWorkspace(), SIGNAL (contextMenu(QContextMenuEvent*)), SLOT (contextMenuEvent(QContextMenuEvent*)));
+  connect (kPlayerWorkspace(), SIGNAL (contextMenu(const QPoint&)), SLOT (contextMenu(const QPoint&)));
   setCentralWidget (kPlayerWorkspace());
   initStatusBar();
   initActions();
@@ -616,8 +617,10 @@ void KPlayer::initActions (void)
   action = actionCollection() -> action ("help_report_bug");
   if ( action )
   {
-    action -> setStatusText (i18n("Opens the bug report window"));
-    action -> setWhatsThis (i18n("Report Bug command opens a dialog that allows you to send a bug report to the KPlayer developer. However, the recommended way to report a bug is to collect information using this dialog and then submit it following the instructions in the Bug reporting micro-HOWTO."));
+    disconnect (action, SIGNAL(activated()), 0, 0);
+    connect (action, SIGNAL(activated()), SLOT(helpReportBug()));
+    action -> setStatusText (i18n("Opens the manual section on bug reporting"));
+    action -> setWhatsThis (i18n("Report Bug command opens the section of KPlayer user manual that explains how to report a bug in KPlayer, including all the information that may be helpful in finding and fixing the bug."));
   }
   action = actionCollection() -> action ("help_about_app");
   if ( action )
@@ -681,8 +684,8 @@ void KPlayer::saveOptions (void)
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Saving options\n";
 #endif
-  saveMainWindowSettings (config(), "General Options");
   config() -> deleteGroup ("General Options");
+  saveMainWindowSettings (config(), "General Options");
   config() -> setGroup ("General Options");
   Qt::Dock dock = DockTornOff;
   int index = 0, offset = 0;
@@ -760,18 +763,19 @@ void KPlayer::readOptions (void)
 #endif
   applyMainWindowSettings (config(), "General Options");
   config() -> setGroup ("General Options");
+  QRect available (availableGeometry());
   int width = config() -> readNumEntry ("Main Window Width", 500);
-  if ( width > QApplication::desktop() -> availableGeometry().width() )
-    width = QApplication::desktop() -> availableGeometry().width();
+  if ( width > available.width() )
+    width = available.width();
   int height = config() -> readNumEntry ("Main Window Height", 350);
-  if ( height > QApplication::desktop() -> availableGeometry().height() )
-    height = QApplication::desktop() -> availableGeometry().height();
+  if ( height > available.height() )
+    height = available.height();
   int x = config() -> readNumEntry ("Main Window Left", -1);
-  if ( x + width > QApplication::desktop() -> availableGeometry().width() )
-    x = QApplication::desktop() -> availableGeometry().width() - width;
+  if ( x + width > available.width() )
+    x = available.width() - width;
   int y = config() -> readNumEntry ("Main Window Top", -1);
-  if ( y + height > QApplication::desktop() -> availableGeometry().height() )
-    y = QApplication::desktop() -> availableGeometry().height() - height;
+  if ( y + height > available.height() )
+    y = available.height() - height;
   if ( x >= 0 && y >= 0 )
     move (x, y);
   if ( width >= minimumWidth() && height >= minimumHeight() )
@@ -796,11 +800,9 @@ void KPlayer::readOptions (void)
   }
   moveDockWindow (log(), dock, newline, index, offset);
   if ( ! docked )
-  {
     log() -> undock();
-    if ( width > 0 && height > 0 )
-      log() -> setGeometry (left, top, width, height);
-  }
+  if ( width > 0 && height > 0 )
+    log() -> setGeometry (left, top, width, height);
   dock = (Qt::Dock) config() -> readNumEntry ("Playlist Dock", Qt::DockBottom);
   docked = config() -> readBoolEntry ("Playlist Docked", true);
   newline = config() -> readBoolEntry ("Playlist New Line", true);
@@ -808,8 +810,8 @@ void KPlayer::readOptions (void)
   offset = config() -> readNumEntry ("Playlist Offset", 0);
   left = config() -> readNumEntry ("Playlist Left", 0);
   top = config() -> readNumEntry ("Playlist Top", 0);
-  width = config() -> readNumEntry ("Playlist Width", 0);
-  height = config() -> readNumEntry ("Playlist Height", 0);
+  width = config() -> readNumEntry ("Playlist Width", 600);
+  height = config() -> readNumEntry ("Playlist Height", 300);
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Library dock " << dock << " " << index << " " << newline << " " << offset << " " << left << "x" << top << " " << width << "x" << height << "\n";
 #endif
@@ -820,11 +822,9 @@ void KPlayer::readOptions (void)
   }
   moveDockWindow (library(), dock, newline, index, offset);
   if ( ! docked )
-  {
     library() -> undock();
-    if ( width > 0 && height > 0 )
-      library() -> setGeometry (left, top, width, height);
-  }
+  if ( width > 0 && height > 0 )
+    library() -> setGeometry (left, top, width, height);
   m_menubar_normally_visible = config() -> readBoolEntry ("Menu Bar Normally Visible", m_menubar_normally_visible);
   m_menubar_fullscreen_visible = config() -> readBoolEntry ("Menu Bar FullScreen Visible", m_menubar_fullscreen_visible);
   showMenubar();
@@ -946,6 +946,15 @@ void KPlayer::actionListUpdated (KPlayerActionList* list)
   if ( has_actions )
     plugActionList (name, list -> actions());
   enableSubmenu (name, has_actions);
+}
+
+void KPlayer::libraryActionListUpdated (KPlayerActionList* list)
+{
+  bool has_actions = ! list -> isEmpty();
+  QString name (list -> name());
+  if ( has_actions )
+    plugActionList (name, list -> actions());
+  enableSubmenu (name, has_actions && library() -> isVisible());
 }
 
 void KPlayer::enableSubmenu (QMenuData* data, const QString& name, bool enable)
@@ -1075,6 +1084,7 @@ void KPlayer::start (void)
     << ", maximum size " << maximumWidth() << "x" << maximumHeight()
     << ", size " << width() << "x" << height() << "\n";
 #endif
+  KPlayerX11GetKeyboardMouseState (winId());
   KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
   if ( args -> count() > 0 )
   {
@@ -1113,9 +1123,8 @@ void KPlayer::start (void)
   return KMainWindow::event (ev);
 }*/
 
-void KPlayer::contextMenuEvent (QContextMenuEvent* event)
+void KPlayer::contextMenu (const QPoint& global_position)
 {
-  KMainWindow::contextMenuEvent (event);
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Main " << winId() << " wspace " << kPlayerWorkspace() -> winId()
     << " widget " << kPlayerWidget() -> winId() << "\n";
@@ -1123,7 +1132,14 @@ void KPlayer::contextMenuEvent (QContextMenuEvent* event)
   dumpObject (actionCollection(), 0);
 #endif
   QPopupMenu* popup = (QPopupMenu*) factory() -> container ("player_popup", this);
-  popup -> popup (event -> globalPos());
+  if ( popup )
+    popup -> popup (global_position);
+}
+
+void KPlayer::contextMenuEvent (QContextMenuEvent* event)
+{
+  KMainWindow::contextMenuEvent (event);
+  contextMenu (event -> globalPos());
   event -> accept();
 }
 
@@ -1410,6 +1426,11 @@ void KPlayer::settingsConfigure (void)
   KPlayerSettingsDialog (this).exec();
 }
 
+void KPlayer::helpReportBug (void)
+{
+  kapp -> invokeHelp ("howto-bug-reporting");
+}
+
 void KPlayer::playerStateChanged (KPlayerProcess::State state, KPlayerProcess::State previous)
 {
   static const QString stateMessages [4] = { i18n("Idle"), i18n("Running"), i18n("Playing"), i18n("Paused") };
@@ -1598,10 +1619,12 @@ void KPlayer::showEvent (QShowEvent* event)
 void KPlayer::windowActivationChange (bool old)
 {
   KMainWindow::windowActivationChange (old);
-#ifdef DEBUG_KPLAYER_WINDOW
   bool active = isActiveWindow();
+#ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Main window activation " << old << " -> " << active << "\n";
 #endif
+  if ( active )
+    KPlayerX11GetKeyboardMouseState (winId());
 /*if ( active && focusProxy() )
     KPlayerX11SetInputFocus (focusProxy() -> winId());
 #ifdef DEBUG_KPLAYER_WINDOW
@@ -1654,7 +1677,7 @@ void KPlayer::resizeEvent (QResizeEvent* event)
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "WiSize " << event -> oldSize(). width() << "x" << event -> oldSize(). height()
     << " => " << event -> size(). width() << "x" << event -> size(). height() << ", "
-    << maximized << " -> " << isMaximized() << "\n";
+    << " maximized  " << maximized << " -> " << isMaximized() << " spontaneous " << event -> spontaneous() << "\n";
   kdDebugTime() << "             Normal geometry " << m_normal_geometry.x() << "x" << m_normal_geometry.y()
     << " " << m_normal_geometry.width() << "x" << m_normal_geometry.height() << "\n";
 #endif
@@ -1663,8 +1686,8 @@ void KPlayer::resizeEvent (QResizeEvent* event)
 void KPlayer::setMinimumSize (int w, int h)
 {
   QSize prev (size()), msh (minimumSizeHint());
-#ifdef DEBUG_KPLAYER_WINDOW
-  kdDebugTime() << "Set minimum size " << w << "x" << h << " / " << msh.width() << "x" << msh.height() << "\n";
+#ifdef DEBUG_KPLAYER_RESIZING
+  kdDebugTime() << "Set minimum size " << w << "x" << h << " => " << msh.width() << "x" << msh.height() << "\n";
 #endif
   w = msh.width();
   h = msh.height();
@@ -1700,10 +1723,10 @@ QSize KPlayer::minimumSizeHint (void) const
       size.setWidth (x);
     size.setHeight (size.height() + that -> statusBar() -> minimumHeight());
   }
-#ifdef DEBUG_KPLAYER_WINDOW
-  //kdDebugTime() << "Minimum size hint " << size.width() << "x" << size.height() << "\n";
+#ifdef DEBUG_KPLAYER_RESIZING
+  kdDebugTime() << "Minimum size hint " << size.width() << "x" << size.height() << "\n";
 #endif
-  return size.boundedTo (QApplication::desktop() -> availableGeometry().size());
+  return size.boundedTo (availableGeometry().size());
 }
 
 void KPlayer::toFullScreen (void)
@@ -1944,104 +1967,86 @@ void KPlayer::zoom (void)
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "KPlayer::zoom\n";
 #endif
-  QSize msh (minimumSizeHint());
-  KMainWindow::setMinimumSize (msh.width(), msh.height());
+  QSize target (minimumSizeHint());
+  QRect available (availableGeometry());
+  KMainWindow::setMinimumSize (target.width(), target.height());
   do_zoom();
+  target = frameGeometry().size() + settings() -> displaySize().expandedTo (QSize (1, 1)) - centralWidget() -> size();
   Qt::Dock dock;
   int index, offset;
   bool newline;
   if ( ! log() -> isHidden() && getLocation (log(), dock, index, newline, offset)
-    && ((dock == Qt::DockLeft || dock == Qt::DockRight)
-      && frameGeometry().width() > QApplication::desktop() -> availableGeometry().width()
-    || (dock == Qt::DockTop || dock == Qt::DockBottom)
-      && frameGeometry().height() >= QApplication::desktop() -> availableGeometry().height()) )
-      //&& frameGeometry().height() > QApplication::desktop() -> availableGeometry().height()) )
+    && ((dock == Qt::DockLeft || dock == Qt::DockRight) && target.width() >= available.width()
+    || (dock == Qt::DockTop || dock == Qt::DockBottom) && target.height() >= available.height()) )
   {
 #ifdef DEBUG_KPLAYER_RESIZING
     kdDebugTime() << "Log dock " << dock << " " << index << " " << newline << " " << offset << " " << log() -> x() << "x" << log() -> y() << " " << log() -> width() << "x" << log() -> height() << "\n";
     kdDebugTime() << "Minimum log size " << log() -> minimumWidth() << "x" << log() -> minimumHeight() << "\n";
 #endif
-    if ( (dock == Qt::DockLeft || dock == Qt::DockRight) && log() -> width() - log() -> minimumWidth()
-      >= frameGeometry().width() - QApplication::desktop() -> availableGeometry().width() )
+    if ( (dock == Qt::DockLeft || dock == Qt::DockRight)
+      && log() -> width() - log() -> minimumWidth() > target.width() - available.width() )
     {
 #ifdef DEBUG_KPLAYER_RESIZING
-      kdDebugTime() << "New log width " << (log() -> width() - frameGeometry().width() + QApplication::desktop() -> availableGeometry().width()) << "\n";
+      kdDebugTime() << "New log width " << (log() -> width() - target.width() + available.width()) << "\n";
 #endif
-      log() -> setFixedExtentWidth (log() -> width() - frameGeometry().width() + QApplication::desktop() -> availableGeometry().width());
+      log() -> setFixedExtentWidth (log() -> width() - target.width() + available.width());
     }
-    else if ( (dock == Qt::DockTop || dock == Qt::DockBottom) && log() -> height() - log() -> minimumHeight()
-      > frameGeometry().height() - QApplication::desktop() -> availableGeometry().height() )
-      //>= frameGeometry().height() - QApplication::desktop() -> availableGeometry().height() )
+    else if ( (dock == Qt::DockTop || dock == Qt::DockBottom)
+      && log() -> height() - log() -> minimumHeight() > target.height() - available.height() )
     {
 #ifdef DEBUG_KPLAYER_RESIZING
-      kdDebugTime() << "New log height " << (log() -> height() - frameGeometry().height() + QApplication::desktop() -> availableGeometry().height() - 1) << "\n";
+      kdDebugTime() << "New log height " << (log() -> height() - target.height() + available.height() - 1) << "\n";
 #endif
-      log() -> setFixedExtentHeight (log() -> height() - frameGeometry().height() + QApplication::desktop() -> availableGeometry().height() - 1);
-      //log() -> setFixedExtentHeight (log() -> height() - frameGeometry().height() + QApplication::desktop() -> availableGeometry().height());
+      log() -> setFixedExtentHeight (log() -> height() - target.height() + available.height() - 1);
     }
     else if ( m_show_log )
       log() -> undock();
     else
       log() -> hide();
     do_zoom();
+    target = frameGeometry().size() + settings() -> displaySize().expandedTo (QSize (1, 1)) - centralWidget() -> size();
   }
   if ( ! library() -> isHidden() && getLocation (library(), dock, index, newline, offset)
-    && ((dock == Qt::DockLeft || dock == Qt::DockRight)
-      && frameGeometry().width() > QApplication::desktop() -> availableGeometry().width()
-    || (dock == Qt::DockTop || dock == Qt::DockBottom)
-      && frameGeometry().height() >= QApplication::desktop() -> availableGeometry().height()) )
-      //&& frameGeometry().height() > QApplication::desktop() -> availableGeometry().height()) )
+    && ((dock == Qt::DockLeft || dock == Qt::DockRight) && target.width() >= available.width()
+    || (dock == Qt::DockTop || dock == Qt::DockBottom) && target.height() >= available.height()) )
   {
 #ifdef DEBUG_KPLAYER_RESIZING
     kdDebugTime() << "Library dock " << dock << " " << index << " " << newline << " " << offset << " " << library() -> x() << "x" << library() -> y() << " " << library() -> width() << "x" << library() -> height() << "\n";
     kdDebugTime() << "Minimum library size " << library() -> minimumWidth() << "x" << library() -> minimumHeight() << "\n";
 #endif
-    if ( (dock == Qt::DockLeft || dock == Qt::DockRight) && library() -> width() - library() -> minimumWidth()
-      >= frameGeometry().width() - QApplication::desktop() -> availableGeometry().width() )
+    if ( (dock == Qt::DockLeft || dock == Qt::DockRight)
+      && library() -> width() - library() -> minimumWidth() > target.width() - available.width() )
     {
 #ifdef DEBUG_KPLAYER_RESIZING
-      kdDebugTime() << "New library width " << (library() -> width() - frameGeometry().width() + QApplication::desktop() -> availableGeometry().width()) << "\n";
+      kdDebugTime() << "New library width " << (library() -> width() - target.width() + available.width()) << "\n";
 #endif
-      library() -> setFixedExtentWidth (library() -> width() - frameGeometry().width() + QApplication::desktop() -> availableGeometry().width());
+      library() -> setFixedExtentWidth (library() -> width() - target.width() + available.width());
     }
-    else if ( (dock == Qt::DockTop || dock == Qt::DockBottom) && library() -> height() - library() -> minimumHeight()
-      > frameGeometry().height() - QApplication::desktop() -> availableGeometry().height() )
-      //>= frameGeometry().height() - QApplication::desktop() -> availableGeometry().height() )
+    else if ( (dock == Qt::DockTop || dock == Qt::DockBottom)
+      && library() -> height() - library() -> minimumHeight() > target.height() - available.height() )
+      //>= target.height() - available.height() )
     {
 #ifdef DEBUG_KPLAYER_RESIZING
-      kdDebugTime() << "New library height " << (library() -> height() - frameGeometry().height() + QApplication::desktop() -> availableGeometry().height() - 1) << "\n";
+      kdDebugTime() << "New library height " << (library() -> height() - target.height() + available.height() - 1) << "\n";
 #endif
-      library() -> setFixedExtentHeight (library() -> height() - frameGeometry().height() + QApplication::desktop() -> availableGeometry().height() - 1);
-      //library() -> setFixedExtentHeight (library() -> height() - frameGeometry().height() + QApplication::desktop() -> availableGeometry().height());
+      library() -> setFixedExtentHeight (library() -> height() - target.height() + available.height() - 1);
     }
     else if ( m_show_library )
       library() -> undock();
     else
       library() -> hide();
     do_zoom();
+    target = frameGeometry().size() + settings() -> displaySize().expandedTo (QSize (1, 1)) - centralWidget() -> size();
+  }
+  int i = 0;
+  while ( centralWidget() -> size() != settings() -> displaySize().expandedTo (QSize (1, 1)) && i ++ < 5 )
+  {
+    settings() -> setDisplaySize (settings() -> constrainSize (centralWidget() -> size()
+      + available.size() - frameGeometry().size() - QSize (1, 1)));
+    do_zoom();
   }
   m_show_log = m_show_library = false;
-  int xc = frameGeometry().right() - QApplication::desktop() -> availableGeometry().right();
-  int yc = frameGeometry().bottom() - QApplication::desktop() -> availableGeometry().bottom();
-  if ( xc > 0 || yc > 0 )
-  {
-    if ( xc <= 0 )
-      xc = x();
-    else if ( QApplication::desktop() -> availableGeometry().width() > frameGeometry().width() )
-      xc = QApplication::desktop() -> availableGeometry().right() - frameGeometry().width();
-    else
-      xc = QApplication::desktop() -> availableGeometry().left();
-    if ( yc <= 0 )
-      yc = y();
-    else if ( QApplication::desktop() -> availableGeometry().height() > frameGeometry().height() )
-      yc = QApplication::desktop() -> availableGeometry().bottom() - frameGeometry().height();
-    else
-      yc = QApplication::desktop() -> availableGeometry().top();
-#ifdef DEBUG_KPLAYER_RESIZING
-    kdDebugTime() << "Moving to " << xc << "x" << yc << "\n";
-#endif
-    move (xc, yc);
-  }
+  do_move (frameGeometry());
   m_previous_size = size();
   activateLayout();
 //KPlayerX11SendConfigureEvent (winId(), geometry().x(), geometry().y(), width(), height());
@@ -2058,6 +2063,26 @@ void KPlayer::zoom (void)
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Zoom done\n";
 #endif
+}
+
+void KPlayer::do_move (const QRect& frame)
+{
+  QRect available (availableGeometry());
+  bool xl = geometry().left() < available.left();
+  bool xr = frame.right() > available.right();
+  bool yt = frame.top() < available.top();
+  bool yb = frame.bottom() > available.bottom();
+  if ( xl || xr || yt || yb )
+  {
+    int xc = ! xl && ! xr ? x() : xr && available.width() > frame.width() ?  available.right() - frame.width()
+      : available.left();
+    int yc = ! yt && ! yb ? y() : yb && available.height() > frame.height() ?  available.bottom() - frame.height()
+      : available.top();
+#ifdef DEBUG_KPLAYER_RESIZING
+    kdDebugTime() << "Moving to " << xc << "x" << yc << "\n";
+#endif
+    move (xc, yc);
+  }
 }
 
 void KPlayer::activateLayout (void)
@@ -2077,12 +2102,20 @@ void KPlayer::activateLayout (void)
 
 void KPlayer::do_zoom (void)
 {
+  QRect available (availableGeometry());
   //if ( isMaximized() )
   //  showNormal();
   activateLayout();
-  QSize video (settings() -> displaySize().expandedTo (QSize(1, 1)));
+  QSize minimum (minimumSizeHint());
+  QSize video (settings() -> displaySize().expandedTo (QSize (1, 1)));
   QSize cwsize (centralWidget() -> size());
-  QSize target ((size() + video - cwsize).expandedTo (minimumSizeHint()));
+  QSize target (size() + video - cwsize);
+  if ( target.width() < minimum.width() || target.height() < minimum.height() )
+  {
+    settings() -> setDisplaySize (cwsize);
+    video = settings() -> displaySize().expandedTo (QSize (1, 1));
+    target = size();
+  }
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "Display " << video.width() << "x" << video.height() << "\n";
   kdDebugTime() << "             Window  " << geometry().x() << "x" << geometry().y() << " " << width() << "x" << height() << "\n";
@@ -2107,12 +2140,24 @@ void KPlayer::do_zoom (void)
   int i = 0;
   while ( target != size() && i ++ < 5 )
   {
+    cwsize = target - size();
+    QRect rect (frameGeometry());
+    rect.addCoords (0, 0, cwsize.width(), cwsize.height());
+    if ( rect.width() > available.width() || rect.height() > available.height() )
+      break;
+    do_move (rect);
     resize (target);
     //if ( isMaximized() )
     //  showNormal();
     activateLayout();
     cwsize = centralWidget() -> size();
-    target = (size() + video - cwsize).expandedTo (minimumSizeHint());
+    target = size() + video - cwsize;
+    if ( target.width() < minimum.width() || target.height() < minimum.height() )
+    {
+      settings() -> setDisplaySize (cwsize);
+      video = settings() -> displaySize().expandedTo (QSize (1, 1));
+      target = size();
+    }
 #ifdef DEBUG_KPLAYER_RESIZING
     kdDebugTime() << "Window  " << width() << "x" << height() << "\n";
     kdDebugTime() << "             WFrame  " << frameGeometry().width() << "x" << frameGeometry().height() << "\n";
@@ -2137,16 +2182,42 @@ void KPlayer::do_zoom (void)
 #ifdef DEBUG_KPLAYER_RESIZING
   if ( target != size() )
     kdDebugTime() << "Zoom unsuccessful\n";
-  kdDebugTime() << "Desktop " << QApplication::desktop() -> width() << "x" << QApplication::desktop() -> height() << "\n";
-  kdDebugTime() << "ScreenG " << QApplication::desktop() -> screenGeometry().x()
-    << "x" << QApplication::desktop() -> screenGeometry().y()
-    << " " << QApplication::desktop() -> screenGeometry().width()
-    << "x" << QApplication::desktop() -> screenGeometry().height() << "\n";
-  kdDebugTime() << "ScreenG " << QApplication::desktop() -> availableGeometry().x()
-    << "x" << QApplication::desktop() -> availableGeometry().y()
-    << " " << QApplication::desktop() -> availableGeometry().width()
-    << "x" << QApplication::desktop() -> availableGeometry().height() << "\n";
 #endif
+}
+
+QRect KPlayer::availableGeometry (void) const
+{
+  QRect rect;
+  if ( ! QApplication::desktop() -> isVirtualDesktop() )
+  {
+    rect = QApplication::desktop() -> availableGeometry();
+#ifdef DEBUG_KPLAYER_RESIZING
+      kdDebugTime() << "Screen " << QApplication::desktop() -> screenGeometry().x()
+        << "x" << QApplication::desktop() -> screenGeometry().y()
+        << " " << QApplication::desktop() -> screenGeometry().width()
+        << "x" << QApplication::desktop() -> screenGeometry().height() << "\n";
+#endif
+  }
+  else
+    for ( int i = 0; i < QApplication::desktop() -> numScreens(); i ++ )
+    {
+      rect |= QApplication::desktop() -> availableGeometry (i);
+#ifdef DEBUG_KPLAYER_RESIZING
+      kdDebugTime() << "Screen " << i << "  " << QApplication::desktop() -> screenGeometry (i).x()
+        << "x" << QApplication::desktop() -> screenGeometry (i).y()
+        << " " << QApplication::desktop() -> screenGeometry (i).width()
+        << "x" << QApplication::desktop() -> screenGeometry (i).height() << "\n";
+      kdDebugTime() << "Available " << QApplication::desktop() -> availableGeometry (i).x()
+        << "x" << QApplication::desktop() -> availableGeometry (i).y()
+        << " " << QApplication::desktop() -> availableGeometry (i).width()
+        << "x" << QApplication::desktop() -> availableGeometry (i).height() << "\n";
+#endif
+  }
+#ifdef DEBUG_KPLAYER_RESIZING
+  kdDebugTime() << "Desktop " << QApplication::desktop() -> width() << "x" << QApplication::desktop() -> height() << "\n";
+  kdDebugTime() << "Total available geometry " << rect.width() << "x" << rect.height() << "\n";
+#endif
+  return rect;
 }
 
 /*void KPlayer::barOrientationChanged (Orientation)

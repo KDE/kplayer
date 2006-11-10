@@ -107,7 +107,7 @@ KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
   if ( layout )
     layout -> insertSpacing (0, 6);
   KConfig* config = kPlayerConfig();
-  config -> setGroup ("General Options");
+  config -> setGroup ("Dialog Options");
   QString name (config -> readEntry ("Settings Dialog Page"));
   if ( ! name.isEmpty() )
   {
@@ -152,7 +152,7 @@ KPlayerSettingsDialog::~KPlayerSettingsDialog (void)
 {
   kPlayerEngine() -> getLists();
   KConfig* config = kPlayerConfig();
-  config -> setGroup ("General Options");
+  config -> setGroup ("Dialog Options");
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
   kdDebugTime() << "KPlayerSettingsDialog " << x() << "x" << y() << " " << width() << "x" << height() << " Hint " << sizeHint().width() << "x" << sizeHint().height() << "\n";
 #endif
@@ -180,7 +180,7 @@ KPlayerSettingsDialog::~KPlayerSettingsDialog (void)
     return;
   m_initial_move = true;
   KConfig* config = kPlayerConfig();
-  config -> setGroup ("General Options");
+  config -> setGroup ("Dialog Options");
   int x = config -> readNumEntry ("Settings Dialog Left", -1);
   int y = config -> readNumEntry ("Settings Dialog Top", -1);
   if ( x >= 0 && y >= 0 )
@@ -221,6 +221,9 @@ void KPlayerSettingsDialog::windowActivationChange (bool old)
 
 void KPlayerSettingsDialog::slotDefault (void)
 {
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsDialog::defaults\n";
+#endif
   if ( KMessageBox::warningYesNo (this, i18n("All configuration settings will be reset.\n\nAre you sure?"))
       != KMessageBox::Yes )
     return;
@@ -245,13 +248,21 @@ void KPlayerSettingsDialog::slotDefault (void)
 
 void KPlayerSettingsDialog::pageAboutToShow (QWidget* page)
 {
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsDialog::pageAboutToShow\n";
+#endif
   m_advanced -> refreshLists();
   QObject* object = page -> child (0, "QFrame");
   KConfig* config = kPlayerConfig();
-  config -> setGroup ("General Options");
+  config -> setGroup ("Dialog Options");
   QString name;
   if ( object )
+  {
     name = object -> name ("");
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+    kdDebugTime() << " Page   " << name << "\n";
+#endif
+  }
   if ( name.isEmpty() )
     config -> deleteEntry ("Settings Dialog Page");
   else
@@ -261,6 +272,9 @@ void KPlayerSettingsDialog::pageAboutToShow (QWidget* page)
 
 void KPlayerSettingsDialog::slotOk (void)
 {
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsDialog::OK\n";
+#endif
   slotApply();
   KDialogBase::slotOk();
 }
@@ -270,7 +284,7 @@ void dumpObject (const QObject* object, int indent, int depth = 20);
 void KPlayerSettingsDialog::slotApply (void)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
-  kdDebugTime() << "KPlayerSettingsDialog::slotApply\n";
+  kdDebugTime() << "KPlayerSettingsDialog::apply\n";
   dumpObject (this, 0);
 #endif
   m_advanced -> save();

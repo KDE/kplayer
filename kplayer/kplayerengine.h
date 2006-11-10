@@ -254,6 +254,8 @@ public:
 public slots:
   /** Handles workspace resized event. */
   void workspaceResized (void);
+  /** Handles workspace user resize event. */
+  void workspaceUserResize (void);
   /** Receives the updated signal from KPlayerSettings. Updates the settings. */
   void refreshSettings (void);
   /** Receives the updated signal from KPlayerProperties. Updates the settings. */

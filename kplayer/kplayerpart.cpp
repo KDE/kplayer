@@ -52,11 +52,11 @@ KPlayerPart::KPlayerPart (QWidget* wparent, const char* wname, QObject* parent, 
   m_toolbar_names << "progressToolBar" << "volumeToolBar";
   m_toolbar_actions << "settings_progress_toolbar" << "settings_volume_toolbar";*/
   KPlayerEngine::initialize (actionCollection(), wparent, wname);
-  KPlayerEngine::engine() -> configuration() -> setResizeAutomatically (false);
+//KPlayerEngine::engine() -> configuration() -> setResizeAutomatically (false);
   setInstance (KPlayerPartFactory::instance());
 //connect (kPlayerProcess(), SIGNAL (stateChanged(KPlayerProcess::State)), this, SLOT (playerStateChanged(KPlayerProcess::State)));
 //connect (kPlayerProcess(), SIGNAL (infoAvailable()), this, SLOT (playerInfoAvailable()));
-  connect (kPlayerWorkspace(), SIGNAL (contextMenu(QContextMenuEvent*)), this, SLOT (widgetContextMenu(QContextMenuEvent*)));
+  connect (kPlayerWorkspace(), SIGNAL (contextMenu(const QPoint&)), this, SLOT (widgetContextMenu(const QPoint&)));
   setWidget (kPlayerWorkspace());
   initActions();
   setXMLFile ("kplayerpartui.rc");
@@ -183,7 +183,7 @@ void KPlayerPart::saveOptions (void)
   kdDebugTime() << "Saving options\n";
 #endif
   KConfig* config = kPlayerConfig();
-  config -> setGroup ("General Options");
+  config -> setGroup ("Part Options");
   config -> writeEntry (QString (m_toolbar_names [0]) + " Part Visible", m_toolbar_visible [0]);
   config -> writeEntry (QString (m_toolbar_names [1]) + " Part Visible", m_toolbar_visible [1]);
 }
@@ -195,7 +195,7 @@ void KPlayerPart::readOptions (void)
 #endif
   KPlayerSettings* settings = kPlayerSettings();
   KConfig* config = kPlayerConfig();
-  config -> setGroup ("General Options");
+  config -> setGroup ("Part Options");
   m_toolbar_visible[0] = config -> readBoolEntry (QString (m_toolbar_names[0]) + " Part Visible", m_toolbar_visible[0]);
   toggleAction (m_toolbar_actions [0]) -> setChecked (m_toolbar_visible [0]);
 #ifdef DEBUG_KPLAYER_KPART
@@ -271,7 +271,7 @@ void KPlayerPart::launchKPlayer (void)
   process.detach();
 }
 
-void KPlayerPart::widgetContextMenu (QContextMenuEvent* event)
+void KPlayerPart::widgetContextMenu (const QPoint& global_position)
 {
 #ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "KPlayerPart context menu\n";
@@ -286,8 +286,7 @@ void KPlayerPart::widgetContextMenu (QContextMenuEvent* event)
 #ifdef DEBUG_KPLAYER_KPART
     kdDebugTime() << "KPlayerPart: displaying popup menu\n";
 #endif
-    popup -> popup (event -> globalPos());
-    event -> accept();
+    popup -> popup (global_position);
   }
 }
 

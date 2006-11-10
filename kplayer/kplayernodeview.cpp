@@ -289,8 +289,9 @@ void KPlayerListViewFolderItem::connectNode (void)
   kdDebugTime() << " URL    " << node() -> url().url() << "\n";
 #endif
   connectNodeCommon();
-  QObject::connect (node(), SIGNAL (attributesUpdated (const KPlayerPropertyCounts&, const KPlayerPropertyCounts&)),
-    listView(), SLOT (updateAttributes (const KPlayerPropertyCounts&, const KPlayerPropertyCounts&)));
+  if ( isOpen() )
+    QObject::connect (node(), SIGNAL (attributesUpdated (const KPlayerPropertyCounts&, const KPlayerPropertyCounts&)),
+      listView(), SLOT (updateAttributes (const KPlayerPropertyCounts&, const KPlayerPropertyCounts&)));
 }
 
 void KPlayerListViewFolderItem::disconnectNodeCommon (void)
@@ -321,6 +322,8 @@ void KPlayerListViewFolderItem::populateNode (void)
 #endif
   node() -> populate();
   listView() -> updateAttributes (node() -> attributeCounts(), KPlayerPropertyCounts());
+  QObject::connect (node(), SIGNAL (attributesUpdated (const KPlayerPropertyCounts&, const KPlayerPropertyCounts&)),
+    listView(), SLOT (updateAttributes (const KPlayerPropertyCounts&, const KPlayerPropertyCounts&)));
 }
 
 void KPlayerListViewFolderItem::vacateNode (void)
@@ -328,6 +331,8 @@ void KPlayerListViewFolderItem::vacateNode (void)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Vacating list view folder item node\n";
 #endif
+  QObject::disconnect (node(), SIGNAL (attributesUpdated (const KPlayerPropertyCounts&, const KPlayerPropertyCounts&)),
+    listView(), SLOT (updateAttributes (const KPlayerPropertyCounts&, const KPlayerPropertyCounts&)));
   listView() -> updateAttributes (KPlayerPropertyCounts(), node() -> attributeCounts());
   node() -> vacate();
 }
@@ -614,7 +619,6 @@ KPlayerNodeView::KPlayerNodeView (QWidget* parent, const char* name)
   m_moving = false;
   m_in_focus = false;
   m_popup_menu_shown = false;
-  m_selection_change = false;
   m_last_item = 0;
   m_editing_item = 0;
   m_editing_column = 0;
@@ -884,6 +888,7 @@ void KPlayerNodeView::startEditing (QListViewItem* item, int column)
   m_editing_item = (KPlayerListViewItem*) item;
   m_editing_column = column;
   rename (item, column);
+  connect (this, SIGNAL(contentsMoving(int, int)), SLOT(moveLineEdit(int, int)));
 }
 
 void KPlayerNodeView::stopEditing (bool save, int state)
@@ -891,6 +896,7 @@ void KPlayerNodeView::stopEditing (bool save, int state)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerNodeView::stopEditing " << save << " " << state << "\n";
 #endif
+  disconnect (this, SIGNAL(contentsMoving(int, int)), this, SLOT(moveLineEdit(int, int)));
   if ( renameLineEdit() -> isHidden() )
     return;
   QListViewItem* item = m_editing_item;
@@ -901,6 +907,16 @@ void KPlayerNodeView::stopEditing (bool save, int state)
   m_editing_item = 0;
   m_editing_column = 0;
   treeView() -> resetActiveNode();
+}
+
+void KPlayerNodeView::moveLineEdit (int x, int y)
+{
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "KPlayerNodeView::moveLineEdit\n";
+  kdDebugTime() << " From   " << contentsX() << "x" << contentsY() << "\n";
+  kdDebugTime() << " To     " << x << "x" << y << "\n";
+  kdDebugTime() << " Edit   " << renameLineEdit() -> x() << "x" << renameLineEdit() -> y() << "\n";
+#endif
 }
 
 bool KPlayerNodeView::eventFilter (QObject* object, QEvent* event)
@@ -929,6 +945,14 @@ bool KPlayerNodeView::eventFilter (QObject* object, QEvent* event)
       //  return true;
       firstcolumn = anothercolumn = false;
     }
+  }
+  else if ( ! recursion && m_editing_item && object == renameLineEdit() && event -> type() == QEvent::Move )
+  {
+    QMoveEvent* moveevent = (QMoveEvent*) event;
+#ifdef DEBUG_KPLAYER_NODEVIEW
+    kdDebugTime() << "KPlayerNodeView::eventFilter move " << moveevent -> oldPos().x() << "x" << moveevent -> oldPos().y()
+      << " => " << moveevent -> pos().x() << "x" << moveevent -> pos().y() << " " << event -> spontaneous() << "\n";
+#endif
   }
   else if ( ! recursion && m_editing_item && object == renameLineEdit()
     && (event -> type() == QEvent::KeyPress || event -> type() == QEvent::AccelOverride) )
@@ -1434,11 +1458,6 @@ void KPlayerNodeView::contentsMousePressEvent (QMouseEvent* e)
 #endif
 }
 
-bool KPlayerNodeView::isExecuteArea (const QPoint &point)
-{
-  return ! m_selection_change && KListView::isExecuteArea (point);
-}
-
 void KPlayerNodeView::itemExecuted (QListViewItem* item)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
@@ -1476,14 +1495,6 @@ void KPlayerNodeView::activeItemChanged (void)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Active item changed\n";
 #endif
-}
-
-void KPlayerNodeView::resetSelectionChange (void)
-{
-#ifdef DEBUG_KPLAYER_NODEVIEW
-  kdDebugTime() << "KPlayerNodeView::resetSelectionChange\n";
-#endif
-  m_selection_change = false;
 }
 
 void KPlayerNodeView::itemTerminating (QListViewItem* item)
@@ -2024,9 +2035,10 @@ void KPlayerListView::updateActions (void)
 #endif
   action ("library_play") -> setEnabled (selection);
   action ("library_play_next") -> setEnabled (selection);
-  action ("library_queue") -> setEnabled (selection && rootNode() -> canQueue());
-  action ("library_queue_next") -> setEnabled (selection);
-  bool enable = container && (container -> canAddLeaves() || container -> canAddBranches());
+  bool enable = selection && rootNode() -> canQueue();
+  action ("library_queue") -> setEnabled (enable);
+  action ("library_queue_next") -> setEnabled (enable);
+  enable = container && (container -> canAddLeaves() || container -> canAddBranches());
   library() -> emitEnableActionGroup ("library_add", enable);
   enable = container && container -> canAddLeaves();
   action ("library_add_files") -> setEnabled (enable);
@@ -2816,9 +2828,10 @@ void KPlayerTreeView::updateActions (void)
 #endif
   action ("library_play") -> setEnabled (selection);
   action ("library_play_next") -> setEnabled (selection);
-  action ("library_queue") -> setEnabled (selection && node -> canQueue());
-  action ("library_queue_next") -> setEnabled (selection);
-  bool enable = selection && (node -> canAddLeaves() || node -> canAddBranches());
+  bool enable = selection && node -> canQueue();
+  action ("library_queue") -> setEnabled (enable);
+  action ("library_queue_next") -> setEnabled (enable);
+  enable = selection && (node -> canAddLeaves() || node -> canAddBranches());
   library() -> emitEnableActionGroup ("library_add", enable);
   enable = selection && node -> canAddLeaves();
   action ("library_add_files") -> setEnabled (enable);
@@ -2952,8 +2965,6 @@ void KPlayerTreeView::activeItemChanged (void)
     }
     historyActionList() -> update();
   }
-  m_selection_change = true;
-  QTimer::singleShot (0, this, SLOT (resetSelectionChange()));
 }
 
 void KPlayerTreeView::popupMenuHidden (void)

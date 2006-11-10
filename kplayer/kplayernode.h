@@ -111,7 +111,8 @@ public:
   virtual QString suggestId (void) const;
 
   /** Node name. */
-  QString name (void) const;
+  QString name (void) const
+    { return media() -> name(); }
 
   /** Node URL. Gives node location in the hierarchy. */
   virtual KURL url (void) const;
@@ -119,10 +120,15 @@ public:
   KURL url (const QString& id) const;
   /** Media URL. Refers to the meta information storage of the node. */
   virtual KURL metaurl (void) const;
+  /** Media URL of a subnode with the given ID. */
+  KURL metaurl (const QString& id) const;
 
   /** Parent node. Null for root node. */
   KPlayerContainerNode* parent (void) const
     { return m_parent; }
+  /** Sets the parent node. */
+  void setParent (KPlayerContainerNode* node)
+    { m_parent = node; }
 
   /** Media properties. */
   KPlayerGenericProperties* media (void) const
@@ -140,6 +146,9 @@ public:
 
   /** Returns the top level node. */
   KPlayerContainerNode* topLevelNode (void) const;
+
+  /** Returns whether the node is ready for playing. */
+  virtual bool ready (void) const;
 
   /** Returns whether the node is a container. */
   virtual bool isContainer (void) const;
@@ -397,6 +406,9 @@ public:
   const KPlayerNodeList& nodes (void) const
     { return m_nodes; }
 
+  /** Returns whether the node is ready for playing. */
+  virtual bool ready (void) const;
+
   /** Returns icon name. */
   virtual QString icon (void) const;
   /** Returns open icon name. */
@@ -595,7 +607,7 @@ public:
   void detach (void);
 
   /** Releases the origin and switches to store source. */
-  void releaseOrigin (void);
+  virtual void releaseOrigin (void);
   /** Detaches the origin and switches to store source recursively. */
   void detachOrigin (void);
 
@@ -887,6 +899,11 @@ public:
   /** Destructor. Frees resources. */
   virtual ~KPlayerPlaylistNode();
 
+  /** Returns icon name. */
+  virtual QString icon (void) const;
+  /** Returns open icon name. */
+  virtual QString openIcon (void) const;
+
   /** Returns whether the given node can be linked into this container. */
   virtual bool canLink (KPlayerContainerNode* node) const;
 
@@ -896,11 +913,19 @@ public:
   /** Indicates whether the node is a playlist. */
   virtual bool isPlaylist (void) const;
 
+  /** Releases the origin and switches to store source. */
+  virtual void releaseOrigin (void);
+
 protected slots:
   /** Removes duplicate nodes if needed. */
   virtual void configurationUpdated (void);
 
+  /** Receives updated signal from the origin and updates media if needed. */
+  void originUpdated (KPlayerContainerNode*, KPlayerNode* node);
+
 protected:
+  /** Initializes the node origin. */
+  virtual void setupOrigin (void);
   /** Initializes the node source. */
   virtual void setupSource (void);
 
@@ -935,7 +960,14 @@ public:
   /** Returns whether the given node can be linked into this container. */
   virtual bool canLink (KPlayerContainerNode* node) const;
 
+protected slots:
+  /** Receives updated signal from the origin and updates media if needed. */
+  void originUpdated (KPlayerContainerNode*, KPlayerNode* node);
+
 protected:
+  /** Initializes the node origin. */
+  virtual void setupOrigin (void);
+
   /** Creates a new branch node with the given id and origin. */
   virtual KPlayerContainerNode* createBranch (const QString& id, KPlayerContainerNode* origin = 0);
 };
@@ -1053,6 +1085,9 @@ public:
   /** Updates the list of devices and nodes. */
   void dirty (void);
 
+  /** Refreshes the given item. */
+  void refreshItem (KFileItem* item);
+
   /** Removes the given nodes from the list of nodes. */
   virtual void removed (const KPlayerNodeList& nodes);
 
@@ -1131,10 +1166,8 @@ public:
   /** Returns whether custom order is allowed. */
   virtual bool allowsCustomOrder (void) const;
 
-  /** Updates the node with the disk properties. */
-  virtual void diskInserted (void);
-  /** Updates the node with the device properties. */
-  virtual void diskRemoved (void);
+  /** Returns whether the device is a disk device. */
+  virtual bool diskDevice (void);
 
   /** Removes the node and all subnodes. */
   virtual void removed (void);
@@ -1152,6 +1185,9 @@ public:
   KPlayerDiskNode (void) { }
   /** Destructor. Frees resources. */
   virtual ~KPlayerDiskNode();
+
+  /** Returns whether the node is ready for playing. */
+  virtual bool ready (void) const;
 
   /** Suggested identifier for a copy of this node. */
   virtual QString suggestId (void) const;
@@ -1172,13 +1208,40 @@ public:
 
   /** Returns the number of tracks and starts autodetection if needed. */
   int tracks (void);
+  /** Starts autodetection unconditionally. */
+  void loadDisk (void);
+
+  /** Returns the local path if known. */
+  const QString& localPath (void) const
+    { return m_local_path; }
+  /** Returns whether the local path is known. */
+  bool hasLocalPath (void) const
+    { return ! m_local_path.isEmpty(); }
+  /** Starts the process of local path acquisition. */
+  void getLocalPath (void);
 
   /** Updates the node with the disk properties. */
-  virtual void diskInserted (void);
+  void diskInserted (const QString& path = QString::null);
   /** Updates the node with the device properties. */
-  virtual void diskRemoved (void);
+  void diskRemoved (void);
+
+  /** Returns whether the device is a disk device. */
+  virtual bool diskDevice (void);
+  /** Returns whether the disk is of a media type. */
+  bool mediaDisk (void);
+  /** Returns whether the disk is of a data type. */
+  bool dataDisk (void);
 
 protected slots:
+  /** Processes the result of a list job. */
+  void listResult (KIO::Job* job);
+  /** Processes the result of a mount job. */
+  void mountResult (KIO::Job* job);
+  /** Processes the result of a stat job. */
+  void pathResult (KIO::Job* job);
+  /** Processes the result of a stat job. */
+  void statResult (KIO::Job* job);
+
   /** Processes an MPlayer output line. */
   void receivedOutput (KPlayerLineOutputProcess*, char*, int);
   /** Finishes refreshing lists. */
@@ -1202,10 +1265,16 @@ protected:
   void autodetect (void);
   /** Wraps up autodetection. */
   void autodetected (void);
+  /** Updates track nodes. */
+  void updateTracks (void);
+
   /** Identifies the disk and returns its properties. */
   bool accessDisk (void);
   /** Updates the node with the disk properties. */
   void diskDetected (const QString& diskid);
+
+  /** Sets the disk type and updates the default name. */
+  void setDiskType (const QString& type);
 
   /** Disk properties. */
   KPlayerDeviceProperties* m_device;
@@ -1231,6 +1300,10 @@ protected:
   int m_year;
   /** Genre. */
   QString m_genre;
+  /** Fast autodetect when type is known from media slave. */
+  bool m_fast_autodetect;
+  /** Local path. */
+  QString m_local_path;
 };
 
 /**TV node.

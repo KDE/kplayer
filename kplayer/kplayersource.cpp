@@ -762,7 +762,7 @@ bool KPlayerOriginSource::enumNext (bool& group, QString& id)
   if ( ! parent() -> origin() -> source() -> next (group, id) )
     return false;
   if ( ! group && parent() -> isGroup() && ! parent() -> origin() -> isGroup() )
-    id = parent() -> origin() -> url (id).url();
+    id = parent() -> origin() -> metaurl (id).url();
   return true;
 }
 

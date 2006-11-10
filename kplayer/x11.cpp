@@ -162,8 +162,8 @@ int KPlayerX11EventFilter (XEvent* event)
       << " keycode " << ev -> keycode << " state " << ev -> state << " same " << ev -> same_screen << "\n";
 #endif
     KPlayerSetControlShiftState ((ev -> state & ControlMask) == ControlMask, (ev -> state & ShiftMask) == ShiftMask);
-    if ( ev -> state == 5 )
-      ev -> state = 4;
+    if ( (ev -> state & (ControlMask | ShiftMask)) == (ControlMask | ShiftMask) )
+      ev -> state &= ~ ShiftMask;
   }
 #ifdef DEBUG_KPLAYER_CLIENT
   else if ( event -> type == ClientMessage && (event -> xclient.message_type == qt_xdnd_position
@@ -306,6 +306,24 @@ void KPlayerX11DiscardConfigureEvents (uint id)
       << " override " << event.xconfigure.override_redirect << "\n"
 #endif
   ;
+}
+
+void KPlayerX11GetKeyboardMouseState (uint id)
+{
+#ifdef DEBUG_KPLAYER_KEY
+  kdDebugTime() << "KPlayerX11GetKeyboardMouseState " << id << "\n";
+#endif
+  Window root, child;
+  int root_x, root_y, win_x, win_y;
+  uint state;
+  if ( XQueryPointer (qt_xdisplay(), id, &root, &child, &root_x, &root_y, &win_x, &win_y, &state) )
+  {
+#ifdef DEBUG_KPLAYER_KEY
+    kdDebugTime() << " root " << root << " " << root_x << "x" << root_y << " child " << child
+      << " " << win_x << "x" << win_y << " state " << state << "\n";
+#endif
+    KPlayerSetControlShiftState ((state & ControlMask) == ControlMask, (state & ShiftMask) == ShiftMask);
+  }
 }
 
 extern QX11EventFilter qt_set_x11_event_filter (QX11EventFilter);

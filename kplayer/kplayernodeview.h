@@ -480,11 +480,11 @@ protected slots:
 
   /** Updates the edited field of the current item. */
   void edited (QListViewItem* item, const QString& value, int column);
+  /** Moves line edit according to the new content position. */
+  void moveLineEdit (int x, int y);
 
   /** Processes selection change signal. */
   void itemSelectionChanged (void);
-  /** Resets selection change indicator. */
-  void resetSelectionChange (void);
 
   /** Plays the current selection. */
   void play (void);
@@ -573,9 +573,6 @@ protected:
   /** Stores indicator of right mouse button press. */
   virtual void contentsMousePressEvent (QMouseEvent* e);
 
-  /** Returns whether the item at the given point can be executed. */
-  bool isExecuteArea (const QPoint &point);
-
   /** Processes keyboard events for rename edit box. */
   virtual bool eventFilter (QObject* object, QEvent* event);
 
@@ -602,8 +599,6 @@ protected:
   bool m_in_focus;
   /** Indicates whether the popup menu is shown. */
   bool m_popup_menu_shown;
-  /** Indicates whether selection has changed. */
-  bool m_selection_change;
   /** Last active item. */
   KPlayerListViewItem* m_last_item;
   /** Item currently being edited. */

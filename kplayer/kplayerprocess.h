@@ -74,7 +74,7 @@ signals:
 protected:
   /** Handles the process output, splits it into lines and emits the appropriate signals.
    */
-  void receivedOutput (KProcess* proc, char* str, int len, char* buf, int blen, int llen, bool stdout);
+  void receivedOutput (KProcess* proc, char* str, int len, char* buf, int blen, int llen, bool bstdout);
 
   /** Current stdout line or part thereof.
     */

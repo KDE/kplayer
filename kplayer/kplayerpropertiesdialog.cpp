@@ -58,7 +58,7 @@ KPlayerPropertiesDialog::KPlayerPropertiesDialog (void)
 KPlayerPropertiesDialog::~KPlayerPropertiesDialog (void)
 {
   KConfig* config = kPlayerConfig();
-  config -> setGroup ("General Options");
+  config -> setGroup ("Dialog Options");
 #ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
   kdDebugTime() << "KPFP " << x() << "x" << y() << " " << width() << "x" << height() << " Hint " << sizeHint().width() << "x" << sizeHint().height() << "\n";
 #endif
@@ -120,7 +120,7 @@ void KPlayerPropertiesDialog::setup (const KURL& url)
   if ( layout )
     layout -> insertSpacing (0, 6);
   KConfig* config = kPlayerConfig();
-  config -> setGroup ("General Options");
+  config -> setGroup ("Dialog Options");
   QString name (config -> readEntry ("Properties Dialog Page"));
   if ( ! name.isEmpty() )
   {
@@ -153,6 +153,9 @@ void KPlayerPropertiesDialog::setup (const KURL& url)
 
 void KPlayerPropertiesDialog::slotDefault (void)
 {
+#ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
+  kdDebugTime() << "KPlayerPropertiesDialog::defaults\n";
+#endif
   if ( KMessageBox::warningYesNo (this, i18n("All file properties will be reset.\n\nAre you sure?"))
       != KMessageBox::Yes )
     return;
@@ -170,12 +173,20 @@ void KPlayerPropertiesDialog::slotDefault (void)
 
 void KPlayerPropertiesDialog::pageAboutToShow (QWidget* page)
 {
+#ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
+  kdDebugTime() << "KPlayerPropertiesDialog::pageAboutToShow\n";
+#endif
   QObject* object = page -> child (0, "QFrame");
   KConfig* config = kPlayerConfig();
-  config -> setGroup ("General Options");
+  config -> setGroup ("Dialog Options");
   QString name;
   if ( object )
+  {
     name = object -> name ("");
+#ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
+    kdDebugTime() << " Page   " << name << "\n";
+#endif
+  }
   if ( name.isEmpty() )
     config -> deleteEntry ("Properties Dialog Page");
   else
@@ -185,12 +196,18 @@ void KPlayerPropertiesDialog::pageAboutToShow (QWidget* page)
 
 void KPlayerPropertiesDialog::slotOk (void)
 {
+#ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
+  kdDebugTime() << "KPlayerPropertiesDialog::OK\n";
+#endif
   slotApply();
   KDialogBase::slotOk();
 }
 
 void KPlayerPropertiesDialog::slotApply (void)
 {
+#ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
+  kdDebugTime() << "KPlayerPropertiesDialog::apply\n";
+#endif
   m_general -> save();
   m_size -> save();
   m_subtitles -> save();
@@ -1152,7 +1169,7 @@ void KPlayerPropertiesAudio::hideRates (void)
   l_kbps -> hide();
   l_samplerate -> hide();
   c_samplerate -> hide();
-  l_khz -> hide();
+  l_hz -> hide();
 }
 
 void KPlayerPropertiesAudio::load (void)

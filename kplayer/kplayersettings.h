@@ -114,7 +114,8 @@ public:
   void setMaintainAspect (bool, QSize);
 
   bool constrainedSize (void)
-    { return fullScreen() || maximized() || ! configuration() -> resizeAutomatically(); }
+    { return fullScreen() || maximized() || ! configuration() -> resizeAutomatically()
+      || KPlayerEngine::engine() -> light(); }
 
   QSize constrainSize (QSize size) const;
   QSize adjustSize (QSize size, bool horizontally = false) const;

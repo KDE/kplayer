@@ -54,6 +54,7 @@ KPlayerPropertyInfoMap KPlayerProperties::m_info;
 KPlayerStringPropertyInfo KPlayerProperties::m_meta_info;
 QStringList KPlayerProperties::m_meta_attributes;
 KPlayerMediaMap KPlayerMedia::m_media_map;
+int KPlayerItemProperties::m_meta_info_timer = 0;
 
 #ifdef DEBUG
 kdbgstream kdDebugTime (void)
@@ -1146,7 +1147,7 @@ void KPlayerProperties::diff (KPlayerProperties* properties)
       m_changed.insert (iterator.key(), 1);
   for ( KPlayerPropertyMap::ConstIterator iterator = properties -> properties().begin();
       iterator != properties -> properties().end(); ++ iterator )
-    if ( ! properties -> has (iterator.key()) )
+    if ( ! has (iterator.key()) )
       m_removed.insert (iterator.key(), 1);
   update();
 }
@@ -1304,18 +1305,18 @@ int KPlayerProperties::getRelative (const QString& key) const
 
 int KPlayerProperties::getRelativeOption (const QString& key) const
 {
-  return has (key) ? ((KPlayerRelativeProperty*) m_properties [key]) -> option() : 0;
+  return has (key) ? ((KPlayerRelativeProperty*) m_properties [key]) -> option() + 1 : 0;
 }
 
 void KPlayerProperties::setRelativeOption (const QString& key, int value, int option)
 {
-  if ( option == 0 || value == 0 && option > 0 && option < 3 )
+  if ( option == 0 || value == 0 && option > 1 && option < 4 )
     reset (key);
   else
   {
     KPlayerRelativeProperty* property = (KPlayerRelativeProperty*) get (key);
     property -> setValue (value);
-    property -> setOption (option);
+    property -> setOption (option - 1);
     updated (key);
   }
 }
@@ -1909,8 +1910,9 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Remember With Shift", boolinfo);
   info = new KPlayerBooleanPropertyInfo;
   m_info.insert ("Remember Size", info);
-  info = new KPlayerBooleanPropertyInfo;
-  m_info.insert ("Remember Aspect", info);
+  boolinfo = new KPlayerBooleanPropertyInfo;
+  boolinfo -> setDefaultValue (true);
+  m_info.insert ("Remember Aspect", boolinfo);
   info = new KPlayerBooleanPropertyInfo;
   m_info.insert ("Remember Full Screen", info);
   info = new KPlayerBooleanPropertyInfo;
@@ -2393,17 +2395,17 @@ void KPlayerMedia::setRelative (const QString& key, int value)
 void KPlayerMedia::adjustRelative (const QString& key, int value)
 {
   int option = getRelativeOption (key);
-  if ( option > 2 )
+  if ( option == 1 )
   {
     configuration() -> setInteger (key, value);
     info (key) -> setOverride (true);
   }
   else
   {
-    if ( option > 0 )
+    if ( option > 1 )
     {
       int current = getInteger (key);
-      if ( option == 1 )
+      if ( option == 2 )
         value -= current;
       else
         value += current;
@@ -2633,6 +2635,14 @@ QString KPlayerGenericProperties::type (const QString& id) const
   return config() -> readEntry ("Type");
 }
 
+float KPlayerGenericProperties::msf (const QString& id) const
+{
+  KURL u (url());
+  u.addPath (id);
+  config() -> setGroup (u.url());
+  return config() -> readDoubleNumEntry ("MSF");
+}
+
 bool KPlayerGenericProperties::hidden (const QString& id) const
 {
   KURL u (url());
@@ -2672,6 +2682,11 @@ KPlayerMediaProperties::~KPlayerMediaProperties()
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "Destroying media properties\n";
 #endif
+}
+
+void KPlayerMediaProperties::setDisplaySize (const QSize& size, int option)
+{
+  setSize ("Display Size", size, option);
 }
 
 KPlayerDeviceProperties::KPlayerDeviceProperties (KPlayerProperties* parent, const KURL& url)
@@ -2800,8 +2815,21 @@ static struct KPlayerChannelGroup
     { 21, 49, 0, 0, 471250, 8000 }
   },
   ireland[] = {
-    { 0, 3, 0, 0, 45750, 8000 },
-    { 3, 6, 0, 0, 175250, 8000 },
+    { 0, 2, 0, "A", 45750, 2250 },
+    { 2, 2, 0, "A", 53750, 2250 },
+    { 4, 2, 0, "A", 61750, 2250 },
+    { 6, 2, 0, "A", 175250, 750 },
+    { 8, 2, 0, "A", 183250, 750 },
+    { 10, 2, 0, "A", 191250, 750 },
+    { 12, 2, 0, "A", 199250, 750 },
+    { 14, 2, 0, "A", 207250, 750 },
+    { 16, 2, 0, "A", 215250, 750 },
+    { 18, 2, 0, "A", 224000, 8000 },
+    { 20, 10, 0, "A", 248000, 8000 },
+    { 30, 2, 0, "A", 344000, 8000 },
+    { 32, 2, 0, "A", 408000, 8000 },
+    { 34, 2, 0, "A", 448000, 32000 },
+    { 36, 1, 0, "A", 520000, 0 },
     { 21, 49, 0, 0, 471250, 8000 }
   },
   france[] = {
@@ -3083,6 +3111,15 @@ KPlayerTrackProperties::~KPlayerTrackProperties()
 #endif
 }
 
+void KPlayerTrackProperties::setDisplaySize (const QSize& size, int option)
+{
+  if ( ! size.isEmpty() && hasOriginalSize() && (option == 1 && originalSize() == size
+      || option == 2 && size.width() * originalSize().height() == size.height() * originalSize().width()) )
+    resetDisplaySize();
+  else
+    KPlayerMediaProperties::setDisplaySize (size, option);
+}
+
 KConfig* KPlayerTrackProperties::config (void) const
 {
   return KPlayerEngine::engine() -> meta();
@@ -3189,9 +3226,11 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
   static QRegExp re_vo ("^V(?:IDE)?O:.* => +(\\d+)x(\\d+)");
   static QRegExp re_vc ("^(?:ID_VIDEO_CODEC=|Selected video codec: \\[)([A-Za-z0-9,:.-]+)(?:$|\\])");
   static QRegExp re_ac ("^(?:ID_AUDIO_CODEC=|Selected audio codec: \\[)([A-Za-z0-9,:.-]+)(?:$|\\])");
+#ifdef KPLAYER_PROCESS_SIZE_IDS
   static QRegExp re_vw ("^ID_VIDEO_WIDTH=(\\d+)$");
   static QRegExp re_vh ("^ID_VIDEO_HEIGHT=(\\d+)$");
   static QRegExp re_va ("^ID_VIDEO_ASPECT=([0-9.]+)$");
+#endif
   static QRegExp re_vbr ("^ID_VIDEO_BITRATE=(\\d+)$");
   static QRegExp re_vfr ("^ID_VIDEO_FPS=([0-9.]+)$");
   static QRegExp re_vid ("^ID_VIDEO_ID=(\\d+)$");
@@ -3209,67 +3248,69 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
   static QRegExp re_name ("^ID_CLIP_INFO_NAME[0-9]+=(.+)$");
   static QRegExp re_value ("^ID_CLIP_INFO_VALUE[0-9]+=(.+)$");
   static QString key;
+  static bool seen_length = false;
+  if ( str.startsWith ("ID_FILENAME=") )
+    seen_length = false;
+  else if ( str.startsWith ("ID_LENGTH=") )
+    seen_length = true;
   if ( re_name.search (str) >= 0 )
   {
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Clip info name: " << re_name.cap (1) << "\n";
 #endif
     key = re_name.cap (1);
-    return;
   }
-  if ( re_value.search (str) >= 0 )
+  else if ( re_value.search (str) >= 0 )
   {
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Clip info value: " << re_value.cap (1) << "\n";
 #endif
     importMeta (key, re_value.cap (1));
-    return;
   }
-  if ( ! hasLength() && re_length.search (str) >= 0 )
+  else if ( ! hasLength() && re_length.search (str) >= 0 )
   {
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Length: " << re_length.cap(1) << "\n";
 #endif
     setLength (re_length.cap(1).toFloat());
-    return;
+    if ( ! hasLength() && has ("MSF") && hasVideoBitrate() && hasAudioBitrate() )
+    {
+      float length = (getFloat ("MSF") - 454.242) * 1700.76543 / (videoBitrate() + audioBitrate());
+      if ( length > 0 )
+        setLength (length);
+    }
   }
-  if ( re_vo.search (str) >= 0 )
+  else if ( (update || ! heightAdjusted()) && re_vo.search (str) >= 0 )
   {
     setOriginalSize (QSize (re_vo.cap(1).toInt(), re_vo.cap(2).toInt()));
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Adjusted width " << originalSize().width() << " height " << originalSize().height() << "\n";
 #endif
-    m_height_adjusted = true;
-    return;
+    m_height_adjusted = update;
   }
-  QSize size (originalSize());
-  if ( ! size.isValid() )
-  {
-    size.setWidth (0);
-    size.setHeight (0);
-  }
-  if ( ! heightAdjusted() && size.isEmpty() && re_video.search (str) >= 0 )
+  else if ( ! heightAdjusted() && originalSize().isEmpty() && re_video.search (str) >= 0 )
   {
     setOriginalSize (QSize (re_video.cap(1).toInt(), re_video.cap(2).toInt()));
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Width " << originalSize().width() << " Height " << originalSize().height() << "\n";
 #endif
   }
-  else if ( ! heightAdjusted() && size.width() == 0 && re_vw.search (str) >= 0 )
+#ifdef KPLAYER_PROCESS_SIZE_IDS
+  else if ( ! heightAdjusted() && originalSize().width() <= 0 && re_vw.search (str) >= 0 )
   {
-    setOriginalSize (QSize (re_vw.cap(1).toInt(), size.height()));
+    setOriginalSize (QSize (re_vw.cap(1).toInt(), originalSize().height()));
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Width " << originalSize().width() << "\n";
 #endif
   }
-  else if ( ! heightAdjusted() && size.height() == 0 && re_vh.search (str) >= 0 )
+  else if ( ! heightAdjusted() && originalSize().height() <= 0 && re_vh.search (str) >= 0 )
   {
-    setOriginalSize (QSize (size.width(), re_vh.cap(1).toInt()));
+    setOriginalSize (QSize (originalSize().width(), re_vh.cap(1).toInt()));
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Height " << originalSize().height() << "\n";
 #endif
   }
-  else if ( ! heightAdjusted() && ! size.isEmpty() && re_va.search (str) >= 0 )
+  else if ( ! heightAdjusted() && ! originalSize().isEmpty() && re_va.search (str) >= 0 )
   {
     int w = 0, h = 0;
     float a = stringToFloat (re_va.cap(1)), b;
@@ -3280,34 +3321,45 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
         b = a * h;
         w = int (b + 0.5);
         b -= w;
-        if ( b < 0.01 && b > -0.01 )
+        if ( b < 0.001 && b > -0.001 )
           break;
       }
       if ( h > 20 )
       {
-        h = 1000;
-        w = int (h * a + 0.5);
+        h = 10000;
+        w = int (a * h + 0.5);
       }
 #ifdef DEBUG_KPLAYER_PROPERTIES
       kdDebugTime() << "Process: Aspect " << a << " (" << w << "x" << h << ")\n";
 #endif
-      setOriginalSize (QSize (size.height() * w / h, size.height()));
+      setOriginalSize (QSize (originalSize().width(), originalSize().width() * h / w));
 #ifdef DEBUG_KPLAYER_PROPERTIES
       kdDebugTime() << "Process: Adjusted width " << originalSize().width() << "\n";
 #endif
       m_height_adjusted = true;
     }
   }
+#endif
   else if ( (update || ! hasVideoBitrate()) && re_vbr.search (str) >= 0 )
   {
-    setVideoBitrate ((re_vbr.cap(1).toInt() + 500) / 1000);
+    int br = re_vbr.cap(1).toInt();
+    if ( br )
+      setVideoBitrate ((br + 500) / 1000);
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Video bitrate " << videoBitrate() << "\n";
 #endif
+    if ( seen_length && ! hasLength() && has ("MSF") && hasVideoBitrate() && hasAudioBitrate() )
+    {
+      float length = (getFloat ("MSF") - 454.242) * 1700.76543 / (videoBitrate() + audioBitrate());
+      if ( length > 0 )
+        setLength (length);
+    }
   }
   else if ( (update || ! hasFramerate()) && re_vfr.search (str) >= 0 )
   {
-    setFramerate (stringToFloat (re_vfr.cap(1)));
+    float fr = stringToFloat (re_vfr.cap(1));
+    if ( fr )
+      setFramerate (fr);
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Framerate " << framerate() << "\n";
 #endif
@@ -3323,21 +3375,33 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
   }
   else if ( (update || ! hasAudioBitrate()) && re_abr.search (str) >= 0 )
   {
-    setAudioBitrate ((re_abr.cap(1).toInt() + 500) / 1000);
+    int br = re_abr.cap(1).toInt();
+    if ( br )
+      setAudioBitrate ((br + 500) / 1000);
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Audio bitrate " << audioBitrate() << "\n";
 #endif
+    if ( seen_length && ! hasLength() && has ("MSF") && hasVideoBitrate() && hasAudioBitrate() )
+    {
+      float length = (getFloat ("MSF") - 454.242) * 1700.76543 / (videoBitrate() + audioBitrate());
+      if ( length > 0 )
+        setLength (length);
+    }
   }
   else if ( (update || ! hasSamplerate()) && re_asr.search (str) >= 0 )
   {
-    setSamplerate (re_asr.cap(1).toInt());
+    int sr = re_asr.cap(1).toInt();
+    if ( sr )
+      setSamplerate (sr);
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Audio sample rate " << samplerate() << "\n";
 #endif
   }
   else if ( (update || ! hasChannels()) && re_ach.search (str) >= 0 )
   {
-    setChannels (re_ach.cap(1).toInt());
+    int ch = re_ach.cap(1).toInt();
+    if ( ch )
+      setChannels (ch);
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Audio channels " << channels() << "\n";
 #endif
@@ -3803,8 +3867,10 @@ void KPlayerItemProperties::setupMeta (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerItemProperties::setupMeta\n";
 #endif
-  if ( ! hasIcon() )
+  if ( ! hasIcon() && m_meta_info_timer < 2000 )
   {
+    QTime timer;
+    timer.start();
     KMimeType::Ptr mimetype (KMimeType::findByURL (url()));
     if ( mimetype != KMimeType::defaultMimeTypePtr() )
       setType (mimetype -> name().lower());
@@ -3829,13 +3895,16 @@ void KPlayerItemProperties::setupMeta (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
               kdDebugTime() << " Extracted size " << key << " " << item.value().toSize().width() << "x" << item.value().toSize().height() << "\n";
 #endif
-              setSize (key, item.value().toSize());
+              //setSize (key, item.value().toSize()); // MPEG resolution is usually wrong
             }
           }
           else if ( item.type() != QVariant::Bool )
             importMeta (key, item.value().toString());
       }
     }
+    int elapsed = timer.elapsed();
+    if ( elapsed >= 100 )
+      m_meta_info_timer += elapsed;
   }
   KPlayerTrackProperties::setupMeta();
 }

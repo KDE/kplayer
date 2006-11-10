@@ -31,8 +31,7 @@ public:
   /** The widget constructor. Initializes internal data structures.
       Parameters are passed to the QWidget constructor. */
   KPlayerWidget (QWidget* parent = 0, const char* name = 0);
-  /** The widget destructor. Frees allocated memory.
-    */
+  /** The widget destructor. Frees allocated memory. */
   virtual ~KPlayerWidget();
 
   void mapHandler (uint wid);
@@ -61,11 +60,13 @@ protected:
   virtual void focusOutEvent (QFocusEvent*);
 
 protected slots:
-  /** Receives the stateChanged signal from KPlayerProcess.
-    */
+  /** Receives the stateChanged signal from KPlayerProcess. */
   void playerStateChanged (KPlayerProcess::State, KPlayerProcess::State);
 };
 
+/** The KPlayer workspace that contains the video widget.
+  *@author kiriuja
+  */
 class KPlayerWorkspace : public QWidget
 {
    Q_OBJECT
@@ -74,17 +75,12 @@ public:
   /** The workspace constructor. Creates the KPlayerWidget.
       Parameters are passed to the QWidget constructor. */
   KPlayerWorkspace (QWidget* parent = 0, const char* name = 0);
-  /** The workspace destructor. Does nothing.
-    */
-  virtual ~KPlayerWorkspace() { }
 
-  /** Returns a pointer to the KPlayerWidget object.
-    */
+  /** Returns a pointer to the KPlayerWidget object. */
   KPlayerWidget* widget (void) const
     { return m_widget; }
 
-  /** Resizes the widget to the given size.
-    */
+  /** Resizes the widget to the given size. */
   void setDisplaySize (QSize);
 
   /** Handles resizing done by the window manager.
@@ -93,36 +89,36 @@ public:
   void resizeHandler (bool resizing);
 
 protected:
-  /** Processes the widget resize event. Resizes the KPlayerWidget to the video size.
-    */
+  /** Processes the widget resize event. Resizes the KPlayerWidget to the video size. */
   virtual void resizeEvent (QResizeEvent*);
+  /** Emits context menu signal on a right click in a part. */
+  virtual void mousePressEvent (QMouseEvent*);
+  /** Ignores a mouse release event. */
+  virtual void mouseReleaseEvent (QMouseEvent*);
   /** Processes mouse double click event. Sends a doubleClick signal to the engine. */
   virtual void mouseDoubleClickEvent (QMouseEvent*);
   /** Processes the wheel event. Sends a wheelZoom signal to the engine. */
   virtual void wheelEvent (QWheelEvent*);
-  /** Emits the contextMenu signal.
-    */
+  /** Emits the contextMenu signal. */
   virtual void contextMenuEvent (QContextMenuEvent*);
   virtual void windowActivationChange (bool);
   virtual void focusInEvent (QFocusEvent*);
   virtual void focusOutEvent (QFocusEvent*);
 
-  /** The pointer to the KPlayerWidget object.
-    */
+  /** The pointer to the KPlayerWidget object. */
   KPlayerWidget* m_widget;
 
   // Following should be private
-  /** Window manager is resizing the top level window.
-    */
+  /** Window manager is resizing the top level window. */
   bool m_resizing;
 
 signals:
-  /** Emitted when the widget is resized.
-    */
+  /** Emitted when the widget is resized. */
   void resized (void);
-  /** Emitted when the context menu event is received.
-   */
-  void contextMenu (QContextMenuEvent*);
+  /** Emitted when the widget is resized by the user. */
+  void userResize (void);
+  /** Emitted when the context menu event is received. */
+  void contextMenu (const QPoint& global_position);
 };
 
 #endif

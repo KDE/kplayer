@@ -141,8 +141,12 @@ public:
   virtual void showNormal (void);
 
 protected:
+  /** Returns the total available geometry. */
+  QRect availableGeometry (void) const;
   /** Resizes the main window in response to a zoom request. */
   void do_zoom (void);
+  /** Moves the main window if it does not fit the available screen space. */
+  void do_move (const QRect& frame);
   /** Sets up actions and connects signals to slots. */
   void initActions (void);
   /** Sets up the status bar. */
@@ -199,6 +203,8 @@ protected:
   virtual void moveEvent (QMoveEvent*);
   /** Handles main window resizing. */
   virtual void resizeEvent (QResizeEvent*);
+  /** Displays the right click popup menu. */
+  virtual void contextMenuEvent (QContextMenuEvent*);
   /** Handles the drag enter event. */
   virtual void dragEnterEvent (QDragEnterEvent*);
   /** Handles the drop event. */
@@ -300,6 +306,9 @@ public slots:
   /** Opens the KPlayer configuration dialog. */
   void settingsConfigure (void);
 
+  /** Opens the KPlayer manual section on bug reporting. */
+  void helpReportBug (void);
+
   /** Changes the statusbar test temporarily, used to display a hint on the currently highlighted action. */
   void setStatusMessage (const QString&);
   /** Clears the temporary statusbar text when the action is no longer highlighted. */
@@ -340,9 +349,11 @@ protected slots:
   void actionListUpdating (KPlayerActionList* list);
   /** Plugs the action list and enables the menu. */
   void actionListUpdated (KPlayerActionList* list);
+  /** Plugs the action list and enables the menu if the library is visible. */
+  void libraryActionListUpdated (KPlayerActionList* list);
 
-  /** Displays the right click popup menu. */
-  virtual void contextMenuEvent (QContextMenuEvent*);
+  /** Displays the right click popup menu at the given position. */
+  void contextMenu (const QPoint& global_position);
 };
 
 /** The KPlayer application class.

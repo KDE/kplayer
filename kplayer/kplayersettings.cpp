@@ -58,11 +58,14 @@ void KPlayerSettings::load (const KURL& url)
 #endif
   if ( url == properties() -> url() )
     return;
+  bool hadAspect = properties() -> originalAspect().isValid() || ! properties() -> url().isValid();
   if ( properties() -> url().isValid() )
     properties() -> commit();
   KPlayerMedia::release (m_properties);
   m_properties = KPlayerMedia::trackProperties (url);
   setAspect (properties() -> originalAspect());
+  if ( hadAspect || aspect().isValid() )
+    setDisplaySizeOverride (false);
   if ( properties() -> displaySizeOption() == 1 )
     setDisplaySize (properties() -> displaySize());
   configuration() -> itemReset();
@@ -144,12 +147,7 @@ void KPlayerSettings::setMaintainAspect (bool maintain, QSize aspect)
   setAspect (aspect);
   if ( configuration() -> rememberAspect (shift()) )
   {
-    if ( ! aspect.isEmpty() && properties() -> hasOriginalSize()
-        && aspect.width() * properties() -> originalSize().height()
-        == aspect.height() * properties() -> originalSize().width() )
-      properties() -> resetDisplaySize();
-    else
-      properties() -> setDisplaySize (aspect, 2);
+    properties() -> setDisplaySize (aspect, 2);
     setAspectOverride (false);
   }
 }
@@ -169,7 +167,9 @@ void KPlayerSettings::setAspect (QSize aspect)
 
 void KPlayerSettings::setDisplaySize (QSize size)
 {
-  setDisplaySizeOverride (true);
+#ifdef DEBUG_KPLAYER_SETTINGS
+  kdDebugTime() << "Settings::setDisplaySize (" << size.width() << "x" << size.height() << ")\n";
+#endif
   m_display_size = size;
 }
 
@@ -300,11 +300,8 @@ bool KPlayerSettings::isZoomFactor (int m, int d)
 
 QSize KPlayerSettings::adjustDisplaySize (bool user_zoom, bool user_resize)
 {
-  QSize size;
-  if ( ! user_zoom && constrainedSize() )
-    size = constrainSize (kPlayerWorkspace() -> size());
-  else
-    size = adjustSize (displaySize());
+  QSize size (! user_zoom && constrainedSize() ? constrainSize (kPlayerWorkspace() -> size())
+    : adjustSize (displaySize()));
 #ifdef DEBUG_KPLAYER_SETTINGS
   kdDebugTime() << "Settings::adjustDisplaySize (" << user_zoom << ", " << user_resize << ") " << size.width() << "x" << size.height() << "\n";
 #endif
@@ -313,13 +310,14 @@ QSize KPlayerSettings::adjustDisplaySize (bool user_zoom, bool user_resize)
     setDisplaySize (size);
     if ( user_zoom || user_resize )
     {
+      setDisplaySizeOverride (true);
       if ( configuration() -> rememberSize (shift()) )
       {
         properties() -> setDisplaySize (size, 1);
         setDisplaySizeOverride (false);
         setAspectOverride (false);
       }
-      else if ( configuration() -> rememberAspect() )
+      else if ( user_resize && ! maintainAspect() && configuration() -> rememberAspect() )
       {
         properties() -> setDisplaySize (size, 2);
         setAspectOverride (false);
@@ -366,7 +364,6 @@ bool KPlayerSettings::setInitialDisplaySize (void)
   kdDebugTime() << "Settings: Initial size: " << size.width() << "x" << size.height() << "\n";
 #endif
   setDisplaySize (size);
-  setDisplaySizeOverride (false);
   return true;
 }
 

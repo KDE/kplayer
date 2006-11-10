@@ -16,6 +16,7 @@
 #include <klargefile.h>
 #include <klocale.h>
 #include <kmdcodec.h>
+#include <kio/netaccess.h>
 #include <qregexp.h>
 
 #ifdef DEBUG
@@ -24,6 +25,7 @@
 
 #include "kplayernode.h"
 #include "kplayernode.moc"
+#include "kplayerprocess.h"
 #include "kplayersettings.h"
 #include "kplayersource.h"
 
@@ -52,7 +54,7 @@ void KPlayerNode::setup (KPlayerContainerNode* parent, const QString& id, KPlaye
     kdDebugTime() << " Parent " << parent -> url().url() << "\n";
 #endif
   m_references = 0;
-  m_parent = parent;
+  setParent (parent);
   m_id = id;
   if ( parent )
     parent -> reference();
@@ -70,14 +72,14 @@ void KPlayerNode::setupChildren (KPlayerContainerNode*)
 {
 }
 
+bool KPlayerNode::ready (void) const
+{
+  return true;
+}
+
 QString KPlayerNode::suggestId (void) const
 {
   return metaurl().url();
-}
-
-QString KPlayerNode::name (void) const
-{
-  return media() -> name();
 }
 
 KURL KPlayerNode::url (void) const
@@ -95,6 +97,13 @@ KURL KPlayerNode::url (const QString& id) const
 KURL KPlayerNode::metaurl (void) const
 {
   return url();
+}
+
+KURL KPlayerNode::metaurl (const QString& id) const
+{
+  KURL idurl (media() -> url());
+  idurl.addPath (id);
+  return idurl;
 }
 
 QString KPlayerNode::icon (void) const
@@ -358,7 +367,8 @@ KPlayerContainerNode::KPlayerContainerNode (void)
   kdDebugTime() << "Creating container node\n";
 #endif
   m_populate_nodes = m_populate_groups = 0;
-  m_origin = m_parent = 0;
+  setParent (0);
+  setOrigin (0);
 }
 
 KPlayerContainerNode::~KPlayerContainerNode()
@@ -382,11 +392,11 @@ void KPlayerContainerNode::setupChildren (KPlayerContainerNode* origin)
     origin = parent() -> origin() -> getNodeById (id());
   if ( ! origin )
   {
-    const KURL& url (media() -> origin());
-    if ( ! url.isEmpty() )
-      origin = getNodeByUrl (url);
+    const KURL& originurl (media() -> origin());
+    if ( ! originurl.isEmpty() && originurl != url() )
+      origin = getNodeByUrl (originurl);
   }
-  m_origin = origin;
+  setOrigin (origin);
   setupOrigin();
   if ( m_origin )
   {
@@ -408,14 +418,19 @@ void KPlayerContainerNode::setupSource (void)
   m_source = new KPlayerListSource (this);
 }
 
+bool KPlayerContainerNode::ready (void) const
+{
+  return ! origin() || origin() -> ready();
+}
+
 QString KPlayerContainerNode::icon (void) const
 {
-  return "folder";
+  return origin() ? origin() -> icon() : "folder";
 }
 
 QString KPlayerContainerNode::openIcon (void) const
 {
-  return "folder_open";
+  return origin() ? origin() -> icon() : "folder_open";
 }
 
 QString KPlayerContainerNode::suggestId (void) const
@@ -600,6 +615,7 @@ void KPlayerContainerNode::add (const KPlayerNodeList& nodes, bool link, KPlayer
   if ( after )
     kdDebugTime() << " After  " << after -> url().url() << "\n";
 #endif
+  KPlayerItemProperties::resetMetaInfoTimer();
   source() -> add (nodes, link, after);
 }
 
@@ -775,8 +791,11 @@ void KPlayerContainerNode::doPopulate (void)
       append (node);
     else
       node = group ? insertBranch (id) : insertLeaf (id);
-    node -> reference();
-    node -> countAttributes (m_attribute_counts);
+    if ( node )
+    {
+      node -> reference();
+      node -> countAttributes (m_attribute_counts);
+    }
   }
   if ( ! previous.isEmpty() )
   {
@@ -850,7 +869,8 @@ void KPlayerContainerNode::doPopulateGroups (void)
     }
     else
       node = insertBranch (id);
-    node -> reference();
+    if ( node )
+      node -> reference();
   }
   if ( ! previous.isEmpty() )
   {
@@ -1057,8 +1077,11 @@ void KPlayerContainerNode::addedLeaves (const QStringList& list)
   while ( iterator != list.end() )
   {
     KPlayerNode* node = insertLeaf (*iterator);
-    node -> countAttributes (counts);
-    nodes.append (node);
+    if ( node )
+    {
+      node -> countAttributes (counts);
+      nodes.append (node);
+    }
     ++ iterator;
   }
   source() -> save();
@@ -1084,8 +1107,11 @@ void KPlayerContainerNode::addedBranches (const QStringList& list)
   while ( iterator != list.end() )
   {
     KPlayerNode* node = insertBranch (*iterator);
-    node -> countAttributes (counts);
-    nodes.append (node);
+    if ( node )
+    {
+      node -> countAttributes (counts);
+      nodes.append (node);
+    }
     ++ iterator;
   }
   if ( populated() )
@@ -1117,8 +1143,11 @@ void KPlayerContainerNode::added (const QFileInfoList& list)
     {
       QString id (iterator.current() -> fileName());
       KPlayerNode* node = group ? insertBranch (id) : insertLeaf (id);
-      node -> countAttributes (counts);
-      nodes.append (node);
+      if ( node )
+      {
+        node -> countAttributes (counts);
+        nodes.append (node);
+      }
     }
   }
   if ( populated() )
@@ -1211,16 +1240,22 @@ KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& nodes, bool lin
           origin = origin -> origin();
         KPlayerContainerNode* branch = insertBranch (id, after, origin);
         subnode = branch;
-        subnode -> media() -> setName (node -> name());
-        if ( origin )
-          branch -> save();
-        else
-          branch -> added (container, link);
+        if ( branch )
+        {
+          subnode -> media() -> setName (node -> name());
+          if ( origin )
+            branch -> save();
+          else
+            branch -> added (container, link);
+        }
       }
       else
         subnode = insertLeaf (id, after);
-      subnode -> countAttributes (counts);
-      list.append (subnode);
+      if ( subnode )
+      {
+        subnode -> countAttributes (counts);
+        list.append (subnode);
+      }
     }
     if ( after )
       after = subnode;
@@ -1518,7 +1553,8 @@ KPlayerNode* KPlayerTemporaryNode::temporaryItem (const QString& id)
   KPlayerNode* node = nodeById (id);
   if ( ! node )
     node = insertLeaf (id);
-  node -> reference();
+  if ( node )
+    node -> reference();
   return node;
 }
 
@@ -1660,12 +1696,12 @@ void KPlayerGroupNode::setupSource (void)
 
 QString KPlayerGroupNode::icon (void) const
 {
-  return "folder_green";
+  return origin() ? origin() -> icon() : "folder_green";
 }
 
 QString KPlayerGroupNode::openIcon (void) const
 {
-  return "folder_green_open";
+  return origin() ? origin() -> icon() : "folder_green_open";
 }
 
 bool KPlayerGroupNode::isGroup (void) const
@@ -1690,9 +1726,9 @@ void KPlayerCollectionNode::setupOrigin (void)
     kdDebugTime() << " Key    " << groupingKey() << "\n";
 #endif
   if ( isParentGrouped() )
-    m_origin = parent();
+    setOrigin (parent());
   else if ( isGrouped() )
-    m_origin = createBranch (id(), origin());
+    setOrigin (createBranch (id(), origin()));
 #endif
 }
 
@@ -1755,7 +1791,7 @@ void KPlayerCollectionNode::group (const QString& key)
     if ( origin() && origin() -> canGroup() )
     {
       origin() -> release();
-      m_origin = 0;
+      setOrigin (0);
     }
     delete m_source;
     m_source = m_origin ?
@@ -1770,7 +1806,7 @@ void KPlayerCollectionNode::group (const QString& key)
       m_source = new KPlayerGroupSource (this);
     }
     if ( ! origin() )
-      m_origin = createBranch (id());
+      setOrigin (createBranch (id()));
   }
   if ( populated() )
     doPopulate();
@@ -1821,6 +1857,56 @@ void KPlayerPlaylistNode::setupSource (void)
     }
     meta -> deleteGroup (group);
   }
+}
+
+void KPlayerPlaylistNode::setupOrigin (void)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerPlaylistNode::setupOrigin\n";
+  if ( origin() )
+    kdDebugTime() << " Origin " << origin() -> url() << "\n";
+#endif
+  KPlayerGroupNode::setupOrigin();
+  if ( origin() && origin() -> hasProperties() )
+  {
+    media() -> setName (origin() -> name());
+    connect (origin() -> parent(), SIGNAL (nodeUpdated (KPlayerContainerNode*, KPlayerNode*)),
+      SLOT (originUpdated (KPlayerContainerNode*, KPlayerNode*)));
+  }
+}
+
+void KPlayerPlaylistNode::originUpdated (KPlayerContainerNode*, KPlayerNode* node)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerPlaylist::originUpdated\n";
+  kdDebugTime() << " Node   " << node -> url().url() << "\n";
+#endif
+  if ( node == origin() && name() != origin() -> name() )
+  {
+    media() -> setName (origin() -> name());
+    media() -> commit();
+  }
+}
+
+void KPlayerPlaylistNode::releaseOrigin (void)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerPlaylistNode::releaseOrigin\n";
+#endif
+  if ( origin() && origin() -> hasProperties() )
+    disconnect (origin() -> parent(), SIGNAL (nodeUpdated (KPlayerContainerNode*, KPlayerNode*)),
+      this, SLOT (originUpdated (KPlayerContainerNode*, KPlayerNode*)));
+  KPlayerGroupNode::releaseOrigin();
+}
+
+QString KPlayerPlaylistNode::icon (void) const
+{
+  return origin() ? origin() -> icon() : "folder_violet";
+}
+
+QString KPlayerPlaylistNode::openIcon (void) const
+{
+  return origin() ? origin() -> icon() : "folder_violet_open";
 }
 
 bool KPlayerPlaylistNode::canLink (KPlayerContainerNode* node) const
@@ -1895,7 +1981,7 @@ bool KPlayerNowPlayingNode::canLink (KPlayerContainerNode* node) const
   kdDebugTime() << "KPlayerNowPlayingNode::canLink\n";
   kdDebugTime() << " Node   " << node -> url() << "\n";
 #endif
-  return node -> isCollection() || node -> isDirectory()
+  return node -> isCollection() || node -> isDirectory() || node -> hasProperties()
     || node -> isPlaylist() && ! node -> isRecent() && ! node -> isNowPlaying();
 }
 
@@ -1906,12 +1992,70 @@ bool KPlayerNowPlayingNode::isNowPlaying (void) const
 
 QString KPlayerNowPlayingNode::icon (void) const
 {
-  return "folder_red";
+  return origin() ? origin() -> icon() : "folder_red";
 }
 
 QString KPlayerNowPlayingNode::openIcon (void) const
 {
-  return "folder_red_open";
+  return origin() ? origin() -> icon() : "folder_red_open";
+}
+
+void KPlayerNowPlayingNode::setupOrigin (void)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerNowPlayingNode::setupOrigin\n";
+  if ( origin() )
+    kdDebugTime() << " Origin " << origin() -> url() << "\n";
+#endif
+  KPlayerPlaylistNode::setupOrigin();
+  if ( origin() && origin() -> hasProperties() && ((KPlayerDeviceNode*) origin()) -> diskDevice() )
+  {
+    KPlayerDiskNode* disk = (KPlayerDiskNode*) origin();
+    if ( disk -> dataDisk() )
+      if ( disk -> hasLocalPath() )
+      {
+        KPlayerContainerNode* origin = getNodeByUrl (KURL::fromPathOrURL (disk -> localPath()));
+        if ( origin )
+        {
+          disconnect (m_origin -> parent(), SIGNAL (nodeUpdated (KPlayerContainerNode*, KPlayerNode*)),
+            this, SLOT (originUpdated (KPlayerContainerNode*, KPlayerNode*)));
+          m_origin -> reference();
+          m_origin -> release();
+          setOrigin (origin);
+        }
+      }
+      else
+        disk -> getLocalPath();
+  }
+}
+
+void KPlayerNowPlayingNode::originUpdated (KPlayerContainerNode* parent, KPlayerNode* node)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerPlaylist::originUpdated\n";
+  kdDebugTime() << " Node   " << node -> url().url() << "\n";
+#endif
+  KPlayerPlaylistNode::originUpdated (parent, node);
+  if ( node == origin() && node -> hasProperties() && ((KPlayerDeviceNode*) node) -> diskDevice() )
+  {
+    KPlayerDiskNode* disk = (KPlayerDiskNode*) node;
+    if ( disk -> dataDisk() )
+      if ( disk -> hasLocalPath() )
+      {
+        KPlayerContainerNode* origin = getNodeByUrl (KURL::fromPathOrURL (disk -> localPath()));
+        if ( origin )
+        {
+          disconnect (node -> parent(), SIGNAL (nodeUpdated (KPlayerContainerNode*, KPlayerNode*)),
+            this, SLOT (originUpdated (KPlayerContainerNode*, KPlayerNode*)));
+          node -> release();
+          origin -> reference();
+          setOrigin (origin);
+          media() -> commit();
+        }
+      }
+      else
+        disk -> getLocalPath();
+  }
 }
 
 KPlayerRecentNode::~KPlayerRecentNode()
@@ -1929,7 +2073,7 @@ bool KPlayerRecentNode::canLink (KPlayerContainerNode* node) const
   kdDebugTime() << "KPlayerRecentNode::canLink\n";
   kdDebugTime() << " Node   " << node -> url() << "\n";
 #endif
-  return node -> isCollection() || node -> isDirectory()
+  return node -> isCollection() || node -> isDirectory() || node -> hasProperties()
     || node -> isPlaylist() && ! node -> isRecent() && ! node -> isNowPlaying();
 }
 
@@ -1942,12 +2086,12 @@ KPlayerContainerNode* KPlayerRecentNode::createBranch (const QString& id, KPlaye
 
 QString KPlayerRecentNode::icon (void) const
 {
-  return "folder_red";
+  return origin() ? origin() -> icon() : "folder_red";
 }
 
 QString KPlayerRecentNode::openIcon (void) const
 {
-  return "folder_red_open";
+  return origin() ? origin() -> icon() : "folder_red_open";
 }
 
 KPlayerRecentsNode::~KPlayerRecentsNode()
@@ -2001,12 +2145,32 @@ void KPlayerRecentsNode::addRecent (const KPlayerNodeList& list)
     }
     if ( just_move )
       move (list, this);
-    else if ( list.count() == 1 && ! list.getFirst() -> isContainer() )
+    else if ( list.count() == 1 )
+    {
+      KPlayerNode* listnode = list.getFirst();
+      bool container = listnode -> isContainer();
+      KPlayerNodeList previous;
+      KPlayerNodeListIterator iterator (nodes());
+      while ( KPlayerNode* node = iterator.current() )
+      {
+        if ( container && node -> isContainer() && ((KPlayerContainerNode*) node) -> origin() == listnode
+            || ! container && ! node -> isContainer() && node -> media() == listnode -> media() )
+          previous.append (node);
+        ++ iterator;
+      }
+      if ( ! previous.isEmpty() )
+        remove (previous);
       prepend (list);
+      if ( container && ! listnode -> hasProperties() )
+      {
+        KPlayerNode* firstnode = nodes().getFirst();
+        firstnode -> media() -> setName (i18n("%1 in %2").arg (listnode -> name(), listnode -> parent() -> name()));
+        firstnode -> media() -> commit();
+      }
+    }
     else
     {
-      QString name (list.count() == 1 ? list.getFirst() -> name()
-        : list.count() == 2 ? i18n("%1 and %2").arg (list.getFirst() -> name()).arg (list.getLast() -> name())
+      QString name (list.count() == 2 ? i18n("%1 and %2").arg (list.getFirst() -> name()).arg (list.getLast() -> name())
         : i18n("%1 and %2 more").arg (list.getFirst() -> name()).arg (list.count() - 1));
       QString id (name);
       for ( int i = 0; nodeById (id); i ++ )
@@ -2014,7 +2178,7 @@ void KPlayerRecentsNode::addRecent (const KPlayerNodeList& list)
       prependBranch (id);
       KPlayerContainerNode* container = getNodeById (id);
       container -> media() -> setName (name);
-      container -> prepend (list.count() == 1 ? ((KPlayerContainerNode*) list.getFirst()) -> nodes() : list);
+      container -> prepend (list);
     }
     configurationUpdated();
     vacate();
@@ -2069,6 +2233,12 @@ void KPlayerDevicesNode::setupSource (void)
   connect (&m_lister, SIGNAL (deleteItem (KFileItem*)), SLOT (removed (KFileItem*)));
   QStringList mimetypes;
   mimetypes.append ("media/audiocd");
+  mimetypes.append ("media/cdrom_mounted");
+  mimetypes.append ("media/cdrom_unmounted");
+  mimetypes.append ("media/cdwriter_mounted");
+  mimetypes.append ("media/cdwriter_unmounted");
+  mimetypes.append ("media/dvd_mounted");
+  mimetypes.append ("media/dvd_unmounted");
   mimetypes.append ("media/dvdvideo");
   mimetypes.append ("media/svcd");
   mimetypes.append ("media/vcd");
@@ -2090,12 +2260,12 @@ KPlayerContainerNode* KPlayerDevicesNode::createBranch (const QString& id, KPlay
 
 QString KPlayerDevicesNode::icon (void) const
 {
-  return "folder_violet";
+  return "system";
 }
 
 QString KPlayerDevicesNode::openIcon (void) const
 {
-  return "folder_violet_open";
+  return "system";
 }
 
 bool KPlayerDevicesNode::isDevices (void) const
@@ -2307,6 +2477,44 @@ void KPlayerDevicesNode::completed (void)
   m_complete = true;
 }
 
+void KPlayerDevicesNode::refreshItem (KFileItem* item)
+{
+  QString path ("/dev" + item -> url().path());
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDevicesNode::refreshItem\n";
+  kdDebugTime() << " Item   " << item -> url() << "\n";
+  kdDebugTime() << " Type   " << item -> mimetype() << "\n";
+  kdDebugTime() << " Text   " << item -> text() << "\n";
+  kdDebugTime() << " Name   " << item -> name() << "\n";
+  kdDebugTime() << " Local  " << item -> localPath() << "\n";
+  kdDebugTime() << " Comment " << item -> mimeComment() << "\n";
+  kdDebugTime() << " Icon   " << item -> iconName() << "\n";
+  kdDebugTime() << " URL    " << item -> url().url() << "\n";
+  kdDebugTime() << " Permissions " << item -> permissions() << "\n";
+  kdDebugTime() << " Mode   " << item -> mode() << "\n";
+  kdDebugTime() << " User   " << item -> user() << "\n";
+  kdDebugTime() << " Group  " << item -> group() << "\n";
+  kdDebugTime() << " Size   " << item -> size() << "\n";
+  kdDebugTime() << " Modification Time " << item -> time (KIO::UDS_MODIFICATION_TIME) << "\n";
+  kdDebugTime() << " Access Time " << item -> time (KIO::UDS_ACCESS_TIME) << "\n";
+  kdDebugTime() << " Creation Time " << item -> time (KIO::UDS_CREATION_TIME) << "\n";
+  kdDebugTime() << " Overlays " << item -> overlays() << "\n";
+  kdDebugTime() << " Status " << item -> getStatusBarInfo() << "\n";
+  kdDebugTime() << " Tool Tip " << item -> getToolTipText() << "\n";
+  kdDebugTime() << " Drops  " << item -> acceptsDrops() << "\n";
+  kdDebugTime() << " Marked " << item -> isMarked() << "\n";
+  kdDebugTime() << " Path   " << path << "\n";
+#endif
+  QString type (item -> mimetype() == "media/audiocd" ? I18N_NOOP("Audio CD")
+    : item -> mimetype() == "media/dvdvideo" ? "DVD"
+    : item -> mimetype() == "media/svcd" || item -> mimetype() == "media/vcd" ? I18N_NOOP("Video CD")
+    : item -> mimetype().startsWith ("media/dvd") ? I18N_NOOP("Data DVD") : I18N_NOOP("Data CD"));
+  m_disk_types.insert (path, type);
+  KPlayerDeviceNode* node = nodeById (path);
+  if ( node && node -> diskDevice() )
+    ((KPlayerDiskNode*) node) -> diskInserted (item -> localPath());
+}
+
 void KPlayerDevicesNode::refresh (const KFileItemList& items)
 {
 #ifdef DEBUG_KPLAYER_NODE
@@ -2315,23 +2523,7 @@ void KPlayerDevicesNode::refresh (const KFileItemList& items)
   KFileItemListIterator iterator (items);
   while ( KFileItem* item = iterator.current() )
   {
-    QString path ("/dev" + item -> url().path());
-#ifdef DEBUG_KPLAYER_NODE
-    kdDebugTime() << " Item   " << item -> url() << "\n";
-    kdDebugTime() << " Type   " << item -> mimetype() << "\n";
-    kdDebugTime() << " Text   " << item -> text() << "\n";
-    kdDebugTime() << " Name   " << item -> name() << "\n";
-    kdDebugTime() << " Local  " << item -> localPath() << "\n";
-    kdDebugTime() << " Comment " << item -> mimeComment() << "\n";
-    kdDebugTime() << " Icon   " << item -> iconName() << "\n";
-    kdDebugTime() << " Path   " << path << "\n";
-#endif
-    QString type (item -> mimetype() == "media/audiocd" ? "Audio CD"
-      : item -> mimetype() == "media/dvdvideo" ? "DVD" : "Video CD");
-    m_disk_types.insert (path, type);
-    KPlayerDeviceNode* node = nodeById (path);
-    if ( node )
-      node -> diskInserted();
+    refreshItem (item);
     ++ iterator;
   }
 }
@@ -2352,8 +2544,8 @@ void KPlayerDevicesNode::removed (KFileItem* item)
 #endif
   m_disk_types.remove (path);
   KPlayerDeviceNode* node = nodeById (path);
-  if ( node )
-    node -> diskRemoved();
+  if ( node && node -> diskDevice() )
+    ((KPlayerDiskNode*) node) -> diskRemoved();
 }
 
 void KPlayerDevicesNode::removed (const KPlayerNodeList& nodes)
@@ -2397,12 +2589,9 @@ bool KPlayerDeviceNode::allowsCustomOrder (void) const
   return false;
 }
 
-void KPlayerDeviceNode::diskInserted (void)
+bool KPlayerDeviceNode::diskDevice (void)
 {
-}
-
-void KPlayerDeviceNode::diskRemoved (void)
-{
+  return false;
 }
 
 void KPlayerDeviceNode::removed (void)
@@ -2423,6 +2612,7 @@ KPlayerDiskNode::~KPlayerDiskNode()
 
 void KPlayerDiskNode::setupMedia (void)
 {
+  m_fast_autodetect = false;
   m_media = m_device = KPlayerMedia::deviceProperties (metaurl());
   m_disk = 0;
   if ( ! media() -> hasType() )
@@ -2440,6 +2630,8 @@ void KPlayerDiskNode::setupSource (void)
 
 KPlayerNode* KPlayerDiskNode::createLeaf (const QString& id)
 {
+  if ( disk() && disk() -> type() == "Video CD" && disk() -> msf (id) == 6 )
+    return 0;
   KPlayerNode* node = new KPlayerTrackNode;
   node -> setup (this, id);
   return node;
@@ -2452,9 +2644,40 @@ QString KPlayerDiskNode::icon (void) const
   return (type == "DVD" ? "dvd" : type == "Audio CD" ? "cdaudio" : "cdrom") + suffix;
 }
 
+bool KPlayerDiskNode::ready (void) const
+{
+  return m_url.isNull() && (KPlayerEngine::engine() -> process() -> state() == KPlayerProcess::Idle
+    || KPlayerEngine::engine() -> properties() -> parent() != disk());
+}
+
 QString KPlayerDiskNode::suggestId (void) const
 {
   return media() -> url().fileName();
+}
+
+void KPlayerDiskNode::setDiskType (const QString& type)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDiskNode::setDiskType\n";
+  kdDebugTime() << " Type   " << type << "\n";
+#endif
+  disk() -> setType (type);
+  disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type.utf8())).arg (device() -> name()));
+}
+
+bool KPlayerDiskNode::diskDevice (void)
+{
+  return true;
+}
+
+bool KPlayerDiskNode::mediaDisk (void)
+{
+  return disk() && disk() -> hasType() && ! disk() -> type().startsWith ("Data ");
+}
+
+bool KPlayerDiskNode::dataDisk (void)
+{
+  return disk() && disk() -> type().startsWith ("Data ");
 }
 
 static QRegExp re_track_length ("^ID_(?:DVD_TITLE|VCD_TRACK|CDDA_TRACK)_(\\d+)_(?:LENGTH|MSF)=([0-9.:]+)$");
@@ -2491,43 +2714,67 @@ void KPlayerDiskNode::diskDetected (const QString& diskid)
   kdDebugTime() << "KPlayerDiskNode::diskDetected\n";
   kdDebugTime() << " ID     " << diskid << "\n";
 #endif
+  if ( diskid == suggestId() )
+    return;
+  KPlayerContainerNode::removed (nodes());
   KPlayerMedia* previous = media();
   previous -> disconnect (this);
   m_media = m_disk = KPlayerMedia::diskProperties (m_device, "kplayer:/disks/" + diskid);
-  const QString& type (parent() -> diskType (id()));
-  if ( ! type.isNull() )
-  {
-    disk() -> setType (type);
-    disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type.utf8())).arg (device() -> name()));
-  }
   connect (media(), SIGNAL (updated()), SLOT (refresh()));
+  const QString& type (parent() -> diskType (id()));
+  if ( type.isNull() )
+    disk() -> setDefaultName (i18n("Disk in %2").arg (device() -> name()));
+  else
+    setDiskType (type);
   media() -> diff (previous);
   if ( previous != device() )
     KPlayerMedia::release (previous);
 }
 
-void KPlayerDiskNode::diskInserted (void)
+void KPlayerDiskNode::diskInserted (const QString& path)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDiskNode::diskInserted\n";
 #endif
-  if ( ! disk() )
+  const QString& type (parent() -> diskType (id()));
+  if ( type.isNull() )
+    return;
+  m_fast_autodetect = true;
+  m_local_path = path;
+  if ( disk() )
   {
-    const QString& type (parent() -> diskType (id()));
-    if ( ! type.isNull() )
+    if ( disk() -> type() != type )
     {
-      media() -> disconnect (this);
+      KPlayerContainerNode::removed (nodes());
+      KPlayerMedia* previous = media();
+      previous -> disconnect (this);
       QString urls ("kplayer:/disks" + id());
       KPlayerEngine::engine() -> meta() -> deleteGroup (urls);
       m_media = m_disk = KPlayerMedia::diskProperties (m_device, urls);
-      disk() -> setType (type);
-      disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type.utf8())).arg (device() -> name()));
       connect (media(), SIGNAL (updated()), SLOT (refresh()));
-      media() -> diff (m_device);
-      if ( populated() && m_url.isNull() )
-        autodetect();
+      setDiskType (type);
+      media() -> diff (previous);
+      if ( previous != device() )
+        KPlayerMedia::release (previous);
     }
+    else
+      disk() -> commit();
   }
+  else
+  {
+#ifdef DEBUG_KPLAYER_NODE
+    kdDebugTime() << " Type   " << type << "\n";
+#endif
+    media() -> disconnect (this);
+    QString urls ("kplayer:/disks" + id());
+    KPlayerEngine::engine() -> meta() -> deleteGroup (urls);
+    m_media = m_disk = KPlayerMedia::diskProperties (device(), urls);
+    connect (media(), SIGNAL (updated()), SLOT (refresh()));
+    setDiskType (type);
+    media() -> diff (device());
+  }
+  if ( populated() && ready() && mediaDisk() && ! disk() -> hasTracks() )
+    autodetect();
 }
 
 void KPlayerDiskNode::diskRemoved (void)
@@ -2537,6 +2784,7 @@ void KPlayerDiskNode::diskRemoved (void)
 #endif
   if ( disk() )
   {
+    KPlayerContainerNode::removed (nodes());
     media() -> disconnect (this);
     KPlayerDiskProperties* d = disk();
     m_disk = 0;
@@ -2544,7 +2792,74 @@ void KPlayerDiskNode::diskRemoved (void)
     connect (media(), SIGNAL (updated()), SLOT (refresh()));
     media() -> diff (d);
     KPlayerMedia::release (d);
-    KPlayerContainerNode::removed (nodes());
+  }
+  m_fast_autodetect = false;
+  m_local_path = QString::null;
+  m_url = QString::null;
+}
+
+void KPlayerDiskNode::getLocalPath (void)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDiskNode::getLocalPath\n";
+#endif
+  if ( hasLocalPath() || ! dataDisk() || ! ready() )
+    return;
+  m_url = "list://";
+  KIO::ListJob* job = KIO::listDir ("media:/" + url().fileName(), false, false);
+  connect (job, SIGNAL(result(KIO::Job*)), SLOT(listResult(KIO::Job*)));
+}
+
+void KPlayerDiskNode::listResult (KIO::Job* job)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDiskNode::listResult\n";
+#endif
+  if ( job -> error() )
+  {
+#ifdef DEBUG_KPLAYER_NODE
+    kdDebugTime() << " Error  " << job -> error() << " " << job -> errorString() << "\n";
+#endif
+    m_url = "mount://";
+    KIO::SimpleJob* job = KIO::mount (true, 0, id(), QString::null, false);
+    connect (job, SIGNAL(result(KIO::Job*)), SLOT(mountResult(KIO::Job*)));
+  }
+  else
+  {
+    m_url = "path://";
+    KIO::StatJob* job = KIO::stat ("media:/" + url().fileName(), false);
+    connect (job, SIGNAL(result(KIO::Job*)), SLOT(pathResult(KIO::Job*)));
+  }
+}
+
+void KPlayerDiskNode::mountResult (KIO::Job* job)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDiskNode::mountResult\n";
+  if ( job -> error() )
+    kdDebugTime() << " Error  " << job -> error() << " " << job -> errorString() << "\n";
+#endif
+  m_url = "path://";
+  job = KIO::stat ("media:/" + url().fileName(), false);
+  connect (job, SIGNAL(result(KIO::Job*)), SLOT(pathResult(KIO::Job*)));
+}
+
+void KPlayerDiskNode::pathResult (KIO::Job* job)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDiskNode::pathResult\n";
+#endif
+  if ( job -> error() )
+  {
+#ifdef DEBUG_KPLAYER_NODE
+    kdDebugTime() << " Error  " << job -> error() << " " << job -> errorString() << "\n";
+#endif
+  }
+  else
+  {
+    KFileItem item (((KIO::StatJob*) job) -> statResult(), "media:/" + url().fileName());
+    if ( ! item.localPath().isEmpty() )
+      parent() -> refreshItem (&item);
   }
   m_url = QString::null;
 }
@@ -2555,7 +2870,7 @@ int KPlayerDiskNode::tracks (void)
   kdDebugTime() << "KPlayerDiskNode::tracks\n";
 #endif
   int n = disk() ? disk() -> tracks() : 0;
-  if ( n == 0 && m_url.isNull() )
+  if ( n == 0 && ready() && ! dataDisk() )
   {
     autodetect();
     if ( disk() )
@@ -2567,24 +2882,56 @@ int KPlayerDiskNode::tracks (void)
   return n;
 }
 
+void KPlayerDiskNode::loadDisk (void)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDiskNode::loadDisk\n";
+#endif
+  if ( ready() && disk() && disk() -> hasTracks() )
+    diskRemoved();
+  if ( ready() )
+    autodetect();
+}
+
 void KPlayerDiskNode::autodetect (void)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDiskNode::autodetect\n";
+  kdDebugTime() << " Fast   " << m_fast_autodetect << "\n";
+  if ( disk() && disk() -> hasType() )
+    kdDebugTime() << " Type   " << disk() -> type() << "\n";
 #endif
   m_autodetected = false;
   m_detected_tracks = 0;
   m_track_lengths.clear();
   m_disk_id = QString::null;
-  QString type;
-  if ( disk() )
-    type = disk() -> type();
-  if ( m_url.isNull() && type != I18N_NOOP("Video CD") )
+  m_local_path = QString::null;
+  if ( ! disk() || ! disk() -> hasType() )
+    m_fast_autodetect = false;
+  if ( ! m_fast_autodetect && ready() || m_fast_autodetect && disk() -> type() == "DVD" && m_url != "dvd://" )
     m_url = "dvd://";
-  else if ( type == I18N_NOOP("Audio CD") || type.isNull() && m_url == "dvd://" )
+  else if ( ! m_fast_autodetect && m_url == "dvd://"
+      || m_fast_autodetect && disk() -> type() == "Audio CD" && m_url != "cdda://" )
     m_url = "cdda://";
-  else
+  else if ( ! m_fast_autodetect && m_url == "cdda://"
+    || m_fast_autodetect && disk() -> type().startsWith ("Data ") && m_url != "data://" )
+  {
+    m_url = "data://";
+    KIO::StatJob* job = KIO::stat ("media:/" + url().fileName(), false);
+    connect (job, SIGNAL(result(KIO::Job*)), SLOT(statResult(KIO::Job*)));
+    return;
+  }
+  else if ( ! m_fast_autodetect && m_url == "data://"
+      || m_fast_autodetect && disk() -> type() == "Video CD" && m_url != "vcd://" )
     m_url = "vcd://";
+  else
+  {
+    diskRemoved();
+    return;
+  }
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << " URL    " << m_url << "\n";
+#endif
   KPlayerLineOutputProcess* process = new KPlayerLineOutputProcess;
   *process << media() -> executablePath() << (m_url == "dvd://" ? "-dvd-device" : "-cdrom-device") << id()
     << "-msglevel" << "identify=6" << "-ao" << "null" << "-vo" << "null" << "-frames" << "0" << m_url;
@@ -2628,7 +2975,7 @@ void KPlayerDiskNode::processExited (KProcess* process)
   kdDebugTime() << "KPlayerDiskNode::processExited\n";
 #endif
   delete process;
-  if ( m_url.isNull() )
+  if ( ready() )
     return;
   if ( m_autodetected && m_url == "cdda://" )
   {
@@ -2649,20 +2996,33 @@ void KPlayerDiskNode::processExited (KProcess* process)
     process -> start (KProcess::NotifyOnExit, KProcess::All);
     return;
   }
-  if ( m_autodetected || m_url == "cdda://" )
+  if ( m_autodetected || m_url == "cdda://" && ! m_fast_autodetect )
     if ( ! accessDisk() )
     {
       diskRemoved();
       return;
     }
-    else if ( disk() -> tracks() )
-      m_autodetected = true;
-  if ( m_autodetected )
+    else if ( dataDisk() || mediaDisk() && disk() -> hasTracks() )
+    {
+      m_url = QString::null;
+      setDiskType (disk() -> type());
+      disk() -> commit();
+      updateTracks();
+      return;
+    }
+  if ( m_autodetected && disk() )
     autodetected();
-  else if ( m_url == "vcd://" || disk() && disk() -> hasType() && (disk() -> type() == "DVD" || m_url == "cdda://") )
-    diskRemoved();
-  else
+  else if ( m_url != "vcd://" || m_fast_autodetect && disk() && disk() -> hasType() )
     autodetect();
+  else
+  {
+    m_url = QString::null;
+    if ( disk() )
+    {
+      setDiskType (I18N_NOOP("Data Disk"));
+      disk() -> commit();
+    }
+  }
 }
 
 void KPlayerDiskNode::autodetected (void)
@@ -2672,36 +3032,69 @@ void KPlayerDiskNode::autodetected (void)
 #endif
   QString type (m_url == "cdda://" ? "Audio CD" : m_url == "dvd://" ? "DVD"
     : m_url == "vcd://" ? "Video CD" : disk() -> type());
-  disk() -> setType (type);
-  disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type.utf8())).arg (device() -> name()));
+  m_url = QString::null;
+  setDiskType (type);
   if ( m_detected_tracks )
     disk() -> setTracks (m_detected_tracks);
-  else
-    m_detected_tracks = disk() -> tracks();
   disk() -> commit();
+  updateTracks();
+}
+
+void KPlayerDiskNode::updateTracks (void)
+{
+  if ( ! mediaDisk() )
+    return;
 #ifdef DEBUG_KPLAYER_NODE
-  kdDebugTime() << " Tracks " << m_detected_tracks << "\n";
+  kdDebugTime() << "KPlayerDiskNode::updateTracks\n";
+  kdDebugTime() << " Tracks " << disk() -> tracks() << "\n";
 #endif
-  QString key (type == "Video CD" ? "MSF" : "Length");
-  QStringList tracklist;
-  for ( uint track = 1; track <= m_detected_tracks; ++ track )
+  if ( int (nodes().count()) != disk() -> tracks() )
   {
-    tracklist.append (QString::number (track));
-    if ( track <= m_track_lengths.count() )
+    if ( nodes().count() )
+      KPlayerContainerNode::removed (nodes());
+    QString key (disk() -> type() == "Video CD" ? "MSF" : "Length");
+    QStringList tracklist;
+    for ( int track = 1; track <= disk() -> tracks(); ++ track )
     {
-      KURL url (disk() -> url());
-      url.addPath (QString::number (track));
-      KPlayerTrackProperties* media = KPlayerMedia::trackProperties (url);
-      if ( ! media -> has (key) )
+      tracklist.append (QString::number (track));
+      if ( track <= int (m_track_lengths.count()) )
       {
-        media -> setFloat (key, m_track_lengths [track - 1]);
-        media -> commit();
+        KURL url (disk() -> url());
+        url.addPath (QString::number (track));
+        KPlayerTrackProperties* media = KPlayerMedia::trackProperties (url);
+        if ( ! media -> has (key) )
+        {
+          media -> setFloat (key, m_track_lengths [track - 1]);
+          media -> commit();
+        }
+        KPlayerMedia::release (media);
       }
-      KPlayerMedia::release (media);
     }
+    addedLeaves (tracklist);
   }
-  addedLeaves (tracklist);
-  m_url = QString::null;
+}
+
+void KPlayerDiskNode::statResult (KIO::Job* job)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDiskNode::statResult\n";
+#endif
+  if ( job -> error() )
+  {
+#ifdef DEBUG_KPLAYER_NODE
+    kdDebugTime() << " Error  " << job -> error() << " " << job -> errorString() << "\n";
+#endif
+  }
+  else
+  {
+    KFileItem item (((KIO::StatJob*) job) -> statResult(), "media:/" + url().fileName());
+    if ( ! item.localPath().isEmpty() )
+      parent() -> refreshItem (&item);
+  }
+  if ( dataDisk() )
+    m_url = QString::null;
+  else
+    autodetect();
 }
 
 void KPlayerDiskNode::receivedCddbOutput (KPlayerLineOutputProcess*, char* str, int)
@@ -2898,8 +3291,40 @@ KPlayerNodeList KPlayerNodeList::fromUrlList (const KURL::List& urls)
     KURL url (*iterator);
     if ( url.path().isEmpty() && url.host().isEmpty() && url.protocol() == "file" )
       continue;
+#ifdef DEBUG_KPLAYER_NODE
+    kdDebugTime() << " URL    " << url.url() << "\n";
+    kdDebugTime() << " Path   " << url.path() << "\n";
+#endif
     bool group = false;
     KPlayerNode* node = 0;
+    if ( url.protocol() == "media" )
+    {
+      node = KPlayerNode::getNodeByUrl ("kplayer:/devices/dev" + url.path());
+      if ( ! node || ! ((KPlayerDeviceNode*) node) -> diskDevice() || ! ((KPlayerDiskNode*) node) -> mediaDisk() )
+      {
+        KIO::UDSEntry entry;
+        if ( KIO::NetAccess::stat (url, entry, 0) )
+        {
+          KFileItem item (entry, url);
+#ifdef DEBUG_KPLAYER_NODE
+          kdDebugTime() << " Type   " << item.mimetype() << "\n";
+#endif
+          QString path (item.localPath());
+          if ( ! path.isEmpty() )
+          {
+            url = KURL::fromPathOrURL (path);
+#ifdef DEBUG_KPLAYER_NODE
+            kdDebugTime() << " Local  " << path << "\n";
+#endif
+            node = 0;
+          }
+        }
+#ifdef DEBUG_KPLAYER_NODE
+        else
+          kdDebugTime() << " Error  " << KIO::NetAccess::lastErrorString() << "\n";
+#endif
+      }
+    }
     if ( url.isLocalFile() )
     {
       QFileInfo info (url.path());
@@ -2911,7 +3336,8 @@ KPlayerNodeList KPlayerNodeList::fromUrlList (const KURL::List& urls)
       node -> reference();
     else
       node = KPlayerNode::root() -> temporaryNode() -> temporaryItem (url.url());
-    list.append (node);
+    if ( node )
+      list.append (node);
     ++ iterator;
   }
   return list;
@@ -2934,10 +3360,10 @@ int KPlayerPlaylistNodeList::compareItems (QPtrCollection::Item item1, QPtrColle
 {
   KPlayerNode* node1 = (KPlayerNode*) item1;
   KPlayerNode* node2 = (KPlayerNode*) item2;
-  while ( node1 )
+  while ( node1 -> parent() )
   {
     KPlayerNode* node = node2;
-    while ( node )
+    while ( node -> parent() )
     {
       if ( node1 -> parent() == node -> parent() )
         return node1 -> compare (node);

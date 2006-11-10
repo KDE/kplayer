@@ -123,6 +123,9 @@ void KPlayerNodeActionList::updated (KPlayerContainerNode*, KPlayerNode* node)
       QString name (node -> name());
       if ( action -> text() != name )
       {
+#ifdef DEBUG_KPLAYER_NODEACTION
+        kdDebugTime() << " Name   " << name << "\n";
+#endif
         action -> setText (name);
         updateAction (action);
       }
@@ -289,7 +292,7 @@ KAction* KPlayerDevicesActionList::createAction (KPlayerNode* node)
 KPlayerDeviceActionMenu::KPlayerDeviceActionMenu (KPlayerDeviceNode* device)
   : KActionMenu (device -> name(), device)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "Creating device action menu\n";
   kdDebugTime() << " URL    " << device -> url().url() << "\n";
 #endif
@@ -306,7 +309,7 @@ KPlayerDeviceActionMenu::KPlayerDeviceActionMenu (KPlayerDeviceNode* device)
 
 KPlayerDeviceActionMenu::~KPlayerDeviceActionMenu()
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "Destroying device action menu\n";
   kdDebugTime() << " ID     " << device() -> id() << "\n";
 #endif
@@ -317,7 +320,7 @@ KPlayerDeviceActionMenu::~KPlayerDeviceActionMenu()
 
 void KPlayerDeviceActionMenu::setup (void)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDeviceActionMenu::setup\n";
 #endif
   m_populated = true;
@@ -327,7 +330,7 @@ void KPlayerDeviceActionMenu::setup (void)
 
 void KPlayerDeviceActionMenu::play (void)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDeviceActionMenu::play\n";
   if ( sender() )
     kdDebugTime() << " Sender " << sender() -> className() << "\n";
@@ -340,7 +343,7 @@ void KPlayerDeviceActionMenu::play (void)
 
 void KPlayerDeviceActionMenu::updateActions (void)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDeviceActionMenu::updateActions\n";
 #endif
   QPtrList<KAction> actions (m_actions);
@@ -355,7 +358,7 @@ void KPlayerDeviceActionMenu::updateActions (void)
   KPlayerNodeListIterator iterator (device() -> nodes());
   while ( KPlayerNode* node = iterator.current() )
   {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
     kdDebugTime() << " Track  " << node -> url().url() << "\n";
 #endif
     QPtrListIterator<KAction> actit (actions);
@@ -379,7 +382,7 @@ void KPlayerDeviceActionMenu::updateActions (void)
     insert (action);
     ++ actmit;
   }
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << " Current " << m_actions.count() << "\n";
   kdDebugTime() << " Removed " << actions.count() << "\n";
 #endif
@@ -388,7 +391,7 @@ void KPlayerDeviceActionMenu::updateActions (void)
 
 void KPlayerDeviceActionMenu::added (KPlayerContainerNode*, const KPlayerNodeList&, KPlayerNode*)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDeviceActionMenu::added\n";
   kdDebugTime() << " URL    " << device() -> url().url() << "\n";
 #endif
@@ -397,7 +400,7 @@ void KPlayerDeviceActionMenu::added (KPlayerContainerNode*, const KPlayerNodeLis
 
 void KPlayerDeviceActionMenu::removed (KPlayerContainerNode*, const KPlayerNodeList&)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDeviceActionMenu::removed\n";
 #endif
   updateActions();
@@ -405,7 +408,7 @@ void KPlayerDeviceActionMenu::removed (KPlayerContainerNode*, const KPlayerNodeL
 
 void KPlayerDeviceActionMenu::updated (KPlayerContainerNode*, KPlayerNode* node)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDeviceActionMenu::updated\n";
   kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
@@ -426,7 +429,7 @@ void KPlayerDeviceActionMenu::updated (KPlayerContainerNode*, KPlayerNode* node)
 KPlayerDiskActionMenu::KPlayerDiskActionMenu (KPlayerDeviceNode* device)
   : KPlayerDeviceActionMenu (device)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "Creating disk action menu\n";
   kdDebugTime() << " URL    " << device -> url().url() << "\n";
 #endif
@@ -437,7 +440,7 @@ KPlayerDiskActionMenu::KPlayerDiskActionMenu (KPlayerDeviceNode* device)
 
 KPlayerDiskActionMenu::~KPlayerDiskActionMenu()
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "Destroying disk action menu\n";
   kdDebugTime() << " ID     " << device() -> id() << "\n";
 #endif
@@ -445,7 +448,7 @@ KPlayerDiskActionMenu::~KPlayerDiskActionMenu()
 
 void KPlayerDiskActionMenu::setup (void)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDiskActionMenu::setup\n";
 #endif
   setText (device() -> name());
@@ -454,7 +457,7 @@ void KPlayerDiskActionMenu::setup (void)
 
 void KPlayerDiskActionMenu::setText (const QString& text)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDiskActionMenu::setText\n";
   kdDebugTime() << " URL    " << device() -> url().url() << "\n";
   kdDebugTime() << " Text   " << text << "\n";
@@ -468,7 +471,8 @@ void KPlayerDiskActionMenu::setText (const QString& text)
   bool use_name = device() -> disk() && text != device() -> disk() -> defaultName();
   m_load_action -> setText (use_name ? i18n("&Load %1").arg (text) : i18n("&Load Disk"));
   m_play_action -> setText (use_name ? i18n("&Play %1").arg (text) : i18n("&Play Disk"));
-  if ( ! m_populated && (device() -> populated() || device() -> disk() && device() -> parent() -> complete()) )
+  if ( ! m_populated && ! device() -> dataDisk() && (device() -> populated()
+    || device() -> disk() && device() -> parent() -> complete()) )
   {
     m_populated = true;
     device() -> populate();
@@ -477,21 +481,23 @@ void KPlayerDiskActionMenu::setText (const QString& text)
 
 void KPlayerDiskActionMenu::loadDisk (void)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDiskActionMenu::loadDisk\n";
 #endif
-  if ( m_populated )
-    device() -> vacate();
-  m_populated = true;
-  device() -> populate();
+  if ( ! m_populated )
+  {
+    m_populated = true;
+    device() -> populate();
+  }
+  device() -> loadDisk();
 }
 
 void KPlayerDiskActionMenu::playDisk (void)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDiskActionMenu::playDisk\n";
 #endif
-  if ( device() -> populated() && device() -> nodes().count() )
+  if ( device() -> dataDisk() || device() -> populated() && device() -> nodes().count() )
     emit activated (device());
   else
   {
@@ -502,7 +508,7 @@ void KPlayerDiskActionMenu::playDisk (void)
 
 void KPlayerDiskActionMenu::updateActions (void)
 {
-#ifdef DEBUG_KPLAYER_PLAYLIST
+#ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDiskActionMenu::updateActions\n";
 #endif
   if ( m_play_disk )
@@ -513,8 +519,7 @@ void KPlayerDiskActionMenu::updateActions (void)
   remove (m_load_action);
   remove (m_play_action);
   QString name (device() -> name());
-  if ( ! device() -> populated() || device() -> nodes().count() == 0 )
-    insert (m_load_action);
   insert (m_play_action);
   KPlayerDeviceActionMenu::updateActions();
+  insert (m_load_action);
 }

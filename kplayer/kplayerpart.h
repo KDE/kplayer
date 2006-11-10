@@ -56,14 +56,12 @@ public:
   KPlayerPart (QWidget*, const char*, QObject*, const char*, const QStringList&);
   virtual ~KPlayerPart();
 
-  /** Returns the data for the About dialog.
-   **/
+  /** Returns the data for the About dialog. **/
   static KAboutData* createAboutData (void);
 
   virtual bool openURL (const KURL&);
 
-  /** Enables or disables player actions.
-    */
+  /** Enables or disables player actions. */
 //void enablePlayerActions (void);
 
   /** Enables a toolbar.
@@ -75,54 +73,41 @@ public:
    */
 //void disableToolbar (int index);
 
-  /** Returns a pointer to the toolbar with the given index.
-   */
+  /** Returns a pointer to the toolbar with the given index. */
   //KToolBar* toolBar (int);
 
 public slots:
-  /** Stops playback, starts KPlayer and gives it the URL.
-    */
+  /** Stops playback, starts KPlayer and gives it the URL. */
   void launchKPlayer (void);
 
-  /** Stops the KPlayerProcess and closes the KPlayerWidget.
-    */
+  /** Stops the KPlayerProcess and closes the KPlayerWidget. */
   //virtual bool closeURL (void);
 
-  /** Toggles the progress toolbar.
-    */
+  /** Toggles the progress toolbar. */
 //void viewProgressToolbar (void);
-  /** Toggles the volume toolbar.
-    */
+  /** Toggles the volume toolbar. */
 //void viewVolumeToolbar (void);
 
-  /** Receives the stateChanged signal from KPlayerProcess.
-    */
+  /** Receives the stateChanged signal from KPlayerProcess. */
 //void playerStateChanged (KPlayerProcess::State);
-  /** Receives the infoAvailable signal from KPlayerProcess.
-    */
+  /** Receives the infoAvailable signal from KPlayerProcess. */
 //void playerInfoAvailable (void);
-  /** Displays the right click popup menu.
-    */
-  void widgetContextMenu (QContextMenuEvent*);
+  /** Displays the right click popup menu at the given position. */
+  void widgetContextMenu (const QPoint& global_position);
 
 protected:
-  /** Initializes the KActions of the KPart.
-    */
+  /** Initializes the KActions of the KPart. */
   void initActions (void);
-  /** Dummy openFile required because of KParts::ReadOnlyPart design flaw.
-    */
+  /** Dummy openFile required because of KParts::ReadOnlyPart design flaw. */
   virtual bool openFile (void)
     { return false; }
 
-  /** Saves options to the configuration file.
-   */
+  /** Saves options to the configuration file. */
 //void saveOptions (void);
-  /** Reads options from the configuration file.
-    */
+  /** Reads options from the configuration file. */
 //void readOptions (void);
 
-  /** The browser extension.
-   */
+  /** The browser extension. */
   //KPlayerBrowserExtension* m_extension;
 
   QPopupMenu* m_popup_menu;

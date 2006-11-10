@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include <klocale.h>
+#include <qtimer.h>
 #include <qwhatsthis.h>
 
 #ifdef DEBUG
@@ -258,7 +259,7 @@ void KPlayerWorkspace::resizeHandler (bool resizing)
     return;
   m_resizing = resizing;
   if ( ! resizing )
-    QApplication::postEvent (this, new QResizeEvent (size(), size()));
+    QTimer::singleShot (0, this, SIGNAL(userResize()));
 }
 
 void KPlayerWorkspace::resizeEvent (QResizeEvent* event)
@@ -282,8 +283,32 @@ void KPlayerWorkspace::contextMenuEvent (QContextMenuEvent* event)
 #ifdef DEBUG_KPLAYER_WORKSPACE
   kdDebugTime() << "KPlayerWorkspace context menu\n";
 #endif
-  emit contextMenu (event);
+  emit contextMenu (event -> globalPos());
   event -> accept();
+}
+
+void KPlayerWorkspace::mousePressEvent (QMouseEvent* event)
+{
+#ifdef DEBUG_KPLAYER_WIDGET
+  kdDebugTime() << "KPlayerWorkspace mouse press event\n";
+#endif
+  QWidget::mousePressEvent (event);
+  if ( kPlayerEngine() -> light() && event -> button() == Qt::RightButton )
+  {
+    emit contextMenu (event -> globalPos());
+    event -> accept();
+  }
+  else
+    event -> ignore();
+}
+
+void KPlayerWorkspace::mouseReleaseEvent (QMouseEvent* event)
+{
+#ifdef DEBUG_KPLAYER_WIDGET
+  kdDebugTime() << "KPlayerWorkspace mouse release event\n";
+#endif
+  QWidget::mouseReleaseEvent (event);
+  event -> ignore();
 }
 
 void KPlayerWorkspace::mouseDoubleClickEvent (QMouseEvent* event)

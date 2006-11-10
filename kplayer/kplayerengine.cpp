@@ -104,6 +104,7 @@ KPlayerEngine::KPlayerEngine (KActionCollection* ac, QWidget* parent, const char
   m_workspace = new KPlayerWorkspace (parent, name);
   m_widget = workspace() -> widget();
   connect (workspace(), SIGNAL (resized()), this, SLOT (workspaceResized()));
+  connect (workspace(), SIGNAL (userResize()), this, SLOT (workspaceUserResize()));
   connect (process(), SIGNAL (stateChanged(KPlayerProcess::State, KPlayerProcess::State)), this, SLOT (playerStateChanged(KPlayerProcess::State, KPlayerProcess::State)));
   connect (process(), SIGNAL (progressChanged(float, KPlayerProcess::ProgressType)), this, SLOT (playerProgressChanged(float, KPlayerProcess::ProgressType)));
   connect (process(), SIGNAL (infoAvailable()), this, SLOT (playerInfoAvailable()));
@@ -770,9 +771,8 @@ void KPlayerEngine::refreshSettings (void)
   toggleAction ("player_hard_frame_drop") -> setChecked (value == 2);
   process() -> frameDrop (value);
   if ( settings() -> setInitialDisplaySize() )
-    emit initialSize();
-  if ( properties() -> originalAspect().isValid() )
   {
+    emit initialSize();
     setDisplaySize();
     refreshAspect();
   }
@@ -806,9 +806,10 @@ void KPlayerEngine::refreshProperties (void)
   }
   process() -> frameDrop (value);
   if ( settings() -> setInitialDisplaySize() )
+  {
     emit initialSize();
-  if ( properties() -> originalAspect().isValid() )
     setDisplaySize();
+  }
   enableVideoActions();
   if ( ! light() )
     toggleAction ("view_full_screen") -> setChecked (properties() -> fullScreen()
@@ -921,8 +922,8 @@ void KPlayerEngine::playerSizeAvailable (void)
 {
   if ( ! m_ac )
     return;
-  if ( ! properties() -> hasOriginalSize() )
-    settings() -> properties() -> setHasVideo (false);
+  if ( ! properties() -> hasDisplaySize() && ! properties() -> hasOriginalSize() )
+    properties() -> setHasVideo (false);
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Engine: Size Available. Video size " << properties() -> originalSize().width() << "x" << properties() -> originalSize().height() << "\n";
 #endif
@@ -1156,7 +1157,7 @@ void KPlayerEngine::load (KURL url)
   if ( properties() -> subtitleAutoload() )
     autoloadSubtitles();
   refreshProperties();
-  if ( properties() -> hasVideo() || properties() -> originalAspect().isValid() )
+  if ( properties() -> hasVideo() || properties() -> hasNoVideo() )
     playerSizeAvailable();
   if ( properties() -> hasLength() ) // || settings() -> shift()
     playerInfoAvailable();
@@ -1165,7 +1166,7 @@ void KPlayerEngine::load (KURL url)
   if ( ! m_stop )
   {
     process() -> play();
-    if ( properties() -> originalAspect().isValid() )
+    if ( properties() -> hasVideo() || properties() -> hasNoVideo() )
       setDisplaySize();
   }
 #ifdef DEBUG_KPLAYER_ENGINE
@@ -1466,7 +1467,7 @@ void KPlayerEngine::play (void)
       kill();
     m_stop = false;
     process() -> play();
-    if ( properties() -> originalAspect().isValid() )
+    if ( properties() -> hasVideo() || properties() -> hasNoVideo() )
       setDisplaySize();
   }
 }
@@ -2093,7 +2094,8 @@ void KPlayerEngine::setDisplaySize (bool user_zoom, bool user_resize)
     emit zoom();
     m_zooming = false;
   }
-  workspace() -> setDisplaySize (size);
+  workspace() -> setDisplaySize (settings() -> fullScreen() || settings() -> maximized()
+    || KPlayerEngine::engine() -> light() ? size : settings() -> displaySize());
   enableZoomActions();
 }
 
@@ -2107,5 +2109,18 @@ void KPlayerEngine::workspaceResized (void)
   m_zooming = true;
   emit correctSize();
   m_zooming = false;
-  setDisplaySize (false, true);
+  setDisplaySize();
+}
+
+void KPlayerEngine::workspaceUserResize (void)
+{
+  if ( m_zooming )
+    return;
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Workspace user resize event\n";
+#endif
+  m_zooming = true;
+  emit correctSize();
+  m_zooming = false;
+  setDisplaySize (false, ! light());
 }
