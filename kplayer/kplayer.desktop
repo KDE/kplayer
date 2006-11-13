@@ -5,6 +5,7 @@ Exec=kplayer %U
 Icon=kplayer.png
 DocPath=kplayer/index.html
 Comment=Media Player
+Comment[el]=Αναπαραγωγέας μέσων
 Comment[ga]=Seinnteoir Meán
 Comment[pt]=Leitor Multimédia
 Comment[pt_BR]=Leitor Multimédia
