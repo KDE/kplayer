@@ -12,6 +12,7 @@ deleting=false
 Icon=kplayer
 Class=:internet
 Description=MMS Protocol
+Description[af]=MMS Protokol
 Description[ar]=ميفاق MMS
 Description[bg]=MMS протокол
 Description[br]=Komenad MMS

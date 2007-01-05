@@ -5,6 +5,7 @@ Encoding=UTF8
 
 [Desktop Action PlayNext]
 Name=Play next
+Name[af]=Speel volgende
 Name[bg]=Последващо изпълнение
 Name[cs]=Přehrát další
 Name[da]=Spil næste
@@ -25,6 +26,7 @@ Exec=kplayer --play-next %U
 
 [Desktop Action QueueNext]
 Name=Queue next
+Name[af]=Plaas as volgende item in wagtou
 Name[bg]=На опашката
 Name[cs]=Zařadit další
 Name[da]=Sæt næste i kø

@@ -6,6 +6,7 @@ X-KDE-Priority=TopLevel
 
 [Desktop Action Play]
 Name=Play
+Name[af]=Speel
 Name[bg]=Изпълнение
 Name[br]=Seniñ
 Name[cs]=Přehrát
@@ -27,6 +28,7 @@ Exec=kplayer %U
 
 [Desktop Action Queue]
 Name=Queue
+Name[af]=Plaas in wagtou
 Name[bg]=На опашката
 Name[br]=Lost
 Name[cs]=Zařadit

@@ -5,6 +5,7 @@ Encoding=UTF8
 
 [Desktop Action AddToPlaylists]
 Name=Add to playlists
+Name[af]=Voeg by speel lys
 Name[bg]=Добавяне към списъци
 Name[cs]=Přidat do seznamů skladeb
 Name[da]=Tilføj til spillelister
@@ -25,6 +26,7 @@ Exec=kplayer --add-to-playlists %U
 
 [Desktop Action AddToCollection]
 Name=Add to collection
+Name[af]=Voeg by versameling
 Name[bg]=Добавяне към колекция
 Name[cs]=Přidat do kolekce
 Name[da]=Tilføj til samling

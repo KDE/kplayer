@@ -12,6 +12,7 @@ deleting=false
 Icon=kplayer
 Class=:internet
 Description=PNM Protocol
+Description[af]=PNM Protokol
 Description[ar]=ميفاق PNM
 Description[bg]=PNM протокол
 Description[br]=Komenad PNM
