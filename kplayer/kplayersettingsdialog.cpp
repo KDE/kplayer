@@ -2,8 +2,8 @@
                           kplayersettingsdialog.cpp
                           -------------------------
     begin                : Tue Apr 22 2003
-    copyright            : (C) 2003-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2003-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -279,13 +279,13 @@ void KPlayerSettingsDialog::slotOk (void)
   KDialogBase::slotOk();
 }
 
-void dumpObject (const QObject* object, int indent, int depth = 20);
+//void dumpObject (const QObject* object, int indent, int depth = 20);
 
 void KPlayerSettingsDialog::slotApply (void)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
   kdDebugTime() << "KPlayerSettingsDialog::apply\n";
-  dumpObject (this, 0);
+  //dumpObject (this, 0);
 #endif
   m_advanced -> save();
   m_audio -> save();

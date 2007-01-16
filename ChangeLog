@@ -1,3 +1,12 @@
+0.6.0 release
+2007-01-14
+ - Much improved support for disk and tuner devices
+ - Multimedia Library to organize your media files and streams
+ - Support for multiple video, audio and subtitle tracks
+ - Many new and updated translations of the user interface
+ - Italian and Spanish translations of the user manual
+ - Many other improvements and bug fixes
+
 0.5.3 release
 2005-01-09
  - Fixed startup crash when Remember Size and/or Remember Aspect options were selected

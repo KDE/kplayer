@@ -2,8 +2,8 @@
                           kplayerprocess.h
                           ----------------
     begin                : Sat Jan 11 2003
-    copyright            : (C) 2002-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2002-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -43,6 +43,7 @@ public:
     */
   virtual ~KPlayerLineOutputProcess();
 
+#if 0
   /** Returns the merge setting that indicates whether stdout and stderr output are handled
       separately or merged. If they are merged, receivedStderrLine will not be emitted. */
   bool merge (void)
@@ -51,6 +52,7 @@ public:
       separately or merged. If they are merged, receivedStderrLine will not be emitted. */
   void setMerge (bool merge)
     { m_merge = merge; }
+#endif
 
 protected slots:
   /** Handles the process stdout output. Emits the receivedStdoutLine signal.
@@ -94,10 +96,12 @@ protected:
   /** Current stderr line length.
     */
   int m_stderr_line_length;
+#if 0
   /** Specifies whether stdout and stderr output are handled separately or merged.
       If they are merged, all output will be reported via receivedStdoutLine, and
       receivedStderrLine will not be emitted. */
   bool m_merge;
+#endif
 };
 
 /**Handles the MPlayer process invocation, input and output.
@@ -305,7 +309,7 @@ protected slots:
   /** Receives notification when the mplayer process exits. */
   void playerProcessExited (KProcess*);
   /** Receives notification when mplayer sends something to stdout. */
-  void receivedStdoutLine (KPlayerLineOutputProcess*, char*, int);
+  void receivedOutputLine (KPlayerLineOutputProcess*, char*, int);
   /** Receives notification when the mplayer helper process sends something to stdout. */
   void receivedHelperLine (KPlayerLineOutputProcess*, char*, int);
   /** Receives notification when mplayer sends something to stderr. */

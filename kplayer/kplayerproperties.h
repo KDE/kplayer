@@ -2,8 +2,8 @@
                           kplayerproperties.h
                           -------------------
     begin                : Tue Feb 10 2004
-    copyright            : (C) 2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2004-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -1286,7 +1286,8 @@ public:
   void setString (const QString& key, const QString& value);
   void set (const QString& key, const QString& value);
 
-  const QString& getComboValue (const QString& key) const;
+  const QString& getStringValue (const QString& key) const;
+
   void setComboValue (const QString& key, const QString& value);
   bool hasComboValue (const QString& key) const;
 
@@ -1346,7 +1347,7 @@ public:
     { return setBoolean ("Maintain Aspect", value); }
 
   const QString& demuxer (void) const
-    { return getComboValue ("Demuxer"); }
+    { return getStringValue ("Demuxer"); }
   void setDemuxer (const QString& codec)
     { setComboValue ("Demuxer", codec); }
 
@@ -1401,7 +1402,7 @@ public:
   QString audioDriverString (void) const;
 
   const QString& audioCodec (void) const
-    { return getComboValue ("Audio Codec"); }
+    { return getStringValue ("Audio Codec"); }
   void setAudioCodec (const QString& codec)
     { setComboValue ("Audio Codec", codec); }
 
@@ -1455,7 +1456,7 @@ public:
   QString videoDriverString (void) const;
 
   const QString& videoCodec (void) const
-    { return getComboValue ("Video Codec"); }
+    { return getStringValue ("Video Codec"); }
   void setVideoCodec (const QString& codec)
     { setComboValue ("Video Codec", codec); }
 
@@ -1659,7 +1660,7 @@ public:
   int cacheSizeLimit (void) const
     { return getInteger ("Cache Size Limit"); }
   void setCacheSizeLimit (int size)
-    { setInteger ("Cache Size Limit", limit (size, 10, 10000)); }
+    { setInteger ("Cache Size Limit", limit (size, 10, 1000000)); }
 
   // Control configuration
 
@@ -2267,15 +2268,24 @@ public:
     { return asString ("Name"); }
   void setName (const QString& name)
     { set ("Name", name); }
+  bool hasName (void) const
+    { return ! getString ("Name").isEmpty(); }
 
   QString defaultName (void) const;
   void setDefaultName (const QString& name)
     { m_default_name = name; }
 
+  const QString& temporaryName (void) const
+    { return m_temporary_name; }
+  void setTemporaryName (const QString& name)
+    { m_temporary_name = name; }
+  QString currentName (void) const
+    { return temporaryName().isEmpty() ? name() : temporaryName(); }
+
   QString caption (void) const;
 
-  const QString& icon (void) const
-    { return getString ("Icon"); }
+  /** Returns icon name. */
+  virtual QString icon (void) const;
   void setIcon (const QString& icon)
     { setString ("Icon", icon); }
   bool hasIcon (void) const
@@ -2321,6 +2331,8 @@ public:
 protected:
   /** Default name. */
   QString m_default_name;
+  /** Temporary name. */
+  QString m_temporary_name;
 };
 
 /** The KPlayer media properties.
@@ -2380,14 +2392,11 @@ public:
 
   const QString& channelList (void) const
     { return getString ("Channel List"); }
+  bool hasChannelList (void) const
+    { return has ("Channel List"); }
 
   const QString& inputDriver (void) const
     { return getString ("Input Driver"); }
-
-  const QString& channelFile (void) const
-    { return getString ("Channel File"); }
-  bool hasChannelFile (void) const
-    { return has ("Channel File"); }
 
   // Size properties
 
@@ -2552,7 +2561,7 @@ public:
   int commandLineOption (void) const
     { return getAppendableOption ("Command Line"); }
   const QString& commandLineValue (void) const
-    { return getString ("Command Line"); }
+    { return getStringValue ("Command Line"); }
   void setCommandLineOption (const QString& value, int option)
     { return setAppendable ("Command Line", value, option); }
 
@@ -2615,18 +2624,18 @@ protected:
   int m_digits;
 };
 
-/** The KPlayer TV and DVB device properties.
+/** The KPlayer tuner device properties.
   * @author kiriuja
   */
-class KPlayerTVDVBProperties : public KPlayerDeviceProperties
+class KPlayerTunerProperties : public KPlayerDeviceProperties
 {
   Q_OBJECT
 
 public:
   /** Constructor. */
-  KPlayerTVDVBProperties (KPlayerProperties* parent, const KURL& url);
+  KPlayerTunerProperties (KPlayerProperties* parent, const KURL& url);
   /** Destructor. */
-  virtual ~KPlayerTVDVBProperties();
+  virtual ~KPlayerTunerProperties();
 
   /** Returns the list of channels. */
   virtual QStringList channels (void) = 0;
@@ -2642,6 +2651,9 @@ public:
     { setInteger ("Audio Input", input); }
   void resetAudioInput (void)
     { reset ("Audio Input"); }
+
+  void setChannelList (const QString& list)
+    { setString ("Channel List", list); }
 
 protected:
   /** Default frequencies. */
@@ -2679,7 +2691,7 @@ extern struct KPlayerChannelList channellists[];
 /** The KPlayer TV device properties.
   * @author kiriuja
   */
-class KPlayerTVProperties : public KPlayerTVDVBProperties
+class KPlayerTVProperties : public KPlayerTunerProperties
 {
   Q_OBJECT
 
@@ -2689,11 +2701,11 @@ public:
   /** Destructor. */
   virtual ~KPlayerTVProperties();
 
+  /** Initializes meta properties. */
+  virtual void setupMeta (void);
+
   /** Returns the list of TV channels. */
   virtual QStringList channels (void);
-
-  void setChannelList (const QString& list)
-    { setString ("Channel List", list); }
 
   void setInputDriver (const QString& driver)
     { setString ("Input Driver", driver); }
@@ -2728,7 +2740,7 @@ public:
 /** The KPlayer DVB device properties.
   * @author kiriuja
   */
-class KPlayerDVBProperties : public KPlayerTVDVBProperties
+class KPlayerDVBProperties : public KPlayerTunerProperties
 {
   Q_OBJECT
 
@@ -2741,14 +2753,11 @@ public:
   /** Initializes meta properties. */
   virtual void setupMeta (void);
 
-  /** Returns the list of TV channels. */
+  /** Returns the list of DVB channels. */
   QStringList channels (void);
   /** Returns the name of the given channel. */
   const QString& channelName (const QString& id) const
     { return m_names [id]; }
-
-  void setChannelFile (const QString& path)
-    { setString ("Channel File", path); }
 
 protected:
   /** Default names. */
@@ -3127,6 +3136,9 @@ public:
   KPlayerDiskProperties* parent (void) const
     { return (KPlayerDiskProperties*) m_parent; }
 
+  /** Returns icon name. */
+  virtual QString icon (void) const;
+
   /** Returns device option. */
   virtual QString deviceOption (void) const;
   /** Returns device setting. */
@@ -3151,6 +3163,9 @@ public:
   /** Parent properties. */
   KPlayerDeviceProperties* parent (void) const
     { return (KPlayerDeviceProperties*) m_parent; }
+
+  /** Returns icon name. */
+  virtual QString icon (void) const;
 
   /** Returns whether this media needs frequency. */
   virtual bool needsFrequency (void) const;

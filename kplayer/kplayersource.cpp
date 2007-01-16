@@ -2,8 +2,8 @@
                           kplayersource.cpp
                           -----------------
     begin                : Thu Jan 12 2006
-    copyright            : (C) 2006 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2006-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -343,7 +343,7 @@ void KPlayerRootSource::enumStart (bool)
   kdDebugTime() << "KPlayerRootSource::start\n";
   kdDebugTime() << " ID     " << parent() -> id() << "\n";
 #endif
-  m_fixed_ids = KPlayerNode::defaultIds();
+  m_fixed_ids = parent() -> defaultIds();
 }
 
 KPlayerDevicesSource::KPlayerDevicesSource (KPlayerContainerNode* parent)
@@ -467,7 +467,7 @@ bool KPlayerDiskSource::enumNext (bool& group, QString& id)
   return false;
 }
 
-KPlayerTVDVBSource::KPlayerTVDVBSource (KPlayerContainerNode* parent)
+KPlayerTunerSource::KPlayerTunerSource (KPlayerContainerNode* parent)
   : KPlayerDeviceSource (parent), m_list (parent)
 {
 #ifdef DEBUG_KPLAYER_SOURCE
@@ -475,32 +475,32 @@ KPlayerTVDVBSource::KPlayerTVDVBSource (KPlayerContainerNode* parent)
 #endif
 }
 
-KPlayerTVDVBSource::~KPlayerTVDVBSource()
+KPlayerTunerSource::~KPlayerTunerSource()
 {
 #ifdef DEBUG_KPLAYER_SOURCE
   kdDebugTime() << "Destroying TV/DVB device source\n";
 #endif
 }
 
-void KPlayerTVDVBSource::enumStart (bool groups)
+void KPlayerTunerSource::enumStart (bool groups)
 {
 #ifdef DEBUG_KPLAYER_SOURCE
-  kdDebugTime() << "KPlayerTVDVBSource::start\n";
+  kdDebugTime() << "KPlayerTunerSource::start\n";
   kdDebugTime() << " ID     " << parent() -> id() << "\n";
 #endif
   if ( groups )
     m_pending.clear();
   else
   {
-    m_pending = ((KPlayerTVDVBProperties*)parent() -> media()) -> channels();
+    m_pending = ((KPlayerTunerProperties*)parent() -> media()) -> channels();
     m_list.start (groups);
   }
 }
 
-bool KPlayerTVDVBSource::enumNext (bool& group, QString& id)
+bool KPlayerTunerSource::enumNext (bool& group, QString& id)
 {
 #ifdef DEBUG_KPLAYER_SOURCE
-  kdDebugTime() << "KPlayerTVDVBSource::next\n";
+  kdDebugTime() << "KPlayerTunerSource::next\n";
 #endif
   if ( m_groups )
     return false;
@@ -782,7 +782,10 @@ void KPlayerOriginSource::added (KPlayerContainerNode*, const KPlayerNodeList& n
 #endif
   if ( after )
   {
-    after = parent() -> nodeById (after -> id());
+    QString id (after -> id());
+    if ( ! after -> isContainer() && parent() -> isGroup() && ! parent() -> origin() -> isGroup() )
+      id = parent() -> origin() -> metaurl (id).url();
+    after = parent() -> nodeById (id);
     if ( ! after )
       after = parent();
   }
@@ -807,7 +810,10 @@ void KPlayerOriginSource::removed (KPlayerContainerNode*, const KPlayerNodeList&
   KPlayerNodeListIterator iterator (nodes);
   while ( KPlayerNode* node = iterator.current() )
   {
-    ids << node -> id();
+    QString id (node -> id());
+    if ( ! node -> isContainer() && parent() -> isGroup() && ! parent() -> origin() -> isGroup() )
+      id = parent() -> origin() -> metaurl (id).url();
+    ids << id;
     ++ iterator;
   }
   parent() -> removed (ids);

@@ -2,8 +2,8 @@
                           kplayerplaylist.cpp
                           --------------------
     begin                : Wed Sep 3 2003
-    copyright            : (C) 2003-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2003-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -105,7 +105,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent, const 
   connect (process(), SIGNAL (stateChanged(KPlayerProcess::State, KPlayerProcess::State)),
     SLOT (playerStateChanged(KPlayerProcess::State, KPlayerProcess::State)));
   connect (configuration(), SIGNAL (updated()), this, SLOT (refreshSettings()));
-  m_nowplaying = (KPlayerNowPlayingNode*) KPlayerNode::getNodeByUrl ("kplayer:/nowplaying");
+  m_nowplaying = (KPlayerNowPlayingNode*) KPlayerNode::root() -> getNodeByUrl ("kplayer:/nowplaying");
   nowplaying() -> reference();
 }
 
@@ -294,6 +294,14 @@ void KPlayerPlaylist::added (KPlayerContainerNode* parent, const KPlayerNodeList
     kdDebugTime() << "Sorting playlist nodes\n";
 #endif
     m_nodes.sort();
+#ifdef DEBUG_KPLAYER_PLAYLIST
+    KPlayerNodeListIterator iterator (m_nodes);
+    while ( KPlayerNode* node = iterator.current() )
+    {
+      kdDebugTime() << " Node   " << node -> url().url() << "\n";
+      ++ iterator;
+    }
+#endif
     add (previous);
   }
   if ( m_next.findRef (parent) >= 0 )
@@ -307,17 +315,8 @@ void KPlayerPlaylist::added (KPlayerContainerNode* parent, const KPlayerNodeList
         m_next.insert (m_next.at() + 1, node);
       ++ iterator;
     }
-    m_next.removeRef (parent);
-    setCurrentNode (currentNode() == parent ? nextNode() : currentNode());
   }
-  if ( m_nodes.findRef (parent) >= 0 )
-  {
-    playlist() -> removeItem (m_nodes.at());
-    m_nodes.remove();
-    setCurrentNode (currentNode() == parent ? m_nodes.current() : currentNode());
-  }
-  if ( m_play_requested )
-    play();
+  updated (parent -> parent(), parent);
   updateActions();
 }
 
@@ -374,12 +373,22 @@ void KPlayerPlaylist::updated (KPlayerContainerNode*, KPlayerNode* node)
   kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
   if ( m_nodes.findRef (node) >= 0 )
-  {
+    if ( node -> isContainer() && node -> ready() )
+    {
+      playlist() -> removeItem (nodes().at());
+      m_nodes.remove();
+      m_next.removeRef (node);
+      if ( m_play_requested )
+        play();
+    }
+    else
+    {
 #ifdef DEBUG_KPLAYER_PLAYLIST
-    kdDebugTime() << " URL    " << node -> url().url() << "\n";
+      kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
-    playlist() -> changeItem (node -> name(), nodes().at());
-  }
+      playlist() -> changeItem (node -> name(), nodes().at());
+    }
+  setCurrentNode (currentNode());
 }
 
 bool KPlayerPlaylist::checkUrls (const KURL::List& urls)
@@ -719,7 +728,7 @@ void KPlayerPlaylist::addToPlaylists (void)
   kdDebugTime() << "KPlayerPlaylist::addToPlaylists\n";
 #endif
   if ( ! nodes().isEmpty() )
-    KPlayerNode::getNodeByUrl ("kplayer:/playlists") -> append (nodes());
+    KPlayerNode::root() -> getNodeByUrl ("kplayer:/playlists") -> append (nodes());
 }
 
 void KPlayerPlaylist::addToPlaylist (KPlayerNode* node)
@@ -738,7 +747,7 @@ void KPlayerPlaylist::addToCollection (void)
   kdDebugTime() << "KPlayerPlaylist::addToCollection\n";
 #endif
   if ( ! nodes().isEmpty() )
-    KPlayerNode::getNodeByUrl ("kplayer:/collection") -> add (nodes());
+    KPlayerNode::root() -> getNodeByUrl ("kplayer:/collection") -> add (nodes());
 }
 
 void KPlayerPlaylist::playerStateChanged (KPlayerProcess::State state, KPlayerProcess::State previous)
@@ -809,19 +818,28 @@ void KPlayerPlaylist::setCurrentNode (KPlayerNode* node)
   if ( node )
     kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
+  if ( playlist() -> currentItem() >= 0 && playlist() -> currentItem() < int (nodes().count()) )
+    playlist() -> changeItem (m_nodes.at (playlist() -> currentItem()) -> name(), playlist() -> currentItem());
   if ( node && m_nodes.findRef (node) >= 0 )
   {
     m_current = node;
 #ifdef DEBUG_KPLAYER_PLAYLIST
-    kdDebugTime() << " CIndex " << playlist() -> currentItem() << "\n";
-    kdDebugTime() << " LIndex " << playlist() -> listBox() -> currentItem() << "\n";
     kdDebugTime() << " Index  " << nodes().at() << "\n";
 #endif
     playlist() -> setCurrentItem (nodes().at());
+    playlist() -> changeItem (node -> media() -> currentName(), nodes().at());
+  }
+  else
+  {
+    m_current = 0;
+    if ( nextNode() && m_nodes.findRef (nextNode()) >= 0 || m_nodes.first() )
+    {
 #ifdef DEBUG_KPLAYER_PLAYLIST
-    kdDebugTime() << " CIndex " << playlist() -> currentItem() << "\n";
-    kdDebugTime() << " LIndex " << playlist() -> listBox() -> currentItem() << "\n";
+      kdDebugTime() << " Index  " << nodes().at() << "\n";
 #endif
+      playlist() -> setCurrentItem (nodes().at());
+      playlist() -> changeItem (nodes().current() -> media() -> currentName(), nodes().at());
+    }
   }
 }
 
@@ -850,17 +868,6 @@ KPlayerPlaylistCombobox::KPlayerPlaylistCombobox (QWidget* parent, const char* n
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "Creating playlist combobox\n";
 #endif
-}
-
-void KPlayerPlaylistCombobox::setCurrentItem (int index)
-{
-#ifdef DEBUG_KPLAYER_PLAYLIST
-  kdDebugTime() << "KPlayerPlaylistCombobox::setCurrentItem\n";
-  kdDebugTime() << " CIndex " << currentItem() << "\n";
-  kdDebugTime() << " LIndex " << listBox() -> currentItem() << "\n";
-  kdDebugTime() << " Index  " << index << "\n";
-#endif
-  QComboBox::setCurrentItem (index);
 }
 
 QSize KPlayerPlaylistCombobox::sizeHint() const

@@ -2,8 +2,8 @@
                           kplayerplaylist.h
                           ------------------
     begin                : Wed Sep 3 2003
-    copyright            : (C) 2003-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2003-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -49,8 +49,6 @@ public:
   virtual QSize sizeHint() const;
   /** The minimum size hint. */
   virtual QSize minimumSizeHint() const;
-
-  virtual void setCurrentItem (int index);
 
 protected:
   /** Displays the right click popup menu. */

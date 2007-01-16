@@ -2,8 +2,8 @@
                           kplayernodeaction.cpp
                           ---------------------
     begin                : Wed Apr 05 2006
-    copyright            : (C) 2005 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2006-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -48,7 +48,7 @@ void KPlayerNodeActionList::initialize (const KURL& url)
   kdDebugTime() << "Initializing node action list\n";
   kdDebugTime() << " URL    " << url.url() << "\n";
 #endif
-  m_node = KPlayerNode::getNodeByUrl (url);
+  m_node = KPlayerNode::root() -> getNodeByUrl (url);
   if ( node() )
   {
     node() -> reference();
@@ -418,6 +418,7 @@ void KPlayerDeviceActionMenu::updated (KPlayerContainerNode*, KPlayerNode* node)
     if ( action -> parent() == node )
     {
       QString name (i18n("Play %1").arg (node -> name()));
+      name.replace ("&", "&&");
       if ( action -> text() != name )
         action -> setText (name);
       break;
@@ -451,7 +452,7 @@ void KPlayerDiskActionMenu::setup (void)
 #ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDiskActionMenu::setup\n";
 #endif
-  setText (device() -> name());
+  //setText (device() -> name());
   updateActions();
 }
 
@@ -468,8 +469,7 @@ void KPlayerDiskActionMenu::setText (const QString& text)
   kdDebugTime() << " Complete  " << device() -> parent() -> complete() << "\n";
 #endif
   KPlayerDeviceActionMenu::setText (text);
-  bool use_name = device() -> disk() && text != device() -> disk() -> defaultName();
-  m_load_action -> setText (use_name ? i18n("&Load %1").arg (text) : i18n("&Load Disk"));
+  bool use_name = device() -> disk() && device() -> name() != device() -> disk() -> defaultName();
   m_play_action -> setText (use_name ? i18n("&Play %1").arg (text) : i18n("&Play Disk"));
   if ( ! m_populated && ! device() -> dataDisk() && (device() -> populated()
     || device() -> disk() && device() -> parent() -> complete()) )

@@ -2,8 +2,8 @@
                           x11.cpp
                           -------
     begin                : Wed Feb 26 2003
-    copyright            : (C) 2003-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2003-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -22,7 +22,7 @@ kdbgstream kdDebugTime (void);
 #define DEBUG_KPLAYER_GRAB
 //#define DEBUG_KPLAYER_X11
 //#define DEBUG_KPLAYER_FOCUS
-#define DEBUG_KPLAYER_KEY
+//#define DEBUG_KPLAYER_KEY
 //#define DEBUG_KPLAYER_RESIZE
 //#define DEBUG_KPLAYER_CLIENT
 #endif

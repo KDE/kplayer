@@ -1,4 +1,4 @@
-KPlayer is a KDE media player based on MPlayer, www.mplayerhq.hu.
+KPlayer is a KDE multimedia player.
 
 With KPlayer you can easily play a wide variety of video and audio files and
 streams using a rich and friendly interface compliant with KDE standards.
@@ -9,7 +9,7 @@ Features include
 - volume, contrast, brightness, hue and saturation controls;
 - zooming, full screen and fixed aspect options;
 - status and progress display and seeking;
-- playlist;
+- multimedia library to organize your media files and streams;
 - configuration dialog and file specific options;
 - KPart for integration with Konqueror, KMLDonkey, etc.
 
@@ -18,27 +18,20 @@ Requirements
 
 A recent MPlayer
 
-   KPlayer uses the famous MPlayer as the backend for playing audio and
-   video files and streams. This ensures the maximum variety of supported
-   types of files and encodings.
+   KPlayer uses the famous MPlayer, www.mplayerhq.hu, as the backend for
+   playing audio and video files and streams. This ensures the maximum
+   variety of supported types of files and encodings.
 
-   You need to have MPlayer version 0.90 or later. Of the stable MPlayer
-   releases 0.90 was the least buggy, but it has security issues. The same
-   issues were present in recent unstable releases up to and including
-   1.0-pre3, so if you are concerned about security (as you should be),
-   your choice would be MPlayer 1.0-pre4 or later. However, 1.0-pre4
-   introduced a fresh set of bugs, in particular in remote URL handling
-   and FTP support.
+   You need to have MPlayer version 1.0rc1 or later.
 
    If there are good binary packages for your distribution, use those.
    For example on Debian unstable you would do
 
-   echo 'deb ftp://ftp.nerim.net/debian-marillat/ unstable main' >> /etc/apt/sources.list
+   echo 'deb http://www.debian-multimedia.org unstable main' >> /etc/apt/sources.list
    apt-get update
-   apt-get install mplayer-k7
+   apt-get install mplayer kplayer libdvdcss w32codecs
 
-   Substitute unstable for stable or testing as required, and k7 for 386,
-   586, 686 or k6, according to your processor type.
+   Substitute unstable for stable or testing as needed.
 
    As always compiling from source is an option.
 
@@ -53,28 +46,111 @@ A recent MPlayer
 
 X11 and XVideo
 
-   X11 is required. Recommended versions are XFree86 4.2.x and 4.3.x, as
-   well as X Server versions released by X.org.
+   X11 is required. X.org is the best choice here.
 
    XVideo extension is recommended. You can check your /etc/X11/xorg.conf
-   or /etc/X11/XF86Config-4 file for a line that reads
+   file for a line that reads
 
    Load "extmod"
 
    This is the line that loads XVideo extension, so make sure it is not
-   disabled. Also check /var/log/XFree86.0.log to make sure that XVideo
+   disabled. Also check /var/log/Xorg.0.log to make sure that XVideo
    is loaded without error.
 
 Qt and KDE
 
-   KPlayer 0.5.x supports KDE 3.3, 3.2 and 3.1, so you need to either run
-   a relatively recent KDE (recommended) or at least have KDE libraries
+   KPlayer supports KDE 3.1 and later, so you need to either run a
+   relatively recent KDE (recommended) or at least have KDE libraries
    and the corresponding Qt libraries on your system.
 
 Installation
 ------------
 
 See INSTALL.
+
+Support
+-------
+
+If you have any problems, questions, support requests, come to the KPlayer
+user forum: http://sourceforge.net/forum/forum.php?forum_id=244388
+
+For issues that take longer time to resolve use the issue trackers:
+bugs: http://sourceforge.net/tracker/?atid=532182&group_id=71710
+support requests: http://sourceforge.net/tracker/?atid=532183&group_id=71710
+feature requests: http://sourceforge.net/tracker/?atid=532185&group_id=71710
+that way your issue will not be lost or forgotten.
+
+The forum and the trackers require you to be registered and logged in.
+This is so that people do not post questions only to never come back to
+check on the response.
+
+There is also an IRC channel for KPlayer discussions: #kplayer on FreeNode.
+
+Playing video DVDs and CDs, audio CDs, data CDs and DVDs, TV, and DVB
+---------------------------------------------------------------------
+
+KPlayer 0.6 and later has much improved support for disk and tuner devices.
+It will detect any CD, DVD, TV and DVB devices present on your system and
+list them as submenus on the File menu. For disk devices it will also detect
+when a disk is inserted or removed and update the submenu accordingly.
+
+When a disk is in the drive, the submenu will list options to play the
+entire disk or each individual track or title. There is also a Load Disk
+command that you will only need if the disk is already in the drive when
+KPlayer starts up or if your system does not tell KPlayer when a disk is
+inserted or removed.
+
+Submenus for TV and DVB devices list options for playing each channel.
+The list of channels can be chosen in the device properties. Go to the
+Multimedia Library, expand the Devices subtree, right click a device and
+choose Properties. The Channel List option is on the General page. There
+are many more options for both disk and tuner devices.
+
+Multimedia Library
+------------------
+
+KPlayer 0.6 and later has a multimedia library that you can use to organize
+your multimedia files and streams.
+
+The Now Playing tree lists the files, URLs and folders on your current
+playlist. This playlist is temporary and will be wiped out the next time
+you play anything else.
+
+Permanent playlists live on the Playlists tree. Copy your current playlist
+from Now Playing here if you want to keep it. Items on playlists can be
+arranged in any order you like by dragging them around or using Move Down
+and Move Up commands.
+
+Collection tree can contain folders with items sorted by any available
+field. By default only the most useful fields are displayed in both
+the playlists and the collection, but other fields can be shown using the
+Columns submenu on the Library menu. Some fields can be changed, those are
+listed on the Edit submenu of the Library menu.
+
+Devices tree lists the disk and tuner devices KPlayer found on your system,
+and under those you will find the available tracks, titles or channels.
+Devices, disks, tracks, titles and channels all have their own properties
+that you can access using the Properties option on the Library menu or on
+the right click context menu.
+
+Root Directory and Home Directory list multimedia files found in those
+directories and their subdirectories. Find the directories that contain
+your multimedia files and put them into your collection. Then create and
+organize your playlists from the collection. Both the collection and the
+playlists can have as many levels as you need.
+
+Remote files and streams can be put on the collection and playlists by
+using the Add URL command on the Library menu or the right click context
+menu.
+
+Multitrack files and streams
+----------------------------
+
+Some media files and streams have more than one video, audio or subtitle
+tracks in them. Those will be listed on the Video, Audio and Subtitles
+submenus of the Player menu. Audio and subtitle tracks will be labelled
+with their language if it is known. You can also choose the tracks in the
+File Properties.
 
 Configuration
 -------------
@@ -117,9 +193,9 @@ options you can set, like name, video aspect, subtitles, and many more.
 Most properties can be set through the File Properties dialog. The
 Properties dialog for the currently loaded file or URL can be opened from
 the File menu, or using a button on the main toolbar, or from the right
-click popup menu. You can also open Properties dialog for an entry from
-your playlist by right clicking on it in the Playlist Editor, or by using
-the command on the Playlist menu.
+click popup menu. You can also open Properties dialog for any entry in
+the multimedia library by right clicking on it, or by using the Properties
+command on the Library menu.
 
 An easier way to set file properties is by holding the Shift key when
 changing a setting. For example, if you hold Shift and select Soft Frame
@@ -130,16 +206,6 @@ one that was in effect before you changed it with Shift. On the other hand,
 if you change Frame Drop without holding Shift, the new setting will become
 the default, and will be used for all URLs that do not have it set
 explicitly.
-
-Playing DVDs, VCDs, audio CDs, TV
----------------------------------
-
-As advertised on MPlayer manpage, DVDs can be played by passing a URL like
-dvd://1 to MPlayer. "1" in this case is the track number you want to watch.
-So put that in the Open URL dialog inside KPlayer.
-
-Similarly, a URL like vcd://1 can be used to play a track from video CD.
-Use the cdda: prefix to play a track from audio CD, and tv: to play from TV.
 
 Full screen mode
 ----------------
@@ -159,47 +225,22 @@ Known issues
 
 See BUGS.
 
-Online HOWTOs
--------------
+Online manuals and HOWTOs
+-------------------------
 
-Installation
-http://sourceforge.net/docman/display_doc.php?docid=23142&group_id=71710
+KPlayer user manual is available online at
+http://docs.kde.org/development/en/extragear-multimedia/kplayer/
+It has not been updated since version 0.5.2, but still is quite helpful.
 
-Compiling from source
-http://sourceforge.net/docman/display_doc.php?docid=22178&group_id=71710
+In particular the manual has a few micro HOWTOs that will give you many
+useful tips on how to get the most out of KPlayer and your multimedia.
 
-Compiling from CVS
-http://sourceforge.net/docman/display_doc.php?docid=22177&group_id=71710
+Several translations of the manual and HOWTOs are also available online:
 
-Basic configuration
-http://sourceforge.net/docman/display_doc.php?docid=23154&group_id=71710
+Danish: http://docs.kde.org/development/da/extragear-multimedia/kplayer/
+Portugese: http://docs.kde.org/development/pt/extragear-multimedia/kplayer/
+Swedish: http://docs.kde.org/development/sv/extragear-multimedia/kplayer/
 
-Advanced configuration
-http://sourceforge.net/docman/display_doc.php?docid=23162&group_id=71710
-
-File properties
-http://sourceforge.net/docman/display_doc.php?docid=23508&group_id=71710
-
-Full screen and maximized window
-http://sourceforge.net/docman/display_doc.php?docid=23505&group_id=71710
-
-Playlist
-http://sourceforge.net/docman/display_doc.php?docid=23506&group_id=71710
-
-Subtitles
-http://sourceforge.net/docman/display_doc.php?docid=23507&group_id=71710
-
-DVD, VCD, audio CD, TV, DVB
-http://sourceforge.net/docman/display_doc.php?docid=23240&group_id=71710
-
-HTTP, FTP and Samba
-http://sourceforge.net/docman/display_doc.php?docid=23242&group_id=71710
-
-KDE I/O Slaves
-http://sourceforge.net/docman/display_doc.php?docid=23246&group_id=71710
-
-Translation
-http://sourceforge.net/docman/display_doc.php?docid=22175&group_id=71710
-
-Reporting bugs
-http://sourceforge.net/docman/display_doc.php?docid=22190&group_id=71710
+A couple more translations should be available shortly:
+Italian: http://docs.kde.org/development/it/extragear-multimedia/kplayer/
+Spanish: http://docs.kde.org/development/es/extragear-multimedia/kplayer/

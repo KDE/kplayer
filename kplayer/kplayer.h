@@ -2,8 +2,8 @@
                           kplayer.h
                           ---------
     begin                : Sat Nov 16 10:12:50 EST 2002
-    copyright            : (C) 2002-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2002-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************

@@ -2,8 +2,8 @@
                           kplayersource.h
                           ---------------
     begin                : Thu Jan 12 2006
-    copyright            : (C) 2006 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2006-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -21,6 +21,7 @@
 
 class KPlayerCollectionNode;
 class KPlayerContainerNode;
+class KPlayerRootNode;
 class KPlayerDeviceProperties;
 class KPlayerDevicesNode;
 class KPlayerDeviceNode;
@@ -177,6 +178,10 @@ public:
   /** The KPlayerRootSource destructor. Frees resources. */
   virtual ~KPlayerRootSource();
 
+  /** Parent node. */
+  KPlayerRootNode* parent (void) const
+    { return (KPlayerRootNode*) m_parent; }
+
 protected:
   /** Initializes the node retrieval process. */
   virtual void enumStart (bool groups);
@@ -263,18 +268,18 @@ protected:
   int m_track;
 };
 
-/**TV/DVB source class, handles TV and DVB device nodes.
+/**Tuner source class, handles tuner device nodes.
   *@author kiriuja
   */
-class KPlayerTVDVBSource : public KPlayerDeviceSource
+class KPlayerTunerSource : public KPlayerDeviceSource
 {
   Q_OBJECT
 
 public:
-  /** The KPlayerTVDVBSource constructor. Sets up a source. */
-  KPlayerTVDVBSource (KPlayerContainerNode*);
-  /** The KPlayerTVDVBSource destructor. Frees resources. */
-  virtual ~KPlayerTVDVBSource();
+  /** The KPlayerTunerSource constructor. Sets up a source. */
+  KPlayerTunerSource (KPlayerContainerNode*);
+  /** The KPlayerTunerSource destructor. Frees resources. */
+  virtual ~KPlayerTunerSource();
 
 protected:
   /** Initializes the node retrieval process. */

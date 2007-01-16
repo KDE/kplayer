@@ -2,8 +2,8 @@
                           main.cpp
                           --------
     begin                : Sat Nov 16 10:12:50 EST 2002
-    copyright            : (C) 2002-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2002-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -39,8 +39,8 @@ int main (int argc, char *argv[])
 {
   KAboutData aboutData ("kplayer", "KPlayer",
     VERSION, description, KAboutData::License_GPL,
-    "(C) 2002-2004, kiriuja", 0, 0, "kplayer dash developer at en dash directo dot net");
-  aboutData.addAuthor ("kiriuja", 0, "kplayer dash developer at en dash directo dot net");
+    "(C) 2002-2007, kiriuja", 0, 0, "http://kplayer.sourceforge.net/email.html");
+  aboutData.addAuthor ("kiriuja", 0, "http://kplayer.sourceforge.net/email.html");
   KCmdLineArgs::init (argc, argv, &aboutData);
   KCmdLineArgs::addCmdLineOptions (options);  // Add our own options.
   KPlayerApplication::addCmdLineOptions();

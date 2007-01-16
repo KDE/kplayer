@@ -2,8 +2,8 @@
                           kplayernodeaction.h
                           -------------------
     begin                : Wed Apr 05 2006
-    copyright            : (C) 2005 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2006-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************

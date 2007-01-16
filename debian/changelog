@@ -1,3 +1,14 @@
+kplayer (0.6.0-1) unstable; urgency=low
+
+  * Much improved support for disk and tuner devices
+  * Multimedia Library to organize your media files and streams
+  * Support for multiple video, audio and subtitle tracks
+  * Many new and updated translations of the user interface
+  * Italian and Spanish translations of the user manual
+  * Many other improvements and bug fixes
+
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Sun, 14 Jan 2007 16:15:00 -0500
+
 kplayer (0.5.3-1) unstable; urgency=low
 
   * Fixed startup crash when Remember Size and/or Remember Aspect options were selected
@@ -6,7 +17,7 @@ kplayer (0.5.3-1) unstable; urgency=low
   * Danish, Portugese and Swedish translations of the user manual
   * Minor improvements and bug fixes
 
- -- kiriuja <kplayer-debs@en-directo.net>  Tue, 09 Jan 2005 18:10:00 -0500
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Tue, 09 Jan 2005 18:10:00 -0500
 
 kplayer (0.5.2-1) unstable; urgency=low
 
@@ -16,13 +27,13 @@ kplayer (0.5.2-1) unstable; urgency=low
   * Minor improvements and bug fixes
   * New Hungarian and Polish translations
 
- -- kiriuja <kplayer-debs@en-directo.net>  Tue, 05 Oct 2004 18:10:00 -0500
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Tue, 05 Oct 2004 18:10:00 -0500
 
 kplayer (0.5.1-1) unstable; urgency=low
 
   * GCC 3.4 and Qt 3.1 compilation fixes
 
- -- kiriuja <kplayer-debs@en-directo.net>  Mon, 05 Jul 2004 18:10:00 -0500
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Mon, 05 Jul 2004 18:10:00 -0500
 
 kplayer (0.5.0-1) unstable; urgency=low
 
@@ -36,7 +47,7 @@ kplayer (0.5.0-1) unstable; urgency=low
   * New Czech, Finnish and Simplified Chinese translations
   * Most existing translations updated
 
- -- kiriuja <kplayer-debs@en-directo.net>  Fri, 02 Jul 2004 18:10:00 -0500
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Fri, 02 Jul 2004 18:10:00 -0500
 
 kplayer (0.4.0-1) unstable; urgency=low
 
@@ -45,13 +56,13 @@ kplayer (0.4.0-1) unstable; urgency=low
   * Translations
   * Bug fixes
 
- -- kiriuja <kplayer-debs@en-directo.net>  Wed, 05 Nov 2003 18:10:00 -0500
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Wed, 05 Nov 2003 18:10:00 -0500
 
 kplayer (0.3.1-1) unstable; urgency=low
 
   * Bug fixes
 
- -- kiriuja <kplayer-debs@en-directo.net>  Wed, 08 Aug 2003 18:10:00 -0500
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Wed, 08 Aug 2003 18:10:00 -0500
 
 kplayer (0.3.0-1) unstable; urgency=low
 
@@ -63,7 +74,7 @@ kplayer (0.3.0-1) unstable; urgency=low
   * MPlayer error detection
   * Bug fixes
 
- -- kiriuja <kplayer-debs@en-directo.net>  Wed, 30 Jul 2003 18:10:00 -0500
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Wed, 30 Jul 2003 18:10:00 -0500
 
 kplayer (0.2.0-1) unstable; urgency=low
 
@@ -77,10 +88,10 @@ kplayer (0.2.0-1) unstable; urgency=low
   * Only one instance allowed to run
   * Many miscellaneous fixes
 
- -- kiriuja <kplayer-debs@en-directo.net>  Wed, 26 Mar 2003 10:04:00 -0500
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Wed, 26 Mar 2003 10:04:00 -0500
 
 kplayer (0.1.0-1) unstable; urgency=low
 
   * Initial Release.
 
- -- kiriuja <kplayer-debs@en-directo.net>  Tue, 4 Feb 2003 12:18:32 -0500
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Tue, 4 Feb 2003 12:18:32 -0500

@@ -2,8 +2,8 @@
                          kplayerpropertiesdialog.cpp
                          ---------------------------
     begin                : Tue Mar 02 2004
-    copyright            : (C) 2003-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2004-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -42,9 +42,9 @@ QString listEntry (QComboBox* combo, bool hasDefault = false)
 {
   if ( hasDefault && combo -> currentItem() == 0 )
     return QString::null;
-  else if ( combo -> currentItem() == 0 || hasDefault && combo -> currentItem() == 1 )
+  if ( combo -> currentItem() == 0 || hasDefault && combo -> currentItem() == 1 )
     return "";
-  else if ( re_key_value.search (combo -> currentText()) >= 0 )
+  if ( re_key_value.search (combo -> currentText()) >= 0 )
     return re_key_value.cap(1);
   return QString::null;
 }
@@ -506,7 +506,9 @@ void KPlayerPropertiesGeneral::hideDVB (void)
 void KPlayerPropertiesGeneral::load (void)
 {
   c_name -> setText (properties() -> name());
+  c_name -> setCursorPosition (0);
   c_url -> setText (properties() -> pathString());
+  c_url -> setCursorPosition (0);
 }
 
 void KPlayerPropertiesGeneral::save (void)
@@ -617,14 +619,14 @@ void KPlayerPropertiesDVBDeviceGeneral::setupControls (void)
 
 void KPlayerPropertiesDVBDeviceGeneral::load (void)
 {
-  c_channel_file -> setText (properties() -> channelFile());
+  c_channel_file -> setText (properties() -> channelList());
   KPlayerPropertiesDeviceGeneral::load();
 }
 
 void KPlayerPropertiesDVBDeviceGeneral::save (void)
 {
   if ( ! c_channel_file -> text().isEmpty() )
-    properties() -> setChannelFile (c_channel_file -> text());
+    properties() -> setChannelList (c_channel_file -> text());
   KPlayerPropertiesDeviceGeneral::save();
 }
 
@@ -1113,10 +1115,11 @@ void KPlayerPropertiesAudio::setup (const KURL& url)
   if ( engine() -> audioCodecCount() )
   {
     c_codec -> clear();
-    if ( properties() -> hasComboString ("Audio Codec") )
-      c_codec -> insertItem (s_default_entry.arg (i18n("default")).arg (properties() -> getString ("Audio Codec")));
-    else
+    const QString& codec = properties() -> getString ("Audio Codec");
+    if ( codec.isEmpty() )
       c_codec -> insertItem (i18n("default"));
+    else
+      c_codec -> insertItem (s_default_entry.arg (i18n("default")).arg (codec));
     c_codec -> insertItem (i18n("auto"));
     for ( int i = 0; i < engine() -> audioCodecCount(); i ++ )
       c_codec -> insertItem (engine() -> audioCodecName (i));
@@ -1414,10 +1417,11 @@ void KPlayerPropertiesVideo::setup (const KURL& url)
   if ( engine() -> videoCodecCount() )
   {
     c_codec -> clear();
-    if ( properties() -> hasComboString ("Video Codec") )
-      c_codec -> insertItem (s_default_entry.arg (i18n("default")).arg (properties() -> getString ("Video Codec")));
-    else
+    const QString& codec = properties() -> getString ("Video Codec");
+    if ( codec.isEmpty() )
       c_codec -> insertItem (i18n("default"));
+    else
+      c_codec -> insertItem (s_default_entry.arg (i18n("default")).arg (codec));
     c_codec -> insertItem (i18n("auto"));
     for ( int i = 0; i < engine() -> videoCodecCount(); i ++ )
       c_codec -> insertItem (engine() -> videoCodecName (i));
@@ -1760,10 +1764,11 @@ void KPlayerPropertiesAdvanced::setup (const KURL& url)
   if ( engine() -> demuxerCount() )
   {
     c_demuxer -> clear();
-    if ( properties() -> hasComboString ("Demuxer") )
-      c_demuxer -> insertItem (s_default_entry.arg (i18n("default")).arg (properties() -> getString ("Demuxer")));
-    else
+    const QString& demuxer = properties() -> getString ("Demuxer");
+    if ( demuxer.isEmpty() )
       c_demuxer -> insertItem (i18n("default"));
+    else
+      c_demuxer -> insertItem (s_default_entry.arg (i18n("default")).arg (demuxer));
     c_demuxer -> insertItem (i18n("auto"));
     for ( int i = 0; i < engine() -> demuxerCount(); i ++ )
       c_demuxer -> insertItem (engine() -> demuxerName (i));
@@ -1828,7 +1833,8 @@ void KPlayerPropertiesAdvanced::save (void)
 void KPlayerPropertiesAdvanced::commandLineChanged (int option)
 {
   bool enable = option > 0;
-  c_command_line -> setText (enable ? properties() -> commandLineValue() : "");
+  c_command_line -> setText (! enable ? ""
+    : option == 2 ? properties() -> commandLineValue() : properties() -> commandLine());
   c_command_line -> setEnabled (enable);
   if ( enable && sender() )
   {

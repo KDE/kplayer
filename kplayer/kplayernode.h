@@ -2,8 +2,8 @@
                           kplayernode.h
                           -------------
     begin                : Wed Feb 16 2005
-    copyright            : (C) 2005, 2006 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2005-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -189,33 +189,27 @@ public:
   /** Terminates the node hierarchy. */
   static void terminate (void);
 
-  /** Returns the list of default IDs. */
-  static const QStringList& defaultIds (void)
-    { return m_default_ids; }
+  /** Sets the sorting key and ascending order. */
+  static void setSorting (const QString& key, bool ascending);
+  /** Returns whether nodes are being sorted by name. */
+  static bool sortByName (void)
+    { return m_sort_by_name; }
+  /** Returns the sort key. */
+  static const QString& sortKey (void)
+    { return m_sort_key; }
+  /** Returns whether to sort in ascending order. */
+  static bool sortAscending (void)
+    { return m_sort_ascending; }
 
-  /** Returns a node from the hierarchy given a URL. */
-  static KPlayerContainerNode* getNodeByUrl (const KURL& url);
-
-  /** Sets the sort key. */
-  static void setSorting (const QString& key);
-
-public slots:
+protected slots:
   /** Checks if the meta information has changed and emits the meta signals. */
-  void refresh (void);
+  virtual void updated (void);
 
 protected:
   /** Initializes the node media. */
   virtual void setupMedia (void);
   /** Initializes the node children. */
   virtual void setupChildren (KPlayerContainerNode* origin);
-
-  /** Returns whether nodes are being sorted by name. */
-  static bool sortByName (void)
-    { return m_sort_by_name; }
-
-  /** Returns the sort key. */
-  static const QString& sortKey (void)
-    { return m_sort_key; }
 
   /** Unique identifier of the node within its parent node. */
   QString m_id;
@@ -230,18 +224,12 @@ protected:
   /** Root node of the hierarchy. */
   static KPlayerRootNode* m_root;
 
-  /** External node map. */
-  static KPlayerContainerNodeMap m_externals;
-
-  /** List of default IDs. */
-  static QStringList m_default_ids;
-  /** Map of standard nodes. */
-  static KPlayerContainerNodeMap m_defaults;
-
   /** Flag indicating whether the list is being sorted by name. */
   static bool m_sort_by_name;
   /** Sort key. */
   static QString m_sort_key;
+  /** Sort in ascending order. */
+  static bool m_sort_ascending;
 };
 
 /**Media node.
@@ -306,9 +294,6 @@ public:
 
   /** Media URL. Refers to the meta information storage of the node. */
   virtual KURL metaurl (void) const;
-
-  /** Returns icon name. */
-  virtual QString icon (void) const;
 };
 
 /**Channel node.
@@ -330,9 +315,6 @@ public:
   /** Media properties. */
   KPlayerChannelProperties* media (void) const
     { return (KPlayerChannelProperties*) m_media; }
-
-  /** Returns icon name. */
-  virtual QString icon (void) const;
 };
 
 /**Item node.
@@ -460,6 +442,8 @@ public:
     { return ! parent() || allowsCustomOrder() && media() -> customOrder(); }
   /** Sets whether nodes are arranged in a custom order. */
   void setCustomOrder (bool custom);
+  /** Sets custom order by name if not already set. */
+  void customOrderByName (void);
 
   /** Returns whether custom order is allowed. */
   virtual bool allowsCustomOrder (void) const;
@@ -688,6 +672,8 @@ protected:
   void doPopulate (void);
   /** Populates the list of group subnodes. */
   void doPopulateGroups (void);
+  /** Refreshes the list of subnodes. */
+  void refreshNodes (void);
 
   /** List of all subnodes of this node. */
   KPlayerNodeList m_nodes;
@@ -742,6 +728,13 @@ public:
   KPlayerTemporaryNode* temporaryNode (void) const
     { return m_temp; }
 
+  /** Returns the list of default IDs. */
+  const QStringList& defaultIds (void)
+    { return m_default_ids; }
+
+  /** Returns a node from the hierarchy given a URL. */
+  KPlayerContainerNode* getNodeByUrl (const KURL& url);
+
 protected:
   /** Initializes the node children. */
   virtual void setupSource (void);
@@ -749,6 +742,12 @@ protected:
   /** Creates a new branch node with the given id and origin. */
   virtual KPlayerContainerNode* createBranch (const QString& id, KPlayerContainerNode* origin = 0);
 
+  /** List of default IDs. */
+  QStringList m_default_ids;
+  /** Map of standard nodes. */
+  KPlayerContainerNodeMap m_defaults;
+  /** External node map. */
+  KPlayerContainerNodeMap m_externals;
   /** Temporary node. */
   KPlayerTemporaryNode* m_temp;
 };
@@ -1306,10 +1305,45 @@ protected:
   QString m_local_path;
 };
 
+/**Tuner node.
+  *@author kiriuja
+  */
+class KPlayerTunerNode : public KPlayerDeviceNode
+{
+  Q_OBJECT
+
+public:
+  /** Default constructor. Initializes the node. */
+  KPlayerTunerNode (void) { }
+  /** Destructor. Frees resources. */
+  virtual ~KPlayerTunerNode();
+
+  /** Source of subnodes. */
+  KPlayerTunerSource* source (void) const
+    { return (KPlayerTunerSource*) m_source; }
+  /** Media properties. */
+  KPlayerTunerProperties* media (void) const
+    { return (KPlayerTunerProperties*) m_media; }
+
+protected slots:
+  /** Checks if the channel list has changed and updates subnodes as necessary. */
+  virtual void updated (void);
+
+protected:
+  /** Initializes the node source. */
+  virtual void setupSource (void);
+
+  /** Creates a new leaf node with the given id. */
+  virtual KPlayerNode* createLeaf (const QString& id);
+
+  /** Current channel list. */
+  QString m_channel_list;
+};
+
 /**TV node.
   *@author kiriuja
   */
-class KPlayerTVNode : public KPlayerDeviceNode
+class KPlayerTVNode : public KPlayerTunerNode
 {
   Q_OBJECT
 
@@ -1319,9 +1353,6 @@ public:
   /** Destructor. Frees resources. */
   virtual ~KPlayerTVNode();
 
-  /** Source of subnodes. */
-  KPlayerTVDVBSource* source (void) const
-    { return (KPlayerTVDVBSource*) m_source; }
   /** Media properties. */
   KPlayerTVProperties* media (void) const
     { return (KPlayerTVProperties*) m_media; }
@@ -1329,17 +1360,12 @@ public:
 protected:
   /** Initializes the node media. */
   virtual void setupMedia (void);
-  /** Initializes the node source. */
-  virtual void setupSource (void);
-
-  /** Creates a new leaf node with the given id. */
-  virtual KPlayerNode* createLeaf (const QString& id);
 };
 
 /**DVB node.
   *@author kiriuja
   */
-class KPlayerDVBNode : public KPlayerDeviceNode
+class KPlayerDVBNode : public KPlayerTunerNode
 {
   Q_OBJECT
 
@@ -1349,9 +1375,6 @@ public:
   /** Destructor. Frees resources. */
   virtual ~KPlayerDVBNode();
 
-  /** Source of subnodes. */
-  KPlayerTVDVBSource* source (void) const
-    { return (KPlayerTVDVBSource*) m_source; }
   /** Media properties. */
   KPlayerDVBProperties* media (void) const
     { return (KPlayerDVBProperties*) m_media; }
@@ -1359,11 +1382,6 @@ public:
 protected:
   /** Initializes the node media. */
   virtual void setupMedia (void);
-  /** Initializes the node source. */
-  virtual void setupSource (void);
-
-  /** Creates a new leaf node with the given id. */
-  virtual KPlayerNode* createLeaf (const QString& id);
 };
 
 #if 0

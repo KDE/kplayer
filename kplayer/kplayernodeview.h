@@ -2,8 +2,8 @@
                           kplayernodeview.h
                           ------------------
     begin                : Mon Apr 18 2005
-    copyright            : (C) 2005 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2005-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -480,8 +480,10 @@ protected slots:
 
   /** Updates the edited field of the current item. */
   void edited (QListViewItem* item, const QString& value, int column);
-  /** Moves line edit according to the new content position. */
+  /** Arranges for the line edit to be moved according to the new content position. */
   void moveLineEdit (int x, int y);
+  /** Moves line edit according to the current content position. */
+  void moveLineEdit (void);
 
   /** Processes selection change signal. */
   void itemSelectionChanged (void);
@@ -556,6 +558,9 @@ protected:
   /** Accepts node and URL drags. */
   virtual bool acceptDrag (QDropEvent*) const;
 
+  /** Sets custom node order if necessary. */
+  virtual void setNodeOrder (KPlayerContainerNode* node);
+
   /** Handles the drop event. */
   virtual void contentsDropEvent (QDropEvent*);
   /** Handles the drag move event. */
@@ -572,6 +577,8 @@ protected:
 
   /** Stores indicator of right mouse button press. */
   virtual void contentsMousePressEvent (QMouseEvent* e);
+  /** Stores the last active item. */
+  virtual void contentsMouseReleaseEvent (QMouseEvent* e);
 
   /** Processes keyboard events for rename edit box. */
   virtual bool eventFilter (QObject* object, QEvent* event);
@@ -589,8 +596,13 @@ protected:
   /** Finds the item corresponding to the given node. */
   KPlayerListViewItem* itemForNode (KPlayerNode* node, bool open = false);
 
+  /** Updates the given item as necessary. */
+  virtual void update (KPlayerListViewItem* item);
+
   /** Currently displayed node. */
   KPlayerContainerNode* m_node;
+  /** Last current node. */
+  KPlayerNode* m_last_node;
   /** Names of visible node attributes. */
   QStringList m_attribute_names;
   /** Indicates whether items are being moved within the view. */
@@ -599,6 +611,10 @@ protected:
   bool m_in_focus;
   /** Indicates whether the popup menu is shown. */
   bool m_popup_menu_shown;
+  /** Indicates whether a mouse button is pressed. */
+  bool m_mouse_pressed;
+  /** Indicates whether a drag is in progress. */
+  bool m_dragging;
   /** Last active item. */
   KPlayerListViewItem* m_last_item;
   /** Item currently being edited. */
@@ -722,6 +738,9 @@ protected:
   /** Adjusts the last column when viewport is resized. */
   //virtual void viewportResizeEvent (QResizeEvent*);
 
+  /** Updates the given item as necessary. */
+  virtual void update (KPlayerListViewItem* item);
+
   /** Counts of visible node attributes. */
   KPlayerPropertyCounts m_attribute_counts;
   /** Names of available node attributes. */
@@ -734,6 +753,8 @@ protected:
   QMap<QString, bool> m_attribute_states;
   /** Column states. */
   QMap<QString, bool> m_column_states;
+  /** Home media. */
+  KPlayerGenericProperties* m_home_media;
 };
 
 /**The tree view.
@@ -772,6 +793,9 @@ public:
   /** Returns the current history entry. */
   const KPlayerHistory::Iterator& currentHistoryEntry (void) const
     { return m_current; }
+
+  /** Adjusts column width. */
+  virtual void setOpen (QListViewItem* item, bool open);
 
   /** Updates actions according to the current tree view selection. */
   virtual void updateActions (void);
@@ -818,6 +842,9 @@ protected:
 
   /** Prevents KListView from resetting the alternate background. */
   virtual bool event (QEvent*);
+
+  /** Sets custom node order by name. */
+  virtual void setNodeOrder (KPlayerContainerNode* node);
 
   /** History. */
   KPlayerHistory m_history;

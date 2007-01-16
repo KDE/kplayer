@@ -2,8 +2,8 @@
                           kplayerengine.cpp
                           -----------------
     begin                : Tue Feb 10 2004
-    copyright            : (C) 2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2004-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -394,6 +394,34 @@ KPlayerEngine::~KPlayerEngine()
   kill();
   if ( process() )
     delete process();
+  if ( meta() )
+  {
+    QStringList groups (meta() -> groupList());
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebugTime() << "Cache has " << groups.count() << " entries\n";
+#endif
+    if ( int (groups.count()) > configuration() -> cacheSizeLimit() )
+    {
+      QMap<QString,QString> map;
+      int i = 0;
+      for ( QStringList::Iterator it = groups.begin(); it != groups.end(); ++ it )
+      {
+        meta() -> setGroup (*it);
+        QDateTime dt (meta() -> readDateTimeEntry ("Date"));
+        if ( ! dt.isNull() )
+          map.insert (dt.toString (Qt::ISODate) + QString().sprintf ("-%04u", i ++), *it);
+      }
+      i = groups.count() - configuration() -> cacheSizeLimit();
+      for ( QMap<QString,QString>::Iterator mapit = map.begin(); i && mapit != map.end(); ++ mapit )
+      {
+#ifdef DEBUG_KPLAYER_ENGINE
+        kdDebugTime() << "Deleting entry for " << mapit.data() << " from " << mapit.key() << "\n";
+#endif
+        meta() -> deleteGroup (mapit.data());
+        i --;
+      }
+    }
+  }
   if ( settings() )
   {
     disconnect (settings() -> properties(), SIGNAL (updated()), this, SLOT (refreshProperties()));
@@ -417,7 +445,7 @@ void KPlayerEngine::initialize (KActionCollection* ac, QWidget* parent, const ch
 {
   if ( ! engine() )
   {
-    KPlayerMedia::initialize();
+    KPlayerProperties::initialize();
     m_engine = new KPlayerEngine (ac, parent, name, config);
   }
 }
@@ -428,7 +456,7 @@ void KPlayerEngine::terminate (void)
   {
     delete engine();
     m_engine = 0;
-    KPlayerMedia::terminate();
+    KPlayerProperties::terminate();
   }
 }
 
@@ -858,6 +886,12 @@ void KPlayerEngine::playerStateChanged (KPlayerProcess::State state, KPlayerProc
     disableScreenSaver();
   else
     enableScreenSaver();
+  if ( state < KPlayerProcess::Playing && previous >= KPlayerProcess::Playing
+      && ! properties() -> temporaryName().isEmpty() )
+  {
+    properties() -> setTemporaryName (QString::null);
+    properties() -> commit();
+  }
 }
 
 void KPlayerEngine::playerProgressChanged (float progress, KPlayerProcess::ProgressType type)
@@ -2123,4 +2157,25 @@ void KPlayerEngine::workspaceUserResize (void)
   emit correctSize();
   m_zooming = false;
   setDisplaySize (false, ! light());
+}
+
+void KPlayerEngine::clearStoreSections (const QString& section)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Clearing store section " << section << "\n";
+#endif
+  store() -> setGroup (section);
+  int children = store() -> readNumEntry ("Children");
+  for ( int i = 0; i < children; ++ i )
+  {
+    store() -> setGroup (section);
+    QString entry (store() -> readEntry ("Child" + QString::number (i)));
+    if ( entry.find ('/') < 0 )
+    {
+      KURL url (section);
+      url.addPath (entry);
+      clearStoreSections (url.url());
+    }
+  }
+  store() -> deleteGroup (section);
 }

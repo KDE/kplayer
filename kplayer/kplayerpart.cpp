@@ -2,8 +2,8 @@
                            kplayerpart.cpp
                            ---------------
     begin                : Wed Aug 20 2003
-    copyright            : (C) 2003-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2003-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -111,8 +111,8 @@ KAboutData* KPlayerPart::createAboutData (void)
 {
   KAboutData* aboutData = new KAboutData ("kplayer", "KPlayerPart",
     VERSION, description, KAboutData::License_GPL,
-    "(C) 2002-2004, kiriuja", 0, 0, "kplayer dash developer at en dash directo dot net");
-  aboutData -> addAuthor ("kiriuja", 0, "kplayer dash developer at en dash directo dot net");
+    "(C) 2002-2007, kiriuja", 0, 0, "http://kplayer.sourceforge.net/email.html");
+  aboutData -> addAuthor ("kiriuja", 0, "http://kplayer.sourceforge.net/email.html");
   return aboutData;
 }
 

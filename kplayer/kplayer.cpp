@@ -2,8 +2,8 @@
                           kplayer.cpp
                           -----------
     begin                : Sat Nov 16 10:12:50 EST 2002
-    copyright            : (C) 2002-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2002-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -33,9 +33,9 @@
 #include <qwhatsthis.h>
 
 #ifdef DEBUG
-#define DEBUG_KPLAYER_RESIZING
 #define DEBUG_KPLAYER_WINDOW
-#define DEBUG_KPLAYER_NOTIFY_KEY
+//#define DEBUG_KPLAYER_RESIZING
+//#define DEBUG_KPLAYER_NOTIFY_KEY
 //#define DEBUG_KPLAYER_NOTIFY_MOUSE
 //#define DEBUG_KPLAYER_NOTIFY_DRAG
 #endif
@@ -326,7 +326,7 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
   KApplication::x11ClientMessage (widget, event, passive_only);
 }*/
 
-#ifdef DEBUG_KPLAYER_WINDOW
+#ifdef DEBUG_KPLAYER_RESIZING
 void dumpObject (const QObject* object, int indent, int depth = 20)
 {
   QString spaces;
@@ -366,6 +366,9 @@ void dumpObject (const QObject* object, int indent, int depth = 20)
 
 KPlayer::KPlayer (QWidget *parent, const char *name) : KMainWindow (parent, name)
 {
+#ifdef DEBUG_KPLAYER_WINDOW
+  kdDebugTime() << "Creating main window\n";
+#endif
   m_status_label = m_state_label = m_progress_label = 0;
   m_menubar_normally_visible = m_statusbar_normally_visible = true;
   m_menubar_fullscreen_visible = m_statusbar_fullscreen_visible = false;
@@ -428,6 +431,11 @@ KPlayer::KPlayer (QWidget *parent, const char *name) : KMainWindow (parent, name
     SLOT (actionListUpdating (KPlayerActionList*)));
   connect (engine() -> subtitleActionList(), SIGNAL (updated (KPlayerActionList*)),
     SLOT (actionListUpdated (KPlayerActionList*)));
+  KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+  if ( args -> count() > 0 && (args -> isSet ("play") || args -> isSet ("play-next")
+      || ! args -> isSet ("queue") && ! args -> isSet ("queue-next") && ! args -> isSet ("add-to-new-playlist")
+      && ! args -> isSet ("add-to-playlists") && ! args -> isSet ("add-to-collection")) )
+    engine() -> clearStoreSections ("kplayer:/nowplaying");
   m_log = new KPlayerLogWindow (actionCollection(), this);
   connect (log(), SIGNAL (windowHidden()), SLOT (logWindowHidden()));
   connect (action ("log_clear"), SIGNAL (activated()), SLOT (fileClearLog()));
@@ -1079,7 +1087,7 @@ void KPlayer::start (void)
   raise();
   setActiveWindow(); // doesn't work after restoring from minimized state
   KWin::forceActiveWindow (winId());
-#ifdef DEBUG_KPLAYER_WINDOW
+#ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "Main window minimum size " << minimumWidth() << "x" << minimumHeight()
     << ", maximum size " << maximumWidth() << "x" << maximumHeight()
     << ", size " << width() << "x" << height() << "\n";
@@ -1125,7 +1133,7 @@ void KPlayer::start (void)
 
 void KPlayer::contextMenu (const QPoint& global_position)
 {
-#ifdef DEBUG_KPLAYER_WINDOW
+#ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "Main " << winId() << " wspace " << kPlayerWorkspace() -> winId()
     << " widget " << kPlayerWidget() -> winId() << "\n";
   dumpObject (this, 0);
@@ -1778,6 +1786,8 @@ void KPlayer::toNormalScreen (void)
 {
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "KPlayer::toNormalScreen\n";
+#endif
+#ifdef DEBUG_KPLAYER_RESIZING
   dumpObject (this, 0);
 #endif
   bool active = isActiveWindow();
@@ -1866,7 +1876,7 @@ void KPlayer::correctSize (void)
     if ( m_maximized )
     {
 #ifdef DEBUG_KPLAYER_WINDOW
-      kdDebugTime() << "             Using normal geometry\n";
+      kdDebugTime() << " Using normal geometry\n";
 #endif
       //syncronizeEvents();
       move (m_normal_geometry.x(), m_normal_geometry.y());
@@ -2087,7 +2097,7 @@ void KPlayer::do_move (const QRect& frame)
 
 void KPlayer::activateLayout (void)
 {
-#ifdef DEBUG_KPLAYER_WINDOW
+#ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "KPlayer::activateLayout\n";
 #endif
   layout() -> activate();
@@ -2095,7 +2105,7 @@ void KPlayer::activateLayout (void)
   QApplication::sendPostedEvents (this, QEvent::Move);
   QApplication::sendPostedEvents (this, QEvent::LayoutHint);
   QApplication::sendPostedEvents (kPlayerWorkspace(), QEvent::Resize);
-#ifdef DEBUG_KPLAYER_WINDOW
+#ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "KPlayer::activateLayout done\n";
 #endif
 }

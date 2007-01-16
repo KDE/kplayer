@@ -102,29 +102,10 @@
    + Root
    + Home
  + Configure toolbars
- Bugs
-  Order of relative options
-  Auto expand in tree
-  Aspect calculation
-  Auto resize cleared
-  Junk config entries
-  Move edit after scrolling
-  Duplicate recent entries
-  Shift with shortcuts
-  Main window popping up
-  Resizing and moving
-  Xinerama
-  Capitalize command names
-  Disable full screen when not playing
-  Maintain aspect when size fixed
-  Restore maintain aspect on part unload
-  Irish channel list
- Testing
-  Allow duplicates
-  Empty config
- Update input.conf
- Update documentation
- Update release info
+ + Show ICY Info
+ Add translations
+ + Update input.conf
+ + Update release info
 
 Basic functionality
  + Open file
@@ -160,14 +141,13 @@ Additional controls
  + Display mplayer text output
  + Message log and error handling
  + Audio delay
-   Tooltips when dragging a slider
-   Toolbar configuration dialog
+ + Tooltips when dragging a slider
+ + Always on top
    Volume control mode
     PCM
     Master
     Native
    Audio equalizer
-   Always on top
    Quit when done playing
    Recording
 
@@ -184,6 +164,7 @@ Subtitles
    Font size
    Font style
    Font scaling
+   Font encoding
 
 Configuration dialog
  + Tree like interface
@@ -197,60 +178,103 @@ Configuration dialog
    Decimals in position and length
 
 Playlist
- + Play file
- + Play URL
- + Play recent
  + List
  + Play
  + Next
  + Previous
  + Loop
  + Shuffle
-   Queue next
-   Edit
-   Move up
-   Move down
-   Remove
+ + Edit
+   Hierarchical shuffling
 
 Multimedia library
  + Name
  + Path or URL
-   Type
+ + Type
  + Length
  + Video size
  + Formats
  + Bitrates
- + Shuffling
+ + Play file
+ + Play URL
+ + Play recent
+ + Order
+   + By name
+   + By key
+   + Custom
  + Allow duplicate entries
  + Size limit
  + Settings
-   Remove missing files
  + Hierarchical structure
    + Directories as playlists
    + Meta information
-   Accumulate
-   Grouping
-   Sources
-    + Root
-    + Directory
-    + Store
-    + Origin
-    + List
-    + Devices
-    + Device
-      + CD
-      + DVD
-      + TV
-      + DVB
-      Group
-      Key
-      Search
-      Playlist
-      Slave
-   Hierarchical shuffling
+ + Metadata
+   + Extract
+   + Store
+   + Display
+   + Update
+   + Change
+   + Video IDs
+   + Audio IDs
+   + Subtitle IDs
+   + Demuxer
+ + Columns
+   + Hiding
+   + Moving
+   + Meta sync
+ + Drag and drop
+   + Copy
+   + Link
+   + Move
+   + Set action
+   + Reorder
+   + URL
+ + Context menu
+   + Play
+   + Queue next
+   + Queue
+   + Add files
+   + Add URL
+   + Add group
+   + Save as playlist
+   + Add to playlist
+   + Add to collection
+   + Open
+   + Rename/Edit
+   + Properties
+   + Move up
+   + Move down
+   + Select all
+   + Remove
+   + Go back
+   + Go forward
+   + Go up
+   + Go down
+   + Go to source
+     Remove missing files
+     Accumulate
+     Grouping
+     Sources
+     + Root
+     + Directory
+     + Store
+     + Origin
+     + List
+     + Devices
+     + Device
+       + CD
+       + DVD
+       + TV
+       + DVB
+         Radio
+    Group
+    Key
+    Search
+    Playlist
+    Slave
    Searching
-   Bookmarks
    Filtering
+   Bookmarks
 
 Per file options
  + Properties dialog
@@ -266,7 +290,8 @@ Documentation
  + HowTo
  + Handbook
 
-DVD, VCD and Audio CD
+Disk and tuner devices
+ + Disks
  + Tracks
  + Titles
    Chapters
@@ -275,13 +300,29 @@ DVD, VCD and Audio CD
  + Video stream
  + Audio stream
  + Subtitle stream
- + Devices
-   Eject
-
-TV and DVB
- + Devices
  + Channels
  + Frequencies
+ + Devices
+   Eject
+ + Properties
+ + DVD
+   + Load
+   + Play title
+   + Play DVD
+ + VCD
+   + Load
+   + Play track
+   + Play VCD
+ + Audio CD
+   + Load
+   + Play track
+   + Play CD
+ + TV
+   + Play channel
+ + DVB
+   + Play channel
+   Radio
+     Play channel
 
 KDE Integration
  + MIME file types
@@ -290,4 +331,9 @@ KDE Integration
  + KFileMetaInfo
    Window manager size hints
    Do not show windows in task bar
-   Remember dialog position
+   Remember dialog size and position
+
+Bugs
+  Show next item on queue next if no current item
+  Show the correct subtree in library on startup
+  Expand when adding one directory

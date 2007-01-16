@@ -2,8 +2,8 @@
                           kplayerengine.h
                           ---------------
     begin                : Tue Feb 10 2004
-    copyright            : (C) 2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2004-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -140,6 +140,9 @@ public:
   void setHue (void);
   /** Sets the video saturation. */
   void setSaturation (void);
+
+  /** Clear the given store section and all subsections. */
+  void clearStoreSections (const QString& section);
 
   /** Initializes the engine. */
   static void initialize (KActionCollection* ac, QWidget* parent, const char* name = 0, KConfig* = 0);

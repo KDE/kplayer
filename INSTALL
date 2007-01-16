@@ -1,14 +1,11 @@
 Binary packages
 ---------------
 
-Look in http://sourceforge.net/project/showfiles.php?group_id=71710
-for Debian and SuSE binary packages.
+On Debian you can use the Marillat repository:
 
-On Debian you can instead use the Marillat repository:
-
-echo 'deb ftp://ftp.nerim.net/debian-marillat/ unstable main' >> /etc/apt/sources.list
+echo 'deb http://www.debian-multimedia.org unstable main' >> /etc/apt/sources.list
 apt-get update
-apt-get install kplayer
+apt-get install mplayer kplayer libdvdcss w32codecs
 
 Visit the KPlayer home page for links to binary packages for other
 distros: http://kplayer.sourceforge.net/
@@ -19,8 +16,8 @@ Compiling from source tarball or CVS
 
 Extract the tarball
 
-  tar -xjf kplayer-0.5.3.tar.bz2
-  cd kplayer-0.5.3
+  tar xjf kplayer-0.6.0.tar.bz2
+  cd kplayer-0.6.0
 
 Or download code from CVS
 

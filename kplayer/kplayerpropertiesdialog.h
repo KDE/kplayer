@@ -2,8 +2,8 @@
                          kplayerpropertiesdialog.h
                          -------------------------
     begin                : Tue Mar 02 2004
-    copyright            : (C) 2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2004-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************

@@ -2,8 +2,8 @@
                           kplayeractionlist.cpp
                           ---------------------
     begin                : Thu Apr 13 2006
-    copyright            : (C) 2006 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2006-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -185,7 +185,9 @@ void KPlayerActionList::updateAction (KAction* action)
   QString text (i18n(action -> text().utf8()));
   action -> setStatusText (m_status.arg (text));
   action -> setWhatsThis (m_whatsthis.arg (text));
-  action -> setText (m_text.arg (text));
+  text = m_text.arg (text);
+  text.replace ("&", "&&");
+  action -> setText (text);
 }
 
 void KPlayerActionList::actionActivated (void)
@@ -280,7 +282,9 @@ void KPlayerToggleActionList::updateAction (KAction* action)
   QString text (i18n(action -> text().utf8()));
   action -> setStatusText ((on ? m_on_status : m_status).arg (text));
   action -> setWhatsThis ((on ? m_on_whatsthis : m_whatsthis).arg (text));
-  action -> setText ((on ? m_on_text : m_text).arg (text));
+  text = (on ? m_on_text : m_text).arg (text);
+  text.replace ("&", "&&");
+  action -> setText (text);
 }
 
 void KPlayerToggleActionList::actionActivated (KAction* action, int index)

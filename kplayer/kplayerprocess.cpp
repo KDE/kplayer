@@ -2,8 +2,8 @@
                           kplayerprocess.cpp
                           ------------------
     begin                : Sat Jan 11 2003
-    copyright            : (C) 2002-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2002-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -22,7 +22,6 @@
 #include <kprocctrl.h>
 #include <kstandarddirs.h>
 #include <ktempfile.h>
-#include <qapplication.h>
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <qregexp.h>
@@ -48,6 +47,7 @@
 #include "kplayerwidget.h"
 
 #define MIN_VIDEO_LENGTH 5
+#define NO_SEEK_ORIGIN -5
 
 #ifdef DEBUG_KPLAYER_DUMP
 static QFile s_dump (QDir::homeDirPath() + "/kioslave.dump");
@@ -86,11 +86,11 @@ KPlayerLineOutputProcess::KPlayerLineOutputProcess (void)
   m_stdout_buffer_length = m_stderr_buffer_length = 129;
   m_stdout_buffer = new char [m_stdout_buffer_length];
   m_stderr_buffer = new char [m_stderr_buffer_length];
+#if 0
   m_merge = false;
-  QApplication::connect (this, SIGNAL (receivedStdout (KProcess*, char*, int)),
-    this, SLOT (slotReceivedStdout (KProcess*, char*, int)));
-  QApplication::connect (this, SIGNAL (receivedStderr (KProcess*, char*, int)),
-    this, SLOT (slotReceivedStderr (KProcess*, char*, int)));
+#endif
+  connect (this, SIGNAL (receivedStdout (KProcess*, char*, int)), SLOT (slotReceivedStdout (KProcess*, char*, int)));
+  connect (this, SIGNAL (receivedStderr (KProcess*, char*, int)), SLOT (slotReceivedStderr (KProcess*, char*, int)));
 }
 
 KPlayerLineOutputProcess::~KPlayerLineOutputProcess()
@@ -125,9 +125,11 @@ void KPlayerLineOutputProcess::slotReceivedStdout (KProcess* proc, char* str, in
 
 void KPlayerLineOutputProcess::slotReceivedStderr (KProcess* proc, char* str, int len)
 {
+#if 0
   if ( m_merge )
     slotReceivedStdout (proc, str, len);
   else
+#endif
     receivedOutput (proc, str, len, m_stderr_buffer, m_stderr_buffer_length, m_stderr_line_length, false);
 }
 
@@ -269,7 +271,7 @@ KPlayerProcess::KPlayerProcess (void)
   m_delayed_player = m_delayed_helper = m_sent = m_send_seek = false;
   m_seekable = m_09_version = m_first_chunk = false;
   m_position = m_max_position = m_helper_position = 0;
-  m_seek_origin = - MIN_VIDEO_LENGTH;
+  m_seek_origin = NO_SEEK_ORIGIN;
   m_helper_seek = m_helper_seek_count = m_absolute_seek = m_seek_count = m_sent_count = m_cache_size = 0;
   m_slave_job = m_temp_job = 0;
   m_send_volume = m_send_contrast = m_send_brightness = m_send_hue = m_send_saturation = false;
@@ -330,10 +332,10 @@ void KPlayerProcess::transferTemporaryFile (void)
     m_temp_job = KIO::get (properties() -> url(), false, false);
     m_temp_job -> setWindow (kPlayerWorkspace());
     m_temp_job -> addMetaData ("PropagateHttpHeader", "true");
-    connect (m_temp_job, SIGNAL (data (KIO::Job*, const QByteArray&)), this, SLOT (transferTempData (KIO::Job*, const QByteArray&)));
-    connect (m_temp_job, SIGNAL (result (KIO::Job*)), this, SLOT (transferTempDone (KIO::Job*)));
-    connect (m_temp_job, SIGNAL (percent (KIO::Job*, unsigned long)), this, SLOT (transferProgress (KIO::Job*, unsigned long)));
-    connect (m_temp_job, SIGNAL (infoMessage (KIO::Job*, const QString&)), this, SLOT (transferInfoMessage (KIO::Job*, const QString&)));
+    connect (m_temp_job, SIGNAL (data (KIO::Job*, const QByteArray&)), SLOT (transferTempData (KIO::Job*, const QByteArray&)));
+    connect (m_temp_job, SIGNAL (result (KIO::Job*)), SLOT (transferTempDone (KIO::Job*)));
+    connect (m_temp_job, SIGNAL (percent (KIO::Job*, unsigned long)), SLOT (transferProgress (KIO::Job*, unsigned long)));
+    connect (m_temp_job, SIGNAL (infoMessage (KIO::Job*, const QString&)), SLOT (transferInfoMessage (KIO::Job*, const QString&)));
     transferProgress (m_temp_job, 0);
     m_delayed_helper = true;
   }
@@ -368,7 +370,7 @@ void KPlayerProcess::setState (State state)
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Process: New state: " << state << ", previous state: " << previous << ", position: " << m_position << "\n";
 #endif
-  if ( (previous == Running && state != Playing && state != Paused || state == Idle && m_max_position < 0.45) && ! m_quit )
+  if ( previous == Running && state == Idle && ! m_quit )
     emit errorDetected();
   if ( ! m_quit || state == Idle )
     emit stateChanged (state, previous);
@@ -428,8 +430,8 @@ void KPlayerProcess::get_info (void)
     *m_helper << "-nocache";
   else if ( properties() -> cache() == 2 )
     *m_helper << "-cache" << QString().setNum (properties() -> cacheSize());
-  QApplication::connect (m_helper, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    this, SLOT (receivedHelperLine (KPlayerLineOutputProcess*, char*, int)));
+  connect (m_helper, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
+    SLOT (receivedHelperLine (KPlayerLineOutputProcess*, char*, int)));
   if ( ! run (m_helper) )
   {
     delete m_helper;
@@ -621,8 +623,10 @@ void KPlayerProcess::start (void)
   }
   else
     m_fifo_name = QCString();
-  QApplication::connect (m_player, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    this, SLOT (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)));
+  connect (m_player, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
+    SLOT (receivedOutputLine (KPlayerLineOutputProcess*, char*, int)));
+  connect (m_player, SIGNAL (receivedStderrLine (KPlayerLineOutputProcess*, char*, int)),
+    SLOT (receivedOutputLine (KPlayerLineOutputProcess*, char*, int)));
   if ( ! run (m_player) )
   {
     delete m_player;
@@ -643,9 +647,9 @@ void KPlayerProcess::start (void)
     m_slave_job = KIO::get (properties() -> url(), false, false);
     m_slave_job -> setWindow (kPlayerWorkspace());
     m_slave_job -> addMetaData ("PropagateHttpHeader", "true");
-    connect (m_slave_job, SIGNAL (data (KIO::Job*, const QByteArray&)), this, SLOT (transferData (KIO::Job*, const QByteArray&)));
-    connect (m_slave_job, SIGNAL (result (KIO::Job*)), this, SLOT (transferDone (KIO::Job*)));
-    connect (m_slave_job, SIGNAL (infoMessage (KIO::Job*, const QString&)), this, SLOT (transferInfoMessage (KIO::Job*, const QString&)));
+    connect (m_slave_job, SIGNAL (data (KIO::Job*, const QByteArray&)), SLOT (transferData (KIO::Job*, const QByteArray&)));
+    connect (m_slave_job, SIGNAL (result (KIO::Job*)), SLOT (transferDone (KIO::Job*)));
+    connect (m_slave_job, SIGNAL (infoMessage (KIO::Job*, const QString&)), SLOT (transferInfoMessage (KIO::Job*, const QString&)));
     m_cache_size = properties() -> cache() == 2 ? properties() -> cacheSize() * 1024 : 1048576;
     m_first_chunk = true;
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -660,7 +664,7 @@ void KPlayerProcess::restart (void)
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Process: Restart\n";
 #endif
-  if ( m_temp_job || ! m_player || properties() -> url().isEmpty() || state() == KPlayerProcess::Idle )
+  if ( m_temp_job || ! m_player || properties() -> url().isEmpty() || state() == Idle )
     return;
   m_quit = true;
   m_cache.clear();
@@ -705,11 +709,10 @@ bool KPlayerProcess::run (KPlayerLineOutputProcess* player)
     *player << (properties() -> useTemporaryFile() && m_temporary_file ? QFile::encodeName (m_temporary_file -> name()) : m_fifo_name);
   else
     *player << properties() -> urlString();
-  QApplication::connect (player, SIGNAL (processExited (KProcess*)),
-    this, SLOT (playerProcessExited (KProcess*)));
-//QApplication::connect (player, SIGNAL (receivedStderrLine (KPlayerLineOutputProcess*, char*, int)),
-//  this, SLOT (receivedStderrLine (KPlayerLineOutputProcess*, char*, int)));
+  connect (player, SIGNAL (processExited (KProcess*)), SLOT (playerProcessExited (KProcess*)));
+#if 0
   player -> setMerge (true);
+#endif
   return player -> start (KProcess::NotifyOnExit, KProcess::All);
 }
 
@@ -1456,7 +1459,7 @@ void KPlayerProcess::sendFifoData (void)
       }
       m_fifo_notifier = new QSocketNotifier (m_fifo_handle, QSocketNotifier::Write);
       m_fifo_notifier -> setEnabled (false);
-      QObject::connect (m_fifo_notifier, SIGNAL (activated (int)), this, SLOT (playerDataWritten (int)));
+      connect (m_fifo_notifier, SIGNAL (activated (int)), SLOT (playerDataWritten (int)));
     }
     else if ( ! m_fifo_timer )
     {
@@ -1464,7 +1467,7 @@ void KPlayerProcess::sendFifoData (void)
       kdDebugTime() << "Process: fifo open failed, creating timer\n";
 #endif
       m_fifo_timer = new QTimer (this);
-      connect (m_fifo_timer, SIGNAL (timeout()), this, SLOT (sendFifoData()));
+      connect (m_fifo_timer, SIGNAL (timeout()), SLOT (sendFifoData()));
       m_fifo_timer -> start (100);
     }
   }
@@ -1539,9 +1542,9 @@ void KPlayerProcess::playerProcessExited (KProcess *proc)
 #endif
     delete m_player;
     m_player = 0;
-    if ( m_success && ! m_seek && m_position >= MIN_VIDEO_LENGTH && m_position > properties() -> length() / 40 )
+    if ( m_success && ! m_seek && m_position > 0 && m_position > properties() -> length() / 40 )
     {
-      properties() -> setLength (m_position);
+      properties() -> setLength (m_max_position);
       m_info_available = true;
       emit infoAvailable();
       properties() -> commit();
@@ -1591,7 +1594,7 @@ void KPlayerProcess::playerProcessExited (KProcess *proc)
   }
 }
 
-void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* str, int len)
+void KPlayerProcess::receivedOutputLine (KPlayerLineOutputProcess* proc, char* str, int len)
 {
   if ( proc != m_player )
   {
@@ -1631,7 +1634,8 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
     if ( settings() -> showExternalSubtitles() && settings() -> currentSubtitles() == m_subtitles.last() )
       subtitleIndex (properties() -> subtitleIDs().count() + properties() -> vobsubIDs().count() + m_subtitles.count() - 1);
   }
-  else if ( m_state < Playing || strncmp (str, "ID_", 3) == 0 )
+  else if ( m_state < Playing || strncmp (str, "ID_", 3) == 0
+    || strncmp (str, "Name", 4) == 0 || strncmp (str, "ICY Info:", 9) == 0 )
   {
     QSize size (properties() -> originalSize());
     bool hadVideo = properties() -> hasVideo();
@@ -1837,7 +1841,7 @@ void KPlayerProcess::receivedStdoutLine (KPlayerLineOutputProcess* proc, char* s
         if ( m_seek_origin >= 0 )
           kdDebugTime() << "Process: Reset seek origin. Position " << position() << " origin " << m_seek_origin << " sent " << m_sent << " count " << m_seek_count << "\n";
 #endif
-        m_seek_origin = - MIN_VIDEO_LENGTH;
+        m_seek_origin = NO_SEEK_ORIGIN;
         emit progressChanged (m_position, Position);
         m_seek_count = 0;
       }

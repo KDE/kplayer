@@ -2,8 +2,8 @@
                           kplayersettingsdialog.h
                           -----------------------
     begin                : Tue Apr 22 2003
-    copyright            : (C) 2003-2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2003-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************

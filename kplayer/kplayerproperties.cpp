@@ -2,8 +2,8 @@
                           kplayerproperties.cpp
                           ---------------------
     begin                : Tue Feb 10 2004
-    copyright            : (C) 2004 by kiriuja
-    email                : kplayer dash developer at en dash directo dot net
+    copyright            : (C) 2004-2007 by kiriuja
+    email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
 /***************************************************************************
@@ -1044,6 +1044,7 @@ void KPlayerProperties::load (void)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerProperties::load\n";
+  kdDebugTime() << " Group  " << configGroup() << "\n";
 #endif
   config() -> setGroup (configGroup());
   KPlayerPropertyInfoMap::ConstIterator iterator (m_info.begin());
@@ -1084,6 +1085,7 @@ void KPlayerProperties::save (void) const
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerProperties::save\n";
+  kdDebugTime() << " Group  " << configGroup() << "\n";
 #endif
   config() -> deleteGroup (configGroup());
   config() -> setGroup (configGroup());
@@ -1417,7 +1419,7 @@ void KPlayerProperties::setString (const QString& key, const QString& value)
     set (key, value);
 }
 
-const QString& KPlayerProperties::getComboValue (const QString& key) const
+const QString& KPlayerProperties::getStringValue (const QString& key) const
 {
   return has (key) ? ((KPlayerStringProperty*) m_properties [key]) -> value() : QString::null;
 }
@@ -1593,10 +1595,9 @@ void KPlayerProperties::count (KPlayerPropertyCounts& counts) const
 
 QString KPlayerProperties::demuxerString (void) const
 {
-  QString demuxer (demuxerOption());
-  if ( ! demuxer.isEmpty() )
-      demuxer += ",";
-  return demuxer;
+  return demuxerOption();
+  //if ( ! demuxer.isEmpty() )
+  //    demuxer += ",";
 }
 
 QString KPlayerProperties::audioDriverString (void) const
@@ -1764,14 +1765,11 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Type", info);
   info = new KPlayerStringPropertyInfo;
   m_info.insert ("Icon", info);
-  strinfo = new KPlayerStringPropertyInfo;
-  strinfo -> setDefaultValue ("europe-west");
-  m_info.insert ("Channel List", strinfo);
+  info = new KPlayerStringPropertyInfo;
+  m_info.insert ("Channel List", info);
   strinfo = new KPlayerStringPropertyInfo;
   strinfo -> setDefaultValue ("v4l2");
   m_info.insert ("Input Driver", strinfo);
-  info = new KPlayerStringPropertyInfo;
-  m_info.insert ("Channel File", info);
   intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (-1);
   m_info.insert ("Video Input", intinfo);
@@ -2620,7 +2618,8 @@ KConfig* KPlayerGenericProperties::config (void) const
 
 QString KPlayerGenericProperties::defaultName (void) const
 {
-  return ! m_default_name.isEmpty() ? m_default_name : url().fileName().isEmpty() ? url().prettyURL() : url().fileName();
+  return ! m_default_name.isEmpty() ? m_default_name
+    : url().fileName().isEmpty() ? url().prettyURL() : url().fileName();
 }
 
 QString KPlayerGenericProperties::type (const QString& id) const
@@ -2661,12 +2660,17 @@ void KPlayerGenericProperties::setHidden (const QString& id, bool hidden)
 
 QString KPlayerGenericProperties::caption (void) const
 {
-  QString n (name());
+  QString n (currentName());
   if ( n.isEmpty() && url().isLocalFile() )
     n = url().path();
   if ( n.isEmpty() )
     n = url().prettyURL (0, KURL::StripFileProtocol);
   return n;
+}
+
+QString KPlayerGenericProperties::icon (void) const
+{
+  return getString ("Icon");
 }
 
 KPlayerMediaProperties::KPlayerMediaProperties (KPlayerProperties* parent, const KURL& url)
@@ -2710,7 +2714,7 @@ void KPlayerDeviceProperties::setupInfo (void)
   setPath ("/" + m_url.path().section ('/', 1, 0xffffffff, QString::SectionSkipEmpty));
 }
 
-KPlayerTVDVBProperties::KPlayerTVDVBProperties (KPlayerProperties* parent, const KURL& url)
+KPlayerTunerProperties::KPlayerTunerProperties (KPlayerProperties* parent, const KURL& url)
   : KPlayerDeviceProperties (parent, url)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
@@ -2718,16 +2722,21 @@ KPlayerTVDVBProperties::KPlayerTVDVBProperties (KPlayerProperties* parent, const
 #endif
 }
 
-KPlayerTVDVBProperties::~KPlayerTVDVBProperties()
+KPlayerTunerProperties::~KPlayerTunerProperties()
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "Destroying TV/DVB properties\n";
 #endif
 }
 
-int KPlayerTVDVBProperties::channelFrequency (const QString& id) const
+int KPlayerTunerProperties::channelFrequency (const QString& id) const
 {
   QMap<QString, int>::ConstIterator iterator = m_frequencies.find (id);
+  if ( iterator == m_frequencies.end() )
+  {
+    ((KPlayerTunerProperties*) this) -> channels();
+    iterator = m_frequencies.find (id);
+  }
   return iterator == m_frequencies.end() ? 0 : iterator.data();
 }
 
@@ -2895,7 +2904,7 @@ struct KPlayerChannelList channellists[] = {
 };
 
 KPlayerTVProperties::KPlayerTVProperties (KPlayerProperties* parent, const KURL& url)
-  : KPlayerTVDVBProperties (parent, url)
+  : KPlayerTunerProperties (parent, url)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "Creating TV properties\n";
@@ -2907,6 +2916,29 @@ KPlayerTVProperties::~KPlayerTVProperties()
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "Destroying TV properties\n";
 #endif
+}
+
+void KPlayerTVProperties::setupMeta (void)
+{
+#ifdef DEBUG_KPLAYER_PROPERTIES
+  kdDebugTime() << "KPlayerTVProperties::setupMeta\n";
+#endif
+  if ( ! hasChannelList() )
+  {
+    QString country (KGlobal::locale() -> country().lower());
+#ifdef DEBUG_KPLAYER_PROPERTIES
+    kdDebugTime() << " Country " << country << "\n";
+#endif
+    setChannelList (country == "us" ? "us-bcast" : country == "jp" ? "japan-bcast" : country == "it" ? "italy"
+      : country == "nz" ? "newzealand" : country == "au" ? "australia" : country == "ie" ? "ireland"
+      : country == "fr" ? "france" : country == "cn" ? "china-bcast" : country == "za" ? "southafrica"
+      : country == "ar" ? "argentina" : country == "ru" ? "russia" : country == "by" || country == "bg"
+      || country == "cz" || country == "hu" || country == "pl" || country == "md" || country == "ro"
+      || country == "sk" || country == "ua" || country == "al" || country == "ba" || country == "hr"
+      || country == "mk" || country == "yu" || country == "me" || country == "rs" || country == "si"
+      || country == "ee" || country == "lv" || country == "lt" || country == "am" || country == "az"
+      || country == "ge" ? "europe-east" : "europe-west");
+  }
 }
 
 QStringList KPlayerTVProperties::channels (void)
@@ -2954,7 +2986,7 @@ QStringList KPlayerTVProperties::channels (void)
 }
 
 KPlayerDVBProperties::KPlayerDVBProperties (KPlayerProperties* parent, const KURL& url)
-  : KPlayerTVDVBProperties (parent, url)
+  : KPlayerTunerProperties (parent, url)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "Creating DVB properties\n";
@@ -2973,7 +3005,7 @@ void KPlayerDVBProperties::setupMeta (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerDVBProperties::setupMeta\n";
 #endif
-  if ( ! hasChannelFile() )
+  if ( ! hasChannelList() )
   {
     QString paths[] = { QDir::homeDirPath() + "/.mplayer", "/etc/mplayer", "/usr/local/etc/mplayer" };
     const char* globs[] = { "channels.conf", "channels.conf.sat", "channels.conf.ter",
@@ -3004,7 +3036,7 @@ void KPlayerDVBProperties::setupMeta (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
               kdDebugTime() << " Found channels file " << path << "\n";
 #endif
-              setChannelFile (path);
+              setChannelList (path);
               return;
             }
             ++ it;
@@ -3025,10 +3057,10 @@ QStringList KPlayerDVBProperties::channels (void)
   m_names.clear();
   m_frequencies.clear();
   QStringList channels;
-  if ( hasChannelFile() )
+  if ( hasChannelList() )
   {
     QString id;
-    QFile file (channelFile());
+    QFile file (channelList());
     file.open (IO_ReadOnly);
     while ( file.readLine (id, 1024) >= 0 )
     {
@@ -3153,8 +3185,8 @@ void KPlayerTrackProperties::importMeta (QString key, QString value)
   static QRegExp re_track ("^(?:Track|Pista) *[0-9]*$", false);
   key = key.lower();
   capitalizeWords (key);
-  if ( key == "Layer" || key == "Version" || key == "Comment" || key == "Copyright"
-      || key == "Software" || key == "Encoder" || key == "Aspect Ratio" )
+  if ( key == "Layer" || key == "Version" || key == "Comment" || key == "Comments"
+      || key == "Copyright" || key == "Software" || key == "Encoder" || key == "Aspect Ratio" )
     return;
   if ( key == "Date" )
     key = "Year";
@@ -3162,7 +3194,7 @@ void KPlayerTrackProperties::importMeta (QString key, QString value)
     key = "Track";
   else if ( key.right (5) == " Rate" )
     key = key.left (key.length() - 5) + "rate";
-  if ( has (key) )
+  if ( key == "Name" ? hasName() : has (key) )
     return;
   value = value.simplifyWhiteSpace();
   if ( value.isEmpty() )
@@ -3245,8 +3277,10 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
   static QRegExp re_vslang ("^ID_VSID_(\\d+)_LANG=(.+)$");
   static QRegExp re_length ("^(?:ID|ANS)_LENGTH=(\\d+\\.?\\d*)$");
   static QRegExp re_demuxer ("^ID_DEMUXER=(.+)$");
+  static QRegExp re_name_sc ("^Name *: *(.+)$");
   static QRegExp re_name ("^ID_CLIP_INFO_NAME[0-9]+=(.+)$");
   static QRegExp re_value ("^ID_CLIP_INFO_VALUE[0-9]+=(.+)$");
+  static QRegExp re_icyinfo ("^ICY Info: StreamTitle='([^']*)'");
   static QString key;
   static bool seen_length = false;
   if ( str.startsWith ("ID_FILENAME=") )
@@ -3274,11 +3308,7 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
 #endif
     setLength (re_length.cap(1).toFloat());
     if ( ! hasLength() && has ("MSF") && hasVideoBitrate() && hasAudioBitrate() )
-    {
-      float length = (getFloat ("MSF") - 454.242) * 1700.76543 / (videoBitrate() + audioBitrate());
-      if ( length > 0 )
-        setLength (length);
-    }
+      setLength (getFloat ("MSF") * 1388 / (videoBitrate() + audioBitrate()));
   }
   else if ( (update || ! heightAdjusted()) && re_vo.search (str) >= 0 )
   {
@@ -3349,11 +3379,7 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
     kdDebugTime() << "Process: Video bitrate " << videoBitrate() << "\n";
 #endif
     if ( seen_length && ! hasLength() && has ("MSF") && hasVideoBitrate() && hasAudioBitrate() )
-    {
-      float length = (getFloat ("MSF") - 454.242) * 1700.76543 / (videoBitrate() + audioBitrate());
-      if ( length > 0 )
-        setLength (length);
-    }
+      setLength (getFloat ("MSF") * 1388 / (videoBitrate() + audioBitrate()));
   }
   else if ( (update || ! hasFramerate()) && re_vfr.search (str) >= 0 )
   {
@@ -3382,11 +3408,7 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
     kdDebugTime() << "Process: Audio bitrate " << audioBitrate() << "\n";
 #endif
     if ( seen_length && ! hasLength() && has ("MSF") && hasVideoBitrate() && hasAudioBitrate() )
-    {
-      float length = (getFloat ("MSF") - 454.242) * 1700.76543 / (videoBitrate() + audioBitrate());
-      if ( length > 0 )
-        setLength (length);
-    }
+      setLength (getFloat ("MSF") * 1388 / (videoBitrate() + audioBitrate()));
   }
   else if ( (update || ! hasSamplerate()) && re_asr.search (str) >= 0 )
   {
@@ -3480,6 +3502,21 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Demuxer " << demuxer() << "\n";
 #endif
+  }
+  else if ( name() == defaultName() && re_name_sc.search (str) >= 0 )
+  {
+    setName (re_name_sc.cap(1).simplifyWhiteSpace());
+#ifdef DEBUG_KPLAYER_PROPERTIES
+    kdDebugTime() << "Process: Name '" << name() << "'\n";
+#endif
+  }
+  else if ( update && re_icyinfo.search (str) >= 0 )
+  {
+    setTemporaryName (re_icyinfo.cap(1).simplifyWhiteSpace());
+#ifdef DEBUG_KPLAYER_PROPERTIES
+    kdDebugTime() << "Process: ICY Info '" << temporaryName() << "'\n";
+#endif
+    commit();
   }
 }
 
@@ -3605,6 +3642,11 @@ void KPlayerDiskTrackProperties::setupInfo (void)
     : i18n("Track %1")).arg (url().fileName().rightJustify (parent() -> digits(), '0')));
 }
 
+QString KPlayerDiskTrackProperties::icon (void) const
+{
+  return parent() -> getString ("Type") == "Audio CD" ? "sound" : "video";
+}
+
 QString KPlayerDiskTrackProperties::deviceOption (void) const
 {
   return parent() -> type() == "DVD" ? "-dvd-device" : "-cdrom-device";
@@ -3635,6 +3677,11 @@ KPlayerChannelProperties::~KPlayerChannelProperties()
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "Destroying channel properties\n";
 #endif
+}
+
+QString KPlayerChannelProperties::icon (void) const
+{
+  return "video";
 }
 
 bool KPlayerChannelProperties::needsFrequency (void) const
@@ -3786,11 +3833,11 @@ QString KPlayerDVBChannelProperties::deviceSetting (void) const
       setting += ":";
     setting += "aid=" + QString::number (audioInput());
   }
-  if ( hasChannelFile() || parent() -> hasChannelFile() )
+  if ( hasChannelList() || parent() -> hasChannelList() )
   {
     if ( ! setting.isEmpty() )
       setting += ":";
-    setting += "file=" + channelFile();
+    setting += "file=" + channelList();
   }
   return setting;
 }

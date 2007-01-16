@@ -4,8 +4,6 @@ kplayer_SOURCES = kplayerpropertiesdevice.ui kplayernodeaction.cpp kplayernodevi
 
 kplayer_LDADD   = libkplayernoinst.la $(LIB_KPARTS) $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
-#EXTRA_DIST = main.cpp kplayer.cpp kplayer.h kplayerpropertiesgeneral.ui kplayerpropertiessize.ui kplayerpropertiessubtitles.ui kplayerpropertiesaudio.ui kplayerpropertiesvideo.ui kplayerpropertiesadvanced.ui kplayerpropertiesdevice.ui kplayersettingsgeneral.ui kplayersettingsadvanced.ui kplayersettingsaudio.ui kplayersettingsvideo.ui kplayerlogwindow.cpp kplayerlogwindow.h kplayersettingscontrast.ui kplayersettingscontrols.ui kplayersettingssliders.ui kplayersettingshue.ui kplayersettingsprogress.ui kplayersettingssaturation.ui kplayersettingsvolume.ui kplayersettingsbrightness.ui kplayersettingssubtitles.ui kplayersettingsdialog.h kplayersettingsdialog.cpp kplayerpropertiesdialog.h kplayerpropertiesdialog.cpp kplayersource.h kplayersource.cpp kplayernode.h kplayernode.cpp kplayernodeaction.h kplayernodeaction.cpp kplayernodeview.h kplayernodeview.cpp kplayerplaylist.h kplayerplaylist.cpp kplayerwidget.h kplayerwidget.cpp kplayerprocess.h kplayerprocess.cpp kplayerproperties.h kplayerproperties.cpp kplayeractionlist.h kplayeractionlist.cpp kplayerengine.h kplayerengine.cpp kplayersettings.h kplayersettings.cpp kplayerslideraction.h kplayerslideraction.cpp kplayerpart.h kplayerpart.cpp x11.cpp kplayerui.rc kplayerpartui.rc input.conf kplayer.desktop kplayerpart.desktop hi16-app-kplayer.png hi22-app-kplayer.png hi32-app-kplayer.png hi48-app-kplayer.png hi64-app-kplayer.png lo16-app-kplayer.png lo22-app-kplayer.png lo32-app-kplayer.png rtsp.protocol pnm.protocol mms.protocol mmst.protocol mmsu.protocol
-
 # These paths are KDE specific. Use them:
 # kde_appsdir         Where your application's menu entry (.desktop) should go to.
 # kde_icondir         Where your icon should go to - better use KDE_ICON.
@@ -32,11 +30,8 @@ INCLUDES= $(all_includes)
 
 # METASOURCES = AUTO
 kplayer_METASOURCES = kplayer.moc kplayerlogwindow.moc kplayersettingsdialog.moc kplayerplaylist.moc kplayernodeaction.moc kplayernodeview.moc
-# kplayersettingssubtitles.moc kplayersettingsbrightness.moc kplayersettingsvolume.moc kplayersettingssaturation.moc kplayersettingsprogress.moc kplayersettingshue.moc kplayersettingscontrols.moc kplayersettingssliders.moc kplayersettingscontrast.moc kplayersettingsvideo.moc kplayersettingsaudio.moc kplayersettingsadvanced.moc kplayersettingsgeneral.moc kplayerpropertiesgeneral.moc kplayerpropertiessize.moc kplayerpropertiessubtitles.moc kplayerpropertiesaudio.moc kplayerpropertiesvideo.moc kplayerpropertiesadvanced.moc
 
 KDE_ICON = kplayer
-
-#DIST_SOURCES =
 
 # the library search path. 
 kplayer_LDFLAGS = $(all_libraries) $(KDE_RPATH)
@@ -53,8 +48,7 @@ libkplayerpart_la_SOURCES = kplayerpart.cpp
 libkplayerpart_la_LIBADD = $(LIB_KPARTS) $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) libkplayernoinst.la
 libkplayerpart_la_METASOURCES = kplayerpart.moc
 
-# Uncomment the following two lines if you add a ui.rc file for your application to make use of
-# KDEs XML GUI builing
+# Uncomment the following two lines if you add a ui.rc file for your application to make use of KDEs XML GUI builing
 rcdir = $(kde_datadir)/kplayer
 rc_DATA = kplayerui.rc
 
