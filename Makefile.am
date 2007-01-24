@@ -1,4 +1,4 @@
-SUBDIRS = $(TOPSUBDIRS)
+#SUBDIRS = $(TOPSUBDIRS)
 
 AUTOMAKE_OPTIONS = dist-bzip2 foreign 
 
