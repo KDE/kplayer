@@ -77,9 +77,29 @@ public:
 public slots:
   void refresh (void);
 
+protected slots:
+  /** Processes an amixer output line. */
+  void amixerOutput (KPlayerLineOutputProcess*, char*, int);
+  /** Finishes refreshing ALSA mixer channel list. */
+  void amixerExited (KProcess*);
+
 protected:
   void loadLists (void);
+  void runAmixer (void);
+  void defaultAlsaChannels (void);
   virtual void driverChanged (int);
+  virtual void deviceChanged (const QString&);
+  virtual void mixerChanged (const QString&);
+  virtual void softvolChanged (bool);
+
+  /** Last selected driver. */
+  QString m_driver;
+  /** Last entered device. */
+  QString m_device;
+  /** Last software volume setting. */
+  bool m_softvol;
+  /** Amixer tracking flags. */
+  bool m_amixer_running, m_rerun_amixer;
 };
 
 class KPlayerSettingsControls : public KPlayerSettingsControlsPage

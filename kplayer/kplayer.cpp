@@ -34,7 +34,8 @@
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_WINDOW
-//#define DEBUG_KPLAYER_RESIZING
+#define DEBUG_KPLAYER_RESIZING
+//#define DEBUG_KPLAYER_SIZING_HACKS
 //#define DEBUG_KPLAYER_NOTIFY_KEY
 //#define DEBUG_KPLAYER_NOTIFY_MOUSE
 //#define DEBUG_KPLAYER_NOTIFY_DRAG
@@ -1803,19 +1804,23 @@ void KPlayer::toNormalScreen (void)
   kdDebugTime() << "Full screen: " << geometry().x() << "x" << geometry().y() << " " << width() << "x" << height() << "\n";
   kdDebugTime() << "                          " << frameGeometry().x() << "x" << frameGeometry().y() << " " << frameGeometry().width() << "x" << frameGeometry().height() << "\n";
 #endif
+#ifdef DEBUG_KPLAYER_SIZING_HACKS
   if ( ! m_maximized )
   {
     //move (m_normal_geometry.x(), m_normal_geometry.y());
     //resize (m_normal_geometry.width(), m_normal_geometry.height());
+    setGeometry (0, 0, width(), height() - 2);
     setGeometry (m_normal_geometry);
     activateLayout();
     //m_initial_show = false;
   }
+#endif
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "Full screen: " << geometry().x() << "x" << geometry().y() << " " << width() << "x" << height() << "\n";
   kdDebugTime() << "                          " << frameGeometry().x() << "x" << frameGeometry().y() << " " << frameGeometry().width() << "x" << frameGeometry().height() << "\n";
 #endif
   showNormal();
+#ifdef DEBUG_KPLAYER_SIZING_HACKS
   /*if ( ! m_maximized )
   {
 #ifdef DEBUG_KPLAYER_WINDOW
@@ -1824,6 +1829,7 @@ void KPlayer::toNormalScreen (void)
     move (m_normal_geometry.x(), m_normal_geometry.y());
     resize (m_normal_geometry.width(), m_normal_geometry.height());
   }*/
+#endif
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "Normal: " << geometry().x() << "x" << geometry().y() << " " << width() << "x" << height() << "\n";
   kdDebugTime() << "                     " << frameGeometry().x() << "x" << frameGeometry().y() << " " << frameGeometry().width() << "x" << frameGeometry().height() << "\n";
@@ -1873,6 +1879,7 @@ void KPlayer::correctSize (void)
     layout() -> setSpacing (-1);
   else if ( ! maximized && settings() -> maximized() )
   {
+#ifdef DEBUG_KPLAYER_SIZING_HACKS
     if ( m_maximized )
     {
 #ifdef DEBUG_KPLAYER_WINDOW
@@ -1884,6 +1891,7 @@ void KPlayer::correctSize (void)
       m_maximized = false;
       activateLayout();
     }
+#endif
 #ifdef DEBUG_KPLAYER_WINDOW
     kdDebugTime() << "KPlayer::correctSize: setMaximized (false)\n";
 #endif

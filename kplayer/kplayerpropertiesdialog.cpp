@@ -1115,7 +1115,7 @@ void KPlayerPropertiesAudio::setup (const KURL& url)
   if ( engine() -> audioCodecCount() )
   {
     c_codec -> clear();
-    const QString& codec = properties() -> getString ("Audio Codec");
+    const QString& codec = properties() -> audioCodecValue();
     if ( codec.isEmpty() )
       c_codec -> insertItem (i18n("default"));
     else
@@ -1417,7 +1417,7 @@ void KPlayerPropertiesVideo::setup (const KURL& url)
   if ( engine() -> videoCodecCount() )
   {
     c_codec -> clear();
-    const QString& codec = properties() -> getString ("Video Codec");
+    const QString& codec = properties() -> videoCodecValue();
     if ( codec.isEmpty() )
       c_codec -> insertItem (i18n("default"));
     else
@@ -1764,7 +1764,7 @@ void KPlayerPropertiesAdvanced::setup (const KURL& url)
   if ( engine() -> demuxerCount() )
   {
     c_demuxer -> clear();
-    const QString& demuxer = properties() -> getString ("Demuxer");
+    const QString& demuxer = properties() -> demuxerValue();
     if ( demuxer.isEmpty() )
       c_demuxer -> insertItem (i18n("default"));
     else

@@ -76,6 +76,9 @@ public:
    * The updated signal is emitted when loading finishes. */
   void getLists (QString = QString::null);
 
+  /** Starts amixer process to get the current ALSA volume. */
+  void getAlsaVolume (void);
+
   /** Creates actions and connects signals to slots. */
   void setupActions (void);
   /** Enables or disables player actions. */
@@ -394,6 +397,11 @@ public slots:
   void saturationChanged (int);
 
 protected:
+  /** Handles workspace resize based on the user flag. */
+  void workspaceResize (bool user);
+  /** Runs amixer with the given command and parameter. */
+  void runAmixer (const QString& command, const QString& parameter = QString::null);
+
   QString m_path;
 
   /** Video track action list. */
@@ -402,8 +410,6 @@ protected:
   KPlayerTrackActionList* m_audio_action_list;
   /** Subtitle track action list. */
   KPlayerSubtitleTrackActionList* m_subtitle_action_list;
-
-  KPlayerLineOutputProcess* m_player;
 
   bool m_audio_codecs_ready;
   bool m_audio_drivers_ready;
@@ -421,6 +427,9 @@ protected:
   QStringList m_video_drivers;
   /** List of available demuxers. */
   QStringList m_demuxers;
+
+  bool m_amixer_running, m_amixer_found_control;
+  int m_last_volume, m_amixer_volume, m_amixer_volume_first, m_amixer_volume_second;
 
   /** The static engine object. */
   static KPlayerEngine* m_engine;
@@ -474,6 +483,11 @@ protected slots:
   void receivedOutput (KPlayerLineOutputProcess*, char*, int);
   /** Finishes refreshing lists. */
   void processExited (KProcess*);
+
+  /** Processes an amixer output line. */
+  void amixerOutput (KPlayerLineOutputProcess*, char*, int);
+  /** Finishes refreshing ALSA volume. */
+  void amixerExited (KProcess*);
 };
 
 inline KPlayerEngine* kPlayerEngine (void)

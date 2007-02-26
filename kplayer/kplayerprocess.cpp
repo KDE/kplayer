@@ -506,6 +506,17 @@ void KPlayerProcess::start (void)
   driver = properties() -> audioDriverString();
   if ( ! driver.isEmpty() )
     *m_player << "-ao" << driver;
+  if ( properties() -> softwareVolume() )
+    *m_player << "-softvol" << "-softvol-max" << QString::number (properties() -> maximumSoftwareVolume());
+  else
+  {
+    driver = properties() -> mixerDevice();
+    if ( ! driver.isEmpty() )
+      *m_player << "-mixer" << driver;
+    driver = properties() -> mixerChannel();
+    if ( ! driver.isEmpty() )
+      *m_player << "-mixer-channel" << driver;
+  }
   *m_player << "-osdlevel" << QCString().setNum (properties() -> osdLevel());
   *m_player << "-contrast" << QCString().setNum (settings() -> contrast());
   *m_player << "-brightness" << QCString().setNum (settings() -> brightness());
@@ -568,7 +579,8 @@ void KPlayerProcess::start (void)
     *m_player << "-double";
   if ( properties() -> videoDirectRendering() && ! settings() -> showSubtitles() )
     *m_player << "-dr";
-  if ( properties() -> videoDriver() != "sdl" && properties() -> videoDriver() != "svga" )
+  if ( ! properties() -> videoDriverString().startsWith ("sdl")
+    && ! properties() -> videoDriverString().startsWith ("svga") )
   {
     QString path (KGlobal::dirs() -> findResource ("appdata", "input.conf"));
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -873,7 +885,7 @@ void KPlayerProcess::absoluteSeek (int seconds)
   QCString s ("seek ");
   // broken codec workaround
   if ( properties() -> length() >= MIN_VIDEO_LENGTH
-    && re_mpeg12.search (properties() -> videoCodec()) >= 0
+    && re_mpeg12.search (properties() -> videoCodecString()) >= 0
     && properties() -> deviceOption().isEmpty() )
   {
     seconds = limit (int (float (seconds) / properties() -> length() * 100 + 0.5), 0, 100);
@@ -897,7 +909,7 @@ void KPlayerProcess::relativeSeek (int seconds)
   QCString s ("seek ");
   // broken codec workaround
   if ( (seconds > 4 || seconds < -4) && properties() -> length() >= MIN_VIDEO_LENGTH
-    && re_mpeg12.search (properties() -> videoCodec()) >= 0
+    && re_mpeg12.search (properties() -> videoCodecString()) >= 0
     && properties() -> deviceOption().isEmpty() )
   {
     //seconds = limit (int ((m_position + seconds) / properties() -> length() * 100 + 0.5), 0, 100);
@@ -1156,7 +1168,7 @@ void KPlayerProcess::audioID (int id)
   if ( id != m_audio_id )
   {
     QRegExp demuxers (KPlayerEngine::engine() -> configuration() -> switchAudioDemuxers());
-    if ( demuxers.search (properties() -> demuxer()) >= 0 )
+    if ( demuxers.search (properties() -> demuxerString()) >= 0 )
     {
       QCString s ("switch_audio ");
       s += QCString().setNum (id) + "\n";

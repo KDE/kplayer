@@ -319,7 +319,7 @@ void KPlayerSettingsAdvanced::refresh (void)
   if ( index > 0 )
     index = engine() -> demuxerIndex (listEntry (c_demuxer)) + 1;
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
-  kdDebugTime() << "Demuxer: " << c_demuxer -> currentText() << " => " << index << " / " << kPlayerEngine() -> demuxerCount() << "\n";
+  kdDebugTime() << "Demuxer: " << c_demuxer -> currentText() << " => " << index << " / " << engine() -> demuxerCount() << "\n";
 #endif
   loadLists();
   c_demuxer -> setCurrentItem (index);
@@ -390,6 +390,7 @@ void KPlayerSettingsAdvanced::cacheChanged (int cache)
 KPlayerSettingsAudio::KPlayerSettingsAudio (QWidget* parent, const char* name)
   : KPlayerSettingsAudioPage (parent, name)
 {
+  m_amixer_running = false;
   loadLists();
   load();
   QApplication::connect (kPlayerEngine(), SIGNAL (updated()), this, SLOT (refresh()));
@@ -397,6 +398,9 @@ KPlayerSettingsAudio::KPlayerSettingsAudio (QWidget* parent, const char* name)
 
 void KPlayerSettingsAudio::refresh (void)
 {
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::refresh\n";
+#endif
   int dindex = c_driver -> currentItem();
   if ( dindex > 0 )
     dindex = engine() -> audioDriverIndex (listEntry (c_driver)) + 1;
@@ -404,8 +408,8 @@ void KPlayerSettingsAudio::refresh (void)
   if ( cindex > 0 )
     cindex = engine() -> audioCodecIndex (listEntry (c_codec)) + 1;
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
-  kdDebugTime() << "Audio Driver: " << c_driver -> currentText() << " => " << dindex << " / " << kPlayerEngine() -> audioDriverCount() << "\n";
-  kdDebugTime() << "Audio Codec: " << c_codec -> currentText() << " => " << cindex << " / " << kPlayerEngine() -> audioCodecCount() << "\n";
+  kdDebugTime() << "Audio Driver: " << c_driver -> currentText() << " => " << dindex << " / " << engine() -> audioDriverCount() << "\n";
+  kdDebugTime() << "Audio Codec: " << c_codec -> currentText() << " => " << cindex << " / " << engine() -> audioCodecCount() << "\n";
 #endif
   loadLists();
   c_driver -> setCurrentItem (dindex);
@@ -415,6 +419,9 @@ void KPlayerSettingsAudio::refresh (void)
 
 void KPlayerSettingsAudio::loadLists (void)
 {
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::loadLists\n";
+#endif
   if ( engine() -> audioCodecCount() )
   {
     c_codec -> clear();
@@ -433,25 +440,195 @@ void KPlayerSettingsAudio::loadLists (void)
 
 void KPlayerSettingsAudio::load (void)
 {
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::load\n";
+#endif
   c_driver -> setCurrentItem (engine() -> audioDriverIndex (configuration() -> audioDriver()) + 1);
-  driverChanged (c_driver -> currentItem());
+  m_softvol = configuration() -> softwareVolume();
+  c_softvol -> setChecked (m_softvol);
+  softvolChanged (m_softvol);
   c_codec -> setCurrentItem (engine() -> audioCodecIndex (configuration() -> audioCodec()) + 1);
   c_delay_step -> setText (QString::number (configuration() -> audioDelayStep()));
 }
 
 void KPlayerSettingsAudio::save (void)
 {
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::save\n";
+#endif
   configuration() -> setAudioDriver (listEntry (c_driver));
   if ( c_driver -> currentItem() > 0 )
+  {
     configuration() -> setAudioDevice (c_device -> text());
+    configuration() -> setMixerDevice (c_mixer -> text());
+    configuration() -> setMixerChannel (c_channel -> currentText());
+  }
+  configuration() -> setSoftwareVolume (c_softvol -> isChecked());
+  if ( configuration() -> softwareVolume() )
+  {
+    int maximum = labs (c_maximum -> text().toInt());
+    if ( maximum < 10 )
+      configuration() -> resetMaximumSoftwareVolume();
+    else
+      configuration() -> setMaximumSoftwareVolume (maximum);
+  }
   configuration() -> setAudioCodec (listEntry (c_codec));
   configuration() -> setAudioDelayStep (fabs (c_delay_step -> text().toFloat()));
 }
 
+void KPlayerSettingsAudio::defaultAlsaChannels (void)
+{
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::defaultAlsaChannels\n";
+#endif
+  QString text = c_channel -> currentText();
+  c_channel -> insertItem ("Master");
+  c_channel -> insertItem ("PCM");
+  c_channel -> insertItem ("Line");
+  c_channel -> setEditText (text);
+}
+
+void KPlayerSettingsAudio::runAmixer (void)
+{
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::runAmixer\n";
+#endif
+  m_rerun_amixer = m_amixer_running;
+  if ( m_amixer_running )
+    return;
+  c_channel -> clear();
+  KPlayerLineOutputProcess* amixer = new KPlayerLineOutputProcess;
+  *amixer << "amixer";
+  QString mixer = c_mixer -> text();
+  if ( ! mixer.isEmpty() )
+  {
+    *amixer << "-D" << mixer;
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+    kdDebugTime() << " Device " << mixer << "\n";
+#endif
+  }
+  *amixer << "scontents";
+  connect (amixer, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
+    SLOT (amixerOutput (KPlayerLineOutputProcess*, char*, int)));
+  connect (amixer, SIGNAL (processExited (KProcess*)), SLOT (amixerExited (KProcess*)));
+  m_amixer_running = amixer -> start (KProcess::NotifyOnExit, KProcess::All);
+  if ( ! m_amixer_running )
+    defaultAlsaChannels();
+}
+
+void KPlayerSettingsAudio::amixerOutput (KPlayerLineOutputProcess*, char* str, int)
+{
+  static QString control;
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << " amixer: " << str << "\n";
+#endif
+  static QRegExp re_control ("^Simple mixer control '(.*)'");
+  static QRegExp re_pvolume ("^ +Capabilities:.* pvolume");
+  if ( re_control.search (str) >= 0 )
+  {
+    control = re_control.cap(1);
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+    kdDebugTime() << " Control " << control << "\n";
+#endif
+  }
+  else if ( re_pvolume.search (str) >= 0 )
+  {
+    QString text = c_channel -> currentText();
+    c_channel -> insertItem (control);
+    c_channel -> setEditText (text);
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+    kdDebugTime() << " Volume " << control << "\n";
+#endif
+  }
+}
+
+void KPlayerSettingsAudio::amixerExited (KProcess* proc)
+{
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::amixerExited\n";
+#endif
+  delete proc;
+  m_amixer_running = false;
+  if ( m_rerun_amixer )
+    runAmixer();
+  else if ( c_channel -> count() <= 0 )
+    defaultAlsaChannels();
+}
+
 void KPlayerSettingsAudio::driverChanged (int index)
 {
-  c_device -> setText (index > 0 ? configuration() -> audioDevice() : "");
-  c_device -> setEnabled (index > 0);
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::driverChanged\n";
+  kdDebugTime() << " Index  " << index << "\n";
+#endif
+  QString driver (listEntry (c_driver));
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << " Driver " << driver << "\n";
+#endif
+  bool device = index > 0;
+  bool softvol = c_softvol -> isChecked();
+  bool mixer = device && ! softvol;
+  bool channel = mixer && (driver == "alsa" || driver == "oss");
+  if ( driver != m_driver )
+  {
+    bool original = driver == configuration() -> audioDriver();
+    c_device -> setText (original && device ? configuration() -> audioDevice() : "");
+    m_device = c_device -> text();
+    c_mixer -> setText (original && mixer ? configuration() -> mixerDevice() : "");
+    if ( driver == "oss" )
+    {
+      c_channel -> clear();
+      c_channel -> insertItem ("vol");
+      c_channel -> insertItem ("pcm");
+      c_channel -> insertItem ("line");
+    }
+    else if ( channel && ! m_amixer_running )
+      runAmixer();
+    c_channel -> setEditText (original && channel ? configuration() -> mixerChannel() : "");
+  }
+  c_device -> setEnabled (device);
+  c_mixer -> setEnabled (mixer);
+  c_channel -> setEnabled (channel);
+  m_driver = driver;
+}
+
+void KPlayerSettingsAudio::deviceChanged (const QString& device)
+{
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::deviceChanged\n";
+  kdDebugTime() << " Device " << device << "\n";
+#endif
+  if ( c_mixer -> isEnabled() && c_mixer -> text() == m_device && listEntry (c_driver) == "alsa" )
+    c_mixer -> setText (device);
+  m_device = device;
+}
+
+void KPlayerSettingsAudio::mixerChanged (const QString&)
+{
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::mixerChanged\n";
+#endif
+  if ( ! c_softvol -> isChecked() && listEntry (c_driver) == "alsa" )
+    runAmixer();
+}
+
+void KPlayerSettingsAudio::softvolChanged (bool checked)
+{
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+  kdDebugTime() << "KPlayerSettingsAudio::softvolChanged\n";
+  kdDebugTime() << " Checked " << checked << "\n";
+#endif
+  c_maximum -> setText (checked ? QString::number (configuration() -> maximumSoftwareVolume()) : "");
+  c_maximum -> setEnabled (checked);
+  QString driver (listEntry (c_driver));
+  bool original = driver == configuration() -> audioDriver();
+  c_mixer -> setText (checked || ! original || driver.isEmpty() ? ""
+    : configuration() -> hasMixerDevice() || m_softvol == checked ? configuration() -> mixerDevice()
+    : configuration() -> audioDevice());
+  c_channel -> setEditText (checked || ! original || driver != "alsa" && driver != "oss" ? ""
+    : configuration() -> mixerChannel());
+  driverChanged (c_driver -> currentItem());
+  m_softvol = checked;
 }
 
 KPlayerSettingsControls::KPlayerSettingsControls (QWidget* parent, const char* name)

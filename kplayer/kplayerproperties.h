@@ -1346,18 +1346,6 @@ public:
   void setMaintainAspect (bool value)
     { return setBoolean ("Maintain Aspect", value); }
 
-  const QString& demuxer (void) const
-    { return getStringValue ("Demuxer"); }
-  void setDemuxer (const QString& codec)
-    { setComboValue ("Demuxer", codec); }
-
-  const QString& demuxerOption (void) const
-    { return getStringOption ("Demuxer"); }
-  void setDemuxerOption (const QString& codec)
-    { setStringOption ("Demuxer", codec); }
-
-  QString demuxerString (void) const;
-
   // Subtitle properties
 
   bool subtitleAutoload (void) const
@@ -1391,27 +1379,25 @@ public:
 
   const QString& audioDriver (void) const
     { return getString ("Audio Driver"); }
-  void setAudioDriver (const QString& driver)
-    { setString ("Audio Driver", driver); }
-
   const QString& audioDevice (void) const
     { return getString ("Audio Device"); }
-  void setAudioDevice (const QString& device)
-    { setString ("Audio Device", device); }
 
-  QString audioDriverString (void) const;
+  bool softwareVolume (void) const
+    { return getBoolean ("Software Volume"); }
+  int maximumSoftwareVolume (void) const
+    { return getInteger ("Maximum Software Volume"); }
+
+  const QString& mixerDevice (void) const
+    { return getString ("Mixer Device"); }
+  const QString& mixerChannel (void) const
+    { return getString ("Mixer Channel"); }
 
   const QString& audioCodec (void) const
     { return getStringValue ("Audio Codec"); }
   void setAudioCodec (const QString& codec)
     { setComboValue ("Audio Codec", codec); }
 
-  const QString& audioCodecOption (void) const
-    { return getStringOption ("Audio Codec"); }
-  void setAudioCodecOption (const QString& codec)
-    { setStringOption ("Audio Codec", codec); }
-
-  QString audioCodecString (void) const;
+  // Video properties
 
   int contrast (void) const
     { return getRelative ("Contrast"); }
@@ -1441,31 +1427,15 @@ public:
   void adjustSaturation (int saturation)
     { adjustRelative ("Saturation", saturation); }
 
-  // Video properties
-
   const QString& videoDriver (void) const
     { return getString ("Video Driver"); }
-  void setVideoDriver (const QString& driver)
-    { setString ("Video Driver", driver); }
-
   const QString& videoDevice (void) const
     { return getString ("Video Device"); }
-  void setVideoDevice (const QString& device)
-    { setString ("Video Device", device); }
-
-  QString videoDriverString (void) const;
 
   const QString& videoCodec (void) const
     { return getStringValue ("Video Codec"); }
   void setVideoCodec (const QString& codec)
     { setComboValue ("Video Codec", codec); }
-
-  const QString& videoCodecOption (void) const
-    { return getStringOption ("Video Codec"); }
-  void setVideoCodecOption (const QString& codec)
-    { setStringOption ("Video Codec", codec); }
-
-  QString videoCodecString (void) const;
 
   int videoScaler (void) const
     { return getInteger ("Video Scaler"); }
@@ -1493,6 +1463,11 @@ public:
     { return getAppendable ("Command Line"); }
   void setCommandLine (const QString& line)
     { setString ("Command Line", line); }
+
+  const QString& demuxer (void) const
+    { return getStringValue ("Demuxer"); }
+  void setDemuxer (const QString& codec)
+    { setComboValue ("Demuxer", codec); }
 
   int frameDrop (void) const
     { return getInteger ("Frame Dropping"); }
@@ -2064,6 +2039,35 @@ public:
   void setAudioDelayStep (float step)
     { setFloat ("Audio Delay Step", flimit (step, 0.01)); }
 
+  void setAudioDriver (const QString& driver)
+    { setString ("Audio Driver", driver); }
+  void setAudioDevice (const QString& device)
+    { setString ("Audio Device", device); }
+
+  void setSoftwareVolume (bool value)
+    { return setBoolean ("Software Volume", value); }
+  void setMaximumSoftwareVolume (int maximum)
+    { setInteger ("Maximum Software Volume", maximum); }
+  void resetMaximumSoftwareVolume (void)
+    { reset ("Maximum Software Volume"); }
+
+  void setMixerDevice (const QString& device)
+    { setString ("Mixer Device", device); }
+  bool hasMixerDevice (void) const
+    { return has ("Mixer Device"); }
+  void setMixerChannel (const QString& channel)
+    { setString ("Mixer Channel", channel); }
+
+  const QString& switchAudioDemuxers (void) const
+    { return getString ("Switch Audio Demuxers"); }
+
+  // Video configuration
+
+  void setVideoDriver (const QString& driver)
+    { setString ("Video Driver", driver); }
+  void setVideoDevice (const QString& device)
+    { setString ("Video Device", device); }
+
   // Subtitle configuration
 
   int subtitlePositionStep (void) const
@@ -2162,9 +2166,6 @@ public:
     { return getBoolean ("Use KIOSlave For SMB"); }
   void setUseKioslaveForSmb (bool use)
     { setBoolean ("Use KIOSlave For SMB", use); }
-
-  const QString& switchAudioDemuxers (void) const
-    { return getString ("Switch Audio Demuxers"); }
 };
 
 /** The KPlayer media.
@@ -2457,6 +2458,17 @@ public:
   void resetAudioDelay (void)
     { reset ("Audio Delay"); }
 
+  const QString& audioCodecValue (void) const
+    { return getString ("Audio Codec"); }
+  const QString& audioCodecOption (void) const
+    { return getStringOption ("Audio Codec"); }
+  void setAudioCodecOption (const QString& codec)
+    { setStringOption ("Audio Codec", codec); }
+
+  QString audioDriverString (void) const;
+  QString mixerChannelString (void) const;
+  QString audioCodecString (void) const;
+
   int audioMode (void) const
     { return getInteger ("Audio Mode"); }
   QString audioModeString (void) const
@@ -2519,20 +2531,15 @@ public:
   void resetSaturation (void)
     { reset ("Saturation"); }
 
-  int videoScalerOption (void) const
-    { return getIntegerOption ("Video Scaler"); }
-  void setVideoScalerOption (int value)
-    { return setIntegerOption ("Video Scaler", value); }
+  const QString& videoCodecValue (void) const
+    { return getString ("Video Codec"); }
+  const QString& videoCodecOption (void) const
+    { return getStringOption ("Video Codec"); }
+  void setVideoCodecOption (const QString& codec)
+    { setStringOption ("Video Codec", codec); }
 
-  int videoDoubleBufferingOption (void) const
-    { return getBooleanOption ("Double Buffering"); }
-  void setVideoDoubleBufferingOption (int value)
-    { return setBooleanOption ("Double Buffering", value); }
-
-  int videoDirectRenderingOption (void) const
-    { return getBooleanOption ("Direct Rendering"); }
-  void setVideoDirectRenderingOption (int value)
-    { return setBooleanOption ("Direct Rendering", value); }
+  QString videoDriverString (void) const;
+  QString videoCodecString (void) const;
 
   int videoInput (void) const
     { return getInteger ("Video Input"); }
@@ -2564,6 +2571,14 @@ public:
     { return getStringValue ("Command Line"); }
   void setCommandLineOption (const QString& value, int option)
     { return setAppendable ("Command Line", value, option); }
+
+  const QString& demuxerValue (void) const
+    { return getString ("Demuxer"); }
+  const QString& demuxerOption (void) const
+    { return getStringOption ("Demuxer"); }
+  void setDemuxerOption (const QString& codec)
+    { setStringOption ("Demuxer", codec); }
+  QString demuxerString (void) const;
 
   int frameDropOption (void) const
     { return getIntegerOption ("Frame Dropping"); }

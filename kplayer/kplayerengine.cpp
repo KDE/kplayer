@@ -22,6 +22,7 @@
 #include <krecentdocument.h>
 #include <kurlrequester.h>
 #include <kurlrequesterdlg.h>
+#include <qdatetime.h>
 #include <qpopupmenu.h>
 #include <qregexp.h>
 
@@ -93,7 +94,7 @@ KPlayerEngine::KPlayerEngine (KActionCollection* ac, QWidget* parent, const char
   m_ac = ac;
   m_light = config == 0;
   m_progress_factor = 0;
-  m_stop = m_updating = m_zooming = m_enable_screen_saver = false;
+  m_stop = m_updating = m_zooming = m_enable_screen_saver = m_amixer_running = false;
   m_config = light() ? new KConfig ("kplayerrc") : config;
   m_store = new KConfig ("kplayerlibraryrc");
   m_meta = new KConfig ("kplayerplaylistrc");
@@ -728,6 +729,9 @@ void KPlayerEngine::refreshSettings (void)
   popupAction ("popup_volume") -> slider() -> setup (configuration() -> volumeMinimum(),
     configuration() -> volumeMaximum(), value, configuration() -> volumeMarks(),
     configuration() -> volumeMarks(), 1);
+  m_last_volume = settings() -> volume();
+  if ( properties() -> audioDriverString().startsWith ("alsa") )
+    getAlsaVolume();
   process() -> volume (settings() -> actualVolume());
   if ( light() )
   {
@@ -1169,8 +1173,11 @@ void KPlayerEngine::load (KURL url)
 #endif
   if ( ! m_ac || url.path().isEmpty() && url.host().isEmpty() )
     return;
+  m_last_volume = settings() -> volume();
   if ( url == properties() -> url() )
   {
+    if ( properties() -> audioDriverString().startsWith ("alsa") )
+      getAlsaVolume();
     play();
     return;
   }
@@ -1199,6 +1206,8 @@ void KPlayerEngine::load (KURL url)
     process() -> get_info();
   if ( ! m_stop )
   {
+    if ( properties() -> audioDriverString().startsWith ("alsa") )
+      getAlsaVolume();
     process() -> play();
     if ( properties() -> hasVideo() || properties() -> hasNoVideo() )
       setDisplaySize();
@@ -1500,6 +1509,9 @@ void KPlayerEngine::play (void)
     if ( settings() -> shift() )
       kill();
     m_stop = false;
+    m_last_volume = settings() -> volume();
+    if ( properties() -> audioDriverString().startsWith ("alsa") )
+      getAlsaVolume();
     process() -> play();
     if ( properties() -> hasVideo() || properties() -> hasNoVideo() )
       setDisplaySize();
@@ -1705,6 +1717,9 @@ void KPlayerEngine::audioStream (int index)
   kdDebugTime() << " Index  " << index << "\n";
 #endif
   properties() -> setAudioIDOption (index + 1);
+  m_last_volume = settings() -> volume();
+  if ( properties() -> audioDriverString().startsWith ("alsa") )
+    getAlsaVolume();
   process() -> audioID (properties() -> audioID());
 }
 
@@ -1715,6 +1730,9 @@ void KPlayerEngine::videoStream (int index)
   kdDebugTime() << " Index  " << index << "\n";
 #endif
   properties() -> setVideoIDOption (index + 1);
+  m_last_volume = settings() -> volume();
+  if ( properties() -> audioDriverString().startsWith ("alsa") )
+    getAlsaVolume();
   process() -> restart();
 }
 
@@ -1954,13 +1972,13 @@ void KPlayerEngine::getLists (QString path)
   kdDebugTime() << "KPlayerEngine::getLists (" << path << ")\n";
 #endif
   m_audio_codecs_ready = m_audio_drivers_ready = m_video_codecs_ready = m_video_drivers_ready = m_demuxers_ready = false;
-  m_player = new KPlayerLineOutputProcess;
-  *m_player << path << "-identify" << "-ac" << "help" << "-ao" << "help"
+  KPlayerLineOutputProcess* player = new KPlayerLineOutputProcess;
+  *player << path << "-identify" << "-ac" << "help" << "-ao" << "help"
     << "-vc" << "help" << "-vo" << "help" << "-demuxer" << "help";
-  connect (m_player, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
+  connect (player, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
     SLOT (receivedOutput (KPlayerLineOutputProcess*, char*, int)));
-  connect (m_player, SIGNAL (processExited (KProcess*)), SLOT (processExited (KProcess*)));
-  m_player -> start (KProcess::NotifyOnExit, KProcess::All);
+  connect (player, SIGNAL (processExited (KProcess*)), SLOT (processExited (KProcess*)));
+  player -> start (KProcess::NotifyOnExit, KProcess::All);
 }
 
 void KPlayerEngine::receivedOutput (KPlayerLineOutputProcess*, char* str, int)
@@ -2086,8 +2104,6 @@ void KPlayerEngine::receivedOutput (KPlayerLineOutputProcess*, char* str, int)
 
 void KPlayerEngine::processExited (KProcess* proc)
 {
-  if ( proc == m_player )
-    m_player = 0;
   delete proc;
   m_audio_codecs.sort();
   m_audio_drivers.sort();
@@ -2133,30 +2149,36 @@ void KPlayerEngine::setDisplaySize (bool user_zoom, bool user_resize)
   enableZoomActions();
 }
 
-void KPlayerEngine::workspaceResized (void)
+void KPlayerEngine::workspaceResize (bool user)
 {
-  if ( m_zooming )
-    return;
+  static QTime lasttime;
+  int msecs = lasttime.msecsTo (QTime::currentTime());
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Workspace resized event\n";
+  kdDebugTime() << "KPlayerEngine::workspaceResize " << user << " " << m_zooming << " " << msecs << "\n";
 #endif
+  if ( m_zooming /* || msecs >= 0 && msecs < 200 */ )
+    return;
   m_zooming = true;
   emit correctSize();
   m_zooming = false;
-  setDisplaySize();
+  setDisplaySize (false, user);
+  lasttime = QTime::currentTime();
+}
+
+void KPlayerEngine::workspaceResized (void)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Workspace resized event\n";
+#endif
+  workspaceResize (false);
 }
 
 void KPlayerEngine::workspaceUserResize (void)
 {
-  if ( m_zooming )
-    return;
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Workspace user resize event\n";
 #endif
-  m_zooming = true;
-  emit correctSize();
-  m_zooming = false;
-  setDisplaySize (false, ! light());
+  workspaceResize (! light());
 }
 
 void KPlayerEngine::clearStoreSections (const QString& section)
@@ -2178,4 +2200,132 @@ void KPlayerEngine::clearStoreSections (const QString& section)
     }
   }
   store() -> deleteGroup (section);
+}
+
+void KPlayerEngine::getAlsaVolume (void)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "KPlayerEngine::getAlsaVolume\n";
+  kdDebugTime() << " Volume " << m_last_volume << "\n";
+  kdDebugTime() << " Mute   " << configuration() -> mute() << "\n";
+#endif
+  if ( m_amixer_running )
+    return;
+  m_amixer_volume = -1;
+  runAmixer ("get");
+}
+
+void KPlayerEngine::runAmixer (const QString& command, const QString& parameter)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "KPlayerEngine::runAmixer\n";
+#endif
+  m_amixer_found_control = false;
+  m_amixer_volume_first = m_amixer_volume_second = -1;
+  KPlayerLineOutputProcess* amixer = new KPlayerLineOutputProcess;
+  *amixer << "amixer";
+  QString mixer = properties() -> mixerDevice();
+  if ( ! mixer.isEmpty() )
+  {
+    *amixer << "-D" << mixer;
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebugTime() << " Device " << mixer << "\n";
+#endif
+  }
+  mixer = properties() -> mixerChannel();
+  if ( mixer.isEmpty() )
+    mixer = "PCM";
+  *amixer << command << mixer;
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << " Command " << command << "\n";
+  kdDebugTime() << " Channel " << mixer << "\n";
+#endif
+  if ( ! parameter.isEmpty() )
+  {
+    *amixer << parameter;
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebugTime() << " Volume " << parameter << "\n";
+#endif
+  }
+  connect (amixer, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
+    SLOT (amixerOutput (KPlayerLineOutputProcess*, char*, int)));
+  connect (amixer, SIGNAL (processExited (KProcess*)), SLOT (amixerExited (KProcess*)));
+  m_amixer_running = amixer -> start (KProcess::NotifyOnExit, KProcess::All);
+}
+
+void KPlayerEngine::amixerOutput (KPlayerLineOutputProcess*, char* str, int)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << " amixer: " << str << "\n";
+#endif
+  static QRegExp re_control ("^Simple mixer control '(.*)'");
+  static QRegExp re_volume ("^ +[^:]+: Playback \\d+ \\[(\\d+)%\\]");
+  if ( re_control.search (str) >= 0 )
+  {
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebugTime() << " Control " << re_control.cap(1) << "\n";
+#endif
+    QString mixer = properties() -> mixerChannel();
+    if ( mixer.isEmpty() )
+      mixer = "PCM";
+    m_amixer_found_control = re_control.cap(1) == mixer;
+  }
+  else if ( m_amixer_found_control && re_volume.search (str) >= 0 )
+  {
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebugTime() << " Volume " << re_volume.cap(1) << "\n";
+#endif
+    (m_amixer_volume_first < 0 ? m_amixer_volume_first : m_amixer_volume_second) = re_volume.cap(1).toInt();
+  }
+}
+
+void KPlayerEngine::amixerExited (KProcess* proc)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "KPlayerEngine::amixerExited\n";
+#endif
+  delete proc;
+  m_amixer_running = false;
+  bool set_volume = m_amixer_volume < 0;
+  if ( m_amixer_volume_second >= 0 )
+    m_amixer_volume = (m_amixer_volume_first + m_amixer_volume_second) >> 1;
+  else if ( m_amixer_volume_first >= 0 )
+    m_amixer_volume = m_amixer_volume_first;
+  if ( m_amixer_volume >= 0 )
+  {
+    if ( configuration() -> mute() )
+      if ( m_amixer_volume == 0 )
+        m_last_volume = 0;
+      else
+      {
+        configuration() -> setMute (false);
+        toggleAction ("audio_mute") -> setChecked (false);
+      }
+    int volume = m_amixer_volume + settings() -> actualVolume() - m_last_volume;
+#ifdef DEBUG_KPLAYER_ENGINE
+    kdDebugTime() << " Volume " << m_amixer_volume << "\n";
+    kdDebugTime() << " Target " << volume << "\n";
+#endif
+    if ( volume != m_amixer_volume && set_volume )
+    {
+      QString parameter;
+      if ( m_amixer_volume_second < 0 )
+        parameter = QString::number (volume) + "%";
+      else
+      {
+        volume = volume - m_amixer_volume >> 1;
+        parameter = QString::number (m_amixer_volume_first + volume) + "%,"
+          + QString::number (m_amixer_volume_first + volume) + "%";
+      }
+      runAmixer ("set", parameter);
+    }
+    else if ( volume != settings() -> volume() && ! configuration() -> mute() )
+    {
+      properties() -> adjustVolume (volume);
+      m_updating = true;
+      sliderAction ("audio_volume") -> slider() -> setValue (volume);
+      popupAction ("popup_volume") -> slider() -> setValue (volume);
+      m_updating = false;
+    }
+  }
 }

@@ -18,7 +18,6 @@
 #include <klocale.h>
 #include <qfileinfo.h>
 #include <qregexp.h>
-#include <sys/ioctl.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_PROPERTIES
@@ -31,19 +30,6 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
-
-#ifdef HAVE_SYS_SOUNDCARD_H
-#include <sys/soundcard.h>
-#define HAVE_OSS_SUPPORT
-#elif defined(HAVE_MACHINE_SOUNDCARD_H)
-#include <machine/soundcard.h>
-#define HAVE_OSS_SUPPORT
-#elif defined(HAVE_SOUNDCARD_H)
-#include <soundcard.h>
-#define HAVE_OSS_SUPPORT
-#else
-#undef HAVE_OSS_SUPPORT
 #endif
 
 const KURL KPlayerProperties::nullUrl;
@@ -1593,67 +1579,6 @@ void KPlayerProperties::count (KPlayerPropertyCounts& counts) const
   }
 }
 
-QString KPlayerProperties::demuxerString (void) const
-{
-  return demuxerOption();
-  //if ( ! demuxer.isEmpty() )
-  //    demuxer += ",";
-}
-
-QString KPlayerProperties::audioDriverString (void) const
-{
-  QString driver (audioDriver());
-  if ( ! driver.isEmpty() )
-  {
-    QString device (audioDevice());
-    if ( ! device.isEmpty() )
-    {
-      device.replace (',', '.');
-      device.replace (':', '=');
-      if ( driver != "oss" )
-        device = "device=" + device;
-      driver += ":" + device;
-    }
-    driver += ",";
-  }
-  return driver;
-}
-
-QString KPlayerProperties::audioCodecString (void) const
-{
-  QString codec (audioCodecOption());
-  if ( ! codec.isEmpty() )
-      codec += ",";
-  return codec;
-}
-
-QString KPlayerProperties::videoDriverString (void) const
-{
-  QString driver (videoDriver());
-  if ( ! driver.isEmpty() )
-  {
-    QString device (videoDevice());
-    if ( ! device.isEmpty() )
-    {
-      device.replace (',', '.');
-      device.replace (':', '=');
-      if ( driver != "oss" )
-        device = "device=" + device;
-      driver += ":" + device;
-    }
-    driver += ",";
-  }
-  return driver;
-}
-
-QString KPlayerProperties::videoCodecString (void) const
-{
-  QString codec (videoCodecOption());
-  if ( ! codec.isEmpty() )
-      codec += ",";
-  return codec;
-}
-
 void KPlayerProperties::initialize (void)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
@@ -1735,6 +1660,15 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Audio Driver", strinfo);
   info = new KPlayerStringPropertyInfo;
   m_info.insert ("Audio Device", info);
+  info = new KPlayerBooleanPropertyInfo;
+  m_info.insert ("Software Volume", info);
+  intinfo = new KPlayerIntegerPropertyInfo;
+  intinfo -> setDefaultValue (200);
+  m_info.insert ("Maximum Software Volume", intinfo);
+  info = new KPlayerStringPropertyInfo;
+  m_info.insert ("Mixer Device", info);
+  info = new KPlayerStringPropertyInfo;
+  m_info.insert ("Mixer Channel", info);
   info = new KPlayerComboStringPropertyInfo;
   info -> setCaption (i18n("Audio codec"));
   info -> setGroup (4);
@@ -2691,6 +2625,76 @@ KPlayerMediaProperties::~KPlayerMediaProperties()
 void KPlayerMediaProperties::setDisplaySize (const QSize& size, int option)
 {
   setSize ("Display Size", size, option);
+}
+
+QString KPlayerMediaProperties::demuxerString (void) const
+{
+  return demuxerOption();
+  //if ( ! demuxer.isEmpty() )
+  //    demuxer += ",";
+}
+
+QString KPlayerMediaProperties::audioDriverString (void) const
+{
+  QString driver (audioDriver());
+  if ( ! driver.isEmpty() )
+  {
+    QString device (audioDevice());
+    if ( ! device.isEmpty() )
+    {
+      device.replace (',', '.');
+      device.replace (':', '=');
+      if ( driver != "oss" )
+        device = "device=" + device;
+      driver += ":" + device;
+    }
+    driver += ",";
+  }
+  return driver;
+}
+
+QString KPlayerMediaProperties::mixerChannelString (void) const
+{
+  static QRegExp re_mixer_channel ("^(.*) +([0-9]+)$");
+  QString channel (mixerChannel());
+  if ( re_mixer_channel.search (channel) >= 0 )
+    channel = re_mixer_channel.cap(1) + "," + re_mixer_channel.cap(2);
+  return channel;
+}
+
+QString KPlayerMediaProperties::audioCodecString (void) const
+{
+  QString codec (audioCodecOption());
+  if ( ! codec.isEmpty() )
+      codec += ",";
+  return codec;
+}
+
+QString KPlayerMediaProperties::videoDriverString (void) const
+{
+  QString driver (videoDriver());
+  if ( ! driver.isEmpty() )
+  {
+    QString device (videoDevice());
+    if ( ! device.isEmpty() )
+    {
+      device.replace (',', '.');
+      device.replace (':', '=');
+      if ( driver != "oss" )
+        device = "device=" + device;
+      driver += ":" + device;
+    }
+    driver += ",";
+  }
+  return driver;
+}
+
+QString KPlayerMediaProperties::videoCodecString (void) const
+{
+  QString codec (videoCodecOption());
+  if ( ! codec.isEmpty() )
+      codec += ",";
+  return codec;
 }
 
 KPlayerDeviceProperties::KPlayerDeviceProperties (KPlayerProperties* parent, const KURL& url)

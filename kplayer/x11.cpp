@@ -20,10 +20,11 @@
 #include <kdebug.h>
 kdbgstream kdDebugTime (void);
 #define DEBUG_KPLAYER_GRAB
+#define DEBUG_KPLAYER_PROPERTY
 //#define DEBUG_KPLAYER_X11
 //#define DEBUG_KPLAYER_FOCUS
 //#define DEBUG_KPLAYER_KEY
-//#define DEBUG_KPLAYER_RESIZE
+#define DEBUG_KPLAYER_RESIZE
 //#define DEBUG_KPLAYER_CLIENT
 #endif
 
@@ -64,7 +65,7 @@ typedef int (*QX11EventFilter) (XEvent*);
 
 static QX11EventFilter PreviousX11EventFilter = 0;
 
-#ifdef DEBUG_KPLAYER_KEY
+#ifdef DEBUG_KPLAYER_RESIZE
 
 const char* KPlayerX11EventTypeNames [LASTEvent] = {
   "EVENT0",
@@ -234,11 +235,49 @@ int KPlayerX11EventFilter (XEvent* event)
 #endif
     KPlayerWidgetUnmapHandler (ev -> window);
   }
-#ifdef DEBUG_KPLAYER_X11
+#ifdef DEBUG_KPLAYER_PROPERTY
   else if ( event -> type == PropertyNotify )
   {
     XPropertyEvent* ev = (XPropertyEvent*) event;
-    kdDebugTime() << "  Property " << ev -> atom << " " << ev -> time << " " << ev -> state << "\n";
+    kdDebugTime() << "X11 " << KPlayerX11EventTypeNames [event -> type] << " " << ev -> send_event
+      << " " << ev -> window << " " << ev -> atom << " " << ev -> time << " " << ev -> state << "\n";
+    char* sdata = XGetAtomName (ev -> display, ev -> atom);
+    if ( sdata )
+    {
+      kdDebugTime() << "X11 property name " << sdata << "\n";
+      XFree (sdata);
+    }
+    if ( ev -> state == PropertyNewValue )
+    {
+      Atom type;
+      int format;
+      unsigned long items, bytes;
+      unsigned char* data;
+      if ( XGetWindowProperty (ev -> display, ev -> window, ev -> atom, 0, 32, false, AnyPropertyType,
+        &type, &format, &items, &bytes, &data) == Success && type != None )
+      {
+        kdDebugTime() << "X11 property type " << type << " format " << format
+          << " items " << items << " bytes " << bytes << "\n";
+        if ( data )
+        {
+          if ( format == 8 )
+            kdDebugTime() << "X11 property value " << data << "\n";
+          else if ( format == 16 )
+          {
+            short* sdata = (short*) data;
+            for ( unsigned long i = 0; i < items; ++ i )
+              kdDebugTime() << "X11 property value " << sdata[i] << "\n";
+          }
+          else if ( format == 32 )
+          {
+            long* ldata = (long*) data;
+            for ( unsigned long i = 0; i < items; ++ i )
+              kdDebugTime() << "X11 property value " << ldata[i] << "\n";
+          }
+          XFree (data);
+        }
+      }
+    }
   }
 #endif
   if ( PreviousX11EventFilter )
