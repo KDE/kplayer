@@ -65,6 +65,12 @@ static QRegExp re_macintosh ("Macintosh Audio Compression and Expansion", false)
 static QRegExp re_amu ("Avid Meridien Uncompressed", false);
 static QRegExp re_speech ("Windows Media Audio 9 Speech", false);
 
+void KPlayerWindowStateChanged (uint wid)
+{
+  if ( kPlayerEngine() )
+    kPlayerEngine() -> emitWindowStateChanged (wid);
+}
+
 int listIndex (const QStringList& sl, const QString& str)
 {
   QString entry, stru (str.upper()), strusc (stru + ":");
@@ -1368,7 +1374,8 @@ void KPlayerEngine::fullScreen (void)
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Engine::fullScreen (" << settings() -> fullScreen() << ")\n";
 #endif
-  setDisplaySize();
+  m_zooming = true;
+  emit syncronize (false);
 }
 
 void KPlayerEngine::normal (void)
@@ -1460,13 +1467,22 @@ void KPlayerEngine::wheel (int delta, int state)
 
 void KPlayerEngine::doubleClick (void)
 {
-  if ( stopped() || ! properties() -> hasVideo() )
+  if ( stopped() || ! properties() -> hasVideo() || light() )
     return;
   settings() -> setFullScreen (! settings() -> fullScreen());
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Engine::doubleClick (" << settings() -> fullScreen() << ")\n";
 #endif
-  setDisplaySize();
+  m_zooming = true;
+  emit syncronize (false);
+}
+
+void KPlayerEngine::emitWindowStateChanged (uint wid)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Engine::emitWindowStateChanged (" << wid << ")\n";
+#endif
+  emit windowStateChanged (wid);
 }
 
 void KPlayerEngine::maintainAspect (void)

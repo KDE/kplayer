@@ -1,3 +1,11 @@
+0.6.1 release
+2007-03-04
+ - New option to control volume independently of other programs
+ - Mixer device and channel options for ALSA and OSS sound output
+ - Fix to keep the system audio volume when starting up
+ - Fix for various problems when coming back from full screen
+ - Updated Brazilian Portugese, Breton and Panjabi translations
+
 0.6.0 release
 2007-01-14
  - Much improved support for disk and tuner devices

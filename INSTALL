@@ -1,14 +1,14 @@
 Binary packages
 ---------------
 
-On Debian you can use the Marillat repository:
+On Debian and derivate distributions you can use the Marillat repository:
 
 echo 'deb http://www.debian-multimedia.org unstable main' >> /etc/apt/sources.list
 apt-get update
 apt-get install mplayer kplayer libdvdcss w32codecs
 
-Visit the KPlayer home page for links to binary packages for other
-distros: http://kplayer.sourceforge.net/
+Visit the KPlayer home page for links to binary packages for other distros:
+http://kplayer.sourceforge.net/
 
 
 Compiling from source tarball or CVS
@@ -16,13 +16,13 @@ Compiling from source tarball or CVS
 
 Extract the tarball
 
-  tar xjf kplayer-0.6.0.tar.bz2
-  cd kplayer-0.6.0
+  tar xjf kplayer-0.6.1.tar.bz2
+  cd kplayer-0.6.1
 
 Or download code from CVS
 
-  cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/kplayer login
-  cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/kplayer co kplayer
+  cvs -d:pserver:anonymous@kplayer.cvs.sourceforge.net:/cvsroot/kplayer login
+  cvs -z3 -d:pserver:anonymous@kplayer.cvs.sourceforge.net:/cvsroot/kplayer co -P kplayer
   cd kplayer
 
 Create configure script

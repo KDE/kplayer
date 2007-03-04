@@ -60,6 +60,7 @@ extern void KPlayerSetControlShiftState (bool control, bool shift);
 extern void KPlayerWidgetResizeHandler (bool);
 extern void KPlayerWidgetMapHandler (uint);
 extern void KPlayerWidgetUnmapHandler (uint);
+extern void KPlayerWindowStateChanged (uint);
 
 typedef int (*QX11EventFilter) (XEvent*);
 
@@ -235,18 +236,23 @@ int KPlayerX11EventFilter (XEvent* event)
 #endif
     KPlayerWidgetUnmapHandler (ev -> window);
   }
-#ifdef DEBUG_KPLAYER_PROPERTY
   else if ( event -> type == PropertyNotify )
   {
     XPropertyEvent* ev = (XPropertyEvent*) event;
+#ifdef DEBUG_KPLAYER_PROPERTY
     kdDebugTime() << "X11 " << KPlayerX11EventTypeNames [event -> type] << " " << ev -> send_event
       << " " << ev -> window << " " << ev -> atom << " " << ev -> time << " " << ev -> state << "\n";
-    char* sdata = XGetAtomName (ev -> display, ev -> atom);
-    if ( sdata )
+#endif
+    char* propname = XGetAtomName (ev -> display, ev -> atom);
+    if ( propname )
     {
-      kdDebugTime() << "X11 property name " << sdata << "\n";
-      XFree (sdata);
+      if ( strcmp (propname, "_NET_WM_STATE") == 0 )
+        KPlayerWindowStateChanged (ev -> window);
+#ifdef DEBUG_KPLAYER_PROPERTY
+      kdDebugTime() << "X11 property name " << propname << "\n";
+#endif
     }
+#ifdef DEBUG_KPLAYER_PROPERTY
     if ( ev -> state == PropertyNewValue )
     {
       Atom type;
@@ -269,17 +275,38 @@ int KPlayerX11EventFilter (XEvent* event)
               kdDebugTime() << "X11 property value " << sdata[i] << "\n";
           }
           else if ( format == 32 )
-          {
-            long* ldata = (long*) data;
-            for ( unsigned long i = 0; i < items; ++ i )
-              kdDebugTime() << "X11 property value " << ldata[i] << "\n";
-          }
+            if ( strcmp (propname, "_NET_SUPPORTED") == 0
+              || strcmp (propname, "_NET_WM_WINDOW_TYPE") == 0
+              || strcmp (propname, "_NET_WM_STATE") == 0
+              || strcmp (propname, "_NET_WM_ALLOWED_ACTIONS") == 0 )
+            {
+              Atom* adata = (Atom*) data;
+              for ( unsigned long i = 0; i < items; ++ i )
+              {
+                char* atomname = XGetAtomName (ev -> display, adata[i]);
+                if ( atomname )
+                {
+                  kdDebugTime() << "X11 property name " << atomname << "\n";
+                  XFree (atomname);
+                }
+                else
+                  kdDebugTime() << "X11 property value " << adata[i] << "\n";
+              }
+            }
+            else
+            {
+              long* ldata = (long*) data;
+              for ( unsigned long i = 0; i < items; ++ i )
+                kdDebugTime() << "X11 property value " << ldata[i] << "\n";
+            }
           XFree (data);
         }
       }
     }
-  }
 #endif
+    if ( propname )
+      XFree (propname);
+  }
   if ( PreviousX11EventFilter )
     return PreviousX11EventFilter (event);
   return 0;

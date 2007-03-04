@@ -217,6 +217,9 @@ public:
   /** Toggle full screen on double click. */
   void doubleClick (void);
 
+  /** Emits windowStateChanged signal. */
+  void emitWindowStateChanged (uint wid);
+
   /** Disables screen saver if it is enabled. */
   void disableScreenSaver (void);
   /** Enables screen saver if it was disabled. */
@@ -467,6 +470,8 @@ protected:
   bool m_stop;
 
 signals:
+  /** Emitted when a window state changes. */
+  void windowStateChanged (uint wid);
   /** Emitted to let the main window syncronize full screen and maximized settings. */
   void syncronize (bool);
   /** Emitted when display size changes. */

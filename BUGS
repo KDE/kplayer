@@ -5,8 +5,8 @@ When you maximize KPlayer window, then go to full screen mode, then back
 to maximized state, and then restore the window to normal state, the final
 size may not be the same as the original size. Also sometimes the window
 will be larger than its original size after coming back from full screen
-mode. This is believed to be a KWin problem. However, it has not been
-observed recently.
+mode. This is believed to be a KWin problem. KPlayer 0.6.1 includes a
+change that should correct this problem for the most part.
 
 Seeking still does not work well on some media types. In those cases you
 can try using the Forward/Backward commands instead of clicking on the

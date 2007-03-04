@@ -567,23 +567,24 @@ void KPlayerSettingsAudio::driverChanged (int index)
 #endif
   bool device = index > 0;
   bool softvol = c_softvol -> isChecked();
-  bool mixer = device && ! softvol;
-  bool channel = mixer && (driver == "alsa" || driver == "oss");
+  bool mixer = device && ! softvol && (driver == "alsa" || driver == "oss" || driver == "sun");
+  bool channel = mixer && driver != "sun";
   if ( driver != m_driver )
   {
     bool original = driver == configuration() -> audioDriver();
     c_device -> setText (original && device ? configuration() -> audioDevice() : "");
     m_device = c_device -> text();
     c_mixer -> setText (original && mixer ? configuration() -> mixerDevice() : "");
-    if ( driver == "oss" )
-    {
-      c_channel -> clear();
-      c_channel -> insertItem ("vol");
-      c_channel -> insertItem ("pcm");
-      c_channel -> insertItem ("line");
-    }
-    else if ( channel && ! m_amixer_running )
-      runAmixer();
+    if ( channel )
+      if ( driver == "oss" )
+      {
+        c_channel -> clear();
+        c_channel -> insertItem ("vol");
+        c_channel -> insertItem ("pcm");
+        c_channel -> insertItem ("line");
+      }
+      else if ( ! m_amixer_running )
+        runAmixer();
     c_channel -> setEditText (original && channel ? configuration() -> mixerChannel() : "");
   }
   c_device -> setEnabled (device);
@@ -621,12 +622,11 @@ void KPlayerSettingsAudio::softvolChanged (bool checked)
   c_maximum -> setText (checked ? QString::number (configuration() -> maximumSoftwareVolume()) : "");
   c_maximum -> setEnabled (checked);
   QString driver (listEntry (c_driver));
-  bool original = driver == configuration() -> audioDriver();
-  c_mixer -> setText (checked || ! original || driver.isEmpty() ? ""
-    : configuration() -> hasMixerDevice() || m_softvol == checked ? configuration() -> mixerDevice()
-    : configuration() -> audioDevice());
-  c_channel -> setEditText (checked || ! original || driver != "alsa" && driver != "oss" ? ""
-    : configuration() -> mixerChannel());
+  bool empty = checked || driver != configuration() -> audioDriver()
+    || driver != "alsa" && driver != "oss" && driver != "sun";
+  c_mixer -> setText (empty ? "" : configuration() -> hasMixerDevice()
+    || m_softvol == checked ? configuration() -> mixerDevice() : configuration() -> audioDevice());
+  c_channel -> setEditText (empty || driver == "sun" ? "" : configuration() -> mixerChannel());
   driverChanged (c_driver -> currentItem());
   m_softvol = checked;
 }

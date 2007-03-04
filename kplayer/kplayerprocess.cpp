@@ -499,7 +499,7 @@ void KPlayerProcess::start (void)
   {
     if ( driver.startsWith ("xvmc") )
       driver = "xvmc:ck=set" + driver.mid (4);
-    else if ( driver.startsWith ("xv") )
+    else if ( driver.startsWith ("xv,") || driver.startsWith ("xv:") )
       driver = "xv:ck=set" + driver.mid (2);
     *m_player << "-vo" << driver << "-colorkey" << "0x010101";
   }

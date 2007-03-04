@@ -236,7 +236,7 @@ protected:
   bool m_statusbar_normally_visible, m_statusbar_fullscreen_visible;
   bool m_messagelog_normally_visible, m_messagelog_fullscreen_visible;
   bool m_library_normally_visible, m_library_fullscreen_visible;
-  bool m_initial_show, m_error_detected, m_maximized;
+  bool m_set_display_size, m_initial_show, m_error_detected, m_maximized;
   bool m_full_screen, m_show_log, m_show_library;
   Toolbar m_toolbar [KPLAYER_TOOLBARS];
   QSize m_previous_size, m_video_size;
@@ -244,6 +244,8 @@ protected:
   KStatusBarLabel *m_status_label, *m_state_label, *m_progress_label;
 
 public slots:
+  /** Resets the zooming flag when the main window state changes. */
+  void windowStateChanged (uint wid);
   /** Syncronizes full screen and maximized settings. */
   void syncronize (bool);
   /** Zooms the video to the correct size. */
@@ -342,6 +344,8 @@ protected slots:
   void refreshSettings (void);
   /** Receives the updated signal from KPlayerProperties. Updates the window caption. */
   void refreshProperties (void);
+  /** Sets the desired display size. */
+  void setDisplaySize (void);
 
   /** Shows the library window. */
   void makeLibraryVisible (void);

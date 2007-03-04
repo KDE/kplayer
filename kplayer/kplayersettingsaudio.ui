@@ -63,7 +63,7 @@
                                 <cstring>l_driver</cstring>
                             </property>
                             <property name="text">
-                                <string>D&amp;river</string>
+                                <string>Output d&amp;river</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignLeft</set>
@@ -78,7 +78,7 @@
                                 <string>Option that lists available audio outputs and lets you choose the one to use for playing sound. Recommended choices are OSS (the default) and ALSA (recommended when available). ARTS and SDL are not recommended. Auto will let MPlayer choose an audio output according to its own configuration. If you need to specify more than one output separated by comma, set this option to Auto and put them in Additional Command Line Arguments on Advanced page.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="0" column="1">
+                        <widget class="QComboBox" row="0" column="1" colspan="2">
                             <property name="name">
                                 <cstring>c_driver</cstring>
                             </property>
@@ -102,7 +102,7 @@
                                 <cstring>l_device</cstring>
                             </property>
                             <property name="text">
-                                <string>Dev&amp;ice</string>
+                                <string>Output dev&amp;ice</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignLeft</set>
@@ -117,7 +117,7 @@
                                 <string>Option to specify audio device to use for the chosen audio output. Leave blank to use the default device.</string>
                             </property>
                         </widget>
-                        <widget class="QLineEdit" row="1" column="1">
+                        <widget class="QLineEdit" row="1" column="1" colspan="2">
                             <property name="name">
                                 <cstring>c_device</cstring>
                             </property>
@@ -136,7 +136,164 @@
                                 <string>Option to specify audio device to use for the chosen audio output. Leave blank to use the default device.</string>
                             </property>
                         </widget>
-                        <widget class="QLabel" row="2" column="0">
+                        <widget class="QCheckBox" row="2" column="0" colspan="3">
+                            <property name="name">
+                                <cstring>c_softvol</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Control &amp;volume independently of other programs</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether to control volume in software independently of other programs</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose whether to control volume in software independently of other programs.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="3" column="0">
+                            <property name="name">
+                                <cstring>l_maximum</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Maximum vo&amp;lume</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_maximum</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Maximum volume in percents of the normal level</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the maximum sound volume in percents of the normal volume level.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="3" column="1">
+                            <property name="name">
+                                <cstring>c_maximum</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Maximum volume in percents of the normal level</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the maximum sound volume in percents of the normal volume level.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="3" column="2">
+                            <property name="name">
+                                <cstring>l_percent</cstring>
+                            </property>
+                            <property name="text">
+                                <string>percent</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Maximum volume in percents of the normal level</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the maximum sound volume in percents of the normal volume level.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="4" column="0">
+                            <property name="name">
+                                <cstring>l_mixer</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Mi&amp;xer device</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_mixer</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Mixer device to be used to control volume</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the mixer device to be used to control audio output volume. Leave blank to use the default device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="4" column="1" colspan="2">
+                            <property name="name">
+                                <cstring>c_mixer</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Mixer device to be used to control volume</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the mixer device to be used to control audio output volume. Leave blank to use the default device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="5" column="0">
+                            <property name="name">
+                                <cstring>l_channel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Mixer cha&amp;nnel</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_channel</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Mixer channel to be used to control volume</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the mixer channel to be used to control audio output volume. Leave blank to use the default channel.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="5" column="1" colspan="2">
+                            <property name="name">
+                                <cstring>c_channel</cstring>
+                            </property>
+                            <property name="editable">
+                                <bool>true</bool>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Mixer channel to be used to control volume</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the mixer channel to be used to control audio output volume. Leave blank to use the default channel.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="6" column="0">
                             <property name="name">
                                 <cstring>l_codec</cstring>
                             </property>
@@ -156,7 +313,7 @@
                                 <string>Option that lists available codecs and lets you choose the one to be used for decoding audio. Auto is the recommended choice, it lets MPlayer decide which codec to use automatically. If you need to tell MPlayer to use a particular codec for a given file or stream, set this option in File Properties.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="2" column="1">
+                        <widget class="QComboBox" row="6" column="1" colspan="2">
                             <property name="name">
                                 <cstring>c_codec</cstring>
                             </property>
@@ -179,7 +336,7 @@
                 </widget>
                 <widget class="QLayoutWidget" row="1" column="0">
                     <property name="name">
-                        <cstring>layout0</cstring>
+                        <cstring>layout1</cstring>
                     </property>
                     <hbox>
                         <property name="name">
@@ -261,15 +418,29 @@
         <slot>driverChanged(int)</slot>
     </connection>
     <connection>
-        <sender>c_codec</sender>
-        <signal>activated(int)</signal>
+        <sender>c_device</sender>
+        <signal>textChanged(const QString&amp;)</signal>
         <receiver>KPlayerSettingsAudioPage</receiver>
-        <slot>codecChanged(int)</slot>
+        <slot>deviceChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>c_mixer</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>KPlayerSettingsAudioPage</receiver>
+        <slot>mixerChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>c_softvol</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>KPlayerSettingsAudioPage</receiver>
+        <slot>softvolChanged(bool)</slot>
     </connection>
 </connections>
 <slots>
     <slot access="protected">driverChanged(int)</slot>
-    <slot access="protected">codecChanged(int)</slot>
+    <slot access="protected">deviceChanged(const QString&amp;)</slot>
+    <slot access="protected">mixerChanged(const QString&amp;)</slot>
+    <slot access="protected">softvolChanged(bool)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="0"/>
 </UI>

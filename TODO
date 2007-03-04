@@ -1,111 +1,32 @@
-0.6 release
- + Sources
-  + Root
-  + Directory
-  + Store
-  + Origin
-  + List
-  + Devices
-  + Device
-   + CD
-   + DVD
-   + TV
-   + DVB
- + Order
-  + By name
-  + By key
-  + Custom
- + Metadata
-  + Extract
-   + MIME type
-   + Icon
-  + Store
-  + Display
-  + Update
-  + Change
-  + Video IDs
-  + Audio IDs
-  + Subtitle IDs
-  + Demuxer
- + Library
-  + Node sync
-  + Columns
-   + Hiding
-   + Moving
-   + Meta sync
-  + Drag and drop
-   + Copy
-   + Link
-   + Move
-   + Set action
-   + Reorder
-   + URL
-  + Context menu
-   + Play
-   + Queue next
-   + Queue
-   + Add files
-   + Add URL
-   + Add group
-   + Save as playlist
-   + Add to playlist
-   + Add to collection
-   + Open
-   + Rename/Edit
-   + Properties
-   + Move up
-   + Move down
-   + Select all
-   + Remove
-   + Go back
-   + Go forward
-   + Go up
-   + Go down
-   + Go to source
- + Playlist
-  + Play file
-  + Play URL
-  + Play recent
-  + List
-  + Play
-  + Next
-  + Previous
-  + Loop
-  + Shuffle
-   + Restore order
-+ Menus
- + File
-  + Play
-  + Play URL
-  + Play Recent
-  + DVD
-   + Load
-   + Play title
-   + Play DVD
-  + VCD
-   + Load
-   + Play track
-   + Play VCD
-  + Audio CD
-   + Load
-   + Play track
-   + Play CD
-  + TV
-   + Play channel
-  + DVB
-   + Play channel
-  + Library
-   + Now Playing
-   + Playlists
-   + Collection
-   + Devices
-   + Root
-   + Home
- + Configure toolbars
- + Show ICY Info
- Add translations
- + Update input.conf
- + Update release info
+0.6.2
+ Documentation
+  Update user manual
+ Library
+  Show next item on queue next if no current item
+  Show the correct subtree in library on startup
+  Expand when adding one directory
+  Extend selection with Control-Shift when editing
+ Devices
+  Radio
+   Channels
+   Properties
+  PVR
+   Channels
+   Properties
+  DVD
+   Allow playing from files and directories
+   Do not use name text
+   Syncronize disk name on playlist
+   Detect length of all titles
+  TV
+   Allow playing from webcam
+  Allow removing channels and tracks
+ Process
+  Kill runaway MPlayers
+ Main window
+  Smooth resizing while keeping aspect ratio
+  Panscan
+  Xinerama
 
 Basic functionality
  + Open file
@@ -143,12 +64,13 @@ Additional controls
  + Audio delay
  + Tooltips when dragging a slider
  + Always on top
-   Volume control mode
-    PCM
-    Master
-    Native
+ + Volume control
+   + Mixer device and channel
+   + Software volume control
    Audio equalizer
    Quit when done playing
+   Frame stepping
+   Playback speed
    Recording
 
 Subtitles
@@ -321,8 +243,12 @@ Disk and tuner devices
    + Play channel
  + DVB
    + Play channel
-   Radio
-     Play channel
+ Radio
+   Play channel
+ PVR
+   Properties
+ Webcam
+   Properties
 
 KDE Integration
  + MIME file types
@@ -332,8 +258,3 @@ KDE Integration
    Window manager size hints
    Do not show windows in task bar
    Remember dialog size and position
-
-Bugs
-  Show next item on queue next if no current item
-  Show the correct subtree in library on startup
-  Expand when adding one directory

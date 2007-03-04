@@ -341,7 +341,10 @@ void dumpObject (const QObject* object, int indent, int depth = 20)
       " " << widget -> minimumSize().width() << "x" << widget -> minimumSize().height() <<
       " " << widget -> minimumSizeHint().width() << "x" << widget -> minimumSizeHint().height() <<
       " " << widget -> sizeHint().width() << "x" << widget -> sizeHint().height() <<
-      " " << widget -> width() << "x" << widget -> height() << "\n";
+      " " << widget -> geometry().x() << "x" << widget -> geometry().y() <<
+      " " << widget -> geometry().width() << "x" << widget -> geometry().height() <<
+      " " << widget -> frameGeometry().x() << "x" << widget -> frameGeometry().y() <<
+      " " << widget -> frameGeometry().width() << "x" << widget -> frameGeometry().height() << "\n";
   }
   else if ( object -> inherits ("QLayout") )
   {
@@ -375,7 +378,7 @@ KPlayer::KPlayer (QWidget *parent, const char *name) : KMainWindow (parent, name
   m_menubar_fullscreen_visible = m_statusbar_fullscreen_visible = false;
   m_messagelog_normally_visible = m_messagelog_fullscreen_visible = false;
   m_library_normally_visible = m_library_fullscreen_visible = false;
-  m_initial_show = m_error_detected = m_maximized = false;
+  m_set_display_size = m_initial_show = m_error_detected = m_maximized = false;
   m_full_screen = m_show_log = m_show_library = false;
   Toolbar toolbars [KPLAYER_TOOLBARS] = {
     { "mainToolBar", KStdAction::stdName (KStdAction::ShowToolbar), true, false },
@@ -416,6 +419,7 @@ KPlayer::KPlayer (QWidget *parent, const char *name) : KMainWindow (parent, name
     i18n("Saturation toolbar has a saturation slider that shows the current video saturation and allows you to change it. This is the same slider you get from the saturation pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Saturation Toolbar option on the Settings menu. Clicking the Saturation button on this toolbar will also hide it.")
   };
   KPlayerEngine::initialize (actionCollection(), this, 0, kapp -> config());
+  connect (engine(), SIGNAL (windowStateChanged (uint)), SLOT (windowStateChanged (uint)));
   connect (engine(), SIGNAL (syncronize (bool)), SLOT (syncronize (bool)));
   connect (engine(), SIGNAL (zoom()), SLOT (zoom()));
   connect (engine(), SIGNAL (correctSize()), SLOT (correctSize()));
@@ -1055,7 +1059,7 @@ void KPlayer::showMaximized (void)
   kdDebugTime() << "KPlayer::showMaximized " << maximized << " -> " << isMaximized() << "\n";
 #endif
   //syncronizeEvents();
-  activateLayout();
+  //activateLayout();
 }
 
 void KPlayer::showNormal (void)
@@ -1070,7 +1074,7 @@ void KPlayer::showNormal (void)
   kdDebugTime() << "KPlayer::showNormal " << maximized << " -> " << isMaximized() << "\n";
 #endif
   //syncronizeEvents();
-  activateLayout();
+  //activateLayout();
 }
 
 void KPlayer::start (void)
@@ -1685,11 +1689,24 @@ void KPlayer::resizeEvent (QResizeEvent* event)
     m_normal_geometry.setSize (QSize (width(), height()));
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "WiSize " << event -> oldSize(). width() << "x" << event -> oldSize(). height()
-    << " => " << event -> size(). width() << "x" << event -> size(). height() << ", "
-    << " maximized  " << maximized << " -> " << isMaximized() << " spontaneous " << event -> spontaneous() << "\n";
+    << " => " << event -> size(). width() << "x" << event -> size(). height() << ", maximized "
+    << maximized << " -> " << isMaximized() << " spontaneous " << event -> spontaneous() << "\n";
   kdDebugTime() << "             Normal geometry " << m_normal_geometry.x() << "x" << m_normal_geometry.y()
     << " " << m_normal_geometry.width() << "x" << m_normal_geometry.height() << "\n";
 #endif
+  if ( m_set_display_size )
+  {
+    m_set_display_size = false;
+    QTimer::singleShot (0, this, SLOT (setDisplaySize()));
+  }
+}
+
+void KPlayer::setDisplaySize (void)
+{
+#ifdef DEBUG_KPLAYER_RESIZING
+  kdDebugTime() << "KPlayer::setDisplaySize\n";
+#endif
+  engine() -> setDisplaySize();
 }
 
 void KPlayer::setMinimumSize (int w, int h)
@@ -1924,6 +1941,15 @@ void KPlayer::correctSize (void)
   else
     kdDebugTime() << "             Using previous size\n";
 #endif
+}
+
+void KPlayer::windowStateChanged (uint wid)
+{
+#ifdef DEBUG_KPLAYER_WINDOW
+  kdDebugTime() << "KPlayer::windowStateChanged (" << wid << ")\n";
+#endif
+  if ( wid == winId() )
+    m_set_display_size = true;
 }
 
 void KPlayer::syncronize (bool user_resize)
