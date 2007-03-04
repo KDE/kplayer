@@ -984,7 +984,7 @@ void KPlayer::enableSubmenu (QMenuData* data, const QString& name, bool enable)
         if ( popup )
         {
           if ( popup -> name() == name )
-            data -> setItemEnabled (id, enable);
+            data -> setItemEnabled (id, enable && popup -> count() > 0);
           else
             enableSubmenu (popup, name, enable);
         }

@@ -1381,7 +1381,7 @@ void KPlayerProperties::fromString (const QString& key, const QString& value)
 {
   if ( value.isEmpty() && has (key) || ! value.isEmpty() && value != asString (key) )
   {
-    if ( value.isEmpty() )
+    if ( value.isEmpty() && m_properties [key] -> defaults (true) )
       reset (key);
     else
       get (key) -> fromString (value);
