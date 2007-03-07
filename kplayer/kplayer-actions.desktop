@@ -5,25 +5,5 @@ Encoding=UTF8
 
 [Desktop Action AddToNewPlaylist]
 Name=Add to new playlist
-Name[af]=Voeg by nuwe speel lys
-Name[bg]=Добавяне към нов списък
-Name[br]=Ouzhpennañ d'ar roll tonioù nevez
-Name[cs]=Přidat do nového seznamu skladeb
-Name[da]=Tilføj til ny spilleliste
-Name[el]=Προσθήκη σε νέα λίστα αναπαραγωγής
-Name[es]=Añadir a la nueva lista de reproducción
-Name[et]=Lisa uude esitusnimekirja
-Name[fr]=Ajouter à une nouvelle liste de lecture
-Name[ga]=Cuir le seinmliosta nua
-Name[it]=Aggiungi a una nuova playlist
-Name[ja]=新規プレイリストに追加
-Name[lt]=Pridėti prie naujo grojaraščio
-Name[nl]=Toevoegen aan nieuwe afspeellijst
-Name[pa]=ਨਵੀਂ ਸੰਗੀਤ-ਸੂਚੀ 'ਚ ਸ਼ਾਮਿਲ
-Name[pl]=Dodaj do nowej listy odtwarzania kplayer-a
-Name[pt]=Adicionar a uma lista nova
-Name[pt_BR]=Adicionar a uma nova Lista de Reprodução
-Name[sv]=Lägg till i ny spellista
-Name[tr]=Yeni çalma listesine ekle
 Icon=kplayer
 Exec=kplayer --add-to-new-playlist -- %U
