@@ -5,10 +5,12 @@ Encoding=UTF8
 
 [Desktop Action PlayNext]
 Name=Play next
+Name[el]=Αναπαραγωγή επόμενου
 Icon=kplayer
 Exec=kplayer --play-next -- %U
 
 [Desktop Action QueueNext]
 Name=Queue next
+Name[el]=Σε αναμονή του επόμενου
 Icon=kplayer
 Exec=kplayer --queue-next -- %U

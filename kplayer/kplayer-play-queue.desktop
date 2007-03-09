@@ -6,10 +6,12 @@ X-KDE-Priority=TopLevel
 
 [Desktop Action Play]
 Name=Play
+Name[el]=Αναπαραγωγή
 Icon=kplayer
 Exec=kplayer -- %U
 
 [Desktop Action Queue]
 Name=Queue
+Name[el]=Σε αναμονή
 Icon=kplayer
 Exec=kplayer --queue -- %U

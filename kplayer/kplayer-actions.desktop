@@ -5,5 +5,6 @@ Encoding=UTF8
 
 [Desktop Action AddToNewPlaylist]
 Name=Add to new playlist
+Name[el]=Προσθήκη σε νέα λίστα αναπαραγωγής
 Icon=kplayer
 Exec=kplayer --add-to-new-playlist -- %U
