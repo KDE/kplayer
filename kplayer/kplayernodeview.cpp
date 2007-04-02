@@ -20,6 +20,7 @@
 #include <kurldrag.h>
 #include <qcursor.h>
 #include <qheader.h>
+#include <qlabel.h>
 #include <qpopupmenu.h>
 
 #ifdef DEBUG
@@ -84,7 +85,11 @@ KPlayerPropertiesDevice::KPlayerPropertiesDevice (QWidget* parent, const char* n
   m_node = KPlayerNode::root() -> getNodeByUrl ("kplayer:/devices");
   m_node -> reference();
   m_node -> populateGroups();
+  for ( uint i = 0; i < channellistcount; i ++ )
+    c_channel_list -> insertItem (channellists[i].name);
   pathChanged (c_path -> text());
+  typeChanged (c_type -> currentItem());
+  c_driver -> setCurrentItem (2);
 }
 
 KPlayerPropertiesDevice::~KPlayerPropertiesDevice()
@@ -109,6 +114,38 @@ void KPlayerPropertiesDevice::pathChanged (const QString& path)
   parent() -> enableButton (KDialogBase::Ok, enable);
 }
 
+void KPlayerPropertiesDevice::typeChanged (int index)
+{
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "KPlayerPropertiesDevice::typeChanged\n";
+  kdDebugTime() << " Type   " << c_type -> text (index) << "\n";
+#endif
+  if ( index == 2 )
+  {
+    l_channel_list -> show();
+    c_channel_list -> show();
+    l_driver -> show();
+    c_driver -> show();
+  }
+  else
+  {
+    l_channel_list -> hide();
+    c_channel_list -> hide();
+    l_driver -> hide();
+    c_driver -> hide();
+  }
+  if ( index == 3 )
+  {
+    l_channel_file -> show();
+    c_channel_file -> show();
+  }
+  else
+  {
+    l_channel_file -> hide();
+    c_channel_file -> hide();
+  }
+}
+
 void KPlayerPropertiesDevice::addDevice (void)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
@@ -121,6 +158,14 @@ void KPlayerPropertiesDevice::addDevice (void)
   media -> setName (c_name -> text());
   int index = c_type -> currentItem();
   media -> setType (index == 1 ? "DVD" : index == 2 ? "TV" : index == 3 ? "DVB" : "CD");
+  if ( index == 2 )
+  {
+    ((KPlayerTunerProperties*) media) -> setChannelList (channellists[c_channel_list -> currentItem()].id);
+    int driver = c_driver -> currentItem();
+    ((KPlayerTVProperties*) media) -> setInputDriver (driver == 0 ? "bsdbt848" : driver == 1 ? "v4l" : "v4l2");
+  }
+  else if ( index == 3 && ! c_channel_file -> text().isEmpty() )
+    ((KPlayerTunerProperties*) media) -> setChannelList (c_channel_file -> text());
   media -> commit();
   QStringList list;
   list.append (fullpath);
@@ -129,7 +174,7 @@ void KPlayerPropertiesDevice::addDevice (void)
 }
 
 KPlayerDeviceDialog::KPlayerDeviceDialog (QWidget* parent, const char* name)
-  : KDialogBase (parent, name, true, i18n("Device Properties"), Help | Ok | Cancel)
+  : KDialogBase (parent, name, true, i18n("Add device"), Help | Ok | Cancel)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Creating device dialog\n";
@@ -1660,7 +1705,7 @@ void KPlayerNodeView::addFiles (void)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerNodeView::addFiles\n";
 #endif
-  activeContainer() -> append (kPlayerEngine() -> openFiles (i18n("Add Files")));
+  activeContainer() -> append (kPlayerEngine() -> openFiles (i18n("Add files")));
 }
 
 void KPlayerNodeView::addUrl (void)
@@ -1686,7 +1731,8 @@ void KPlayerNodeView::addGroup (void)
   else
   {
     KPlayerNodeNameValidator validator (container);
-    QString name = KInputDialog::text (i18n("Add folder"), i18n("Folder name"),
+    QString name = KInputDialog::text (container -> isPlaylist() ? i18n("Add playlist") : i18n("Add folder"),
+      container -> isPlaylist() ? i18n("Playlist name") : i18n("Folder name"),
       QString::null, 0, 0, 0, &validator, QString::null,
       i18n("Folder name field allows you to enter a name for a new folder. OK button will be enabled when you enter a unique and valid name."));
     if ( ! name.isNull() )
@@ -2142,7 +2188,7 @@ void KPlayerListView::updateActions (void)
     a -> setStatusText (i18n("Adds a new device"));
     a -> setWhatsThis (i18n("Add device command allows you to add a new device. You will need to give the new device a unique name and specify the device path and type."));
   }
-  else if ( container == playlistActionList() -> node() )
+  else if ( container && container -> isPlaylist() )
   {
     a -> setText (i18n("&Playlist..."));
     a -> setStatusText (i18n("Adds a new playlist"));
@@ -2948,7 +2994,7 @@ void KPlayerTreeView::updateActions (void)
     a -> setStatusText (i18n("Adds a new device"));
     a -> setWhatsThis (i18n("Add device command allows you to add a new device. You will need to give the new device a unique name and specify the device path and type."));
   }
-  else if ( node == playlistActionList() -> node() )
+  else if ( node && node -> isPlaylist() )
   {
     a -> setText (i18n("&Playlist..."));
     a -> setStatusText (i18n("Adds a new playlist"));

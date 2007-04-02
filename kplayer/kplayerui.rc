@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kplayer" version="15">
+<kpartgui name="kplayer" version="16">
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <Action name="file_open"/>
@@ -305,7 +305,6 @@
   </Menu>
   <Menu name="playlist_add_to"><text>Add &amp;to</text>
     <ActionList name="playlist_add_to_playlist"/>
-    <Action name="playlist_add_to_new_playlist"/>
     <Action name="playlist_add_to_playlists"/>
     <Action name="playlist_add_to_collection"/>
   </Menu>

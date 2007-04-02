@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>Device Properties</string>
+        <string>Add device</string>
     </property>
     <property name="frameShape">
         <enum>NoFrame</enum>
@@ -63,7 +63,7 @@
                                 <cstring>l_name</cstring>
                             </property>
                             <property name="text">
-                                <string>&amp;Name</string>
+                                <string>Device &amp;name</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignLeft</set>
@@ -102,7 +102,7 @@
                                 <cstring>l_path</cstring>
                             </property>
                             <property name="text">
-                                <string>&amp;Path</string>
+                                <string>&amp;Path to device node</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignLeft</set>
@@ -120,6 +120,9 @@
                         <widget class="QLineEdit" row="1" column="1">
                             <property name="name">
                                 <cstring>c_path</cstring>
+                            </property>
+                            <property name="text">
+                                <cstring>/dev/</cstring>
                             </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
@@ -141,7 +144,7 @@
                                 <cstring>l_type</cstring>
                             </property>
                             <property name="text">
-                                <string>&amp;Type</string>
+                                <string>Device &amp;type</string>
                             </property>
                             <property name="alignment">
                                 <set>AlignVCenter|AlignLeft</set>
@@ -195,6 +198,138 @@
                                 <string>Option that lets you choose the type of the device.</string>
                             </property>
                         </widget>
+                        <widget class="QLabel" row="3" column="0">
+                            <property name="name">
+                                <cstring>l_channel_list</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Channel &amp;list</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_channel_list</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>List of available channels</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the available channels according to your location.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="3" column="1">
+                            <property name="name">
+                                <cstring>c_channel_list</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>List of available channels</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the available channels according to your location.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="4" column="0">
+                            <property name="name">
+                                <cstring>l_driver</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Driver</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_driver</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Driver to use for input</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the input driver.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="4" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>BSD Bt848</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Video4Linux</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Video4Linux 2</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_driver</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Driver to use for input</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the input driver.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="5" column="0">
+                            <property name="name">
+                                <cstring>l_channel_file</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Channel file</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_channel_file</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Path to the file containing the list of available channels</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the path to the file containing the list of available channels.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="5" column="1">
+                            <property name="name">
+                                <cstring>c_channel_file</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Path to the file containing the list of available channels</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the path to the file containing the list of available channels.</string>
+                            </property>
+                        </widget>
                     </grid>
                 </widget>
             </grid>
@@ -208,9 +343,16 @@
         <receiver>KPlayerPropertiesDevicePage</receiver>
         <slot>pathChanged (const QString&amp;)</slot>
     </connection>
+    <connection>
+        <sender>c_type</sender>
+        <signal>activated (int)</signal>
+        <receiver>KPlayerPropertiesDevicePage</receiver>
+        <slot>typeChanged (int)</slot>
+    </connection>
 </connections>
 <slots>
     <slot access="protected">pathChanged (const QString&amp;)</slot>
+    <slot access="protected">typeChanged (int)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="0"/>
 </UI>

@@ -438,8 +438,7 @@ public:
     { return source() -> canRemove(); }
 
   /** Indicates whether nodes are arranged in a custom order. */
-  bool customOrder (void) const
-    { return ! parent() || allowsCustomOrder() && media() -> customOrder(); }
+  bool customOrder (void) const;
   /** Sets whether nodes are arranged in a custom order. */
   void setCustomOrder (bool custom);
   /** Sets custom order by name if not already set. */
@@ -509,20 +508,13 @@ public:
   /** Saves the node data into the store. */
   void save (void);
 
-  /** Arranges nodes in the correct order. */
-  void applyCustomOrder (void);
-
-  /** Returns the last node. */
-  KPlayerNode* lastNode (void);
-
   /** Adds a new branch node with the given name. */
   void addBranch (const QString& name, KPlayerNode* after = 0);
   /** Adds a new branch node with the given name at the top of the node list. */
   void prependBranch (const QString& name)
     { addBranch (name, this); }
   /** Adds a new branch node with the given name at the end of the node list. */
-  void appendBranch (const QString& name)
-    { addBranch (name, lastNode()); }
+  void appendBranch (const QString& name);
 
   /** Adds the given nodes to this node, optionally linking to the origin. */
   void add (const KPlayerNodeList& nodes, bool link = true, KPlayerNode* after = 0);
@@ -530,8 +522,7 @@ public:
   void prepend (const KPlayerNodeList& nodes)
     { add (nodes, true, this); }
   /** Adds the given nodes at the end of the node list, linking to the origin. */
-  void append (const KPlayerNodeList& nodes)
-    { add (nodes, true, lastNode()); }
+  void append (const KPlayerNodeList& nodes);
 
   /** Adds the given URL list to this node, linking local directories to the origin. */
   void add (const KURL::List& urls, bool link = true, KPlayerNode* after = 0);
@@ -539,8 +530,7 @@ public:
   void prepend (const KURL::List& urls)
     { add (urls, true, this); }
   /** Adds the given URL list at the end of the node list, linking to the origin. */
-  void append (const KURL::List& urls)
-    { add (urls, true, lastNode()); }
+  void append (const KURL::List& urls);
 
   /** Moves the given nodes after the given node. */
   void move (const KPlayerNodeList& nodes, KPlayerNode* after);
@@ -674,6 +664,12 @@ protected:
   void doPopulateGroups (void);
   /** Refreshes the list of subnodes. */
   void refreshNodes (void);
+
+  /** Returns the last node. */
+  KPlayerNode* lastNode (void);
+
+  /** Arranges nodes in the correct order. */
+  void applyCustomOrder (void);
 
   /** List of all subnodes of this node. */
   KPlayerNodeList m_nodes;

@@ -417,6 +417,16 @@ bool KPlayerDeviceSource::canAddBranches (void) const
   return false;
 }
 
+bool KPlayerDeviceSource::canAddLeaves (void) const
+{
+  return false;
+}
+
+bool KPlayerDeviceSource::canRemove (void) const
+{
+  return false;
+}
+
 KPlayerDiskSource::KPlayerDiskSource (KPlayerContainerNode* parent)
   : KPlayerDeviceSource (parent)
 {
@@ -430,16 +440,6 @@ KPlayerDiskSource::~KPlayerDiskSource()
 #ifdef DEBUG_KPLAYER_SOURCE
   kdDebugTime() << "Destroying disk device source\n";
 #endif
-}
-
-bool KPlayerDiskSource::canAddLeaves (void) const
-{
-  return false;
-}
-
-bool KPlayerDiskSource::canRemove (void) const
-{
-  return false;
 }
 
 void KPlayerDiskSource::enumStart (bool groups)

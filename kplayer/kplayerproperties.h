@@ -2311,7 +2311,11 @@ public:
   bool customOrder (void) const
     { return getBoolean ("Custom Order"); }
   void setCustomOrder (bool custom)
-    { setBoolean ("Custom Order", custom); }
+    { setBooleanOption ("Custom Order", custom ? 1 : 2); }
+  void resetCustomOrder (void)
+    { reset ("Custom Order"); }
+  bool hasCustomOrder (void) const
+    { return has ("Custom Order"); }
 
   const QString& groupingKey (void) const
     { return getString ("Group By"); }
@@ -2695,6 +2699,8 @@ struct KPlayerChannelList
 {
   /** List ID. */
   const char* id;
+  /** List name. */
+  QString name;
   /** Channel groups. */
   struct KPlayerChannelGroup* groups;
   /** Group count. */
@@ -2702,6 +2708,7 @@ struct KPlayerChannelList
 };
 
 extern struct KPlayerChannelList channellists[];
+extern const uint channellistcount;
 
 /** The KPlayer TV device properties.
   * @author kiriuja

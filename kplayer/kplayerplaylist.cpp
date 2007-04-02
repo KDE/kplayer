@@ -90,18 +90,15 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent, const 
   action = new KAction (i18n("&URL..."), 0, 0, this, SLOT (addUrl()), m_ac, "playlist_add_url");
   action -> setStatusText (i18n("Adds a URL to the playlist"));
   action -> setWhatsThis (i18n("Add URL command displays the standard Open URL dialog and lets you type or paste in a URL to add to the playlist."));
-  action = new KAction (i18n("&New Playlist..."), 0, 0, this, SLOT (addToNewPlaylist()), m_ac, "playlist_add_to_new_playlist");
+  action = new KAction (i18n("&Playlists..."), 0, 0, this, SLOT (addToPlaylists()), m_ac, "playlist_add_to_playlists");
   action -> setStatusText (i18n("Saves the playlist under a new name"));
   action -> setWhatsThis (i18n("Add to new playlist command prompts for a new playlist name and saves the playlist under the new name."));
-  action = new KAction (i18n("&Playlists"), 0, 0, this, SLOT (addToPlaylists()), m_ac, "playlist_add_to_playlists");
-  action -> setStatusText (i18n("Adds the playlist items to the root playlist"));
-  action -> setWhatsThis (i18n("Add to playlists command adds the playlist items to the root playlist."));
   m_playlists_add = new KPlayerContainerActionList ("%1", i18n("Adds playlist items to %1 playlist"),
     i18n("Add to playlist command adds the playlist items to the %1 playlist."), this, "playlist_add_to_playlist");
   playlistAddActionList() -> setMaximumSize (configuration() -> playlistMenuSize());
-  action = new KAction (i18n("&Collection"), 0, 0, this, SLOT (addToCollection()), m_ac, "playlist_add_to_collection");
-  action -> setStatusText (i18n("Adds playlist items to the collection"));
-  action -> setWhatsThis (i18n("Add to collection command adds the playlist items to the multimedia collection."));
+  action = new KAction (i18n("&Collection..."), 0, 0, this, SLOT (addToCollection()), m_ac, "playlist_add_to_collection");
+  action -> setStatusText (i18n("Saves the playlist in the collection"));
+  action -> setWhatsThis (i18n("Add to collection command prompts for a new folder name and saves the playlist under the new name in the multimedia collection."));
   connect (process(), SIGNAL (stateChanged(KPlayerProcess::State, KPlayerProcess::State)),
     SLOT (playerStateChanged(KPlayerProcess::State, KPlayerProcess::State)));
   connect (configuration(), SIGNAL (updated()), this, SLOT (refreshSettings()));
@@ -158,7 +155,6 @@ void KPlayerPlaylist::updateActions (void) const
   bool enable = ! nodes().isEmpty();
   KPlayerPlaylist* that = (KPlayerPlaylist*) this;
   emit that -> enableActionGroup ("playlist_add_to", enable);
-  action ("playlist_add_to_new_playlist") -> setEnabled (enable);
   action ("playlist_add_to_playlists") -> setEnabled (enable);
   action ("playlist_add_to_collection") -> setEnabled (enable);
   enableNextPrevious();
@@ -245,31 +241,25 @@ int KPlayerPlaylist::insert (const KPlayerNodeList& nodes, int index)
   return index;
 }
 
-void KPlayerPlaylist::add (KPlayerPlaylistNodeList& previous)
+void KPlayerPlaylist::update (void)
 {
 #ifdef DEBUG_KPLAYER_PLAYLIST
-  kdDebugTime() << "Adding nodes to the playlist\n";
+  kdDebugTime() << "Updating the playlist\n";
 #endif
-  KPlayerNodeListIterator prit (previous);
+  KPlayerNode* current = currentNode();
   KPlayerNode* node = m_nodes.first();
   while ( node )
   {
-    while ( node && node != prit.current() )
-    {
-      if ( previous.findRef (node) < 0 )
-      {
 #ifdef DEBUG_KPLAYER_PLAYLIST
-        kdDebugTime() << " Name   " << node -> name() << "\n";
+    kdDebugTime() << " Name   " << node -> name() << "\n";
 #endif
-        playlist() -> insertItem (node -> name(), nodes().at());
-      }
-      node = m_nodes.next();
-    }
-    if ( node )
-      node = m_nodes.next();
-    if ( prit.current() )
-      ++ prit;
+    if ( nodes().at() < playlist() -> count() )
+      playlist() -> changeItem (node -> name(), nodes().at());
+    else
+      playlist() -> insertItem (node -> name());
+    node = m_nodes.next();
   }
+  setCurrentNode (current);
 }
 
 void KPlayerPlaylist::added (KPlayerContainerNode* parent, const KPlayerNodeList& nodes, KPlayerNode* after)
@@ -302,7 +292,7 @@ void KPlayerPlaylist::added (KPlayerContainerNode* parent, const KPlayerNodeList
       ++ iterator;
     }
 #endif
-    add (previous);
+    update();
   }
   if ( m_next.findRef (parent) >= 0 )
   {
@@ -477,7 +467,7 @@ void KPlayerPlaylist::queueNextUrls (const KURL::List& urls)
 
 void KPlayerPlaylist::filePlay (void)
 {
-  playUrls (engine() -> openFiles (i18n("Play Files")));
+  playUrls (engine() -> openFiles (i18n("Play files")));
 }
 
 void KPlayerPlaylist::filePlayUrl (void)
@@ -669,13 +659,11 @@ void KPlayerPlaylist::shuffle (void)
     randomize();
   else
   {
-    playlist() -> clear();
 #ifdef DEBUG_KPLAYER_PLAYLIST
     kdDebugTime() << "Sorting playlist nodes\n";
 #endif
     m_nodes.sort();
-    KPlayerPlaylistNodeList empty;
-    add (empty);
+    update();
   }
   KPlayerNode* node = currentNode();
   if ( ! node || m_nodes.findRef (node) < 0 )
@@ -701,34 +689,26 @@ void KPlayerPlaylist::addUrl (void)
   nowplaying() -> append (kPlayerEngine() -> openUrl (i18n("Add URL")));
 }
 
-void KPlayerPlaylist::addToNewPlaylist (void)
-{
-#ifdef DEBUG_KPLAYER_PLAYLIST
-  kdDebugTime() << "KPlayerPlaylist::addToNewPlaylist\n";
-#endif
-  if ( ! nodes().isEmpty() )
-  {
-    KPlayerNodeNameValidator validator (nowplaying());
-    QString name = KInputDialog::text (i18n("Add to new playlist"), i18n("Playlist name"),
-      QString::null, 0, 0, 0, &validator, QString::null,
-      i18n("Playlist name field allows you to enter a name for a new playlist. OK button will be enabled when you enter a unique and valid name."));
-    if ( ! name.isNull() )
-    {
-      nowplaying() -> addBranch (name);
-      KPlayerContainerNode* container = nowplaying() -> getNodeById (name);
-      if ( container )
-        container -> append (nodes());
-    }
-  }
-}
-
 void KPlayerPlaylist::addToPlaylists (void)
 {
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "KPlayerPlaylist::addToPlaylists\n";
 #endif
   if ( ! nodes().isEmpty() )
-    KPlayerNode::root() -> getNodeByUrl ("kplayer:/playlists") -> append (nodes());
+  {
+    KPlayerContainerNode* container = KPlayerNode::root() -> getNodeByUrl ("kplayer:/playlists");
+    KPlayerNodeNameValidator validator (container);
+    QString name = KInputDialog::text (i18n("Add to playlists"), i18n("Playlist name"),
+      QString::null, 0, 0, 0, &validator, QString::null,
+      i18n("Playlist name field allows you to enter a name for a new playlist. OK button will be enabled when you enter a unique and valid name."));
+    if ( ! name.isNull() )
+    {
+      container -> addBranch (name);
+      container = container -> getNodeById (name);
+      if ( container )
+        container -> append (nowplaying() -> nodes());
+    }
+  }
 }
 
 void KPlayerPlaylist::addToPlaylist (KPlayerNode* node)
@@ -738,7 +718,7 @@ void KPlayerPlaylist::addToPlaylist (KPlayerNode* node)
   kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
   if ( ! nodes().isEmpty() && node -> isContainer() )
-    ((KPlayerContainerNode*) node) -> append (nodes());
+    ((KPlayerContainerNode*) node) -> append (nowplaying() -> nodes());
 }
 
 void KPlayerPlaylist::addToCollection (void)
@@ -747,7 +727,20 @@ void KPlayerPlaylist::addToCollection (void)
   kdDebugTime() << "KPlayerPlaylist::addToCollection\n";
 #endif
   if ( ! nodes().isEmpty() )
-    KPlayerNode::root() -> getNodeByUrl ("kplayer:/collection") -> add (nodes());
+  {
+    KPlayerContainerNode* container = KPlayerNode::root() -> getNodeByUrl ("kplayer:/collection");
+    KPlayerNodeNameValidator validator (container);
+    QString name = KInputDialog::text (i18n("Add to collection"), i18n("Folder name"),
+      QString::null, 0, 0, 0, &validator, QString::null,
+      i18n("Folder name field allows you to enter a name for a new folder. OK button will be enabled when you enter a unique and valid name."));
+    if ( ! name.isNull() )
+    {
+      container -> addBranch (name);
+      container = container -> getNodeById (name);
+      if ( container )
+        container -> append (nowplaying() -> nodes());
+    }
+  }
 }
 
 void KPlayerPlaylist::playerStateChanged (KPlayerProcess::State state, KPlayerProcess::State previous)

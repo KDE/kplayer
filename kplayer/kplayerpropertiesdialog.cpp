@@ -569,6 +569,8 @@ void KPlayerPropertiesTVDeviceGeneral::setupControls (void)
   hideLength();
   hidePlaylist();
   hideDVB();
+  for ( uint i = 0; i < channellistcount; i ++ )
+    c_channels -> insertItem (channellists[i].name);
 }
 
 void KPlayerPropertiesTVDeviceGeneral::load (void)
@@ -712,8 +714,6 @@ void KPlayerPropertiesItemGeneral::setupControls (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
   kdDebugTime() << "KPlayerPropertiesItemGeneral::setupControls\n";
 #endif
-  l_type -> hide();
-  c_type -> hide();
   hideFrequency();
   hideTV();
   hideDVB();
@@ -721,6 +721,7 @@ void KPlayerPropertiesItemGeneral::setupControls (void)
 
 void KPlayerPropertiesItemGeneral::load (void)
 {
+  c_type -> setText (properties() -> typeString());
   c_playlist -> setCurrentItem (properties() -> playlistOption());
   KPlayerPropertiesTrackGeneral::load();
 }

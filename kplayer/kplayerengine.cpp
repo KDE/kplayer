@@ -550,13 +550,13 @@ void KPlayerEngine::setupActions (void)
 
   action = new KAction (i18n("&Load Subtitles..."), 0, CTRL + Key_S, this, SLOT (fileOpenSubtitles()), m_ac, "subtitles_load");
   action -> setStatusText (i18n("Opens a subtitle file"));
-  action -> setWhatsThis (i18n("Load Subtitles command displays the standard Open File dialog and lets you choose a subtitle file to use with the current file or URL. If you load subtitles when video is playing, KPlayer will restart playback with the subtitles. By default it will also remember the subtitles you choose in the current file properties. This command is available for video files."));
+  action -> setWhatsThis (i18n("Load Subtitles command displays the standard Open File dialog and lets you choose a subtitle file to use with the current file or URL. If you load subtitles when video is playing, KPlayer will display the subtitles immediately. By default it will also remember the subtitles you choose in the current file properties. This command is available for video files."));
   /*action = new KAction (i18n("Load Su&btitle URL..."), 0, 0, this, SLOT (fileOpenSubtitleUrl()), m_ac, "subtitles_load_url");
   action -> setStatusText (i18n("Opens a subtitle URL"));
-  action -> setWhatsThis (i18n("Load Subtitle URL command displays the standard Open URL dialog and lets you type or paste in a subtitle URL to use with the current file or URL. If you load subtitles when video is playing, KPlayer will restart playback with the subtitles. By default it will also remember the subtitles you choose in the current file properties. This command is available for video files."));
+  action -> setWhatsThis (i18n("Load Subtitle URL command displays the standard Open URL dialog and lets you type or paste in a subtitle URL to use with the current file or URL. If you load subtitles when video is playing, KPlayer will display the subtitles immediately. By default it will also remember the subtitles you choose in the current file properties. This command is available for video files."));
   action = new KAction (i18n("U&nload Subtitles"), 0, 0, this, SLOT (fileUnloadSubtitles()), m_ac, "subtitles_unload");
   action -> setStatusText (i18n("Unloads subtitles"));
-  action -> setWhatsThis (i18n("Unload Subtitles command unloads the currently loaded subtitles, and if video is playing, restarts playback without subtitles. This command is available when subtitles are loaded."));*/
+  action -> setWhatsThis (i18n("Unload Subtitles command unloads the currently loaded subtitles, and if video is playing, hides the subtitles. This command is available when subtitles are loaded."));*/
 
   action = new KToggleAction (i18n("&Full Screen"), "window_fullscreen", CTRL + Key_F, this, SLOT (fullScreen()), m_ac, "view_full_screen");
   action -> setStatusText (i18n("Switches to full screen mode"));

@@ -570,6 +570,17 @@ void KPlayerContainerNode::addBranch (const QString& name, KPlayerNode* after)
   node -> release();
 }
 
+void KPlayerContainerNode::appendBranch (const QString& name)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerContainerNode::appendBranch\n";
+  kdDebugTime() << " Name   " << name << "\n";
+#endif
+  populate();
+  addBranch (name, lastNode());
+  vacate();
+}
+
 void KPlayerContainerNode::add (const KURL::List& urls, bool link, KPlayerNode* after)
 {
 #ifdef DEBUG_KPLAYER_NODE
@@ -585,6 +596,16 @@ void KPlayerContainerNode::add (const KURL::List& urls, bool link, KPlayerNode* 
   }
 }
 
+void KPlayerContainerNode::append (const KURL::List& urls)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerContainerNode::append url list\n";
+#endif
+  populate();
+  add (urls, true, lastNode());
+  vacate();
+}
+
 void KPlayerContainerNode::add (const KPlayerNodeList& nodes, bool link, KPlayerNode* after)
 {
 #ifdef DEBUG_KPLAYER_NODE
@@ -594,6 +615,16 @@ void KPlayerContainerNode::add (const KPlayerNodeList& nodes, bool link, KPlayer
 #endif
   KPlayerItemProperties::resetMetaInfoTimer();
   source() -> add (nodes, link, after);
+}
+
+void KPlayerContainerNode::append (const KPlayerNodeList& nodes)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerContainerNode::append\n";
+#endif
+  populate();
+  add (nodes, true, lastNode());
+  vacate();
 }
 
 void KPlayerContainerNode::move (const KPlayerNodeList& nodes, KPlayerNode* after)
@@ -673,6 +704,10 @@ void KPlayerContainerNode::insert (KPlayerNode* node, KPlayerNode* after)
 
 void KPlayerContainerNode::append (KPlayerNode* node)
 {
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "Appending node\n";
+  kdDebugTime() << " ID     " << node -> id() << "\n";
+#endif
   m_nodes.append (node);
   m_node_map.insert (node -> id(), node);
 }
@@ -737,7 +772,7 @@ void KPlayerContainerNode::doPopulate (void)
   kdDebugTime() << "Populating node\n";
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
-  bool apply_custom_order = customOrder() && (origin() || ! nodes().isEmpty());
+  bool apply_custom_order = media() -> customOrder() && (origin() || ! nodes().isEmpty());
   if ( origin() )
     origin() -> populate();
   KPlayerNodeList previous (nodes());
@@ -826,7 +861,7 @@ void KPlayerContainerNode::doPopulateGroups (void)
   kdDebugTime() << "Populating groups\n";
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
-  bool apply_custom_order = customOrder() && (origin() || ! nodes().isEmpty());
+  bool apply_custom_order = media() -> customOrder() && (origin() || ! nodes().isEmpty());
   if ( origin() )
     origin() -> populateGroups();
   KPlayerNodeList previous (nodes());
@@ -1045,7 +1080,7 @@ void KPlayerContainerNode::customOrderByName (void)
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerContainerNode::customOrderByName\n";
 #endif
-  if ( ! customOrder() && parent() && allowsCustomOrder() )
+  if ( ! customOrder() && allowsCustomOrder() )
   {
     QString key (sortKey());
     bool ascending = sortAscending();
@@ -1056,6 +1091,11 @@ void KPlayerContainerNode::customOrderByName (void)
   }
 }
 
+bool KPlayerContainerNode::customOrder (void) const
+{
+  return ! origin() || media() -> hasCustomOrder() ? ! parent() || media() -> customOrder() : origin() -> customOrder();
+}
+
 void KPlayerContainerNode::setCustomOrder (bool custom)
 {
 #ifdef DEBUG_KPLAYER_NODE
@@ -1064,7 +1104,10 @@ void KPlayerContainerNode::setCustomOrder (bool custom)
 #endif
   if ( parent() && allowsCustomOrder() )
   {
-    media() -> setCustomOrder (custom);
+    if ( custom || origin() && origin() -> customOrder() )
+      media() -> setCustomOrder (custom);
+    else
+      media() -> resetCustomOrder();
     media() -> commit();
   }
 }
@@ -1287,7 +1330,7 @@ KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& nodes, bool lin
       after = subnode;
     ++ iterator;
   }
-  if ( origin() && customOrder() )
+  if ( origin() && customOrder() && ! media() -> customOrder() )
   {
     m_nodes.clear();
     KPlayerNodeListIterator originit (origin() -> nodes());
@@ -1324,7 +1367,7 @@ KPlayerNode* KPlayerContainerNode::moved (const KPlayerNodeList& nodes, KPlayerN
   populate();
   if ( ! allowsCustomOrder() )
     after = 0;
-  else if ( after && ! customOrder() )
+  else if ( after )
   {
 #ifdef DEBUG_KPLAYER_NODE
     kdDebugTime() << " Key    '" << sortKey() << "'\n";
@@ -1464,7 +1507,7 @@ void KPlayerContainerNode::save (void)
   kdDebugTime() << "KPlayerContainerNode::save\n";
   kdDebugTime() << " URL    " << url() << "\n";
 #endif
-  if ( ! origin() || customOrder() )
+  if ( ! origin() || media() -> customOrder() )
   {
     populate();
     QStringList children;

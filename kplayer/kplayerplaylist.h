@@ -213,12 +213,10 @@ public slots:
   void addUrl (void);
 
   /** Saves the playlist as a new playlist. */
-  void addToNewPlaylist (void);
-  /** Adds the playlist items to the root playlist. */
   void addToPlaylists (void);
   /** Adds the playlist items to an existing playlist. */
   void addToPlaylist (KPlayerNode*);
-  /** Adds the playlist items to the collection. */
+  /** Saves the playlist as a new folder in the collection. */
   void addToCollection (void);
 
 protected slots:
@@ -229,8 +227,8 @@ protected slots:
   /** Updates the given node attributes. */
   void updated (KPlayerContainerNode* parent, KPlayerNode* node);
 
-  /** Adds new nodes to the playlist combobox. */
-  void add (KPlayerPlaylistNodeList& previous);
+  /** Updates the playlist combobox. */
+  void update (void);
 
   /** Plays the next item when appropriate. */
   void playerStateChanged (KPlayerProcess::State, KPlayerProcess::State);

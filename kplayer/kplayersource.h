@@ -232,6 +232,10 @@ public:
 
   /** Indicates whether branches can be added. */
   virtual bool canAddBranches (void) const;
+  /** Indicates whether leaves can be added. */
+  virtual bool canAddLeaves (void) const;
+  /** Indicates whether nodes can be removed. */
+  virtual bool canRemove (void) const;
 };
 
 /**Disk source class, handles disk device nodes.
@@ -250,11 +254,6 @@ public:
   /** Parent node. */
   KPlayerDiskNode* parent (void) const
     { return (KPlayerDiskNode*) m_parent; }
-
-  /** Indicates whether leaves can be added. */
-  virtual bool canAddLeaves (void) const;
-  /** Indicates whether nodes can be removed. */
-  virtual bool canRemove (void) const;
 
 protected:
   /** Initializes the node retrieval process. */

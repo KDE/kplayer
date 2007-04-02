@@ -772,6 +772,8 @@ QString KPlayerTranslatedStringProperty::asString (void) const
 {
   if ( value().find ('/') < 0 )
     return i18n(value().utf8());
+  if ( value() == "video/avi" || value() == "video/x-msvideo" )
+    return i18n("AVI Video");
   KMimeType::Ptr mimetype (KMimeType::mimeType (value()));
   if ( mimetype -> name() == "application/octet-stream" || mimetype -> comment().isEmpty() )
     return value();
@@ -1680,9 +1682,8 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Command Line", info);
   info = new KPlayerIntegerPropertyInfo;
   m_info.insert ("Frame Dropping", info);
-  intinfo = new KPlayerIntegerPropertyInfo;
-  intinfo -> setDefaultValue (1024);
-  m_info.insert ("Cache", intinfo);
+  info = new KPlayerIntegerPropertyInfo;
+  m_info.insert ("Cache", info);
   intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (1);
   m_info.insert ("Build New Index", intinfo);
@@ -2889,23 +2890,25 @@ static struct KPlayerChannelGroup
   };
 
 struct KPlayerChannelList channellists[] = {
-  { "us-bcast", us_bcast, sizeof (us_bcast) / sizeof (struct KPlayerChannelGroup) },
-  { "us-cable", us_cable, sizeof (us_cable) / sizeof (struct KPlayerChannelGroup) },
-  { "us-cable-hrc", us_hrc, sizeof (us_hrc) / sizeof (struct KPlayerChannelGroup) },
-  { "japan-bcast", japan_bcast, sizeof (japan_bcast) / sizeof (struct KPlayerChannelGroup) },
-  { "japan-cable", japan_cable, sizeof (japan_cable) / sizeof (struct KPlayerChannelGroup) },
-  { "europe-west", europe_west, sizeof (europe_west) / sizeof (struct KPlayerChannelGroup) },
-  { "europe-east", europe_east, sizeof (europe_east) / sizeof (struct KPlayerChannelGroup) },
-  { "italy", italy, sizeof (italy) / sizeof (struct KPlayerChannelGroup) },
-  { "newzealand", newzealand, sizeof (newzealand) / sizeof (struct KPlayerChannelGroup) },
-  { "australia", australia, sizeof (australia) / sizeof (struct KPlayerChannelGroup) },
-  { "ireland", ireland, sizeof (ireland) / sizeof (struct KPlayerChannelGroup) },
-  { "france", france, sizeof (france) / sizeof (struct KPlayerChannelGroup) },
-  { "china-bcast", china, sizeof (china) / sizeof (struct KPlayerChannelGroup) },
-  { "southafrica", southafrica, sizeof (southafrica) / sizeof (struct KPlayerChannelGroup) },
-  { "argentina", argentina, sizeof (argentina) / sizeof (struct KPlayerChannelGroup) },
-  { "russia", russia, sizeof (russia) / sizeof (struct KPlayerChannelGroup) }
+  { "us-bcast", i18n("US broadcast"), us_bcast, sizeof (us_bcast) / sizeof (struct KPlayerChannelGroup) },
+  { "us-cable", i18n("US cable"), us_cable, sizeof (us_cable) / sizeof (struct KPlayerChannelGroup) },
+  { "us-cable-hrc", i18n("US cable HRC"), us_hrc, sizeof (us_hrc) / sizeof (struct KPlayerChannelGroup) },
+  { "japan-bcast", i18n("Japan broadcast"), japan_bcast, sizeof (japan_bcast) / sizeof (struct KPlayerChannelGroup) },
+  { "japan-cable", i18n("Japan cable"), japan_cable, sizeof (japan_cable) / sizeof (struct KPlayerChannelGroup) },
+  { "europe-west", i18n("Western Europe"), europe_west, sizeof (europe_west) / sizeof (struct KPlayerChannelGroup) },
+  { "europe-east", i18n("Eastern Europe"), europe_east, sizeof (europe_east) / sizeof (struct KPlayerChannelGroup) },
+  { "italy", i18n("Italy"), italy, sizeof (italy) / sizeof (struct KPlayerChannelGroup) },
+  { "newzealand", i18n("New Zealand"), newzealand, sizeof (newzealand) / sizeof (struct KPlayerChannelGroup) },
+  { "australia", i18n("Australia"), australia, sizeof (australia) / sizeof (struct KPlayerChannelGroup) },
+  { "ireland", i18n("Ireland"), ireland, sizeof (ireland) / sizeof (struct KPlayerChannelGroup) },
+  { "france", i18n("France"), france, sizeof (france) / sizeof (struct KPlayerChannelGroup) },
+  { "china-bcast", i18n("China"), china, sizeof (china) / sizeof (struct KPlayerChannelGroup) },
+  { "southafrica", i18n("South Africa"), southafrica, sizeof (southafrica) / sizeof (struct KPlayerChannelGroup) },
+  { "argentina", i18n("Argentina"), argentina, sizeof (argentina) / sizeof (struct KPlayerChannelGroup) },
+  { "russia", i18n("Russia"), russia, sizeof (russia) / sizeof (struct KPlayerChannelGroup) }
 };
+
+extern const uint channellistcount = sizeof (channellists) / sizeof (struct KPlayerChannelList);
 
 KPlayerTVProperties::KPlayerTVProperties (KPlayerProperties* parent, const KURL& url)
   : KPlayerTunerProperties (parent, url)
@@ -2955,7 +2958,7 @@ QStringList KPlayerTVProperties::channels (void)
   QString id;
   QStringList channels;
   const QString& channellist (channelList());
-  for ( uint i = 0; i < sizeof (channellists) / sizeof (struct KPlayerChannelList); i ++ )
+  for ( uint i = 0; i < channellistcount; i ++ )
   {
     const struct KPlayerChannelList& list = channellists[i];
     if ( list.id == channellist )
@@ -3019,7 +3022,7 @@ void KPlayerDVBProperties::setupMeta (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
       kdDebugTime() << " Looking for channels file in " << paths[i] << "\n";
 #endif
-      for ( uint j = 0; i < sizeof (globs) / sizeof (const char*); j ++ )
+      for ( uint j = 0; j < sizeof (globs) / sizeof (const char*); j ++ )
       {
 #ifdef DEBUG_KPLAYER_PROPERTIES
         kdDebugTime() << " Checking " << globs[j] << "\n";

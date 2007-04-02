@@ -75,6 +75,8 @@ public:
 protected:
   /** Enables or disables the OK button. */
   virtual void pathChanged (const QString&);
+  /** Shows or hides channel list and file options. */
+  virtual void typeChanged (int);
 
   /** Devices node. */
   KPlayerContainerNode* m_node;
