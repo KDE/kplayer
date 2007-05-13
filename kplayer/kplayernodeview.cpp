@@ -85,8 +85,13 @@ KPlayerPropertiesDevice::KPlayerPropertiesDevice (QWidget* parent, const char* n
   m_node = KPlayerNode::root() -> getNodeByUrl ("kplayer:/devices");
   m_node -> reference();
   m_node -> populateGroups();
+  QString list (KPlayerTVProperties::channelListFromCountry());
   for ( uint i = 0; i < channellistcount; i ++ )
-    c_channel_list -> insertItem (channellists[i].name);
+  {
+    c_channel_list -> insertItem (i18n(channellists[i].name));
+    if ( channellists[i].id == list )
+      c_channel_list -> setCurrentItem (i);
+  }
   pathChanged (c_path -> text());
   typeChanged (c_type -> currentItem());
   c_driver -> setCurrentItem (2);
@@ -385,7 +390,7 @@ void KPlayerListViewFolderItem::vacateNode (void)
 
 void KPlayerListViewFolderItem::updateColumns (void)
 {
-  listView() -> loadColumnWidths();
+  listView() -> updateAttributes (KPlayerPropertyCounts(), KPlayerPropertyCounts());
 }
 
 void KPlayerListViewFolderItem::resetCustomOrder (void)
@@ -449,6 +454,7 @@ void KPlayerListViewFolderItem::added (const KPlayerNodeList& nodes, KPlayerNode
 #endif
   if ( isOpen() )
   {
+    int count = childCount();
     KPlayerListViewItem* item = after == node() ? 0 : itemForNode (after);
     KPlayerNodeListIterator iterator (nodes);
     while ( KPlayerNode* node = iterator.current() )
@@ -464,6 +470,8 @@ void KPlayerListViewFolderItem::added (const KPlayerNodeList& nodes, KPlayerNode
       ++ iterator;
     }
     setExpandable (childCount() > 0);
+    if ( childCount() - count == 1 && nodeForItem (item) -> isContainer() )
+      listView() -> setOpen (item, true);
   }
   else
   {
@@ -819,7 +827,7 @@ void KPlayerNodeView::added (KPlayerContainerNode* parent, const KPlayerNodeList
 #endif
   if ( ! parent || parent == rootNode() )
   {
-    bool was_empty = childCount() == 0;
+    int count = childCount();
     KPlayerListViewItem* item = after == parent ? 0 : itemForNode (after);
     KPlayerNodeListIterator iterator (nodes);
     while ( KPlayerNode* node = iterator.current() )
@@ -836,7 +844,7 @@ void KPlayerNodeView::added (KPlayerContainerNode* parent, const KPlayerNodeList
       ++ iterator;
     }
     sort();
-    if ( was_empty && childCount() == 1 && nodeForItem (item) -> isContainer() )
+    if ( childCount() - count == 1 && nodeForItem (item) -> isContainer() )
       setOpen (item, true);
   }
   else if ( rootIsDecorated() )
@@ -955,6 +963,7 @@ void KPlayerNodeView::startEditing (QListViewItem* item, int column)
   m_editing_column = column;
   rename (item, column);
   connect (this, SIGNAL(contentsMoving(int, int)), SLOT(moveLineEdit(int, int)));
+  connect (header(), SIGNAL (sizeChange (int, int, int)), SLOT (moveLineEdit (int, int, int)));
 }
 
 void KPlayerNodeView::stopEditing (bool save, int state)
@@ -962,6 +971,7 @@ void KPlayerNodeView::stopEditing (bool save, int state)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerNodeView::stopEditing " << save << " " << state << "\n";
 #endif
+  disconnect (header(), SIGNAL (sizeChange (int, int, int)), this, SLOT (moveLineEdit (int, int, int)));
   disconnect (this, SIGNAL(contentsMoving(int, int)), this, SLOT(moveLineEdit(int, int)));
   if ( renameLineEdit() -> isHidden() )
     return;
@@ -973,6 +983,15 @@ void KPlayerNodeView::stopEditing (bool save, int state)
   m_editing_item = 0;
   m_editing_column = 0;
   treeView() -> resetActiveNode();
+}
+
+void KPlayerNodeView::moveLineEdit (int section, int from, int to)
+{
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "KPlayerNodeView::moveLineEdit\n";
+  kdDebugTime() << " Change " << section << ": " << from << " -> " << to << "\n";
+#endif
+  moveLineEdit();
 }
 
 void KPlayerNodeView::moveLineEdit (int x, int y)
@@ -1002,11 +1021,23 @@ void KPlayerNodeView::moveLineEdit (void)
       x += (m_editing_item -> depth() + (rootIsDecorated() ? 1 : 0)) * treeStepSize();
     if ( m_editing_item -> pixmap (m_editing_column) )
       x += m_editing_item -> pixmap (m_editing_column) -> width();
-    renameLineEdit() -> move (x, rect.y() - 1);
+    renameLineEdit() -> setGeometry (x, rect.y() - 1, columnWidth (header() -> mapToSection (index)),
+      renameLineEdit() -> height());
 #ifdef DEBUG_KPLAYER_NODEVIEW
     kdDebugTime() << " Moved  " << renameLineEdit() -> x() << "x" << renameLineEdit() -> y() << "\n";
 #endif
   }
+}
+
+void KPlayerNodeView::setColumnWidth (int column, int width)
+{
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "KPlayerNodeView::setColumnWidth\n";
+  kdDebugTime() << " Column " << column << "\n";
+  kdDebugTime() << " Width  " << width << "\n";
+#endif
+  KListView::setColumnWidth (column, width);
+  moveLineEdit();
 }
 
 bool KPlayerNodeView::eventFilter (QObject* object, QEvent* event)
@@ -1062,6 +1093,9 @@ bool KPlayerNodeView::eventFilter (QObject* object, QEvent* event)
       if ( key == Qt::Key_Return || key == Qt::Key_Enter || key == Qt::Key_Escape
         || key == Qt::Key_Tab || key == Qt::Key_Backtab || key == Qt::Key_Up || key == Qt::Key_Down )
       {
+#ifdef DEBUG_KPLAYER_NODEVIEW
+        kdDebugTime() << " override\n";
+#endif
         keyevent -> accept();
         return true;
       }
@@ -1459,6 +1493,52 @@ void KPlayerNodeView::contentsDropEvent (QDropEvent* event)
   m_mouse_pressed = false;
 }
 
+bool KPlayerNodeView::event (QEvent* e)
+{
+  if ( e -> type() == QEvent::AccelOverride )
+  {
+    QKeyEvent* keyevent = (QKeyEvent*) e;
+    int key = keyevent -> key();
+    int state = keyevent -> state();
+#ifdef DEBUG_KPLAYER_NODEVIEW
+    kdDebugTime() << "KPlayerNodeView::event AccelOverride " << key << " " << state << "\n";
+#endif
+    if ( state == 0 && (key == Qt::Key_Return || key == Qt::Key_Enter || key == Qt::Key_Space
+      || key == Qt::Key_Left || key == Qt::Key_Right)
+      || (state & Qt::ControlButton) == Qt::ControlButton
+      && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_A) )
+    {
+#ifdef DEBUG_KPLAYER_NODEVIEW
+      kdDebugTime() << " override\n";
+#endif
+      keyevent -> accept();
+      return true;
+    }
+  }
+  return KListView::event (e);
+}
+
+void KPlayerNodeView::keyPressEvent (QKeyEvent* keyevent)
+{
+  int key = keyevent -> key();
+  int state = keyevent -> state();
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "KPlayerNodeView::keyPressEvent " << key << " " << state << "\n";
+#endif
+  if ( currentItem() && state == 0 && (key == Qt::Key_Return || key == Qt::Key_Enter) )
+  {
+    if ( ! activeNode() -> isContainer() )
+      play();
+    else if ( rootIsDecorated() )
+      setOpen (currentItem(), ! currentItem() -> isOpen());
+    else
+      treeView() -> setActiveNode (activeContainer());
+    keyevent -> accept();
+  }
+  else
+    KListView::keyPressEvent (keyevent);
+}
+
 void KPlayerNodeView::setNodeOrder (KPlayerContainerNode*)
 {
 }
@@ -1756,18 +1836,21 @@ void KPlayerNodeView::addToNewPlaylistUrls (const KURL::List& urls)
   kdDebugTime() << "KPlayerNodeView::addToNewPlaylist urls\n";
   kdDebugTime() << " URLs   " << urls.count() << "\n";
 #endif
+  KPlayerContainerNode* container = playlistActionList() -> node();
   if ( playlist() -> checkUrls (urls) )
   {
     KPlayerNodeList list (KPlayerNodeList::fromUrlList (urls));
     if ( ! list.isEmpty() )
     {
-      addToNewPlaylist (list);
+      container = addToNewPlaylist (list);
       list.releaseAll();
     }
   }
+  if ( container )
+    library() -> open (container);
 }
 
-void KPlayerNodeView::addToNewPlaylist (const KPlayerNodeList& list)
+KPlayerContainerNode* KPlayerNodeView::addToNewPlaylist (const KPlayerNodeList& list)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerNodeView::addToNewPlaylist list\n";
@@ -1783,8 +1866,20 @@ void KPlayerNodeView::addToNewPlaylist (const KPlayerNodeList& list)
     container -> addBranch (name);
     container = container -> getNodeById (name);
     if ( container )
-      container -> append (list);
+    {
+      KPlayerContainerNode* node = list.count() == 1
+        && list.getFirst() -> isContainer() ? (KPlayerContainerNode*) list.getFirst() : 0;
+      if ( node )
+        node -> populate();
+      const KPlayerNodeList& nodes = node ? node -> nodes() : list;
+      if ( ! nodes.isEmpty() )
+        container -> append (nodes);
+      if ( node )
+        node -> vacate();
+    }
+    return container;
   }
+  return 0;
 }
 
 void KPlayerNodeView::addToPlaylistsUrls (const KURL::List& urls)
@@ -1802,6 +1897,7 @@ void KPlayerNodeView::addToPlaylistsUrls (const KURL::List& urls)
       list.releaseAll();
     }
   }
+  library() -> open (playlistActionList() -> node());
 }
 
 void KPlayerNodeView::addToPlaylists (void)
@@ -1811,7 +1907,10 @@ void KPlayerNodeView::addToPlaylists (void)
 #endif
   KPlayerNodeList list (getSelectedNodes());
   if ( ! list.isEmpty() )
-    playlistActionList() -> node() -> append (list);
+    if ( list.count() == 1 && list.getFirst() == playlist() -> nowplaying() )
+      playlist() -> addToPlaylists();
+    else
+      playlistActionList() -> node() -> append (list);
 }
 
 void KPlayerNodeView::addToPlaylist (KPlayerNode* node)
@@ -1821,8 +1920,15 @@ void KPlayerNodeView::addToPlaylist (KPlayerNode* node)
   kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
   KPlayerNodeList list (getSelectedNodes());
-  if ( ! list.isEmpty() && node -> isContainer() )
-    ((KPlayerContainerNode*) node) -> append (list);
+  KPlayerContainerNode* container = list.count() == 1
+    && list.getFirst() -> isContainer() ? (KPlayerContainerNode*) list.getFirst() : 0;
+  if ( container )
+    container -> populate();
+  const KPlayerNodeList& nodes = container ? container -> nodes() : list;
+  if ( ! nodes.isEmpty() && node -> isContainer() )
+    ((KPlayerContainerNode*) node) -> append (nodes);
+  if ( container )
+    container -> vacate();
 }
 
 void KPlayerNodeView::addToCollectionUrls (const KURL::List& urls)
@@ -1831,15 +1937,17 @@ void KPlayerNodeView::addToCollectionUrls (const KURL::List& urls)
   kdDebugTime() << "KPlayerNodeView::addToCollection urls\n";
   kdDebugTime() << " URLs   " << urls.count() << "\n";
 #endif
+  KPlayerContainerNode* node = KPlayerNode::root() -> getNodeByUrl ("kplayer:/collection");
   if ( playlist() -> checkUrls (urls) )
   {
     KPlayerNodeList list (KPlayerNodeList::fromUrlList (urls));
     if ( ! list.isEmpty() )
     {
-      KPlayerNode::root() -> getNodeByUrl ("kplayer:/collection") -> add (list);
+      node -> add (list);
       list.releaseAll();
     }
   }
+  library() -> open (node);
 }
 
 void KPlayerNodeView::addToCollection (void)
@@ -1849,7 +1957,10 @@ void KPlayerNodeView::addToCollection (void)
 #endif
   KPlayerNodeList list (getSelectedNodes());
   if ( ! list.isEmpty() )
-    KPlayerNode::root() -> getNodeByUrl ("kplayer:/collection") -> add (list);
+    if ( list.count() == 1 && list.getFirst() == playlist() -> nowplaying() )
+      playlist() -> addToCollection();
+    else
+      KPlayerNode::root() -> getNodeByUrl ("kplayer:/collection") -> add (list);
 }
 
 void KPlayerNodeView::editName (void)
@@ -2077,7 +2188,6 @@ void KPlayerListView::initialize (void)
   connect (header(), SIGNAL (indexChange (int, int, int)), SLOT (headerIndexChange (int, int, int)));
   //connect (header(), SIGNAL (clicked (int)), SLOT (headerClicked (int)));
   //connect (header(), SIGNAL (sectionHandleDoubleClicked (int)), SLOT (headerAdjustColumn (int)));
-  //connect (header(), SIGNAL (sizeChange(int, int, int)), SLOT (headerSizeChange (int, int, int)));
   resize (2000, height());
   m_home_media = KPlayerNode::root() -> nodeById ("file:" + QDir::homeDirPath()) -> media();
 }
@@ -2153,6 +2263,14 @@ void KPlayerListView::disconnectNode (void)
     this, SLOT (updateAttributes (const KPlayerPropertyCounts&, const KPlayerPropertyCounts&)));
 }
 
+bool KPlayerListView::showingMedia (void) const
+{
+  for ( QListViewItem* item = firstChild(); item; item = item -> itemBelow() )
+    if ( nodeForItem (item) -> hasProperties() )
+      return true;
+  return false;
+}
+
 void KPlayerListView::updateActions (void)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
@@ -2214,7 +2332,7 @@ void KPlayerListView::updateActions (void)
   action ("library_move_up") -> setEnabled (enable);
   action ("library_move_down") -> setEnabled (enable);
   action ("library_remove") -> setEnabled (selection && rootNode() -> canRemove());
-  library() -> emitEnableActionGroup ("library_columns", ! columnActionList() -> isEmpty());
+  library() -> emitEnableActionGroup ("library_columns", ! columnActionList() -> isEmpty() && showingMedia());
   action ("library_go_down") -> setEnabled (container != rootNode());
   action ("library_go_to_origin") -> setEnabled (container -> origin() != 0);
   treeView() -> updateNavigationActions();
@@ -2282,7 +2400,7 @@ void KPlayerListView::editField (int index)
 #endif
   const QString& name (editableAttributes() [index]);
 #ifdef DEBUG_KPLAYER_NODEVIEW
-  kdDebugTime() << " Name " << name << "\n";
+  kdDebugTime() << " Name   " << name << "\n";
 #endif
   index = attributeNames().findIndex (name);
 #ifdef DEBUG_KPLAYER_NODEVIEW
@@ -2294,8 +2412,16 @@ void KPlayerListView::editField (int index)
 #ifdef DEBUG_KPLAYER_NODEVIEW
     kdDebugTime() << " Index  " << index << "\n";
 #endif
-    if ( index >= 0 )
-      toggleColumn (index);
+    if ( index < 0 )
+    {
+      insertAttribute (m_available_attributes, name);
+      m_attribute_states.insert (name, false);
+      index = availableAttributes().findIndex (name);
+#ifdef DEBUG_KPLAYER_NODEVIEW
+      kdDebugTime() << " Index  " << index << "\n";
+#endif
+    }
+    toggleColumn (index);
     index = attributeNames().findIndex (name);
 #ifdef DEBUG_KPLAYER_NODEVIEW
     kdDebugTime() << " Index  " << index << "\n";
@@ -2323,25 +2449,18 @@ void KPlayerListView::updateAttributes (const KPlayerPropertyCounts& added, cons
   kdDebugTime() << "KPlayerListView::updateAttributes\n";
 #endif
   saveColumnWidths();
-  if ( columns() )
-    loadColumnWidth (columns() - 1);
+  //if ( columns() )
+  //  loadColumnWidth (columns() - 1);
   m_attribute_counts.add (added);
   m_attribute_counts.subtract (removed);
   KPlayerPropertyCounts::ConstIterator it = attributeCounts().begin();
   while ( it != attributeCounts().end() )
   {
     const QString& name (it.key());
-    if ( ! attributeOrder().contains (name) )
+    if ( KPlayerMedia::info (name) -> canShow() && ! attributeOrder().contains (name) )
       m_attribute_order.insert (m_attribute_order.find (""), name);
     ++ it;
   }
-  bool edit = false;
-  for ( QListViewItem* item = firstChild(); item; item = item -> itemBelow() )
-    if ( ! nodeForItem (item) -> isContainer() )
-    {
-      edit = true;
-      break;
-    }
   QStringList::ConstIterator iterator (attributeOrder().begin());
   if ( columns() == 0 )
     setupColumn (*iterator);
@@ -2352,8 +2471,7 @@ void KPlayerListView::updateAttributes (const KPlayerPropertyCounts& added, cons
     if ( ! name.isEmpty() )
     {
       KPlayerPropertyInfo* info = KPlayerMedia::info (name);
-      bool editable = edit && info -> canEdit();
-      if ( ! editable && (! attributeCounts().contains (name) || rootNode() -> isDirectory() && name == "Path") )
+      if ( ! attributeCounts().contains (name) || rootNode() -> isDirectory() && name == "Path" )
       {
         m_available_attributes.remove (name);
         m_attribute_states.insert (name, false);
@@ -2364,7 +2482,7 @@ void KPlayerListView::updateAttributes (const KPlayerPropertyCounts& added, cons
           insertAttribute (m_available_attributes, name);
         m_attribute_states.insert (name, info -> show() && attributeCounts().contains (name) || showColumn (name));
       }
-      if ( ! editable )
+      if ( ! info -> canEdit() )
         m_editable_attributes.remove (name);
       else if ( ! editableAttributes().contains (name) )
         insertAttribute (m_editable_attributes, name);
@@ -2423,16 +2541,15 @@ void KPlayerListView::headerIndexChange (int section, int from, int to)
   ++ iterator;
   m_attribute_order.insert (iterator, name);
   insertAttribute (m_attribute_names, name);
+  KPlayerPropertyInfo* info = KPlayerMedia::info (name);
   insertAttribute (m_available_attributes, name);
-  if ( KPlayerMedia::info (name) -> canEdit() )
+  if ( info -> canEdit() )
     insertAttribute (m_editable_attributes, name);
   if ( from == columns() - 1 || to == columns() - 1 )
-  {
     loadColumnWidth (from == columns() - 1 ? to : columns() - 2);
-    //adjustLastColumn();
-  }
   columnActionList() -> update();
   editActionList() -> update();
+  moveLineEdit();
 }
 
 KPlayerNodeList KPlayerListView::getSelectedNodes (void) const
@@ -2855,8 +2972,34 @@ void KPlayerTreeView::setOpen (QListViewItem* item, bool open)
   kdDebugTime() << "KPlayerTreeView::setOpen " << open << "\n";
   kdDebugTime() << " URL    " << nodeForItem (item) -> url().url() << "\n";
 #endif
+  int width = contentsWidth();
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << " Content " << contentsX() << "x" << contentsY() << " "
+    << width << "x" << contentsHeight() << "\n";
+  kdDebugTime() << " Visible " << visibleWidth() << "x" << visibleHeight() << "\n";
+#endif
   KPlayerNodeView::setOpen (item, open);
   adjustColumn (0);
+  int newwidth = contentsWidth();
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << " Content " << contentsX() << "x" << contentsY() << " "
+    << newwidth << "x" << contentsHeight() << "\n";
+  kdDebugTime() << " Visible " << visibleWidth() << "x" << visibleHeight() << "\n";
+#endif
+  if ( newwidth > width )
+  {
+    int x = item -> depth() * treeStepSize();
+#ifdef DEBUG_KPLAYER_NODEVIEW
+    kdDebugTime() << " Depth  " << x << "\n";
+#endif
+    if ( x > contentsX() )
+    {
+      scrollBy (x - contentsX(), 0);
+#ifdef DEBUG_KPLAYER_NODEVIEW
+      kdDebugTime() << " Scrolled " << contentsX() << "x" << contentsY() << "\n";
+#endif
+    }
+  }
 }
 
 void KPlayerTreeView::remove (void)
@@ -3020,7 +3163,8 @@ void KPlayerTreeView::updateActions (void)
   action ("library_move_up") -> setEnabled (enable);
   action ("library_move_down") -> setEnabled (enable);
   action ("library_remove") -> setEnabled (selection && node -> parent() -> canRemove());
-  library() -> emitEnableActionGroup ("library_columns", ! columnActionList() -> isEmpty());
+  library() -> emitEnableActionGroup ("library_columns",
+    ! columnActionList() -> isEmpty() && listView() -> showingMedia());
   action ("library_go_down") -> setEnabled (false);
   action ("library_go_to_origin") -> setEnabled (selection && node -> origin() != 0);
   updateNavigationActions();
@@ -3057,7 +3201,7 @@ KPlayerNodeList KPlayerTreeView::getSelectedNodes (void) const
 
 bool KPlayerTreeView::event (QEvent* event)
 {
-  bool result = KListView::event (event);
+  bool result = KPlayerNodeView::event (event);
   if ( event -> type() == QEvent::ApplicationPaletteChange )
     setAlternateBackground (QColor());
   return result;

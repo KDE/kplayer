@@ -546,7 +546,6 @@ void KPlayerPlaylist::play (const KPlayerNodeList& list)
 void KPlayerPlaylist::playNext (const KPlayerNodeList& list)
 {
   if ( ! list.isEmpty() )
-  {
     if ( list.getFirst() -> topLevelNode() == nowplaying() )
       setNextNodes (list);
     else
@@ -555,7 +554,6 @@ void KPlayerPlaylist::playNext (const KPlayerNodeList& list)
       recent() -> addRecent (list);
       setNextNodes (nodes());
     }
-  }
 }
 
 void KPlayerPlaylist::queue (const KPlayerNodeList& list)
@@ -564,6 +562,7 @@ void KPlayerPlaylist::queue (const KPlayerNodeList& list)
   {
     nowplaying() -> append (list);
     recent() -> addRecent (list);
+    setCurrentNode (currentNode());
   }
 }
 
@@ -584,6 +583,8 @@ void KPlayerPlaylist::queueNext (const KPlayerNodeList& list)
         m_next.removeRef (node);
         ++ iterator;
       }
+      setCurrentNode (currentNode());
+      enableNextPrevious();
     }
 }
 
@@ -678,7 +679,7 @@ void KPlayerPlaylist::addFiles (void)
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "KPlayerPlaylist::addFiles\n";
 #endif
-  nowplaying() -> append (kPlayerEngine() -> openFiles (i18n("Add Files")));
+  nowplaying() -> append (kPlayerEngine() -> openFiles (i18n("Add files")));
 }
 
 void KPlayerPlaylist::addUrl (void)
@@ -840,6 +841,8 @@ void KPlayerPlaylist::setNextNodes (const KPlayerNodeList& nodes)
 {
   m_next.clear();
   addNextNodes (nodes);
+  setCurrentNode (currentNode());
+  enableNextPrevious();
 }
 
 void KPlayerPlaylist::addNextNodes (const KPlayerNodeList& nodes)

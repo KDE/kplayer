@@ -20,11 +20,11 @@
 #include <kdebug.h>
 kdbgstream kdDebugTime (void);
 #define DEBUG_KPLAYER_GRAB
-#define DEBUG_KPLAYER_PROPERTY
+//#define DEBUG_KPLAYER_PROPERTY
 //#define DEBUG_KPLAYER_X11
 //#define DEBUG_KPLAYER_FOCUS
 //#define DEBUG_KPLAYER_KEY
-#define DEBUG_KPLAYER_RESIZE
+//#define DEBUG_KPLAYER_RESIZE
 //#define DEBUG_KPLAYER_CLIENT
 #endif
 
@@ -164,7 +164,9 @@ int KPlayerX11EventFilter (XEvent* event)
       << " keycode " << ev -> keycode << " state " << ev -> state << " same " << ev -> same_screen << "\n";
 #endif
     KPlayerSetControlShiftState ((ev -> state & ControlMask) == ControlMask, (ev -> state & ShiftMask) == ShiftMask);
-    if ( (ev -> state & (ControlMask | ShiftMask)) == (ControlMask | ShiftMask) )
+    if ( (ev -> state & ShiftMask) == ShiftMask && (ev -> state & (ControlMask | Mod1Mask)) != 0
+        && ev -> keycode != 100 && ev -> keycode != 102
+        && ((ev -> state & Mod1Mask) != Mod1Mask || ev -> keycode != 98 && ev -> keycode != 104) )
       ev -> state &= ~ ShiftMask;
   }
 #ifdef DEBUG_KPLAYER_CLIENT

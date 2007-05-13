@@ -1,3 +1,22 @@
+kplayer (0.6.2-1) unstable; urgency=low
+
+  * User manual updated with all the new 0.6 features
+  * Improvements in multimedia library and playlists
+  * Many bug fixes and other improvements
+  * Updated translations
+
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Sun, 13 May 2007 13:25:00 -0500
+
+kplayer (0.6.1-1) unstable; urgency=low
+
+  * New option to control volume independently of other programs
+  * Mixer device and channel options for ALSA and OSS sound output
+  * Fix to keep the system audio volume when starting up
+  * Fix for various problems when coming back from full screen
+  * Updated Brazilian Portugese, Breton and Panjabi translations
+
+ -- kiriuja <http://kplayer.sourceforge.net/email.html>  Sun, 04 Mar 2007 16:05:00 -0500
+
 kplayer (0.6.0-1) unstable; urgency=low
 
   * Much improved support for disk and tuner devices

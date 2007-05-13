@@ -26,6 +26,7 @@ kdbgstream kdDebugTime (void);
 
 #include "kplayeractionlist.h"
 #include "kplayeractionlist.moc"
+#include "kplayerproperties.h"
 
 KPlayerActionList::KPlayerActionList (const QString& text, const QString& status,
     const QString& whatsthis, QObject* parent, const char* name)
@@ -182,7 +183,7 @@ void KPlayerActionList::unplug (void)
 
 void KPlayerActionList::updateAction (KAction* action)
 {
-  QString text (i18n(action -> text().utf8()));
+  QString text (action -> text());
   action -> setStatusText (m_status.arg (text));
   action -> setWhatsThis (m_whatsthis.arg (text));
   text = m_text.arg (text);
@@ -258,6 +259,20 @@ void KPlayerSimpleActionList::update (void)
   plug();
 }
 
+void KPlayerSimpleActionList::updateAction (KAction* action)
+{
+  QString text (action -> text());
+  KPlayerPropertyInfo* info = KPlayerMedia::info (text);
+  QString caption (info -> caption());
+  if ( caption.isEmpty() )
+    caption = i18n(text.utf8());
+  action -> setStatusText (m_status.arg (caption));
+  action -> setWhatsThis (m_whatsthis.arg (caption));
+  caption = m_text.arg (caption);
+  caption.replace ("&", "&&");
+  action -> setText (caption);
+}
+
 KPlayerToggleActionList::KPlayerToggleActionList (const QStringList& names, const QMap<QString, bool>& states,
   const QString& ontext, const QString& offtext, const QString& onstatus, const QString& offstatus,
   const QString& onwhatsthis, const QString& offwhatsthis, QObject* parent, const char* name)
@@ -278,13 +293,17 @@ KPlayerToggleActionList::~KPlayerToggleActionList()
 
 void KPlayerToggleActionList::updateAction (KAction* action)
 {
-  bool on = m_states [action -> text()];
-  QString text (i18n(action -> text().utf8()));
-  action -> setStatusText ((on ? m_on_status : m_status).arg (text));
-  action -> setWhatsThis ((on ? m_on_whatsthis : m_whatsthis).arg (text));
-  text = (on ? m_on_text : m_text).arg (text);
-  text.replace ("&", "&&");
-  action -> setText (text);
+  QString text (action -> text());
+  KPlayerPropertyInfo* info = KPlayerMedia::info (text);
+  QString caption (info -> caption());
+  if ( caption.isEmpty() )
+    caption = i18n(text.utf8());
+  bool on = m_states [text];
+  action -> setStatusText ((on ? m_on_status : m_status).arg (caption));
+  action -> setWhatsThis ((on ? m_on_whatsthis : m_whatsthis).arg (caption));
+  caption = (on ? m_on_text : m_text).arg (caption);
+  caption.replace ("&", "&&");
+  action -> setText (caption);
 }
 
 void KPlayerToggleActionList::actionActivated (KAction* action, int index)
@@ -434,6 +453,7 @@ void KPlayerSubtitleTrackActionList::update (bool show, const QMap<int, QString>
       {
         action = new KToggleAction (text, 0, this, SLOT (actionActivated()), this);
         updateAction (action);
+        action -> setText (text);
         action -> setExclusiveGroup (name());
         if ( external && *iterator == current )
           action -> setChecked (true);

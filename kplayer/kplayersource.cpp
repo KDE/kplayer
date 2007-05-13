@@ -674,6 +674,15 @@ void KPlayerDirectorySource::dirty (const QString&)
   }
 }
 
+bool KPlayerDirectorySource::verify (const QString& id)
+{
+#ifdef DEBUG_KPLAYER_SOURCE
+  kdDebugTime() << "KPlayerDirectorySource::verify '" << id << "'\n";
+#endif
+  QFileInfo info (m_directory, id);
+  return info.exists() && info.isDir();
+}
+
 void KPlayerDirectorySource::enumStart (bool groups)
 {
 #ifdef DEBUG_KPLAYER_SOURCE

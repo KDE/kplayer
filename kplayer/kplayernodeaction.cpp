@@ -514,7 +514,8 @@ void KPlayerDiskActionMenu::updateActions (void)
   if ( m_play_disk )
   {
     m_play_disk = false;
-    playDisk();
+    if ( device() -> dataDisk() || device() -> populated() && device() -> nodes().count() )
+      playDisk();
   }
   remove (m_load_action);
   remove (m_play_action);

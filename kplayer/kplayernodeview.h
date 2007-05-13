@@ -449,6 +449,9 @@ public:
   /** Checks whether the current item is being hidden and sets a new one. */
   virtual void setOpen (QListViewItem* item, bool open);
 
+  /** Sets column width and moves the edit box if any. */
+  virtual void setColumnWidth (int column, int width);
+
   /** Fills the given list with selected nodes. */
   virtual KPlayerNodeList getSelectedNodes (void) const = 0;
 
@@ -482,6 +485,8 @@ protected slots:
 
   /** Updates the edited field of the current item. */
   void edited (QListViewItem* item, const QString& value, int column);
+  /** Moves line edit according to the new column size. */
+  void moveLineEdit (int section, int from, int to);
   /** Arranges for the line edit to be moved according to the new content position. */
   void moveLineEdit (int x, int y);
   /** Moves line edit according to the current content position. */
@@ -572,6 +577,11 @@ protected:
   /** Handles the drag leave event. */
   virtual void contentsDragLeaveEvent (QDragLeaveEvent*);
 
+  /** Handles accel overrides. */
+  virtual bool event (QEvent*);
+  /** Handles the return key. */
+  virtual void keyPressEvent (QKeyEvent*);
+
   /** Updates actions and connections when the view gets the focus. */
   virtual void focusInEvent (QFocusEvent* event);
   /** Updates actions and connections when the view loses the focus. */
@@ -586,7 +596,7 @@ protected:
   virtual bool eventFilter (QObject* object, QEvent* event);
 
   /** Adds the given nodes to a new playlist. */
-  void addToNewPlaylist (const KPlayerNodeList& list);
+  KPlayerContainerNode* addToNewPlaylist (const KPlayerNodeList& list);
 
   /** Moves the selected children of the given node up in the playlist. */
   void moveUp (KPlayerContainerNode* parent, KPlayerListViewItem* item);
@@ -688,6 +698,9 @@ public:
   void loadHistoryEntry (const KPlayerHistoryEntry& entry);
   /** Saves expanded and selected items and scroll position to the given history entry. */
   void saveHistoryEntry (KPlayerHistoryEntry& entry) const;
+
+  /** Returns whether the list is showing any media items. */
+  bool showingMedia (void) const;
 
 public slots:
   /** Updates the attribute counts, add and removes columns as necessary, keeping column widths. */
@@ -937,7 +950,7 @@ signals:
   /** Emitted when an action group is enabled or disabled. */
   void enableActionGroup (const QString& name, bool enable);
 
-protected slots:
+public slots:
   /** Shows library and opens the given node. */
   void open (KPlayerNode*);
   /** Shows library and opens the Now Playing node in it. */

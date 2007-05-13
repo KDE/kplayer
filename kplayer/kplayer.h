@@ -128,6 +128,8 @@ public:
   /** Sets the minimum size of the main widget. */
   virtual void setMinimumSize (int, int);
 
+  /** Returns the full screen state. */
+  bool isFullScreen (void) const;
   /** Changes to full screen. */
   void toFullScreen (void);
   /** Changes to normal screen size. */

@@ -212,8 +212,9 @@ Full screen mode
 
 To return from the full screen mode to the normal mode just hit Ctrl+F or
 right click anywhere in the video area and choose Full Screen from the menu.
-You can also hit the Esc key, which will stop playback and end the full
-screen mode.
+Double clicking the video area also switches between full screen and normal
+mode. You can also hit the Esc key, which will stop playback and end the
+full screen mode.
 
 History
 -------
@@ -230,17 +231,7 @@ Online manuals and HOWTOs
 
 KPlayer user manual is available online at
 http://docs.kde.org/development/en/extragear-multimedia/kplayer/
-It has not been updated since version 0.5.2, but still is quite helpful.
+or http://kplayer.sourceforge.net/manual/
 
 In particular the manual has a few micro HOWTOs that will give you many
 useful tips on how to get the most out of KPlayer and your multimedia.
-
-Several translations of the manual and HOWTOs are also available online:
-
-Danish: http://docs.kde.org/development/da/extragear-multimedia/kplayer/
-Portugese: http://docs.kde.org/development/pt/extragear-multimedia/kplayer/
-Swedish: http://docs.kde.org/development/sv/extragear-multimedia/kplayer/
-
-A couple more translations should be available shortly:
-Italian: http://docs.kde.org/development/it/extragear-multimedia/kplayer/
-Spanish: http://docs.kde.org/development/es/extragear-multimedia/kplayer/

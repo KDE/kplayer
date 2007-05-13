@@ -1,7 +1,7 @@
 Source: kplayer
 Section: x11
 Priority: optional
-Maintainer: kiriuja <kplayer-debs@en-directo.net>
+Maintainer: kiriuja <http://kplayer.sourceforge.net/email.html>
 Build-Depends: debhelper (>> 3.0.0)
 Standards-Version: 3.5.8
 

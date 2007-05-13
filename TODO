@@ -1,11 +1,4 @@
-0.6.2
- Documentation
-  Update user manual
- Library
-  Show next item on queue next if no current item
-  Show the correct subtree in library on startup
-  Expand when adding one directory
-  Extend selection with Control-Shift when editing
+0.6.x
  Devices
   Radio
    Channels
@@ -13,24 +6,23 @@
   PVR
    Channels
    Properties
-  DVD
-   Allow playing from files and directories
-   Do not use name text
-   Syncronize disk name on playlist
-   Detect length of all titles
   TV
    Allow playing from webcam
-  Allow removing channels and tracks
+  Allow playing disks from files and directories
+  Allow removing and readding channels and tracks
  Process
   Kill runaway MPlayers
  Main window
   Smooth resizing while keeping aspect ratio
   Panscan
   Xinerama
+ Dialogs
+  History for text fields
+  Collapse duplicate actions
 
 Basic functionality
- + Open file
- + Open URL
+ + Play files
+ + Play URL
  + Start
  + Stop
  + Pause
@@ -210,7 +202,7 @@ Documentation
  + Readme
  + Install
  + HowTo
- + Handbook
+ + User manual
 
 Disk and tuner devices
  + Disks
@@ -256,5 +248,4 @@ KDE Integration
  + Playing from KIOSlaves
  + KFileMetaInfo
    Window manager size hints
-   Do not show windows in task bar
    Remember dialog size and position

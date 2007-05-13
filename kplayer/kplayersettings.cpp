@@ -255,6 +255,23 @@ void KPlayerSettings::setSaturation (int saturation)
     properties() -> adjustSaturation (saturation);
 }
 
+QString KPlayerSettings::currentSubtitles (void) const
+{
+  if ( properties() -> hasSubtitleUrl() )
+  {
+    QString subtitle (properties() -> subtitleUrlString());
+    if ( subtitles().find (subtitle) != subtitles().end() )
+      return subtitle;
+  }
+  return subtitles().first();
+}
+
+void KPlayerSettings::addSubtitlePath (const QString& path)
+{
+  if ( subtitles().find (path) == subtitles().end() )
+    m_subtitles.append (path);
+}
+
 void KPlayerSettings::setSubtitlePosition (int position)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS

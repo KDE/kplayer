@@ -47,6 +47,9 @@ KPlayerBrowserExtension::~KPlayerBrowserExtension()
 KPlayerPart::KPlayerPart (QWidget* wparent, const char* wname, QObject* parent, const char* name, const QStringList&)
   : KParts::ReadOnlyPart (parent, name ? name : "kplayerpart")
 {
+#ifdef DEBUG_KPLAYER_KPART
+  kdDebugTime() << "Creating KPlayerPart\n";
+#endif
 /*m_toolbar_visible [0] = true;
   m_toolbar_visible [1] = false;
   m_toolbar_names << "progressToolBar" << "volumeToolBar";
@@ -101,10 +104,16 @@ KPlayerPart::KPlayerPart (QWidget* wparent, const char* wname, QObject* parent, 
 
 KPlayerPart::~KPlayerPart()
 {
+#ifdef DEBUG_KPLAYER_KPART
+  kdDebugTime() << "Destroying KPlayerPart\n";
+#endif
 //closeURL();
 //if ( m_popup_menu )
 //  delete m_popup_menu;
   KPlayerEngine::terminate();
+#ifdef DEBUG_KPLAYER_KPART
+  kdDebugTime() << "KPlayerPart terminated.\n";
+#endif
 }
 
 KAboutData* KPlayerPart::createAboutData (void)

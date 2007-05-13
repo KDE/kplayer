@@ -2,7 +2,7 @@ Package: kplayer
 Version: 0.5.2-1
 Priority: optional
 Section: x11
-Maintainer: kiriuja <kplayer-debs@en-directo.net>
+Maintainer: kiriuja <http://kplayer.sourceforge.net/email.html>
 Depends: kdelibs4 (>= 4:3.2.3), libart-2.0-2 (>= 2.3.16), libc6 (>= 2.3.2.ds1-4), libfam0c102, libgcc1 (>= 1:3.3.4-1), libice6 | xlibs (>> 4.1.0), libpng12-0 (>= 1.2.5.0-4), libqt3c102-mt (>= 3:3.2.3-3), libsm6 | xlibs (>> 4.1.0), libstdc++5 (>= 1:3.3.4-1), libx11-6 | xlibs (>> 4.1.0), libxext6 | xlibs (>> 4.1.0), libxrender1, zlib1g (>= 1:1.2.1), mplayer | mplayer-k7 | mplayer-k6 | mplayer-686 | mplayer-586 | mplayer-386
 Replaces: kdelibs-data, kmplayer, kaffeine
 Architecture: i386

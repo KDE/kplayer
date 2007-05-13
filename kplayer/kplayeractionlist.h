@@ -95,6 +95,9 @@ public:
   void update (void);
 
 protected:
+  /** Updates the action text, status, and whats this. */
+  virtual void updateAction (KAction* action);
+
   /** Action names. */
   const QStringList& m_names;
 };

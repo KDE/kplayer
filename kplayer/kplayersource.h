@@ -58,7 +58,7 @@ public:
   /** Retrieves the id of the next node. */
   bool next (bool& group, QString& id);
   /** Verifies the given id. */
-  bool verify (const QString& id);
+  virtual bool verify (const QString& id);
 
   /** Saves the node data into the source. */
   virtual void save (void);
@@ -332,6 +332,9 @@ public:
   virtual bool canAddBranches (void) const;
   /** Indicates whether nodes can be removed. */
   virtual bool canRemove (void) const;
+
+  /** Verifies the given id. */
+  virtual bool verify (const QString& id);
 
 protected slots:
   /** Receives dirty signal from directory watch. */

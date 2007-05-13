@@ -235,7 +235,7 @@
                         </size>
                     </property>
                     <property name="text">
-                        <string>a&amp;qt</string>
+                        <cstring>a&amp;qt</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load AQT subtitles</string>
@@ -255,7 +255,7 @@
                         </size>
                     </property>
                     <property name="text">
-                        <string>&amp;ass</string>
+                        <cstring>&amp;ass</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load ASS subtitles</string>
@@ -275,7 +275,7 @@
                         </size>
                     </property>
                     <property name="text">
-                        <string>&amp;js</string>
+                        <cstring>&amp;js</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load JS subtitles</string>
@@ -295,7 +295,7 @@
                         </size>
                     </property>
                     <property name="text">
-                        <string>&amp;jss</string>
+                        <cstring>&amp;jss</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load JSS subtitles</string>
@@ -309,7 +309,7 @@
                         <cstring>c_subtitles_rt</cstring>
                     </property>
                     <property name="text">
-                        <string>r&amp;t</string>
+                        <cstring>r&amp;t</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load RT subtitles</string>
@@ -329,7 +329,7 @@
                         </size>
                     </property>
                     <property name="text">
-                        <string>s&amp;mi</string>
+                        <cstring>s&amp;mi</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load SMI subtitles</string>
@@ -349,7 +349,7 @@
                         </size>
                     </property>
                     <property name="text">
-                        <string>s&amp;rt</string>
+                        <cstring>s&amp;rt</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load SRT subtitles</string>
@@ -363,7 +363,7 @@
                         <cstring>c_subtitles_ssa</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;ssa</string>
+                        <cstring>&amp;ssa</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load SSA subtitles</string>
@@ -383,7 +383,7 @@
                         </size>
                     </property>
                     <property name="text">
-                        <string>su&amp;b</string>
+                        <cstring>su&amp;b</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load SUB subtitles</string>
@@ -403,7 +403,7 @@
                         </size>
                     </property>
                     <property name="text">
-                        <string>t&amp;xt</string>
+                        <cstring>t&amp;xt</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load TXT subtitles</string>
@@ -417,7 +417,7 @@
                         <cstring>c_subtitles_utf</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;utf</string>
+                        <cstring>&amp;utf</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load UTF subtitles</string>
@@ -431,7 +431,7 @@
                         <cstring>c_subtitles_vobsub</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;vobsub</string>
+                        <cstring>&amp;vobsub</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Automatically load VobSub subtitles</string>

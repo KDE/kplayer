@@ -570,7 +570,7 @@ void KPlayerPropertiesTVDeviceGeneral::setupControls (void)
   hidePlaylist();
   hideDVB();
   for ( uint i = 0; i < channellistcount; i ++ )
-    c_channels -> insertItem (channellists[i].name);
+    c_channels -> insertItem (i18n(channellists[i].name));
 }
 
 void KPlayerPropertiesTVDeviceGeneral::load (void)
@@ -1270,7 +1270,7 @@ void KPlayerPropertiesTVDeviceAudio::load (void)
 {
   c_mode -> setCurrentItem (properties() -> audioModeOption());
   c_immediate -> setChecked (properties() -> immediateMode());
-  c_capture -> setCurrentItem (properties() -> alsaCapture() ? 1 : 0);
+  c_capture -> setCurrentItem (properties() -> alsaCapture() ? 0 : 1);
   c_device -> setText (properties() -> captureDevice());
   KPlayerPropertiesDVBDeviceAudio::load();
 }
@@ -1279,7 +1279,7 @@ void KPlayerPropertiesTVDeviceAudio::save (void)
 {
   properties() -> setAudioModeOption (c_mode -> currentItem());
   properties() -> setImmediateMode (c_immediate -> isChecked());
-  properties() -> setAlsaCapture (c_capture -> currentItem() == 1);
+  properties() -> setAlsaCapture (c_capture -> currentItem() == 0);
   properties() -> setCaptureDevice (c_device -> text());
   KPlayerPropertiesDVBDeviceAudio::save();
 }

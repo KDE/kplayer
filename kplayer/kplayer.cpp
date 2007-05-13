@@ -34,7 +34,7 @@
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_WINDOW
-#define DEBUG_KPLAYER_RESIZING
+//#define DEBUG_KPLAYER_RESIZING
 //#define DEBUG_KPLAYER_SIZING_HACKS
 //#define DEBUG_KPLAYER_NOTIFY_KEY
 //#define DEBUG_KPLAYER_NOTIFY_MOUSE
@@ -97,12 +97,26 @@ int KPlayerApplication::newInstance (void)
 
 bool KPlayerApplication::notify (QObject* object, QEvent* event)
 {
+  static bool overridden = false;
   if ( kPlayerEngine() && kPlayerSettings() && event )
   {
     switch ( event -> type() )
     {
-#ifdef DEBUG_KPLAYER_NOTIFY_KEY
     case QEvent::AccelOverride:
+      {
+        QKeyEvent* kevent = (QKeyEvent*) event;
+#ifdef DEBUG_KPLAYER_NOTIFY_KEY
+        kdDebugTime() << "KPlayerApplication::notify: event type AccelOverride"
+          << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
+          << " key " << kevent -> key() << " ascii " << kevent -> ascii() << " text " << kevent -> text()
+          << " count " << kevent -> count() << " state " << kevent -> state() << " after " << kevent -> stateAfter()
+          << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
+#endif
+        bool result = KUniqueApplication::notify (object, event);
+        overridden = kevent -> isAccepted();
+        return result;
+      }
+#ifdef DEBUG_KPLAYER_NOTIFY_KEY
     case QEvent::KeyPress:
     case QEvent::KeyRelease:
       {
@@ -114,7 +128,8 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
         }*/
         kdDebugTime() << "KPlayerApplication::notify: event type " << event -> type()
           << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
-          << " state " << kevent -> state() << " after " << kevent -> stateAfter()
+          << " key " << kevent -> key() << " ascii " << kevent -> ascii() << " text " << kevent -> text()
+          << " count " << kevent -> count() << " state " << kevent -> state() << " after " << kevent -> stateAfter()
           << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
       }
       break;
@@ -125,14 +140,15 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
         //kPlayerSettings() -> setControl (kevent -> stateAfter() & Qt::ControlButton);
         //kPlayerSettings() -> setShift (kevent -> stateAfter() & Qt::ShiftButton);
 #ifdef DEBUG_KPLAYER_NOTIFY_KEY
-        kdDebugTime() << "KPlayerApplication::notify: keyboard event type " << event -> type()
+        kdDebugTime() << "KPlayerApplication::notify: event type Accel"
           << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
           << " key " << kevent -> key() << " ascii " << kevent -> ascii() << " text " << kevent -> text()
           << " count " << kevent -> count() << " state " << kevent -> state() << " after " << kevent -> stateAfter()
-          << " accepted " << kevent -> isAccepted() << " autorepeat " << kevent -> isAutoRepeat()
+          << " accepted " << kevent -> isAccepted() << " overridden " << overridden << " autorepeat " << kevent -> isAutoRepeat()
           << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
 #endif
-        if ( (kevent -> state() & (Qt::ShiftButton | Qt::ControlButton)) == (Qt::ShiftButton | Qt::ControlButton)
+        if ( ! overridden &&
+          (kevent -> state() & (Qt::ShiftButton | Qt::ControlButton)) == (Qt::ShiftButton | Qt::ControlButton)
           && (kevent -> key() >= Qt::Key_Exclam && kevent -> key() <= Qt::Key_Ampersand
           || kevent -> key() >= Qt::Key_ParenLeft && kevent -> key() <= Qt::Key_Plus
           || kevent -> key() == Qt::Key_Colon || kevent -> key() == Qt::Key_Less
@@ -690,6 +706,7 @@ void KPlayer::refreshSettings (void)
 //activateLayout();
   if ( ! settings() -> properties() -> url().isEmpty() )
     setCaption (settings() -> properties() -> caption());
+  enableVideoActions();
 }
 
 void KPlayer::saveOptions (void)
@@ -1042,6 +1059,11 @@ void KPlayer::dropEvent (QDropEvent* event)
   playlist() -> playUrls (urls);
 }
 
+bool KPlayer::isFullScreen (void) const
+{
+  return (KWin::windowInfo (winId(), NET::WMState).state() & NET::FullScreen) == NET::FullScreen;
+}
+
 bool KPlayer::isMaximized (void) const
 {
   return (KWin::windowInfo (winId(), NET::WMState).state() & NET::Max) == NET::Max;
@@ -1171,6 +1193,7 @@ void KPlayer::playlistActivated (void)
   if ( m_progress_label )
     m_progress_label -> setText ("");
   connect (settings() -> properties(), SIGNAL (updated()), this, SLOT (refreshProperties()));
+  enableVideoActions();
 }
 
 void KPlayer::playlistStopped (void)
@@ -1190,6 +1213,7 @@ void KPlayer::statusPressed (void)
 void KPlayer::refreshProperties (void)
 {
   setCaption (settings() -> properties() -> caption());
+  enableVideoActions();
 }
 
 void KPlayer::closeEvent (QCloseEvent* event)
@@ -1668,7 +1692,7 @@ void KPlayer::moveEvent (QMoveEvent* event)
   bool maximized = isMaximized();
 #endif
   KMainWindow::moveEvent (event);
-  if ( ! m_full_screen && ! settings() -> maximized() && ! isMaximized() && m_initial_show )
+  if ( ! m_full_screen && ! m_set_display_size && ! settings() -> maximized() && ! isMaximized() && m_initial_show )
     m_normal_geometry.setRect (x(), y(), width(), height());
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "WiMove " << event -> oldPos().x() << "x" << event -> oldPos().y()
@@ -1685,7 +1709,7 @@ void KPlayer::resizeEvent (QResizeEvent* event)
   bool maximized = isMaximized();
 #endif
   KMainWindow::resizeEvent (event);
-  if ( ! m_full_screen && ! settings() -> maximized() && ! isMaximized() && m_initial_show )
+  if ( ! m_full_screen && ! m_set_display_size && ! settings() -> maximized() && ! isMaximized() && m_initial_show )
     m_normal_geometry.setSize (QSize (width(), height()));
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "WiSize " << event -> oldSize(). width() << "x" << event -> oldSize(). height()
@@ -1696,8 +1720,10 @@ void KPlayer::resizeEvent (QResizeEvent* event)
 #endif
   if ( m_set_display_size )
   {
-    m_set_display_size = false;
-    QTimer::singleShot (0, this, SLOT (setDisplaySize()));
+    if ( kPlayerWorkspace() -> isResizing() )
+      m_set_display_size = false;
+    else
+      QTimer::singleShot (0, this, SLOT (setDisplaySize()));
   }
 }
 
@@ -1706,6 +1732,14 @@ void KPlayer::setDisplaySize (void)
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "KPlayer::setDisplaySize\n";
 #endif
+#ifdef DEBUG_KPLAYER_SIZING_HACKS
+  if ( ! m_full_screen && ! isMaximized() )
+  {
+    move (m_normal_geometry.x(), m_normal_geometry.y());
+    resize (m_normal_geometry.width(), m_normal_geometry.height());
+  }
+#endif
+  m_set_display_size = false;
   engine() -> setDisplaySize();
 }
 
@@ -1760,11 +1794,10 @@ void KPlayer::toFullScreen (void)
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "KPlayer::toFullScreen\n";
 #endif
-  m_full_screen = true;
   bool active = isActiveWindow();
   if ( isMaximized() )
     m_maximized = true;
-  else // if ( ! isMaximized() )
+  else if ( ! m_full_screen && ! m_set_display_size )
     m_normal_geometry.setRect (x(), y(), width(), height());
   setAcceptDrops (false);
 #ifdef DEBUG_KPLAYER_RESIZING
@@ -1778,7 +1811,11 @@ void KPlayer::toFullScreen (void)
   for ( int i = 0; i < KPLAYER_TOOLBARS; i ++ )
     showToolbar (i);
   showLibrary();
-  showFullScreen();
+  if ( ! m_full_screen )
+  {
+    m_full_screen = true;
+    showFullScreen();
+  }
 //syncronizeEvents();
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "Full screen: " << geometry().x() << "x" << geometry().y() << " " << width() << "x" << height() << "\n";
@@ -1836,7 +1873,11 @@ void KPlayer::toNormalScreen (void)
   kdDebugTime() << "Full screen: " << geometry().x() << "x" << geometry().y() << " " << width() << "x" << height() << "\n";
   kdDebugTime() << "                          " << frameGeometry().x() << "x" << frameGeometry().y() << " " << frameGeometry().width() << "x" << frameGeometry().height() << "\n";
 #endif
-  showNormal();
+  if ( m_full_screen )
+  {
+    m_full_screen = false;
+    showNormal();
+  }
 #ifdef DEBUG_KPLAYER_SIZING_HACKS
   /*if ( ! m_maximized )
   {
@@ -1857,7 +1898,6 @@ void KPlayer::toNormalScreen (void)
     KWin::forceActiveWindow (winId());
   }
   setAcceptDrops (true);
-  m_full_screen = false;
   enablePlayerActions();
 }
 
@@ -1949,7 +1989,19 @@ void KPlayer::windowStateChanged (uint wid)
   kdDebugTime() << "KPlayer::windowStateChanged (" << wid << ")\n";
 #endif
   if ( wid == winId() )
+  {
     m_set_display_size = true;
+    m_full_screen = isFullScreen();
+#ifdef DEBUG_KPLAYER_WINDOW
+    kdDebugTime() << " Full screen " << m_full_screen << "\n";
+#endif
+    bool full_screen = settings() -> fullScreen();
+    settings() -> setFullScreen (m_full_screen);
+    if ( ! full_screen && m_full_screen )
+      toFullScreen();
+    else if ( full_screen && ! m_full_screen )
+      toNormalScreen();
+  }
 }
 
 void KPlayer::syncronize (bool user_resize)

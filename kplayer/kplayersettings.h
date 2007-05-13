@@ -152,8 +152,7 @@ public:
 
   const QStringList& subtitles (void) const
     { return m_subtitles; }
-  void addSubtitlePath (const QString& path)
-    { m_subtitles.append (path); }
+  void addSubtitlePath (const QString& path);
   void clearSubtitles (void)
     { m_subtitles.clear(); }
 
@@ -163,8 +162,7 @@ public:
     { return properties() -> showInternalSubtitles() || showExternalSubtitles(); }
   bool showExternalSubtitles (void) const
     { return properties() -> showExternalSubtitles() && ! m_subtitles.isEmpty(); }
-  QString currentSubtitles (void) const
-    { return properties() -> hasNormalSubtitles() ? properties() -> subtitleUrlString() : subtitles().first(); }
+  QString currentSubtitles (void) const;
 
   int subtitlePosition (void) const
     { return properties ("Subtitle Position") -> subtitlePosition(); }

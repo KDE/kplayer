@@ -1,18 +1,24 @@
 Known problems
 --------------
 
-When you maximize KPlayer window, then go to full screen mode, then back
-to maximized state, and then restore the window to normal state, the final
-size may not be the same as the original size. Also sometimes the window
-will be larger than its original size after coming back from full screen
-mode. This is believed to be a KWin problem. KPlayer 0.6.1 includes a
-change that should correct this problem for the most part.
+Problems when coming back from full screen mode have been fixed.
 
 Seeking still does not work well on some media types. In those cases you
 can try using the Forward/Backward commands instead of clicking on the
 progress slider or dragging the slider thumb. Also the detected length may
 not be correct in some cases, especially on variable bitrate files. Some
 files are not seekable at all. This is an MPlayer problem.
+
+After playing from slow media like optical disks, some MPlayer processes
+may be left behind. Run killall mplayer to kill them.
+
+Resizing is not very smooth and causes flickering of the video area and
+other parts of the program. Aspect ratio is not maintained while resizing
+the window continuously.
+
+Some actions in the Configure Shortcuts and Configure Toolbars dialogs
+have the same name when in fact they are different actions. This is
+presently a kdelibs limitation.
 
 Reporting bugs
 --------------

@@ -850,7 +850,7 @@ void KPlayerEngine::refreshProperties (void)
   }
   enableVideoActions();
   if ( ! light() )
-    toggleAction ("view_full_screen") -> setChecked (properties() -> fullScreen()
+    toggleAction ("view_full_screen") -> setChecked (settings() -> fullScreen()
       && toggleAction ("view_full_screen") -> isEnabled());
   refreshAspect();
 }
@@ -978,7 +978,7 @@ void KPlayerEngine::playerSizeAvailable (void)
   }
   enableVideoActions();
   if ( ! light() )
-    toggleAction ("view_full_screen") -> setChecked (properties() -> fullScreen()
+    toggleAction ("view_full_screen") -> setChecked (settings() -> fullScreen()
       && toggleAction ("view_full_screen") -> isEnabled());
   refreshAspect();
 }
@@ -1172,6 +1172,12 @@ void KPlayerEngine::enableScreenSaver (void)
   m_enable_screen_saver = false;
 }
 
+bool isReadableFile (const QString& path)
+{
+  QFileInfo info (path);
+  return info.exists() && info.isReadable() && ! info.isDir();
+}
+
 void KPlayerEngine::load (KURL url)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
@@ -1199,7 +1205,7 @@ void KPlayerEngine::load (KURL url)
   connect (settings() -> properties(), SIGNAL (updated()), this, SLOT (refreshProperties()));
   playerProgressChanged (0, KPlayerProcess::Position);
   settings() -> clearSubtitles();
-  if ( properties() -> hasNormalSubtitles() )
+  if ( properties() -> hasSubtitleUrl() && isReadableFile (properties() -> subtitleUrlString()) )
     settings() -> addSubtitlePath (properties() -> subtitleUrlString());
   if ( properties() -> subtitleAutoload() )
     autoloadSubtitles();
@@ -1294,7 +1300,7 @@ void KPlayerEngine::autoloadSubtitles (void)
     {
       QString name (info -> fileName());
       if ( name != filename && info -> filePath() != urls && name.startsWith (basename, false)
-        && info -> exists() && info -> isReadable() )
+        && info -> exists() && info -> isReadable() && ! info -> isDir() )
       {
         QStringList::ConstIterator extiterator (exts.constBegin()), end (exts.constEnd());
         while ( extiterator != end )
@@ -1326,13 +1332,10 @@ void KPlayerEngine::loadSubtitle (KURL url)
   kdDebugTime() << "Subtitle '" << url.url() << "'\n";
   kdDebugTime() << "         '" << url.prettyURL (0, KURL::StripFileProtocol) << "'\n";
 #endif
-  properties() -> setSubtitleUrl (url);
-  QString subtitles (properties() -> subtitleUrlString());
-  if ( settings() -> subtitles().find (subtitles) == settings() -> subtitles().end() )
-    settings() -> addSubtitlePath (subtitles);
-  properties() -> setShowSubtitles (true);
-  properties() -> resetSubtitleID();
-  properties() -> resetVobsubID();
+  if ( ! isReadableFile (url.path()) )
+    return;
+  properties() -> showSubtitleUrl (url);
+  settings() -> addSubtitlePath (properties() -> subtitleUrlString());
   properties() -> commit();
   process() -> subtitles();
   enableSubtitleActions();
@@ -2148,7 +2151,7 @@ void KPlayerEngine::setDisplaySize (bool user_zoom, bool user_resize)
   kdDebugTime() << "Engine::setDisplaySize (" << user_zoom << ", " << user_resize << ")\n";
 #endif
   if ( ! light() )
-    toggleAction ("view_full_screen") -> setChecked (properties() -> fullScreen()
+    toggleAction ("view_full_screen") -> setChecked (settings() -> fullScreen()
       && toggleAction ("view_full_screen") -> isEnabled());
   m_zooming = true;
   emit syncronize (user_resize);

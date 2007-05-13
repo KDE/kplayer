@@ -2007,8 +2007,19 @@ void KPlayerPlaylistNode::originUpdated (KPlayerContainerNode*, KPlayerNode* nod
 #endif
   if ( node == origin() )
   {
+#ifdef DEBUG_KPLAYER_NODE
+    kdDebugTime() << " Name   " << name() << "\n";
+#endif
     if ( name() != origin() -> name() )
-      media() -> setDefaultName (origin() -> name());
+    {
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << " Origin " << origin() -> name() << "\n";
+#endif
+      media() -> setName (origin() -> name());
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << " Name   " << name() << "\n";
+#endif
+    }
     media() -> commit();
   }
 }
@@ -2162,8 +2173,19 @@ void KPlayerNowPlayingNode::originUpdated (KPlayerContainerNode*, KPlayerNode* n
 #endif
   if ( node == origin() && node -> hasProperties() && ((KPlayerDeviceNode*) node) -> diskDevice() )
   {
+#ifdef DEBUG_KPLAYER_NODE
+    kdDebugTime() << " Name   " << name() << "\n";
+#endif
     if ( name() != origin() -> name() )
-      media() -> setDefaultName (origin() -> name());
+    {
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << " Origin " << origin() -> name() << "\n";
+#endif
+      media() -> setName (origin() -> name());
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << " Name   " << name() << "\n";
+#endif
+    }
     KPlayerDiskNode* disk = (KPlayerDiskNode*) node;
     if ( disk -> dataDisk() )
       if ( disk -> hasLocalPath() )
@@ -2656,7 +2678,7 @@ void KPlayerDevicesNode::refreshItem (KFileItem* item)
   {
     KPlayerDiskNode* disk = (KPlayerDiskNode*) node;
     disk -> diskInserted (itemLocalPath (*item));
-    if ( type == "DVD" )
+    /*if ( type == "DVD" )
     {
       QString name (item -> name());
 #ifdef DEBUG_KPLAYER_NODE
@@ -2690,7 +2712,7 @@ void KPlayerDevicesNode::refreshItem (KFileItem* item)
         disk -> disk() -> setName (name);
         disk -> disk() -> commit();
       }
-    }
+    }*/
   }
 }
 
@@ -2876,7 +2898,7 @@ bool KPlayerDiskNode::accessDisk (void)
 #ifdef DEBUG_KPLAYER_NODE
     kdDebugTime() << " Length " << length << "\n";
 #endif
-    if ( length == 65536 )
+    if ( length > 0 )
     {
       KMD5 digest (data, length);
       diskDetected (digest.hexDigest());
@@ -3120,7 +3142,11 @@ void KPlayerDiskNode::autodetect (void)
 #endif
   KPlayerLineOutputProcess* process = new KPlayerLineOutputProcess;
   *process << media() -> executablePath() << (m_url == "dvd://" ? "-dvd-device" : "-cdrom-device") << id()
-    << "-msglevel" << "identify=6" << "-ao" << "null" << "-vo" << "null" << "-frames" << "0" << m_url;
+    << "-msglevel" << "identify=6" << "-ao" << "null" << "-vo" << "null" << "-frames" << "0";
+  if ( m_url == "vcd://" )
+    *process << "vcd://1" << "vcd://2";
+  else
+    *process << m_url;
   connect (process, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
     SLOT (receivedOutput (KPlayerLineOutputProcess*, char*, int)));
   connect (process, SIGNAL (processExited (KProcess*)), SLOT (processExited (KProcess*)));

@@ -871,7 +871,7 @@ class KPlayerFloatPropertyInfo : public KPlayerPropertyInfo
 {
 public:
   /** Constructor. Sets up the property information. */
-  KPlayerFloatPropertyInfo (void) { }
+  KPlayerFloatPropertyInfo (void);
   /** Destructor. */
   virtual ~KPlayerFloatPropertyInfo();
 
@@ -1132,7 +1132,8 @@ public:
   KPlayerPropertyCounts (void) { }
 
   /** Returns the count for the given key. */
-  int count (const QString& key);
+  int count (const QString& key) const;
+  /** Returns the number of properties. */
 
   /** Adds the given counts. */
   void add (const KPlayerPropertyCounts& counts);
@@ -1183,6 +1184,9 @@ public:
   /** Returns integer property information for the given key. */
   static KPlayerIntegerPropertyInfo* integerInfo (const QString& key)
     { return (KPlayerIntegerPropertyInfo*) info (key); }
+  /** Returns float property information for the given key. */
+  static KPlayerFloatPropertyInfo* floatInfo (const QString& key)
+    { return (KPlayerFloatPropertyInfo*) info (key); }
   /** Returns string property information for the given key. */
   static KPlayerStringPropertyInfo* stringInfo (const QString& key)
     { return (KPlayerStringPropertyInfo*) info (key); }
@@ -1356,7 +1360,7 @@ public:
   int subtitlePosition (void) const
     { return getInteger ("Subtitle Position"); }
   void setSubtitlePosition (int value)
-    { return setInteger ("Subtitle Position", value); }
+    { return setInteger ("Subtitle Position", limit (value, 0, 100)); }
 
   float subtitleDelay (void) const
     { return getFloat ("Subtitle Delay"); }
@@ -2425,7 +2429,7 @@ public:
   // Subtitle properties
 
   void setSubtitlePositionValue (int value)
-    { return set ("Subtitle Position", value); }
+    { return set ("Subtitle Position", limit (value, 0, 100)); }
   QString subtitlePositionString (void) const
     { return asString ("Subtitle Position"); }
   bool hasSubtitlePosition (void) const
@@ -2757,6 +2761,9 @@ public:
 
   void setMjpegQuality (int quality)
     { setInteger ("Compression", quality); }
+
+  /** Returns a channel list based on the KDE country setting. */
+  static QString channelListFromCountry (void);
 };
 
 /** The KPlayer DVB device properties.
@@ -2937,6 +2944,8 @@ public:
   void resetSubtitleUrl (void)
     { reset ("Subtitle URL"); }
 
+  void showSubtitleUrl (const KURL& url);
+
   bool showSubtitles (void) const
     { return getBoolean ("Subtitle Visibility"); }
   void setShowSubtitles (bool show)
@@ -2946,11 +2955,11 @@ public:
     { return hasSubtitleID() || hasVobsubID(); }
   bool showExternalSubtitles (void) const
     { return showSubtitles() && ! showInternalSubtitles(); }
-  bool hasNormalSubtitles (void) const
-    { return hasSubtitleUrl() && ! vobsubSubtitles(); }
+  //bool hasNormalSubtitles (void) const
+  //  { return hasSubtitleUrl() && ! vobsubSubtitles(); }
 
   bool vobsubSubtitles (void) const
-    { return getVobsubSubtitles ("Vobsub", url()); }
+    { return getVobsubSubtitles ("Vobsub", subtitleUrl()); }
   int vobsubSubtitlesOption (void) const
     { return getBooleanOption ("Vobsub"); }
   void setVobsubSubtitlesOption (int vobsub)

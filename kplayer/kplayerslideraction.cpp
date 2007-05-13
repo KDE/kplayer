@@ -63,8 +63,14 @@ KPlayerPopupSliderAction::KPlayerPopupSliderAction (const QString& text,
 
 KPlayerPopupSliderAction::~KPlayerPopupSliderAction()
 {
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "Destorying KPlayerPopupSliderAction\n";
+#endif
   delete m_frame;
   m_frame = 0;
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "KPlayerPopupSliderAction destroyed\n";
+#endif
 }
 
 void KPlayerPopupSliderAction::slotActivated (void)
@@ -133,7 +139,13 @@ KPlayerSliderAction::KPlayerSliderAction (const QString& text, const KShortcut& 
 
 KPlayerSliderAction::~KPlayerSliderAction()
 {
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "Destorying KPlayerSliderAction\n";
+#endif
   delete slider();
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "KPlayerSliderAction destroyed\n";
+#endif
 }
 
 int KPlayerSliderAction::plug (QWidget* widget, int index)
@@ -182,36 +194,53 @@ KPlayerSlider::~KPlayerSlider()
 
 QSize KPlayerSlider::sizeHint() const
 {
+#ifdef DEBUG_KPLAYER_SLIDER_HINTS
+  kdDebugTime() << "KPlayerSlider::sizeHint\n";
+#endif
   QSize hint = QSlider::sizeHint();
-  int length = KPlayerEngine::engine() -> configuration() -> preferredSliderLength();
-  if ( orientation() == Qt::Horizontal )
+  if ( KPlayerEngine::engine() )
   {
-    if ( hint.width() < length )
-      hint.setWidth (length);
+    int length = KPlayerEngine::engine() -> configuration() -> preferredSliderLength();
+    if ( orientation() == Qt::Horizontal )
+    {
+      if ( hint.width() < length )
+        hint.setWidth (length);
+    }
+    else
+    {
+      if ( hint.height() < length )
+        hint.setHeight (length);
+    }
   }
-  else
-  {
-    if ( hint.height() < length )
-      hint.setHeight (length);
-  }
+#ifdef DEBUG_KPLAYER_SLIDER_HINTS
+  kdDebugTime() << " Hint   " << hint.width() << "x" << hint.height() << "\n";
+#endif
   return hint;
 }
 
 QSize KPlayerSlider::minimumSizeHint() const
 {
-//kdDebugTime() << "KPlayerSlider minimum size hint\n";
+#ifdef DEBUG_KPLAYER_SLIDER_HINTS
+  kdDebugTime() << "KPlayerSlider::minimumSizeHint\n";
+#endif
   QSize hint = QSlider::minimumSizeHint();
-  int length = KPlayerEngine::engine() -> configuration() -> minimumSliderLength();
-  if ( orientation() == Qt::Horizontal )
+  if ( KPlayerEngine::engine() )
   {
-    if ( hint.width() < length )
-      hint.setWidth (length);
+    int length = KPlayerEngine::engine() -> configuration() -> minimumSliderLength();
+    if ( orientation() == Qt::Horizontal )
+    {
+      if ( hint.width() < length )
+        hint.setWidth (length);
+    }
+    else
+    {
+      if ( hint.height() < length )
+        hint.setHeight (length);
+    }
   }
-  else
-  {
-    if ( hint.height() < length )
-      hint.setHeight (length);
-  }
+#ifdef DEBUG_KPLAYER_SLIDER_HINTS
+  kdDebugTime() << " Hint   " << hint.width() << "x" << hint.height() << "\n";
+#endif
   return hint;
 }
 

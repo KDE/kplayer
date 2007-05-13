@@ -220,6 +220,11 @@ bool KPlayerFrequencyPropertyInfo::exists (KPlayerProperties* properties, const 
   return properties -> needsFrequency();
 }
 
+KPlayerFloatPropertyInfo::KPlayerFloatPropertyInfo (void)
+{
+  m_default = 0;
+}
+
 KPlayerFloatPropertyInfo::~KPlayerFloatPropertyInfo()
 {
 }
@@ -933,7 +938,7 @@ bool KPlayerPersistentUrlProperty::defaults (bool)
   return true;
 }
 
-int KPlayerPropertyCounts::count (const QString& key)
+int KPlayerPropertyCounts::count (const QString& key) const
 {
   KPlayerPropertyCounts::ConstIterator iterator = find (key);
   return iterator == end() ? 0 : iterator.data();
@@ -1009,6 +1014,13 @@ void KPlayerProperties::setup (void)
 
 void KPlayerProperties::setupInfo (void)
 {
+  config() -> setGroup (configGroup());
+  if ( config() -> hasKey ("Subtitle Position") )
+  {
+    int value = config() -> readNumEntry ("Subtitle Position");
+    if ( value < 0 || value > 100 )
+      config() -> deleteEntry ("Subtitle Position");
+  }
 }
 
 void KPlayerProperties::setupMeta (void)
@@ -1721,8 +1733,9 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Audio Input", intinfo);
   info = new KPlayerBooleanPropertyInfo;
   m_info.insert ("Immediate Mode", info);
-  info = new KPlayerBooleanPropertyInfo;
-  m_info.insert ("ALSA Capture", info);
+  boolinfo = new KPlayerBooleanPropertyInfo;
+  boolinfo -> setDefaultValue (true);
+  m_info.insert ("ALSA Capture", boolinfo);
   info = new KPlayerStringPropertyInfo;
   m_info.insert ("Capture Device", info);
   info = new KPlayerIntegerPropertyInfo;
@@ -2143,12 +2156,12 @@ int KPlayerConfiguration::getCacheSize (const QString& key) const
 
 float KPlayerConfiguration::getFloat (const QString& key) const
 {
-  return has (key) ? ((KPlayerFloatProperty*) m_properties [key]) -> value() : 0;
+  return has (key) ? ((KPlayerFloatProperty*) m_properties [key]) -> value() : floatInfo (key) -> defaultValue();
 }
 
 void KPlayerConfiguration::setFloat (const QString& key, float value)
 {
-  if ( value == 0 )
+  if ( value == floatInfo (key) -> defaultValue() )
     reset (key);
   else
     set (key, value);
@@ -2182,7 +2195,7 @@ bool KPlayerConfiguration::getVobsubSubtitles (const QString&, const KURL& url) 
 
 bool KPlayerConfiguration::getPlaylist (const QString&, const KURL& url) const
 {
-  static QRegExp re_playlist_url ("^(?:file|http|http_proxy|ftp|smb):/.*\\.(?:ram|smi|smil|rpm|asx|wax|pls|m3u|strm)(?:\\?|$)", false);
+  static QRegExp re_playlist_url ("^(?:file|http|http_proxy|ftp|smb):/.*\\.(?:ram|smi|smil|rpm|asx|wax|wvx|pls|m3u|strm)(?:\\?|$)", false);
   return re_playlist_url.search (url.url()) >= 0;
 }
 
@@ -2716,6 +2729,7 @@ KPlayerDeviceProperties::~KPlayerDeviceProperties()
 
 void KPlayerDeviceProperties::setupInfo (void)
 {
+  KPlayerMediaProperties::setupInfo();
   setPath ("/" + m_url.path().section ('/', 1, 0xffffffff, QString::SectionSkipEmpty));
 }
 
@@ -2890,22 +2904,22 @@ static struct KPlayerChannelGroup
   };
 
 struct KPlayerChannelList channellists[] = {
-  { "us-bcast", i18n("US broadcast"), us_bcast, sizeof (us_bcast) / sizeof (struct KPlayerChannelGroup) },
-  { "us-cable", i18n("US cable"), us_cable, sizeof (us_cable) / sizeof (struct KPlayerChannelGroup) },
-  { "us-cable-hrc", i18n("US cable HRC"), us_hrc, sizeof (us_hrc) / sizeof (struct KPlayerChannelGroup) },
-  { "japan-bcast", i18n("Japan broadcast"), japan_bcast, sizeof (japan_bcast) / sizeof (struct KPlayerChannelGroup) },
-  { "japan-cable", i18n("Japan cable"), japan_cable, sizeof (japan_cable) / sizeof (struct KPlayerChannelGroup) },
-  { "europe-west", i18n("Western Europe"), europe_west, sizeof (europe_west) / sizeof (struct KPlayerChannelGroup) },
-  { "europe-east", i18n("Eastern Europe"), europe_east, sizeof (europe_east) / sizeof (struct KPlayerChannelGroup) },
-  { "italy", i18n("Italy"), italy, sizeof (italy) / sizeof (struct KPlayerChannelGroup) },
-  { "newzealand", i18n("New Zealand"), newzealand, sizeof (newzealand) / sizeof (struct KPlayerChannelGroup) },
-  { "australia", i18n("Australia"), australia, sizeof (australia) / sizeof (struct KPlayerChannelGroup) },
-  { "ireland", i18n("Ireland"), ireland, sizeof (ireland) / sizeof (struct KPlayerChannelGroup) },
-  { "france", i18n("France"), france, sizeof (france) / sizeof (struct KPlayerChannelGroup) },
-  { "china-bcast", i18n("China"), china, sizeof (china) / sizeof (struct KPlayerChannelGroup) },
-  { "southafrica", i18n("South Africa"), southafrica, sizeof (southafrica) / sizeof (struct KPlayerChannelGroup) },
-  { "argentina", i18n("Argentina"), argentina, sizeof (argentina) / sizeof (struct KPlayerChannelGroup) },
-  { "russia", i18n("Russia"), russia, sizeof (russia) / sizeof (struct KPlayerChannelGroup) }
+  { "us-bcast", I18N_NOOP("US broadcast"), us_bcast, sizeof (us_bcast) / sizeof (struct KPlayerChannelGroup) },
+  { "us-cable", I18N_NOOP("US cable"), us_cable, sizeof (us_cable) / sizeof (struct KPlayerChannelGroup) },
+  { "us-cable-hrc", I18N_NOOP("US cable HRC"), us_hrc, sizeof (us_hrc) / sizeof (struct KPlayerChannelGroup) },
+  { "japan-bcast", I18N_NOOP("Japan broadcast"), japan_bcast, sizeof (japan_bcast) / sizeof (struct KPlayerChannelGroup) },
+  { "japan-cable", I18N_NOOP("Japan cable"), japan_cable, sizeof (japan_cable) / sizeof (struct KPlayerChannelGroup) },
+  { "europe-west", I18N_NOOP("Western Europe"), europe_west, sizeof (europe_west) / sizeof (struct KPlayerChannelGroup) },
+  { "europe-east", I18N_NOOP("Eastern Europe"), europe_east, sizeof (europe_east) / sizeof (struct KPlayerChannelGroup) },
+  { "italy", I18N_NOOP("Italy"), italy, sizeof (italy) / sizeof (struct KPlayerChannelGroup) },
+  { "newzealand", I18N_NOOP("New Zealand"), newzealand, sizeof (newzealand) / sizeof (struct KPlayerChannelGroup) },
+  { "australia", I18N_NOOP("Australia"), australia, sizeof (australia) / sizeof (struct KPlayerChannelGroup) },
+  { "ireland", I18N_NOOP("Ireland"), ireland, sizeof (ireland) / sizeof (struct KPlayerChannelGroup) },
+  { "france", I18N_NOOP("France"), france, sizeof (france) / sizeof (struct KPlayerChannelGroup) },
+  { "china-bcast", I18N_NOOP("China"), china, sizeof (china) / sizeof (struct KPlayerChannelGroup) },
+  { "southafrica", I18N_NOOP("South Africa"), southafrica, sizeof (southafrica) / sizeof (struct KPlayerChannelGroup) },
+  { "argentina", I18N_NOOP("Argentina"), argentina, sizeof (argentina) / sizeof (struct KPlayerChannelGroup) },
+  { "russia", I18N_NOOP("Russia"), russia, sizeof (russia) / sizeof (struct KPlayerChannelGroup) }
 };
 
 extern const uint channellistcount = sizeof (channellists) / sizeof (struct KPlayerChannelList);
@@ -2925,27 +2939,33 @@ KPlayerTVProperties::~KPlayerTVProperties()
 #endif
 }
 
+QString KPlayerTVProperties::channelListFromCountry (void)
+{
+#ifdef DEBUG_KPLAYER_PROPERTIES
+  kdDebugTime() << "KPlayerTVProperties::channelListFromCountry\n";
+#endif
+  QString country (KGlobal::locale() -> country().lower());
+#ifdef DEBUG_KPLAYER_PROPERTIES
+  kdDebugTime() << " Country " << country << "\n";
+#endif
+  return country == "us" ? "us-bcast" : country == "jp" ? "japan-bcast" : country == "it" ? "italy"
+    : country == "nz" ? "newzealand" : country == "au" ? "australia" : country == "ie" ? "ireland"
+    : country == "fr" ? "france" : country == "cn" ? "china-bcast" : country == "za" ? "southafrica"
+    : country == "ar" ? "argentina" : country == "ru" ? "russia" : country == "by" || country == "bg"
+    || country == "cz" || country == "hu" || country == "pl" || country == "md" || country == "ro"
+    || country == "sk" || country == "ua" || country == "al" || country == "ba" || country == "hr"
+    || country == "mk" || country == "yu" || country == "me" || country == "rs" || country == "si"
+    || country == "ee" || country == "lv" || country == "lt" || country == "am" || country == "az"
+    || country == "ge" ? "europe-east" : "europe-west";
+}
+
 void KPlayerTVProperties::setupMeta (void)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerTVProperties::setupMeta\n";
 #endif
   if ( ! hasChannelList() )
-  {
-    QString country (KGlobal::locale() -> country().lower());
-#ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << " Country " << country << "\n";
-#endif
-    setChannelList (country == "us" ? "us-bcast" : country == "jp" ? "japan-bcast" : country == "it" ? "italy"
-      : country == "nz" ? "newzealand" : country == "au" ? "australia" : country == "ie" ? "ireland"
-      : country == "fr" ? "france" : country == "cn" ? "china-bcast" : country == "za" ? "southafrica"
-      : country == "ar" ? "argentina" : country == "ru" ? "russia" : country == "by" || country == "bg"
-      || country == "cz" || country == "hu" || country == "pl" || country == "md" || country == "ro"
-      || country == "sk" || country == "ua" || country == "al" || country == "ba" || country == "hr"
-      || country == "mk" || country == "yu" || country == "me" || country == "rs" || country == "si"
-      || country == "ee" || country == "lv" || country == "lt" || country == "am" || country == "az"
-      || country == "ge" ? "europe-east" : "europe-west");
-  }
+    setChannelList (channelListFromCountry());
 }
 
 QStringList KPlayerTVProperties::channels (void)
@@ -3115,6 +3135,7 @@ void KPlayerDiskProperties::setupInfo (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerDiskProperties::setupInfo\n";
 #endif
+  KPlayerDeviceProperties::setupInfo();
   if ( parent() != configuration() )
     setPath (((KPlayerDeviceProperties*) parent()) -> path());
 }
@@ -3625,6 +3646,14 @@ void KPlayerTrackProperties::setSubtitleOption (int option)
     reset ("Vobsub ID");
 }
 
+void KPlayerTrackProperties::showSubtitleUrl (const KURL& url)
+{
+  setSubtitleUrl (url);
+  setShowSubtitles (true);
+  resetSubtitleID();
+  resetVobsubID();
+}
+
 KPlayerDiskTrackProperties::KPlayerDiskTrackProperties (KPlayerProperties* parent, const KURL& url)
   : KPlayerTrackProperties (parent, url)
 {
@@ -3645,6 +3674,7 @@ void KPlayerDiskTrackProperties::setupInfo (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerDiskTrackProperties::setupInfo\n";
 #endif
+  KPlayerTrackProperties::setupInfo();
   setDefaultName ((parent() -> type() == "DVD" ? i18n("Title %1")
     : i18n("Track %1")).arg (url().fileName().rightJustify (parent() -> digits(), '0')));
 }
@@ -3728,6 +3758,7 @@ void KPlayerTVChannelProperties::setupInfo (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerTVChannelProperties::setupInfo\n";
 #endif
+  KPlayerChannelProperties::setupInfo();
   QString id (url().fileName());
   setDefaultName (i18n("Channel %1").arg (re_channel.search (id) < 0 ? id : re_channel.cap(1)
     + QString::number (re_channel.cap(2).toInt()).rightJustify (re_channel.cap(1).isEmpty() ? parent() -> digits()
@@ -3807,6 +3838,7 @@ void KPlayerDVBChannelProperties::setupInfo (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerDVBChannelProperties::setupInfo\n";
 #endif
+  KPlayerChannelProperties::setupInfo();
   QString id (url().fileName());
   setDefaultName (parent() -> channelName (id));
   setDefaultFrequency (parent() -> channelFrequency (id));
@@ -3874,6 +3906,7 @@ void KPlayerItemProperties::setupInfo (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerItemProperties::setupInfo\n";
 #endif
+  KPlayerTrackProperties::setupInfo();
   config() -> setGroup (configGroup());
   if ( config() -> readEntry ("Video Size") == "0,0" )
   {

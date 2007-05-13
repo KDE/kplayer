@@ -88,6 +88,10 @@ public:
    */
   void resizeHandler (bool resizing);
 
+  /** Returns whether the workspace is being resized by the user. */
+  bool isResizing (void) const
+    { return m_resizing; }
+
 protected:
   /** Processes the widget resize event. Resizes the KPlayerWidget to the video size. */
   virtual void resizeEvent (QResizeEvent*);

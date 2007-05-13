@@ -501,14 +501,14 @@ void KPlayerProcess::start (void)
       driver = "xvmc:ck=set" + driver.mid (4);
     else if ( driver.startsWith ("xv,") || driver.startsWith ("xv:") )
       driver = "xv:ck=set" + driver.mid (2);
-    *m_player << "-vo" << driver << "-colorkey" << "0x010101";
+    *m_player << "-vo" << driver << "-colorkey" << "0x020202";
   }
   driver = properties() -> audioDriverString();
   if ( ! driver.isEmpty() )
     *m_player << "-ao" << driver;
   if ( properties() -> softwareVolume() )
     *m_player << "-softvol" << "-softvol-max" << QString::number (properties() -> maximumSoftwareVolume());
-  else
+  else if ( driver.startsWith ("alsa") || driver.startsWith ("oss") )
   {
     driver = properties() -> mixerDevice();
     if ( ! driver.isEmpty() )
@@ -556,7 +556,8 @@ void KPlayerProcess::start (void)
     else
     {
       QString urls (settings() -> currentSubtitles());
-      if ( properties() -> vobsubSubtitles() )
+      if ( urls == properties() -> subtitleUrlString() ? properties() -> vobsubSubtitles()
+          : KPlayerEngine::engine() -> configuration() -> getVobsubSubtitles ("Vobsub", KURL::fromPathOrURL (urls)) )
         *m_player << "-vobsub" << urls;
       else if ( urls.find (',') < 0 )
         *m_player << "-sub" << urls;
