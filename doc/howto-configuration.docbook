@@ -31,51 +31,55 @@ saturation, so those controls will not be functional.</para>
 VIDIX output if you have a Matrox or ATI card. For Matrox cards there is also
 XMGA output.</para>
 
-<para><ulink
-url="http://sourceforge.net/account/login.php?return_to=%2Fsendmessage.php%3Ftouser%3D137121">Add
-a section for your video card</ulink></para>
-
-<para>However, some video outputs may not support embedding video into &kplayer;
-and will open their own window instead. Those video outputs are not
-recommended.</para>
-
 <para>You can change the video output type on the
 <link linkend="settings-video">Video page</link> in <guilabel>&kplayer;
-Settings</guilabel>, and optionally tell &kplayer; to fall back on other video
-outputs if the one you choose fails.</para>
+Settings</guilabel>. However, some video outputs may not support embedding video
+into &kplayer; and will open their own window instead. Those video outputs are
+not recommended.</para>
 
 </sect2>
 
 <sect2 id="howto-configuration-audio">
 <title>Audio setup</title>
 
-<para>The optimal audio outputs to use with &kplayer; are <acronym>OSS</acronym>
-(the default) and <acronym>ALSA</acronym> (recommended when present).</para>
+<para>The optimal audio output to use with &kplayer; is <acronym>ALSA</acronym>,
+which is the default setting when &kplayer; is first installed.
+If <acronym>ALSA</acronym> is not available, <acronym>OSS</acronym> is the
+second best choice.</para>
 
-<para>If you see that &kplayer; cannot use the audio output you have chosen, it
-is usually because another program has locked the audio device. If you find that
-<filename>/dev/dsp</filename> is locked, the chief suspect usually is &artsd;.
-Run</para>
+<para>If the audio output is configured correctly, but &kplayer; cannot use it,
+usually it is because another program has locked the audio device. The optimal
+solution for this is to allow multiple programs access the audio device at the
+same time.</para>
 
-<para><userinput><command>killall</command> artsd</userinput></para>
+<para>For example, to set up <acronym>ALSA</acronym> to allow more than one
+program to use the same device, put something along these lines into your
+<filename>~/.asourndrc</filename>:</para>
 
-<para>and then try playing a file with &kplayer; again. If that works, the
-permanent solution is to disable &arts; through &kcontrolcenter;. There is an
-option to tell &artsd; to unlock the device after so many seconds of inactivity,
-but setting it to 0 seconds or 1 second has not been found to work. If you
-disable &arts; but not remove it from the system, some programs will still start
-it, but normally it will then at least not lock the audio device. Another
-program that may lock the audio device is Mozilla and its derivatives and
-successors. Just use &konqueror; instead.</para>
+<screen>pcm.!default
+{
+  type dmix
+  ipc_key 1234
+  slave.pcm "hw:<replaceable>card-name</replaceable>"
+}</screen>
 
-<para><acronym>ARTS</acronym> and <acronym>SDL</acronym> audio outputs are not
-recommended since they will cause stability problems, degraded performance and
-a broken volume control.</para>
+<para>where <replaceable>card-name</replaceable> is the name of the audio card
+that you can find out by running <userinput><command>cat</command>
+<filename>/proc/asound/cards</filename></userinput>. Before trying the new
+configuration, be sure to stop any programs that are known to lock audio devices
+and keep them locked, for example <userinput><command>killall</command>
+artsd</userinput></para>
 
 <para>You can change the audio output type on the
 <link linkend="settings-audio">Audio page</link> in <guilabel>&kplayer;
-Settings</guilabel>, and optionally tell &kplayer; to fall back on other audio
-outputs if the one you choose fails.</para>
+Settings</guilabel>.</para>
+
+<para>However, some audio outputs like <acronym>SDL</acronym> or sound server
+outputs like <acronym>ARTS</acronym> or <acronym>ESD</acronym> are not
+recommended since they may cause stability problems, degraded performance and
+a broken volume control.</para>
+
+<para></para>
 
 </sect2>
 
@@ -92,10 +96,7 @@ recommended), you can get it by running <command>gmplayer</command>.</para>
 
 <para>Also make sure there are no other options that may interfere with
 &kplayer; operation. If you see any, either comment them out or override them
-in <guilabel>&kplayer; Settings</guilabel>. For example, the recommended cache
-size is one megabyte, although you can use a different size depending on the
-type of media you are going to play, as discussed for example in
-<link linkend="howto-streams">Online Radio and TV micro-HOWTO</link>.</para>
+in <guilabel>&kplayer; Settings</guilabel>.</para>
 
 </sect2>
 

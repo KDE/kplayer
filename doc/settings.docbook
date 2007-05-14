@@ -24,14 +24,6 @@ behavior.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><link linkend="settings-playlist">Playlist</link> section</term>
-<listitem><para>Contains advanced playlist options. The more basic
-playlist options are available through &kplayer; menus and are described
-in <link linkend="configuration-playlist">Playlist section</link> of the
-Configuration chapter.</para></listitem>
-</varlistentry>
-
-<varlistentry>
 <term><link linkend="settings-controls">Controls</link> section</term>
 <listitem><para>Contains advanced options that control how your choices made
 using various &kplayer; controls are applied and stored.</para>
@@ -100,11 +92,6 @@ controls in &kplayer;.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><link linkend="settings-messages">Messages</link> section</term>
-<listitem><para>Contains options that affect the message log.</para></listitem>
-</varlistentry>
-
-<varlistentry>
 <term><link linkend="settings-advanced">Advanced</link> section</term>
 <listitem><para>Contains various options that affect advanced command line
 parameters passed to &mplayer;, as well as interaction with &kde; I/O
@@ -158,10 +145,10 @@ the currently selected section of the dialog.</para></listitem>
 
 <note><para>You can also click the small <guibutton>What's This</guibutton>
 button with a question mark at the top right of the dialog and then click a
-configuration option to get a brief explanation of it.</para>
+configuration option to get a brief explanation of it.</para></note>
 
 <para>Clicking the rightmost button at the top of the dialog closes the dialog
-discarding any unapplied changes.</para></note>
+discarding any unapplied changes.</para>
 
 </sect1>
 
@@ -208,117 +195,81 @@ video width in pixels reaches this setting.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Recent file list size</guilabel></term>
+<term><guilabel>Maximum entries on playlist menus</guilabel></term>
 
-<listitem><para>This option tells &kplayer; the maximum number of URLs
-to put on the <guisubmenu>Recent Files</guisubmenu> submenu of the
-<guimenu>File</guimenu> menu. When the number of URLs is exceeded, &kplayer;
-will remove the oldest entries from the list.</para></listitem>
+<listitem><para>This option tells &kplayer; the maximum number of entries to put
+on the <guisubmenu>Play List</guisubmenu> submenu of the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and
+<mousebutton>right</mousebutton> click <link linkend="popup-menus">popup
+menus</link> and on the <guisubmenu>Add to</guisubmenu> submenu of the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> and the
+<link linkend="popup-library">library popup menu</link>. The
+<link linkend="parts-library"><interface>multimedia library</interface></link>
+allows you to create as many playlists as you like, and you can always access
+them in the <guilabel>Playlists</guilabel> section of the library regardless of
+this setting.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Show Open dialog if started without file</guilabel></term>
+<term><guilabel>Maximum entries on Play Recent menu</guilabel></term>
 
-<listitem><para>If this option is selected, if you start &kplayer; by itself,
-without a file argument, it will display the <guilabel>Open File</guilabel>
-dialog and let you choose a file to play. The <link linkend="starting">Starting
-&kplayer;</link> section of this manual describes ways to start &kplayer;
-without a file argument, while various ways to start &kplayer; with file
-arguments are described in the <link linkend="playing">Playing
-multimedia</link> section.</para></listitem>
+<listitem><para>This option tells &kplayer; the maximum number of entries to put
+on the <guisubmenu>Play Recent</guisubmenu> submenu of the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and
+<mousebutton>right</mousebutton> click <link linkend="popup-menus">popup
+menus</link>. When the number of entries is exceeded, &kplayer; will remove the
+oldest entries from the menu, but depending on the option below you may still
+find them in the <interface>multimedia library</interface>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Show full path in window title</guilabel></term>
+<term><guilabel>Maximum Recent entries in the library</guilabel></term>
 
-<listitem><para>If this option is selected, &kplayer; will display the full
-path to the current file or the full URL for remote files in the main window
-<link linkend="parts">title bar</link>. By default this option is turned off,
-and &kplayer; will display only the file name without extension in the title
-bar.</para></listitem>
+<listitem><para>This option tells &kplayer; the maximum number of entries to put
+in the <guilabel>Recent</guilabel> section of the <interface>multimedia
+library</interface>. When the number of entries is exceeded, &kplayer; will
+remove the oldest entries. Note that playing a directory or a selection of files
+and directories creates only one entry in the <guilabel>Recent</guilabel>
+section and on the <guisubmenu>Play Recent</guisubmenu> menu.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Disable screensaver while playing video</guilabel></term>
+<term><guilabel>Meta information cache size limit</guilabel></term>
 
-<listitem><para>If this option is selected and a screen saver is enabled in the
-&kcontrolcenter;, &kplayer; will disable it while playing video and reenable it
-when it stops playing video. When playing audio only files, &kplayer; will
-leave your screen saver alone so it will work as usual.</para></listitem>
-</varlistentry>
-
-</variablelist>
-
-</sect1>
-
-<sect1 id="settings-playlist">
-<title><guilabel>Playlist</guilabel> section</title>
-
-<para>This section contains advanced playlist options. The more basic playlist
-options are available through &kplayer; menus and are described in <link
-linkend="configuration-playlist">Playlist section</link> of the Configuration
-chapter.</para>
-
-<mediaobject>
-<imageobject>
-<imagedata fileref="settings-playlist.png" format="PNG"/>
-</imageobject>
-</mediaobject>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Start playing new entries immediately</guilabel></term>
-
-<listitem><para>This option tells &kplayer; whether to start playing new
-items immediately when you add them to the playlist by using
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></menuchoice>
-or
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open URL</guimenuitem></menuchoice>
-commands, by dragging and dropping files onto &kplayer; window, or by
-starting &kplayer; with file arguments. If this option is selected, &kplayer;
-will start playing new items immediately if it is not currently playing any
-existing item or if the <guilabel>only if player is idle</guilabel> option
-is not selected. Else &kplayer; will put the new items on the playlist and
-will only play them when their turn comes or when you manually select them
-from the playlist.</para></listitem>
+<listitem><para>This option gives the maximum number of multimedia items for
+which &kplayer; should store the <link linkend="howto-properties">file
+properties</link>. These items include local files, remote
+<acronym>URL</acronym>s, <acronym>CD</acronym> tracks, <acronym>DVD</acronym>
+titles and tuner device channels. &kplayer; remembers the properties of each
+of those items, and when the total number of items exceeds this setting, it will
+start discarding the properties of the items that have not been played for the
+longest time.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>only if player is idle</guilabel></term>
-
-<listitem><para>When this option is selected, &kplayer; will start playing
-newly added playlist items immediately only if it is idle. If it is already
-playing an existing item, it will put the new items on the playlist and will
-only play them when their turn comes or when you manually select them from
-the playlist. This option is only available when the <guilabel>Start playing
-new entries immediately</guilabel> option is selected.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Allow duplicate entries</guilabel></term>
+<term><guilabel>Allow duplicate entries on playlists</guilabel></term>
 
 <listitem><para>If this option is selected, &kplayer; will let you add items
-with identical URLs to the playlist. When the option is turned off and you add
-new entries to the playlist, &kplayer; will remove any existing entries that
-have the same URL as one of the new entries. Also if some of the new entries
-have identical URLs, it will add only one for each URL.</para></listitem>
+with identical <acronym>URL</acronym>s to the playlist. When the option is
+turned off and you add new entries to a playlist, &kplayer; will remove any
+existing entries that have the same <acronym>URL</acronym> as one of the new
+entries from the same playlist folder. Also if some of the new entries have
+identical <acronym>URL</acronym>s, it will add only one for each
+<acronym>URL</acronym>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Maximum number of entries</guilabel></term>
+<term><guilabel>Show messages if a file fails to play</guilabel></term>
 
-<listitem><para>If the number of items on the playlist exceeds this number,
-&kplayer; will remove items from the top of the list.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Cache size limit</guilabel></term>
-
-<listitem><para>It gives the maximum number of URLs for which &kplayer; will
-remember their properties. If the number of items in the internal cache is
-exceeded, &kplayer; will discard properties for the items that have not been
-played for the longest time.</para></listitem>
+<listitem><para>This option tells &kplayer; whether to automatically show the
+<link linkend="parts-message-log">message log</link> if &kplayer; encounters an
+error when trying to play a file. If this option is enabled, &kplayer; will show
+the log and scroll to the last messages from the first file with an error, so
+you can see what the error was. If the option is disabled, &kplayer; will
+instead display the word <guilabel>Error</guilabel> in the left portion of the
+<link linkend="parts-status-bar">status bar</link>, and then you can
+<mousebutton>left</mousebutton> click it to show the message
+log.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -353,10 +304,10 @@ You will be able to see and modify the stored setting in the File Properties
 dialog. The next time the file is played, the setting stored in its
 properties will again take effect until another file is loaded.</para>
 
-<para>If the option is not selected or the change is made without pressing
-the &Shift; key, and the corresponding option below is not selected, the
-new setting will apply to the current file and all files played after it
-until you change the setting again.</para></listitem>
+<para>If you make the change without pressing the &Shift; key, and the
+corresponding option below is not selected, the new setting will apply to the
+current file and all files played after it until you change the setting
+again.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -365,13 +316,14 @@ file</guilabel></term>
 
 <listitem><para>The following options let you choose what settings &kplayer;
 will automatically remember in the file properties for each individual file.
-By default it remembers subtitle URL, subtitle delay and audio delay, and
-resets them for each new file, while other settings are preserved when
-loading new files. Normally you should leave the options below at their
-defaults. Settings for which the corresponding options below are not selected
-can still be easily stored for each file by holding down the &Shift; key
-while changing them, as long as the <guilabel>Remember for current file any
-changes made with Shift</guilabel> option is selected.</para></listitem>
+By default it stores the video aspect ratio, subtitle delay and audio delay
+separately for each file, and resets the delays for each new file, while other
+settings are preserved when loading new files. Normally you should leave the
+options below at their defaults. Settings for which the corresponding options
+below are not selected can still be easily stored for each file by holding down
+the &Shift; key while changing them, as long as the <guilabel>Remember for
+current file any changes made with Shift</guilabel> option is
+selected.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -437,14 +389,6 @@ loaded file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Frame drop</guilabel></term>
-
-<listitem><para>If this option is selected, &kplayer; will automatically
-remember the frame drop setting in the file properties for the currently
-loaded file.</para></listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Contrast</guilabel></term>
 
 <listitem><para>If this option is selected, &kplayer; will automatically
@@ -477,26 +421,6 @@ loaded file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Subtitle URL</guilabel></term>
-
-<listitem><para>If this option is selected, &kplayer; will automatically
-remember in the file properties for the current file the subtitles you load
-using <guimenuitem>Load Subtitles</guimenuitem> and <guimenuitem>Load
-Subtitle URL</guimenuitem> commands on the <guimenu>File</guimenu> menu.
-Also, if you unload the subtitles using the <guimenuitem>Unload
-Subtitles</guimenuitem> command, &kplayer; will reset the <guilabel>Subtitle
-URL</guilabel> property of the current file.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Subtitle visibility</guilabel></term>
-
-<listitem><para>If this option is selected, &kplayer; will automatically
-remember the subtitle visibility setting in the file properties for the
-currently loaded file.</para></listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Subtitle position</guilabel></term>
 
 <listitem><para>If this option is selected, &kplayer; will automatically
@@ -509,6 +433,14 @@ currently loaded file.</para></listitem>
 
 <listitem><para>If this option is selected, &kplayer; will automatically
 remember the subtitle delay setting in the file properties for the currently
+loaded file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Frame drop</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember the frame drop setting in the file properties for the currently
 loaded file.</para></listitem>
 </varlistentry>
 
@@ -907,13 +839,6 @@ of using &kplayer; video area are not recommended.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Fall back on others</guilabel></term>
-
-<listitem><para>This option specifies whether to use other video outputs
-if the chosen one fails.</para></listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Device</guilabel></term>
 
 <listitem><para>This option specifies the video device to use for the selected
@@ -928,13 +853,6 @@ choose the one to be used for decoding video. <guilabel>Auto</guilabel> is the
 recommended choice, it lets &mplayer; decide which codec to use automatically.
 If you need to tell &mplayer; to use a particular codec for a particular file
 or stream, set this option in the File Properties.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Fall back on others</guilabel></term>
-
-<listitem><para>This option specifies whether to use other video codecs
-if the chosen one fails.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -982,29 +900,57 @@ double buffering option or when playing with subtitles.</para></listitem>
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Driver</guilabel></term>
+<term><guilabel>Output driver</guilabel></term>
 
 <listitem><para>This option lists available audio outputs and lets you
 choose the one to use for playing sound.</para>
 
-<para>Recommended choices are OSS (the default) and ALSA (recommended when
-available). ARTS and SDL are not recommended. <guilabel>Auto</guilabel>
-will let &mplayer; choose an audio output according to its own
-configuration.</para></listitem>
+<para>Recommended choice is <acronym>ALSA</acronym>, or <acronym>OSS</acronym>
+as the last resort if you cannot use <acronym>ALSA</acronym>.
+<acronym>ARTS</acronym>, <acronym>ESD</acronym> and <acronym>SDL</acronym> are
+not recommended. The <guilabel>auto</guilabel> option will let &mplayer; choose
+an audio output according to its own configuration.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Fall back on others</guilabel></term>
-
-<listitem><para>This option specifies whether to use other audio outputs
-if the chosen one fails.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Device</guilabel></term>
+<term><guilabel>Output device</guilabel></term>
 
 <listitem><para>This option specifies the audio device to use for the selected
 audio output. Leave it blank to use the default device.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Control volume independently of other programs</guilabel></term>
+
+<listitem><para>This option tells &mplayer; to use software volume control,
+which does not affect global volume settings on your system, but may result
+in some distortion of the sound.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximum volume</guilabel></term>
+
+<listitem><para>When the software volume option above is turned on, this option
+gives the maximum volume level in percent of the normal level.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Mixer device</guilabel></term>
+
+<listitem><para>When <acronym>ALSA</acronym> or <acronym>OSS</acronym> audio
+output is selected, and the software volume option above is turned off, this
+option specifies the mixer device that should be used to control the sound
+volume. Leave it blank to use the default device.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Mixer channel</guilabel></term>
+
+<listitem><para>When <acronym>ALSA</acronym> or <acronym>OSS</acronym> audio
+output is selected, and the software volume option above is turned off, this
+option specifies the mixer channel that should be used to control the sound
+volume. Leave it blank to use the default channel, normally
+<acronym>PCM</acronym>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1015,13 +961,6 @@ choose the one to be used for decoding audio. <guilabel>Auto</guilabel> is the
 recommended choice, it lets &mplayer; decide which codec to use automatically.
 If you need to tell &mplayer; to use a particular codec for a particular file
 or stream, set this option in the File Properties.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Fall back on others</guilabel></term>
-
-<listitem><para>This option specifies whether to use other audio codecs
-if the chosen one fails.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1088,6 +1027,20 @@ subtitle files with aqt and AQT extensions.</para></listitem>
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>ass</guilabel></term>
+
+<listitem><para>This option tells &kplayer; whether to automatically load
+subtitle files with ass and ASS extensions.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>js</guilabel></term>
+
+<listitem><para>This option tells &kplayer; whether to automatically load
+subtitle files with js and JS extensions.</para></listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>jss</guilabel></term>
 
 <listitem><para>This option tells &kplayer; whether to automatically load
@@ -1140,7 +1093,15 @@ subtitle files with txt and TXT extensions.</para></listitem>
 <term><guilabel>utf</guilabel></term>
 
 <listitem><para>This option tells &kplayer; whether to automatically load
-subtitle files with utf and UTF extensions.</para></listitem>
+subtitle files with utf, UTF, utf8, UTF8, utf-8 and UTF-8
+extensions.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>vobsub</guilabel></term>
+
+<listitem><para>This option tells &kplayer; whether to automatically load
+VobSub subtitles with idx, IDX, ifo and IFO extensions.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1149,63 +1110,6 @@ subtitle files with utf and UTF extensions.</para></listitem>
 <listitem><para>This option tells &kplayer; whether to automatically load
 subtitle files with extensions you enter in text field below, separated
 by commas, semicolons, colons, periods or spaces.</para></listitem>
-</varlistentry>
-
-</variablelist>
-
-</sect1>
-
-<sect1 id="settings-messages">
-<title><guilabel>Messages</guilabel> section</title>
-
-<para>This section contains options that affect the message log.</para>
-
-<mediaobject>
-<imageobject>
-<imagedata fileref="settings-messages.png" format="PNG"/>
-</imageobject>
-</mediaobject>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Show if a file fails to play</guilabel></term>
-
-<listitem><para>This option tells &kplayer; whether to automatically show the
-<link linkend="parts-message-log">message log</link> if &kplayer; encounters an
-error when trying to play a file. If this option is enabled, &kplayer; will show
-the log and scroll to the last messages from the first file with an error, so
-you can see what the error was. If the option is disabled, &kplayer; will
-instead display the word <guilabel>Error</guilabel> in the left portion of the
-<link linkend="parts-status-bar">status bar</link>, and then you can
-<mousebutton>left</mousebutton> click it to show the message
-log.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Show before playing</guilabel></term>
-
-<listitem><para>This option tells &kplayer; whether to show message log
-before starting to play a file. Select it if you want to always see &mplayer;
-messages while a file is being played.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Show after playing</guilabel></term>
-
-<listitem><para>This option tells &kplayer; whether to show message log
-after a file finishes playing. Select it if you want to always see &mplayer;
-messages after playing a file.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Clear before playing</guilabel></term>
-
-<listitem><para>This option tells &kplayer; whether to remove all previous
-messages before starting to play a file. If you select this option and also
-select the option to show messages on error, &kplayer; will keep messages
-from errored files until playback stops so you have a chance to review the
-errors.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -1239,41 +1143,59 @@ current environment path.</para></listitem>
 <term><guilabel>Additional command line arguments</guilabel></term>
 
 <listitem><para>This option gives additional options that will be passed
-to &mplayer; on the command line. See mplayer(1) manpage for a complete
-list of possible options. You can also set this option for individual file
-or URL in File Properties.</para></listitem>
+to &mplayer; on the command line. See the <ulink url="man:/mplayer">&mplayer;
+manpage</ulink> for a complete list of possible options. You can also set this
+option for an individual file or <acronym>URL</acronym> in the
+<link linkend="properties-advanced"><guilabel>File
+Properties</guilabel></link>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Preferred demuxer</guilabel></term>
+
+<listitem><para>This option lists the available demultiplexers and lets you
+choose the one to be used for decoding files and streams.
+<guilabel>Auto</guilabel> is the recommended choice, it lets &mplayer; decide
+which demuxer to use automatically. If you need to tell &mplayer; to use a
+particular demuxer for a particular file or stream, set this option in the
+<link linkend="properties-advanced"><guilabel>File
+Properties</guilabel></link>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Frame drop</guilabel></term>
 
 <listitem><para>If your system is too slow to play a file, &mplayer; can
-drop some frames so playback does not slow down. <guilabel>None</guilabel>
-disables dropping, <guilabel>Soft</guilabel> drops less frames, and
-<guilabel>Hard</guilabel> drops more frames and may sometimes break decoding.
-You can also set this option for individual file or URL in File
-Properties.</para></listitem>
+drop some frames so playback does not slow down. The <guilabel>none</guilabel>
+option disables frame dropping, <guilabel>soft</guilabel> drops less frames, and
+<guilabel>hard</guilabel> drops more frames and may sometimes break decoding.
+You can also set this option for an individual file or <acronym>URL</acronym> in
+the <link linkend="properties-advanced"><guilabel>File
+Properties</guilabel></link>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Cache</guilabel></term>
 
 <listitem><para>This option lets you choose whether to use cache and set its
-size. <guilabel>Auto</guilabel> lets &mplayer; use the its own configuration,
-<guilabel>None</guilabel> tells &mplayer; to use no cache, and <guilabel>Set
-Size</guilabel> lets you set a specific size. You can also set this option
-for individual file or URL in File Properties.</para></listitem>
+size. The <guilabel>auto</guilabel> option lets &mplayer; choose an optimal
+cache size automatically, <guilabel>none</guilabel> tells &mplayer; to use no
+cache, and <guilabel>set size</guilabel> lets you set a specific size. You can
+also set this option for an individual file or <acronym>URL</acronym> in the
+<link linkend="properties-advanced"><guilabel>File
+Properties</guilabel></link>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Build new index</guilabel></term>
 
-<listitem><para>This option lets you choose whether to build new index for
-seeking. <guilabel>Yes</guilabel> builds an index if the file does not have
-it, <guilabel>No</guilabel> tells &mplayer; not to build an index, and
-<guilabel>Force</guilabel> tells it to always build an index. You can also
-choose this option for individual file or URL in File
-Properties.</para></listitem>
+<listitem><para>This option lets you choose whether to build a new index for
+seeking. The <guilabel>yes</guilabel> option builds an index if the file does
+not have it, <guilabel>no</guilabel> tells &mplayer; not to build an index, and
+<guilabel>force</guilabel> tells it to always build an index. You can also
+choose this option for an individual file or <acronym>URL</acronym> in the
+<link linkend="properties-advanced"><guilabel>File
+Properties</guilabel></link>.</para></listitem>
 </varlistentry>
 
 <varlistentry>

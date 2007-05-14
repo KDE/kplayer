@@ -1,51 +1,115 @@
 <sect1 id="howto-devices">
-<title>DVD, VCD, audio CD, TV, DVB</title>
+<title>Disk and tuner devices</title>
+
+<sect2 id="howto-devices-setup">
+<title>Setting up devices</title>
+
+<para>&kplayer; tries to find any disk and tuner devices you have on your
+system. The ones it finds it puts on the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and on several
+<mousebutton>right</mousebutton> click <link linkend="popup-menus">popup
+menus</link>, as well as in the <guilabel>Devices</guilabel> section of the
+<link linkend="parts-library"><interface>multimedia
+library</interface></link>.</para>
+
+<para>If the device you want &kplayer; to use does not show up on those lists,
+you can add it manually by selecting the <guilabel>Devices</guilabel> node in
+the <interface>multimedia library</interface> and choosing
+<menuchoice><guisubmenu>Add</guisubmenu>
+<guimenuitem>Device...</guimenuitem></menuchoice> command from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<mousebutton>right</mousebutton> click <link linkend="popup-library">popup
+menu</link>. &kplayer; will show the <guilabel>Add device</guilabel>
+dialog:</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="device-add.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>Add device dialog</phrase>
+</textobject>
+</mediaobject>
+
+<para>Enter a unique descriptive name for the device and the path to the device
+node under the <filename>/dev</filename> directory. Select the device type from
+the drop down box. For a <acronym>TV</acronym> device select a channel list and
+an input driver, usually <guilabel>Video4Linux 2</guilabel> or
+<guilabel>Video4Linux</guilabel>. A <acronym>DVB</acronym> device needs the path
+to a channel file in the <quote>zap</quote> format. You can get the file from
+the Internet or create it using the <command>scan</command> utility that comes
+with <acronym>DVB</acronym> drivers. &kplayer; looks for existing
+<filename>channels.conf</filename> files and selects the first one it finds by
+default.</para>
+
+<para>To set additional options for a device, select it in the
+<interface>multimedia library</interface> and choose the
+<guimenuitem>Properties...</guimenuitem> command from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<mousebutton>right</mousebutton> click <link linkend="popup-library">popup
+menu</link>. Most of the options are the same
+<link linkend="howto-properties">properties</link> available for every
+multimedia item in &kplayer;.</para>
+
+<para>Tuner devices have several specific options detailed in the <link
+linkend="properties"><guilabel>Properties</guilabel> dialog</link> chapter. The
+<link linkend="properties-general"><guilabel>General</guilabel> page</link>
+has the options to select a list of channels available from the device and an
+input driver as discussed above. Other options are on the
+<link linkend="properties-video"><guilabel>Video</guilabel></link>,
+<link linkend="properties-audio"><guilabel>Audio</guilabel></link> and
+<link linkend="properties-advanced"><guilabel>Advanced</guilabel></link> pages
+of the dialog.</para>
+
+<para>For a detailed description of the multimedia library feature see the
+<link linkend="howto-library">Multimedia library micro-HOWTO</link>.</para>
+
+<para>If you had <userinput><option>-dvd-device</option></userinput> or
+<userinput><option>-cdrom-device</option></userinput> options in the
+<guilabel>Additional command line parameters</guilabel> box on the
+<guilabel>Advanced</guilabel> page in
+<link linkend="settings-advanced">&kplayer; Settings</link>, you have to remove
+them, because since version 0.6 &kplayer; supplies those options to &mplayer;
+automatically.</para>
+
+</sect2>
 
 <sect2 id="howto-devices-playing">
 <title>Playing from devices</title>
 
-<para>You can play <acronym>DVD</acronym> titles by entering a
-<acronym>URL</acronym> like <userinput>dvd://1</userinput> into the
-<guilabel>Open URL</guilabel> dialog from the <guimenu>File</guimenu> menu in
-&kplayer;. The number <userinput>1</userinput> is the title number to play.
-Similarly, <userinput>vcd://1</userinput> will play a <acronym>VCD</acronym>,
-<acronym>SVCD</acronym> and other <acronym>VCD</acronym> varieties, and
-<userinput>cdda://12</userinput> will play the twelfth track of an audio
-<acronym>CD</acronym>. Also supported are <userinput>tv://1</userinput> and
-<userinput>dvb://channelname</userinput> type <acronym>URL</acronym>s.</para>
+<para>When you put a disk into a <acronym>CD</acronym> or <acronym>DVD</acronym>
+drive, &kplayer; detects what kind of disk it is and how many tracks or titles
+it has, and updates the <link linkend="submenu-device">device submenu</link> of
+the <guilabel>File</guilabel> menu accordingly. The submenu includes commands to
+play the whole disk or an individual track or title from it.</para>
 
-<para>If a <acronym>DVB</acronym> channel name has uppercase letters in it,
-like <userinput>dvb://RAI Uno</userinput>, then the standard form will not work
-in &kde; 3.2 and later, because &kde; libraries have been "fixed" to convert
-all host names to lower case without ever asking you. In that case &kplayer;
-will insert <userinput>kplayer</userinput> as the host name for you like so:
-<userinput>dvb://kplayer/RAI Uno</userinput>. The host name will show up in the
-<guilabel>Path or URL</guilabel> field in
-<link linkend="properties-general">File Properties</link>, but &kplayer; will
-remove it when passing the <acronym>URL</acronym> to
-<link linkend="howto-installation-mplayer">&mplayer;</link>. That host name will
-also work for <userinput>dvd:</userinput>, <userinput>vcd:</userinput>,
-<userinput>cdda:</userinput>, <userinput>cddb:</userinput> and
-<userinput>tv:</userinput> <acronym>URL</acronym>s, although only
-<userinput>dvb:</userinput> and <userinput>tv:</userinput>
-<acronym>URL</acronym>s might actually need it since they can contain letters
-in the channel name.</para>
+<para>&kplayer; supports video <acronym>DVD</acronym>, video
+<acronym>CD</acronym>, including <acronym>SVCD</acronym> and other
+<acronym>VCD</acronym> varieties, audio <acronym>CD</acronym>, data
+<acronym>DVD</acronym> and data <acronym>CD</acronym> disks. If &kplayer; does
+not detect your disk automatically for any reason, you can kick off the
+detection process manually by selecting the <guimenuitem>Load Disk</guimenuitem>
+command from the <link linkend="submenu-device">device submenu</link>.</para>
 
-</sect2>
+<para>Tuner devices like <acronym>TV</acronym> or <acronym>DVB</acronym> also
+have their own submenus that contain commands to play each individual channel
+available on the device. Or you can open the device in the <interface>multimedia
+library</interface>, select some channels and play them using the commands on
+the <link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<mousebutton>right</mousebutton> click <link linkend="popup-library">popup
+menu</link>.</para>
 
-<sect2 id="howto-devices-options">
-<title>Setting options</title>
-
-<para>If you need to use a <acronym>DVD</acronym> or <acronym>CD</acronym>
-device different from the default, you can add options like
-<userinput><option>-dvd-device</option>
-<filename>/dev/hdc</filename></userinput> and
-<userinput><option>-cdrom-device</option>
-<filename>/dev/hdd</filename></userinput> in the <guilabel>Additional command
-line parameters</guilabel> box on the <guilabel>Advanced</guilabel> page either
-globally in <link linkend="settings-advanced">&kplayer; Settings</link> or for
-an individual <acronym>URL</acronym> in <link linkend="properties-advanced">File
-Properties</link>.</para>
+<para>Another way to play an entire disk is through the
+<filename>media:/</filename> or <filename>system:/</filename>
+<acronym>I/O</acronym> Slaves. If you have the <interface>Devices</interface>
+applet enabled in the &kicker; panel, it will show disks you insert into disk
+drives. You can then <mousebutton>left</mousebutton> click the disk icon and
+select the <guimenuitem>Play</guimenuitem> command. This will start &kplayer;
+if it is not already running and play the disk. Similarly, if disk icons show
+up on your desktop, you can <mousebutton>right</mousebutton> click them and
+select <guimenuitem>Play</guimenuitem>. You can also display the disk icons
+in &konqueror; file manager by opening <filename>media:/</filename> or
+<filename>system:/media</filename> <acronym>URL</acronym>s in it.</para>
 
 </sect2>
 
@@ -54,20 +118,28 @@ Properties</link>.</para>
 
 <para>Video on <acronym>DVD</acronym> disks is often telecined. The
 <literal>pullup</literal> filter does a decent inverse telecine. To use it,
-open the <link linkend="properties-advanced">Advanced page</link> of the
-<guilabel>File Properties</guilabel> dialog and enter <option>-vf
+select the disk or one of its titles in the <guilabel>Devices</guilabel> section
+of the
+<link linkend="parts-library"><interface>multimedia library</interface></link>
+and choose the <guimenuitem>Properties...</guimenuitem> command from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<mousebutton>right</mousebutton> click <link linkend="popup-library">popup
+menu</link> to open the disk properties, then go to the
+<link linkend="properties-advanced">Advanced page</link> and enter <option>-vf
 pullup</option> in the <guilabel>Additional command line arguments</guilabel>
-field before playing the video.</para>
+field before playing the video. Setting the property on the disk will apply the
+filter to all titles on the <acronym>DVD</acronym>.</para>
 
 <para>Some <acronym>DVD</acronym> disks and many <acronym>TV</acronym> and
 <acronym>DVB</acronym> channels are interlaced. There are several deinterlacing
 filters in &mplayer;. Each of them has its own advantages and disadvantages, so
-try a few of them starting with <option>-vf pp=md</option> and see which one
+try a few of them starting with <option>-vf yadif</option> and see which one
 gives the best results for the particular video you are trying to watch. The
 full list is available by running</para>
 
-<para><userinput><command>mplayer</command> <option>-pphelp</option> |
-<command>grep</command> <option>deint</option></userinput></para>
+<para><userinput><command>mplayer</command> <option>-vf help</option>
+<option>-pphelp</option> | <command>grep</command>
+<option>deint</option></userinput></para>
 
 </sect2>
 
@@ -81,9 +153,9 @@ full list is available by running</para>
 <option>-vf help</option></userinput></para>
 
 <para>from the command line. Most of them are described on the
-<literal>mplayer(1)</literal> manpage. One of the most useful filters is
-<literal>pp</literal>, the postprocessing filter. Among other things it can
-smooth blocky <acronym>MPEG</acronym>s using the deblocking filters
+<ulink url="man:/mplayer">&mplayer; manpage</ulink>. One of the most useful
+filters is <literal>pp</literal>, the postprocessing filter. Among other things
+it can smooth blocky <acronym>MPEG</acronym>s using the deblocking filters
 <literal>hb</literal> and <literal>vb</literal> or <literal>h1</literal> and
 <literal>v1</literal>, usually combined with the deringing filter
 <literal>dr</literal> like this: <option>-vf pp=hb/vb/dr</option> or

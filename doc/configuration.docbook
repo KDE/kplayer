@@ -9,8 +9,8 @@ without any additional configuration. This chapter describes ways to make
 &kplayer;'s user interface best fit your tastes and configure media playback
 for optimal quality and performance.</para>
 
-<sect1 id="configuration-bars">
-<title>Toolbars</title>
+<sect1 id="configuration-ui">
+<title>User interface</title>
 
 <para>When &kplayer; is first installed, its window contains a
 <link linkend="parts-menu-bar">menu bar</link>, a
@@ -28,15 +28,30 @@ available when &kplayer; can detect the time length of the current file.</para>
 
 <para>The menu bar itself can be toggled on and off with the shortcut key
 combination <keycombo action="simul">&Ctrl;<keycap>M</keycap></keycombo>.
-You can also hide the status bar if you do not need the information it displays,
-or show the message log detailing internal operation of &mplayer; backend as
-well as &kde; <acronym>I/O</acronym> Slaves.</para>
+You can also hide the status bar if you do not need the information it
+displays.</para>
+
+<para>To show or hide the
+<link linkend="parts-library">multimedia library</link>, press
+<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo> or choose
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Show
+Library</guimenuitem></menuchoice>. To show or hide the
+<link linkend="parts-message-log">message log</link> detailing internal
+operation of &mplayer; backend as well as &kde; <acronym>I/O</acronym> Slaves,
+press <keycombo action="simul">&Ctrl;<keycap>G</keycap></keycombo> or choose
+<menuchoice><guimenu>Settings</guimenu><guimenuitem>Show
+Message Log</guimenuitem></menuchoice>.</para>
 
 <para>Each toolbar has a small area on one of its sides where you can press and
 hold the &LMB; to drag the toolbar into a new position. You can place most
 toolbars either horizontally at the top or bottom of &kplayer; window or
 vertically at the left or right side of it, while the playlist toolbar can only
 be positioned horizontally.</para>
+
+<para>Similarly, you can move around the multimedia library and the message log
+by pressing and holding the &LMB; on the title area of the window and dragging
+it above or below the <link linkend="parts-video-area">video area</link> and
+positioning it in relation to the toolbars.</para>
 
 <para>If you <mousebutton>right</mousebutton> click a toolbar, you will get a
 <link linkend="popup-toolbar">menu</link> to configure it. You can choose the
@@ -52,91 +67,242 @@ mode separately.</para>
 <sect1 id="configuration-playlist">
 <title>Playlist</title>
 
-<para>&kplayer;'s playlist stores items that have been played and let you easily
-play them again, arrange them and set individual item
-<link linkend="howto-properties">properties</link>. For a full list of commands
-and options see the sections about the <link linkend="menu-playlist">Playlist
-menu</link> and the <link linkend="popup-playlist">Playlist popup menu</link> in
-Command Reference, the <link linkend="settings-playlist">Playlist section</link>
-in the Configuration Dialog chapter. The <link linkend="howto-playlist">Playlist
-micro-HOWTO</link> gives details on playlist support in &kplayer;. Following is
-a description of options that affect the playlist behavior.</para>
+<para>&kplayer;'s <link linkend="toolbar-playlist">playlist toolbar</link> has
+a drop down box that shows the current playlist. It stores files and streams
+that have been played or are going to be played and lets you easily switch to a
+different item and play it. For details on the playlist feature see the
+<link linkend="howto-playlist">Playlist micro-HOWTO</link>.
+Following is a description of options that affect the playlist behavior.</para>
 
 <itemizedlist>
 
-<listitem><para><guimenuitem>Show Playlist</guimenuitem> option is available
-from the <link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu
-and the <link linkend="popup-main">general popup menu</link>. It shows or hides
-the <link linkend="parts-toolbar-playlist">playlist toolbar</link> that contains
-the playlist itself in a combo box, as well as <guimenuitem>Next</guimenuitem>
-and <guimenuitem>Previous</guimenuitem> commands and
-<guimenuitem>Loop</guimenuitem> and <guimenuitem>Shuffle</guimenuitem>
-options.</para></listitem>
-
-<listitem><para><guimenuitem>Show Editor</guimenuitem> option is available from
-the <link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu and
-the <link linkend="popup-main">general popup menu</link>. It shows or hides the
-<link linkend="parts-playlist-editor">playlists editor</link> that you can use
-to move items up and down the list, remove them or change their
-<link linkend="howto-properties">properties</link>.</para></listitem>
-
-<listitem><para><guimenuitem>Show Toolbar</guimenuitem> option is available from
-the <link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu. It
-shows or hides the <link linkend="parts-toolbar-editor">playlist editor
-toolbar</link> that contains commands that work on items in the editor, as
-well as the option to lock the main playlist.</para></listitem>
-
 <listitem><para><guimenuitem>Loop</guimenuitem> option is available from the
-<link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu and the
-<link linkend="toolbar-playlist">playlist toolbar</link>. When enabled, it makes
-&kplayer; start playing items from the beginning of the list after it finishes
-playing the last item on the list.</para></listitem>
+<link linkend="menu-player"><guimenu>Player</guimenu> menu</link>, the
+<link linkend="toolbar-playlist">playlist toolbar</link> and the
+<link linkend="popup-playlist">playlist popup menu</link>. When enabled, it
+makes &kplayer; start playing items from the beginning of the list after it
+finishes playing the last item on the list.</para></listitem>
 
-<listitem><para><guimenuitem>Shuffle</guimenuitem> option is available from the
-<link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu and the
-<link linkend="toolbar-playlist">playlist toolbar</link>. When enabled, it makes
-&kplayer; play items in a random order. When the <guimenuitem>Loop</guimenuitem>
-option is also enabled, items will be reshuffled every time &kplayer; restarts
-playback from the top of the list. To reshuffle immediately, disable the
-<guimenuitem>Shuffle</guimenuitem> option and then enable it
-again.</para></listitem>
+<listitem><para><guimenuitem>Shuffle</guimenuitem> option is also available from
+the <link linkend="menu-player"><guimenu>Player</guimenu> menu</link>, the
+<link linkend="toolbar-playlist">playlist toolbar</link> and the
+<link linkend="popup-playlist">playlist popup menu</link>. When enabled, it
+makes &kplayer; play items in a random order. When the
+<guimenuitem>Loop</guimenuitem> option is also enabled, items will be reshuffled
+every time &kplayer; restarts playback from the top of the list. To reshuffle
+immediately, disable the <guimenuitem>Shuffle</guimenuitem> option and then
+enable it again.</para></listitem>
 
-<listitem><para><guimenuitem>Temporary List For New Entries</guimenuitem>
-option is available from the
-<link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu,
-the <link linkend="popup-main">playlist popup menu</link> and the
-<link linkend="toolbar-playlist">playlist editor toolbar</link>. When
-enabled, it locks the main playlist, so when you load new items using
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></menuchoice>
-or
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open URL</guimenuitem></menuchoice>
-commands, by dragging and dropping files onto &kplayer; window, or by starting
-&kplayer; with file arguments, it creates a temporary playlist, puts the new
-items on it and starts playing them. To start playing items from the main
-playlist again, choose <menuchoice><guimenu>Playlist</guimenu><guimenuitem>Play
-From Playlist</guimenuitem></menuchoice>.</para></listitem>
-
-<listitem><para><guimenuitem>Play Selection Only</guimenuitem> option is
-available from the
-<link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu and
-the <link linkend="popup-main">playlist popup menu</link>. When enabled,
-it makes &kplayer; play only the items selected in the
-<link linkend="parts-playlist-editor">playlist editor</link>.</para></listitem>
-
-<listitem><para><guimenuitem>Clear Before Adding Entries</guimenuitem>
-option is available from the
-<link linkend="menu-playlist"><guimenu>Playlist</guimenu></link> menu.
-When it is enabled, all items are removed from the current playlist before
-adding new items to it. The current playlist can be either the main playlist
-or the temporary playlist when the
-<guimenuitem>Temporary List For New Entries</guimenuitem> option is
-enabled.</para></listitem>
-
-<listitem><para>More advanced playlist option are available in the
-<link linkend="settings-playlist">Playlist section</link> of
-<guilabel>&kplayer; Settings</guilabel> dialog.</para></listitem>
+<listitem><para><guilabel>Allow duplicate entries on playlists</guilabel> option
+is available on the
+<link linkend="settings-general"><guilabel>General</guilabel> page</link> of the
+&kplayer; Configuration dialog. When enabled, it allows &kplayer; to put
+identical entries on the playlist. By default it is disabled, and if you queue
+the same file twice, the old entry will be removed before adding the new one at
+the bottom of the playlist.</para></listitem>
 
 </itemizedlist>
+
+<para>The <guimenuitem>Edit</guimenuitem> command opens the current playlist in
+the <link linkend="parts-library">multimedia library</link> where you can add
+new items and remove or change the order of existing ones. It is available from
+the <link linkend="popup-playlist">playlist popup menu</link> that you can open
+by <mousebutton>right</mousebutton> clicking the playlist drop down box on the
+<link linkend="parts-toolbar-playlist">playlist toolbar</link>.</para>
+
+<para>To save the current playlist in the <guilabel>Playlists</guilabel> section
+of the <interface>multimedia library</interface>,
+<mousebutton>right</mousebutton> click the playlist drop down box on the
+<link linkend="parts-toolbar-playlist">playlist toolbar</link>, select
+<menuchoice><guisubmenu>Add
+to</guisubmenu><guimenuitem>Playlists...</guimenuitem></menuchoice> and enter a
+playlist name. The new playlist will then be added to each menu that works on
+playlists. See the <link linkend="configuration-playlists">multimedia library
+configuration</link> for details.</para>
+
+</sect1>
+
+<sect1 id="configuration-library">
+<title>Multimedia library</title>
+
+<para>&kplayer;'s <link linkend="parts-library"><interface>multimedia
+library</interface></link> is the place to access all your multimedia and
+arrange it into playlists. The things you create in the library affect other
+parts of &kplayer;, in particular some menus and the current playlist. For
+details on the multimedia library feature see the
+<link linkend="howto-library">Multimedia library micro-HOWTO</link>.</para>
+
+<sect2 id="configuration-now-playing">
+<title>Now Playing</title>
+
+<para>This section shows the contents of the current playlist and lets you
+modify it, for example by adding new files, streams and directories, removing
+existing items or changing their order. The changes are reflected on the current
+playlist shown on the <link linkend="parts-toolbar-playlist">playlist
+toolbar</link>. The commands to modify the playlist contents are available from
+the <link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<link linkend="popup-library">library <mousebutton>right</mousebutton> click
+menu</link>.</para>
+
+</sect2>
+
+<sect2 id="configuration-recent">
+<title>Recent</title>
+
+<para>This section shows the recently played files and streams and lets you
+modify the list. The top few entries are shown on the <guisubmenu>Play
+Recent</guisubmenu> submenu of the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and
+<mousebutton>right</mousebutton> click <link linkend="popup-menus">popup
+menus</link>.</para>
+
+<para>The <guilabel>Maximum Recent entries in the library</guilabel> option on
+the <link linkend="settings-general"><guilabel>General</guilabel> page</link> of
+the &kplayer; Configuration dialog gives the maximum number of files, folders
+and streams the <guilabel>Recent</guilabel> section can hold. When a new entry
+is added and the total number of entries exceeds this number, the bottom entry
+is removed from the list.</para>
+
+<para>The <guilabel>Maximum entries on Play Recent menu</guilabel> option on the
+<link linkend="settings-general">same page</link> of the global settings gives
+the maximum number of commands the <guisubmenu>Play Recent</guisubmenu> submenus
+can have. When a new entry is added and the total number of entries exceeds this
+number, the last entry is removed from the menus.</para>
+
+</sect2>
+
+<sect2 id="configuration-playlists">
+<title>Playlists</title>
+
+<para>This section stores the playlists you create and lets you add new
+playlists and change or remove the existing ones. You can also add new playlists
+by selecting files, folders or streams elsewhere in the multimedia library,
+<mousebutton>right</mousebutton> clicking the selection and choosing
+<menuchoice><guisubmenu>Add to</guisubmenu><guimenuitem>New
+Playlist...</guimenuitem></menuchoice> from the popup menu.
+<mousebutton>Right</mousebutton> clicking a folder and choosing
+<menuchoice><guisubmenu>Add
+to</guisubmenu><guimenuitem>Playlists</guimenuitem></menuchoice> will also add
+the folder to the list of playlists.</para>
+
+<para><guisubmenu>Play List</guisubmenu> submenu on the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and
+<guisubmenu>Add to</guisubmenu> submenu on the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> as well as
+their equivalents on <link linkend="popup-menus">popup menus</link> each have a
+list of commands to either play a playlist or add new content to it. Each
+playlist in this section has its own command on each of those menus. When you
+add, remove or rename a playlist, the menus are updated to reflect the
+changes.</para>
+
+<para>The <guilabel>Maximum entries on playlist menus</guilabel> option on the
+<link linkend="settings-general"><guilabel>General</guilabel> page</link> of the
+&kplayer; Configuration dialog gives the maximum number of playlists that will
+be included on the submenus that work on playlists.</para>
+
+</sect2>
+
+<sect2 id="configuration-devices">
+<title>Devices</title>
+
+<para>This section lists the disk and tuner devices available on your system
+as well as the <acronym>CD</acronym> tracks and <acronym>DVD</acronym> titles
+found on the disks you insert into the disk devices and the channels available
+on the tuner devices. &kplayer; puts any devices it finds on this list, and you
+can add new devices or remove existing ones.</para>
+
+<para>The <link linkend="menu-file"><guimenu>File</guimenu> menu</link> and some
+of the <mousebutton>right</mousebutton> click <link linkend="popup-menus">popup
+menus</link> have submenus that let you easily access and play multimedia
+available on these devices. Each device from this section has its own
+<link linkend="submenu-device">submenu</link>. When you add, remove or rename a
+device, the menus are updated to reflect the changes.</para>
+
+<para>When &kplayer; finds titles on a <acronym>DVD</acronym> disk or tracks on
+a <acronym>CD</acronym> disk, it updates the corresponding menu to include
+commands to play the individual titles or tracks. &kplayer; looks for titles and
+tracks when you insert a disk into a drive or when you select <guimenuitem>Play
+Disk</guimenuitem> or <guimenuitem>Load Disk</guimenuitem> command for a disk
+device that does not yet have any titles or tracks listed.</para>
+
+<para>Similarly, when you change the channel list for a tuner device, &kplayer;
+updates the corresponding menu to include commands to play each of the available
+channels. The option to change the channel list is on the
+<link linkend="properties-general"><guilabel>General</guilabel> page</link> of
+the device properties dialog that you can open by selecting the device in the
+multimedia library and choosing the <guimenuitem>Properties...</guimenuitem>
+command from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<mousebutton>right</mousebutton> click <link linkend="popup-library">popup
+menu</link>.</para>
+
+<para>To add a new device, select the <guilabel>Devices</guilabel> node and
+choose <menuchoice><guisubmenu>Add</guisubmenu>
+<guimenuitem>Device...</guimenuitem></menuchoice> command from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<mousebutton>right</mousebutton> click <link linkend="popup-library">popup
+menu</link>. This will bring up a dialog box as shown below.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="device-add.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>Add device dialog</phrase>
+</textobject>
+</mediaobject>
+
+<para>Enter a unique descriptive name for the device into the
+<guilabel>Name</guilabel> field and the path to the device node under the
+<filename>/dev</filename> directory into the <guilabel>Path</guilabel> field.
+Select the device type from the <guilabel>Type</guilabel> drop down box.
+For a tuner device you will need to choose a channel list, and for TV device
+also an input driver. Click the <guibutton>OK</guibutton> button to add the
+device to the <interface>multimedia library</interface> and to the
+<guimenu>File</guimenu> menu and various <link linkend="popup-menus">popup
+menus</link>.</para>
+
+<para>There are many more device specific options that you can see and change
+in the <link linkend="properties">device properties dialog</link>. To open it,
+select the device in the <interface>multimedia library</interface> and choose
+the <guimenuitem>Properties...</guimenuitem> command from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<mousebutton>right</mousebutton> click <link linkend="popup-library">popup
+menu</link>. For more information on disk and tuner device support in &kplayer;
+see the <link linkend="howto-devices">Devices micro-HOWTO</link>.</para>
+
+</sect2>
+
+<sect2 id="configuration-list-view">
+<title>List view</title>
+
+<para>There are several ways you can customize the <interface>list
+view</interface> where the library shows the multimedia found in the folder you
+select from the <interface>tree view</interface>.</para>
+
+<para>The <guisubmenu>Columns</guisubmenu> submenu of the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> and the
+<link linkend="popup-library">library popup menu</link> allows you to choose
+what columns to show in the <interface>list view</interface>. Each available
+column has a command on this submenu that either shows or hides that column.
+What columns are available depends on the folder selected in the tree view and
+on its contents.</para>
+
+<para>To change the order of columns in the <interface>list view</interface>,
+click and drag a column header with the &LMB;. However, the
+<guilabel>Name</guilabel> always has to be the first column. To change the width
+of a column, click and drag the divider on the right side of the column
+header.</para>
+
+<para>To change the sorting order of items in the <interface>list
+view</interface>, <mousebutton>left</mousebutton> click the header of the column
+you want to sort by. To sort in the reverse order, click the same header again.
+The new sorting order will apply to all folders in the multimedia library,
+except for <link linkend="howto-library-playlist-folders">playlist
+folders</link> with a <link linkend="howto-library-ordering-sorting">custom
+order</link> of items.</para>
+
+</sect2>
 
 </sect1>
 
@@ -205,6 +371,103 @@ press the key that will choose that item from the menu.</para>
 
 </sect1>
 
+<sect1 id="configuration-toolbars">
+<title>Toolbars</title>
+
+<sect2 id="configuration-toolbars-style">
+<title>Toolbar style and position</title>
+
+<para>The <link linkend="popup-toolbar">toolbar popup menu</link> has several
+options to change the toolbar appearance. To display this menu,
+<mousebutton>right</mousebutton> click the toolbar for which you want to change
+the options.</para>
+
+<para>The <guisubmenu>Orientation</guisubmenu> submenu contains options to place
+the toolbar at the <guimenuitem>Top</guimenuitem>,
+<guimenuitem>Bottom</guimenuitem>, <guimenuitem>Left</guimenuitem> or
+<guimenuitem>Right</guimenuitem> side of the &kplayer; window. You can also
+click and drag the toolbar by the handle on its left border with the &LMB; to
+move it to a new position. The <guimenuitem>Floating</guimenuitem> option
+displays the toolbar on top of other parts of &kplayer; window. The
+<guimenuitem>Flat</guimenuitem> option makes the toolbar show as small lines
+that you need to <mousebutton>left</mousebutton> click to expand the
+toolbar.</para>
+
+<para>The <guisubmenu>Text Position</guisubmenu> submenu allows you to display
+a description of each icon on the toolbar either underneath or alongside the
+icon, or display only the description instead of the icon. By default only the
+icon is displayed without the description.</para>
+
+<para>The <guisubmenu>Icon Size</guisubmenu> submenu allows you to choose the
+size of the icons on the toolbar. The choices are
+<guimenuitem>Default</guimenuitem>, <guimenuitem>Small</guimenuitem>,
+<guimenuitem>Medium</guimenuitem>, <guimenuitem>Large</guimenuitem> and
+<guimenuitem>Huge</guimenuitem>.</para>
+
+</sect2>
+
+<sect2 id="configuration-toolbars-dialog">
+<title>Toolbar configuration dialog</title>
+
+<para>To configure &kplayer;'s toolbars, select
+<guimenuitem>Configure Toolbars...</guimenuitem> from the
+<link linkend="menu-settings"><guimenu>Settings</guimenu> menu</link> or from
+the <link linkend="popup-toolbar">toolbar popup menu</link>. This will open a
+dialog box as shown below.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="toolbars-configure.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>Toolbar configuration dialog</phrase>
+</textobject>
+</mediaobject>
+
+<para>The drop down list box at the top of this dialog shows the name of the
+selected toolbar and lets you switch to another toolbar. The <guilabel>Current
+actions</guilabel> list box shows the actions included on the currently selected
+toolbar, and the <guilabel>Available actions</guilabel> list box shows all the
+other actions that exist in &kplayer;.</para>
+
+<para>The buttons in the middle part of the dialog let you include or exclude
+actions from the selected toolbar and change the order of buttons and other
+elements on the toolbar. The right arrow button puts the action selected in the
+<guilabel>Available actions</guilabel> box on the toolbar, and the left arrow
+button takes the action selected in the <guilabel>Current actions</guilabel>
+box off the toolbar. The up and down arrow buttons move the action selected in
+the <guilabel>Current actions</guilabel> box back and forward within the toolbar
+respectively.</para>
+
+<para>To be included on a toolbar, an action needs an icon that will be shown on
+the toolbar if the action is shown as a button. Some actions already have icons,
+but for others you need to choose one. The <guilabel>Change Icon...</guilabel>
+button opens a dialog box that allows you to choose an icon for the selected
+action.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="toolbars-change-icon.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>Change icon dialog</phrase>
+</textobject>
+</mediaobject>
+
+<para>When the <guilabel>System icons</guilabel> option is selected, the drop
+down box on the right lets you select a category of system icons to choose an
+icon from. By default the <guilabel>Actions</guilabel> category is selected
+that shows the action icons in your system icon theme. If you have icons other
+than the system icon theme that you want to choose from, select the
+<guilabel>Other icons</guilabel> option and click the
+<guibutton>Browse</guibutton> button to open the standard dialog to find the
+directory where your icons are stored. The <guilabel>Search</guilabel> box lets
+you filter the icons by name.</para>
+
+</sect2>
+
+</sect1>
+
 <sect1 id="configuration-dialog">
 <title>Other settings</title>
 
@@ -216,9 +479,7 @@ dialog</link>. Select <menuchoice><guimenu>Settings</guimenu><guimenuitem>
 Configure &kplayer;...</guimenuitem></menuchoice> to open it.</para>
 
 <para>The dialog is divided into several sections. Some of them affect &kplayer;
-behavior, including <link linkend="settings-general">general</link> options and
-options that affect the <link linkend="settings-playlist">playlist</link> and
-<link linkend="settings-messages">message log</link> specifically. The
+behavior, including <link linkend="settings-general">general</link> options. The
 <link linkend="settings-controls">Controls section</link> tells &kplayer; which
 changes it should remember globally and which ones it should store in individual
 <link linkend="howto-properties">file properties</link>, and its subsections
@@ -230,7 +491,7 @@ allow you to fine tune individual &kplayer; controls, including
 <link linkend="settings-hue">hue</link>,
 <link linkend="settings-saturation">saturation</link>, and
 <link linkend="settings-sliders">slider controls</link> in general. Other
-sections affect option &kplayer; uses for interaction with
+sections affect options that &kplayer; uses for interaction with
 <link linkend="howto-installation-mplayer">&mplayer;</link> and control various
 aspect of multimedia playback, including
 <link linkend="settings-video">video</link>,
@@ -274,11 +535,11 @@ you made to the setting and keep it until you load another file or
 <para>The other way to set a file property is through the
 <link linkend="properties">File Properties dialog</link>. The properties in the
 dialog are arranged according to their function. General properties like
-<guilabel>Name</guilabel>, <guilabel>Length</guilabel> and others, including
-properties that control the video size are in the
-<link linkend="properties-general">General</link> section. Other sections
-contain properties that affect &kplayer; interaction with
-<link linkend="howto-installation-mplayer">&mplayer;</link> and control
+<guilabel>Name</guilabel>, <guilabel>Length</guilabel> and others are in the
+<link linkend="properties-general">General</link> section. Properties that
+control the video size are in the <link linkend="properties-size">Size</link>
+section. Other sections contain properties that affect &kplayer; interaction
+with <link linkend="howto-installation-mplayer">&mplayer;</link> and control
 multimedia playback, including <link linkend="properties-video">video</link>,
 <link linkend="properties-audio">audio</link>,
 <link linkend="properties-subtitles">subtitles</link> and
@@ -287,10 +548,10 @@ multimedia playback, including <link linkend="properties-video">video</link>,
 <para>Select <menuchoice><guimenu>File</guimenu>
 <guimenuitem>Properties...</guimenuitem></menuchoice> to open the properties
 of the current file or <acronym>URL</acronym>. You can also
-<mousebutton>right</mousebutton> click an item in the <guilabel>Playlist
-Editor</guilabel> and select the <guimenuitem>Properties...</guimenuitem>
-command to open the <guilabel>File Properties</guilabel> dialog for that
-item.</para>
+<mousebutton>right</mousebutton> click an item in the
+<link linkend="parts-library"><interface>multimedia library</interface></link>
+and select the <guimenuitem>Properties...</guimenuitem> command to open the
+properties dialog for that item.</para>
 
 <para>The <link linkend="properties">File properties dialog chapter</link> gives
 complete details on each section and all the available properties. Also the

@@ -5,22 +5,26 @@
 <title>Overview</title>
 
 <para>The <guilabel>File Properties</guilabel> dialog allows you to choose
-various options that will apply only to a particular file or
-<acronym>URL</acronym>. Many of the options are the same or similar to the ones
-that can be chosen globally on the <link linkend="settings">&kplayer;
+various options that will apply only to a particular file, stream, device,
+track, title, or channel. Many of the options are the same or similar to the
+ones that can be chosen globally in the <link linkend="settings">&kplayer;
 Settings</link> dialog. The options set in file properties will override the
-global ones. The file properties give you full control of how the file is
-played, including options that are passed to &mplayer;. Other properties display
-information that &kplayer; found out about the file or stream, like time length,
-video size, and audio and video bitrates.</para>
+global ones. Additionally, options set for a track, title or channel will
+override options set for the disk or device it comes from. The file properties
+give you full control of how the file is played, including options that are
+passed to &mplayer;. Other properties display information that &kplayer; found
+out about the file or stream, like time length, video size, and audio and video
+bitrates.</para>
 
 <para>Select <menuchoice><guimenu>File</guimenu>
 <guimenuitem>Properties...</guimenuitem></menuchoice> to open the dialog
 box for the currently loaded file or <acronym>URL</acronym>. You can also open
-the properties for any item on the playlist by <mousebutton>right</mousebutton>
-clicking the item in the <link linkend="parts-playlist-editor">Playlist
-Editor</link> and selecting <guimenuitem>Properties...</guimenuitem> from the
-<link linkend="popup-playlist">playlist popup menu</link>.</para>
+the properties for any item in the <link linkend="parts-library">multimedia
+library</link> by <mousebutton>right</mousebutton> clicking the item and
+selecting <guimenuitem>Properties...</guimenuitem> from the
+<link linkend="popup-library">library popup menu</link> or by selecting
+<menuchoice><guimenu>Library</guimenu><guimenuitem>Properties...</guimenuitem>
+</menuchoice>.</para>
 
 <para>The dialog contains several sections which are selected by
 <mousebutton>left</mousebutton> clicking one of the items on the
@@ -30,8 +34,15 @@ left side of the dialog box.</para>
 
 <varlistentry>
 <term><link linkend="properties-general">General</link> section</term>
-<listitem><para>Shows general information about the file or URL and lets
-you control the video area size when playing it.</para></listitem>
+<listitem><para>Shows general information about the multimedia item and lets you
+set a few essential properties.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="properties-size">Size</link> section</term>
+<listitem><para>If the file or stream contains video, tells you the video
+resolution and lets you control the video area size when playing
+it.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -108,18 +119,18 @@ the currently selected section of the dialog.</para></listitem>
 
 <note><para>You can also click the small <guibutton>What's This</guibutton>
 button with a question mark at the top right of the dialog and then click a
-property to get a brief explanation of it.</para>
+property to get a brief explanation of it.</para></note>
 
 <para>Clicking the rightmost button at the top of the dialog closes the dialog
-discarding any unapplied changes.</para></note>
+discarding any unapplied changes.</para>
 
 </sect1>
 
 <sect1 id="properties-general">
 <title><guilabel>General</guilabel> section</title>
 
-<para>This section shows general information about the file or URL and lets
-you control the video area size when playing it.</para>
+<para>This section shows general information about the multimedia item and lets
+you set a few essential properties.</para>
 
 <mediaobject>
 <imageobject>
@@ -130,25 +141,33 @@ you control the video area size when playing it.</para>
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Path or URL</guilabel></term>
+<term><guilabel>Name</guilabel></term>
 
-<listitem><para>This property shows the file path for local files or the full
-URL for all other files. The URL identifies the file or stream, and all other
-properties are attached to it. For now it is not possible to change the URL,
-you have to create a new playlist entry instead, by using
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></menuchoice>
-or
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open URL</guimenuitem></menuchoice>
-commands, by dragging and dropping files onto &kplayer; window, or by starting
-&kplayer; with the new URL as the command line argument.</para></listitem>
+<listitem><para>This property shows and lets you change the name of the item
+that is displayed in the <link linkend="parts-toolbar-playlist">playlist drop
+down box</link>, the <link linkend="parts-library">multimedia library</link>,
+and also in the &kplayer; title bar when the item is loaded for
+playing.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Name</guilabel></term>
+<term><guilabel>Path or URL</guilabel></term>
 
-<listitem><para>This property shows and lets you change the name of the
-item that is displayed in the playlist, the playlist editor, and also in
-the &kplayer; title bar when the item becomes is loaded.</para></listitem>
+<listitem><para>This property shows the file path for local files or the full
+<acronym>URL</acronym> for all other files. The <acronym>URL</acronym>
+identifies the file or stream, and all other properties are attached to it.
+This property is read only. It is not applicable and not shown for
+<acronym>CD</acronym> tracks, <acronym>DVD</acronym> titles and tuner device
+channels.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Type</guilabel></term>
+
+<listitem><para>This property shows the type of the multimedia item. For a
+device, track, title or channel it is the device type. For other items it is the
+<acronym>MIME</acronym> type if it is known. This property is read
+only.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -162,7 +181,10 @@ if it is a playlist file. The playlist extensions KPlayer recognizes are ram,
 rpm, smi, smil, asx, m3u, pls and strm. If a file that is not a playlist has
 one of these extensions, or a playlist file has a different extension, you
 will need to correctly set this property in order to be able to play the file
-or stream.</para></listitem>
+or stream.</para>
+
+<para>This property is not applicable and not shown for devices, disks, titles,
+tracks and channels.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -171,8 +193,77 @@ or stream.</para></listitem>
 <listitem><para>This property shows the time length of the file.
 &kplayer; tries to detect it with precision of one tenth of a second,
 and usually it gets it pretty close to the real length. This property
-is read only.</para></listitem>
+is read only. It is not applicable and not shown for devices and
+channels.</para></listitem>
 </varlistentry>
+
+</variablelist>
+
+<para>Tuner <link linkend="howto-devices">devices</link> like
+<acronym>DVB</acronym>, <acronym>PVR</acronym> and <acronym>TV</acronym> and
+channels available on them have some specific properties that are not applicable
+to other items.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="device-properties-general.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Frequency</guilabel></term>
+
+<listitem><para>This property shows and lets you change the frequency in
+<acronym>MHz</acronym> of a <acronym>DVB</acronym>, <acronym>PVR</acronym> or
+<acronym>TV</acronym> channel. For other items this property is not applicable
+and not shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Channels</guilabel></term>
+
+<listitem><para>This property shows and lets you choose the list of channels
+available on a <acronym>TV</acronym> or <acronym>PVR</acronym> device. For other
+items this property is not applicable and not shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Driver</guilabel></term>
+
+<listitem><para>This property shows and lets you choose the input driver for a
+<acronym>TV</acronym> or <acronym>PVR</acronym> device. For other items this
+property is not applicable and not shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Channel file</guilabel></term>
+
+<listitem><para>This property shows and lets you change the path to a file
+listing the available channels on a <acronym>DVB</acronym> device and their
+properties. For other items this property is not applicable and not
+shown.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="properties-size">
+<title><guilabel>Size</guilabel> section</title>
+
+<para>This section shows the video resolution and lets you control the
+<link linkend="parts-video-area">video area</link> size when playing this file,
+if it has video.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="properties-size.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
 
 <varlistentry>
 <term><guilabel>Original size</guilabel></term>
@@ -186,28 +277,30 @@ It is read only, and it is empty for audio only files.</para></listitem>
 
 <listitem><para>This property lets you choose the initial video size &kplayer;
 will use when it starts playing the file, unless you turned off the option to
-<guilabel>Resize Main Window Automatically</guilabel> on the
-<guilabel>General</guilabel> page in <guilabel>KPlayer Settings</guilabel>.
-The <guilabel>Auto</guilabel> setting will use the <guilabel>Minimum
-Initial Video Width</guilabel> option from the <guilabel>General</guilabel>
-page in <guilabel>KPlayer Settings</guilabel>. The <guilabel>Set Size</guilabel>
-setting will use the fixed initial size you specify. The <guilabel>Set
-Aspect</guilabel> setting will again use the <guilabel>Minimum Initial Video
-Width</guilabel> option, but will apply the fixed initial aspect you
-specify.</para></listitem>
+<guilabel>Resize main window automatically</guilabel> on the
+<link linkend="settings-general"><guilabel>General</guilabel> page</link> in
+<guilabel>&kplayer; Settings</guilabel>. The <guilabel>auto</guilabel> setting
+will use the <guilabel>Minimum initial video width</guilabel> option from the
+<guilabel>General</guilabel> settings. The <guilabel>set size</guilabel> setting
+will use the fixed initial size you specify. The <guilabel>set aspect</guilabel>
+setting will again use the <guilabel>Minimum initial video width</guilabel>
+option, but will apply the fixed initial aspect you specify.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Full screen</guilabel></term>
 
-<listitem><para>This property lets you choose the full screen or maximized
-window state for this file. Normally you would simply leave this at the
-<guilabel>default</guilabel> setting, which will keep the full screen or
-maximized state of the previous file. The <guilabel>normal</guilabel>
-setting will force normal windowed mode for this file, the <guilabel>full
-screen</guilabel> setting will force full screen mode unless it is an audio
-only file, and the <guilabel>maximized</guilabel> setting will force
-maximized window mode.</para></listitem>
+<listitem><para>This property lets you choose the full screen mode when playing
+this file. The <guilabel>default</guilabel> setting will keep the full screen
+mode of the previous file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximized</guilabel></term>
+
+<listitem><para>This property lets you choose the maximized window state when
+this file is not played full screen. The <guilabel>default</guilabel> setting
+will keep the maximized state of the previous file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -237,6 +330,19 @@ a video component.</para>
 </mediaobject>
 
 <variablelist>
+
+<varlistentry>
+<term><guilabel>Track</guilabel></term>
+
+<listitem><para>This property lets you choose the video track to use when
+playing this file or stream. The <guilabel>auto</guilabel> option lets &mplayer;
+choose a video track automatically. The <guilabel>set ID</guilabel> option
+allows you to enter a video track ID to play. The other options choose a video
+track from the list of detected tracks. An easy way to set this property for a
+file or stream that has more than one video track is by selecting a video track
+from the <link linkend="submenu-video"><guisubmenu>Video</guisubmenu>
+submenu</link> of the <guimenu>Player</guimenu> menu.</para></listitem>
+</varlistentry>
 
 <varlistentry>
 <term><guilabel>Contrast</guilabel></term>
@@ -285,21 +391,12 @@ to the default setting.</para></listitem>
 <varlistentry>
 <term><guilabel>Codec</guilabel></term>
 
-<listitem><para>This property specifies the video codec to use when playing
-this file. The <guilabel>default</guilabel> setting will use the codec chosen
-on the <guilabel>Video</guilabel> page in <guilabel>KPlayer Settings</guilabel>,
-normally <guilabel>Auto</guilabel>. <guilabel>Auto</guilabel> will tell
-&mplayer; to choose the codec it thinks is the best for playing this
-file.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Fallback</guilabel></term>
-
-<listitem><para>This property specifies whether &mplayer; should try other
-codecs if the one you choose fails. The <guilabel>default</guilabel> setting
-will use the option on the <guilabel>Video</guilabel> page in <guilabel>KPlayer
-Settings</guilabel>.</para></listitem>
+<listitem><para>This property specifies the video codec to use when playing this
+file. The <guilabel>default</guilabel> setting will use the codec chosen on the
+<link linkend="settings-video"><guilabel>Video</guilabel> page</link> in
+<guilabel>&kplayer; Settings</guilabel>, normally <guilabel>auto</guilabel>. The
+<guilabel>auto</guilabel> setting will tell &mplayer; to choose the codec it
+thinks is the best for playing this file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -314,6 +411,52 @@ It is read only, and it is empty for audio only files.</para></listitem>
 
 <listitem><para>This property shows the video framerate of this file.
 It is read only, and it is empty for audio only files.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>Tuner <link linkend="howto-devices">devices</link> like
+<acronym>DVB</acronym>, <acronym>PVR</acronym> and <acronym>TV</acronym> have
+some specific properties that are not applicable to other items.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="device-properties-video.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Input</guilabel></term>
+
+<listitem><para>This property lets you choose the video input to use when
+playing from the tuner device. The <guilabel>auto</guilabel> option tells
+&mplayer; to choose a <acronym>TV</acronym> or <acronym>DVB</acronym> input
+automatically. The <guilabel>set to</guilabel> option allows you to enter an
+input ID to be used. For other items this property is not applicable and not
+shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Format</guilabel></term>
+
+<listitem><para>This property lets you choose the video format to use when
+playing from the <acronym>PVR</acronym> or <acronym>TV</acronym> device. The
+<guilabel>auto</guilabel> option tells &mplayer; to choose a video output format
+automatically. The other options let you specify a particular video format.
+For other items this property is not applicable and not shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Norm</guilabel></term>
+
+<listitem><para>This property lets you choose the video norm to use when
+playing from the <acronym>PVR</acronym> or <acronym>TV</acronym> device.
+The <guilabel>auto</guilabel> option tells &mplayer; to choose a video norm
+automatically. The <guilabel>set ID</guilabel> option allows you to enter a norm
+ID to be used. The other options let you choose a particular video norm. For
+other items this property is not applicable and not shown.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -336,6 +479,19 @@ an audio component.</para>
 <variablelist>
 
 <varlistentry>
+<term><guilabel>Track</guilabel></term>
+
+<listitem><para>This property lets you choose the audio track to use when
+playing this file or stream. The <guilabel>auto</guilabel> option lets &mplayer;
+choose an audio track automatically. The <guilabel>set ID</guilabel> option
+allows you to enter a audio track ID to play. The other options choose an audio
+track from the list of detected tracks. An easy way to set this property for a
+file or stream that has more than one audio track is by selecting an audio track
+from the <link linkend="submenu-audio"><guisubmenu>Audio</guisubmenu>
+submenu</link> of the <guimenu>Player</guimenu> menu.</para></listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>Volume</guilabel></term>
 
 <listitem><para>This property controls the sound volume for this file.
@@ -352,29 +508,22 @@ to the default setting.</para></listitem>
 <listitem><para>This property controls delay of the sound relative to video.
 By default this property is remembered automatically when you use the
 <guimenuitem>Increase Delay</guimenuitem> and <guimenuitem>Decrease
-Delay</guimenuitem> commands from the <guisubmenu>Audio</guisubmenu> submenu
+Delay</guimenuitem> commands from the
+<link linkend="submenu-audio"><guisubmenu>Audio</guisubmenu> submenu</link>
 of the <guimenu>Player</guimenu> menu. The <guilabel>default</guilabel>
-setting always resets audio delay to zero when the file is loaded.</para></listitem>
+setting always resets audio delay to zero when the file is
+loaded.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Codec</guilabel></term>
 
-<listitem><para>This property specifies the audio codec to use when playing
-this file. The <guilabel>default</guilabel> setting will use the codec chosen
-on the <guilabel>Audio</guilabel> page in <guilabel>KPlayer Settings</guilabel>,
-normally <guilabel>Auto</guilabel>. <guilabel>Auto</guilabel> will tell
-&mplayer; to choose the codec it thinks is the best for playing this
-file.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Fallback</guilabel></term>
-
-<listitem><para>This property specifies whether &mplayer; should try other
-codecs if the one you choose fails. The <guilabel>default</guilabel> setting
-will use the option on the <guilabel>Audio</guilabel> page in <guilabel>KPlayer
-Settings</guilabel>.</para></listitem>
+<listitem><para>This property specifies the audio codec to use when playing this
+file. The <guilabel>default</guilabel> setting will use the codec chosen on the
+<link linkend="settings-audio"><guilabel>Audio</guilabel> page</link> in
+<guilabel>&kplayer; Settings</guilabel>, normally <guilabel>auto</guilabel>. The
+<guilabel>auto</guilabel> setting will tell &mplayer; to choose the codec it
+thinks is the best for playing this file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -382,6 +531,76 @@ Settings</guilabel>.</para></listitem>
 
 <listitem><para>This property shows the audio bitrate of this file. It is
 read only, and it is empty for files without an audio track.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Samplerate</guilabel></term>
+
+<listitem><para>This property shows the audio samplerate of this file. It is
+read only, and it is empty for files without an audio track.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>Tuner <link linkend="howto-devices">devices</link> like
+<acronym>DVB</acronym>, <acronym>PVR</acronym> and <acronym>TV</acronym> have
+some specific properties that are not applicable to other items.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="device-properties-audio.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Mode</guilabel></term>
+
+<listitem><para>This property lets you choose the audio mode to use when
+playing from the <acronym>PVR</acronym> or <acronym>TV</acronym> device.
+The <guilabel>auto</guilabel> option tells &mplayer; to choose an audio mode
+automatically. The other options let you specify a particular audio mode.
+For other items this property is not applicable and not shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Input</guilabel></term>
+
+<listitem><para>This property lets you choose the audio input to use when
+playing from the tuner device. The <guilabel>auto</guilabel> option tells
+&mplayer; to choose a <acronym>TV</acronym> or <acronym>DVB</acronym> audio
+input automatically. The <guilabel>set to</guilabel> option allows you to enter
+an input ID to be used. For other items this property is not applicable and not
+shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Immediate mode</guilabel></term>
+
+<listitem><para>This property lets you choose the immediate mode for playing
+from the <acronym>PVR</acronym> or <acronym>TV</acronym> device. When disabled,
+&mplayer; will capture audio from the same device as video. When enabled, tells
+&mplayer; to capture audio through a cable going from the <acronym>TV</acronym>
+card to the sound card. For other items this property is not applicable and not
+shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Capture</guilabel></term>
+
+<listitem><para>This property lets you choose the audio capture system, either
+<acronym>ALSA</acronym> or <acronym>OSS</acronym>, for playing from the
+<acronym>PVR</acronym> or <acronym>TV</acronym> device. For other items this
+property is not applicable and not shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Capture device</guilabel></term>
+
+<listitem><para>This property lets you specify the audio capture device for
+playing from the <acronym>PVR</acronym> or <acronym>TV</acronym> device. For
+other items this property is not applicable and not shown.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -403,31 +622,48 @@ display, if the file is played with subtitles.</para>
 <variablelist>
 
 <varlistentry>
+<term><guilabel>Track</guilabel></term>
+
+<listitem><para>This property lets you choose the subtitles to use when playing
+this file or stream. The <guilabel>none</guilabel> option disables subtitle
+display. The <guilabel>external</guilabel> option tells &mplayer; to display
+subtitles loaded from an external file given by the <guilabel>External
+path</guilabel> property below. The <guilabel>set ID</guilabel> option allows
+you to enter an internal subtitle track ID to play. The other options choose an
+internal subtitle track from the list of detected tracks. An easy way to set
+this property is by selecting a subtitle track or file or the
+<guimenuitem>None</guimenuitem> option from the
+<link linkend="submenu-subtitles"><guisubmenu>Subtitles</guisubmenu>
+submenu</link> of the <guimenu>Player</guimenu> menu.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>External path</guilabel></term>
+
+<listitem><para>This property specifies the path to the external subtitle file
+to be used for this file. This property is set automatically when you use the
+<guimenuitem>Load Subtitles...</guimenuitem> command from the
+<guimenu>File</guimenu> menu. The command also sets the
+<guilabel>Track</guilabel> property above to
+<guilabel>external</guilabel>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>External type</guilabel></term>
+
+<listitem><para>This property allows you to specify the type of the external
+subtitles. The <guilabel>auto</guilabel> option tells &kplayer; to determine
+the type based on the subtitle file extension.</para></listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>Autoload</guilabel></term>
 
-<listitem><para>If this is a local file, this property tells &kplayer;
-whether to try to autoload subtitles for it. The <guilabel>default</guilabel>
-setting uses the <guilabel>Autoload</guilabel> settings from the
-<guilabel>Subtitles</guilabel> page in KPlayer Settings. Setting this
-property to <guilabel>no</guilabel> allows you to enter the path or URL
-of the subtitles you want to use in the next field.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Path or URL</guilabel></term>
-
-<listitem><para>This property specifies the subtitles to be used for this file.
-By default this property is set automatically when you use the
-<guimenuitem>Load Subtitles</guimenuitem>, <guimenuitem>Load Subtitle
-URL</guimenuitem> and <guimenuitem>Unload Subtitles</guimenuitem> commands
-from the <guimenu>File</guimenu> menu.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Show</guilabel></term>
-
-<listitem><para>This property lets you choose whether subtitles should be
-shown initially. By default subtitles are initially shown.</para></listitem>
+<listitem><para>If this is a local file, this property tells &kplayer; whether
+to try to autoload subtitles for it. The <guilabel>default</guilabel> setting
+uses the <guilabel>Autoload</guilabel> settings from the
+<link linkend="settings-subtitles"><guilabel>Subtitles</guilabel> page</link>
+in <guilabel>&kplayer; Settings</guilabel>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -437,8 +673,9 @@ shown initially. By default subtitles are initially shown.</para></listitem>
 The <guilabel>default</guilabel> setting will use the same subtitle position
 as for other files. An easy way to set this property is by using keyboard
 shortcuts for subtitle position commands on the
-<guisubmenu>Subtitles</guisubmenu> submenu of the <guimenu>Player</guimenu>
-menu while holding down the &Shift; key.</para></listitem>
+<link linkend="submenu-subtitles"><guisubmenu>Subtitles</guisubmenu>
+submenu</link> of the <guimenu>Player</guimenu> menu while holding down the
+&Shift; key.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -447,10 +684,11 @@ menu while holding down the &Shift; key.</para></listitem>
 <listitem><para>This property controls delay of the subtitles relative to
 video. By default this property is remembered automatically when you use
 the <guimenuitem>Increase Delay</guimenuitem> and <guimenuitem>Decrease
-Delay</guimenuitem> commands from the <guisubmenu>Subtitles</guisubmenu>
-submenu of the <guimenu>Player</guimenu> menu.
-The <guilabel>default</guilabel> setting always resets subtitle delay
-to zero when the file is loaded.</para></listitem>
+Delay</guimenuitem> commands from the
+<link linkend="submenu-subtitles"><guisubmenu>Subtitles</guisubmenu>
+submenu</link> of the <guimenu>Player</guimenu> menu. The
+<guilabel>default</guilabel> setting always resets subtitle delay to zero when
+the file is loaded.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -477,26 +715,40 @@ I/O Slave if it is used to transfer the file.</para>
 
 <listitem><para>This property lets you specify additional arguments to be
 passed to &mplayer;. You can either <guilabel>append</guilabel> the arguments
-to the ones given on the <guilabel>Advanced</guilabel> page in
-<guilabel>KPlayer Settings</guilabel> or use the <guilabel>set to</guilabel>
+to the ones given on the
+<link linkend="settings-advanced"><guilabel>Advanced</guilabel></link> page in
+<guilabel>&kplayer; Settings</guilabel> or use the <guilabel>set to</guilabel>
 setting to override them. The <guilabel>default</guilabel> option uses the
-arguments given in <guilabel>KPlayer Settings</guilabel>.</para></listitem>
+arguments given in <guilabel>&kplayer; Settings</guilabel>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Demuxer</guilabel></term>
+
+<listitem><para>This property specifies the demultiplexer to use when playing
+this file. The <guilabel>default</guilabel> setting will use the demuxer chosen
+on the <link linkend="settings-advanced"><guilabel>Advanced</guilabel>
+page</link> in <guilabel>&kplayer; Settings</guilabel>, normally
+<guilabel>auto</guilabel>. The <guilabel>auto</guilabel> setting will tell
+&mplayer; to choose the demuxer it thinks is the best for playing this
+file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>Frame drop</guilabel></term>
 
-<listitem><para>This property allows you to tell &mplayer; to drop some
-frames if your system is too slow to play the file properly.
+<listitem><para>This property allows you to tell &mplayer; to drop some frames
+if your system is too slow to play the file properly.
 The <guilabel>soft</guilabel> setting drops less frames than
 the <guilabel>hard</guilabel> one, so you should try it first.
-The <guilabel>default</guilabel> option uses the <guilabel>Frame
-Drop</guilabel> setting from the <guilabel>Advanced</guilabel> page
-in <guilabel>KPlayer Settings</guilabel>. You can also change this option
-while playing a file using commands on the <guimenu>Player</guimenu> menu.
-If you hold &Shift; when choosing them, &kplayer; by default will use the
-setting only for the current file and remember it in this
-property.</para></listitem>
+The <guilabel>default</guilabel> option uses the <guilabel>Frame drop</guilabel>
+setting from the <link linkend="settings-advanced"><guilabel>Advanced</guilabel>
+page</link> in <guilabel>&kplayer; Settings</guilabel>. You can also change this
+option while playing a file using commands on the
+<link linkend="submenu-advanced"><guisubmenu>Advanced</guisubmenu>
+submenu</link> of the <guimenu>Player</guimenu> menu. If you hold &Shift; when
+choosing them, &kplayer; by default will use the setting only for the current
+file and remember it in this property.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -504,10 +756,11 @@ property.</para></listitem>
 
 <listitem><para>This property lets you choose whether to use cache for this
 file and set its size. The <guilabel>default</guilabel> setting uses the cache
-options from the <guilabel>Advanced</guilabel> page in <guilabel>&kplayer;
-Settings</guilabel>, <guilabel>auto</guilabel> lets &mplayer; use the its own
-configuration, <guilabel>none</guilabel> tells &mplayer; to use no cache, and
-<guilabel>set size</guilabel> lets you set a specific size.</para></listitem>
+options from the <link linkend="settings-advanced"><guilabel>Advanced</guilabel>
+page</link> in <guilabel>&kplayer; Settings</guilabel>,
+<guilabel>auto</guilabel> lets &mplayer; choose an optimal cache size,
+<guilabel>none</guilabel> tells &mplayer; to use no cache, and <guilabel>set
+size</guilabel> lets you set a specific size.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -515,10 +768,11 @@ configuration, <guilabel>none</guilabel> tells &mplayer; to use no cache, and
 
 <listitem><para>This property lets you choose whether &mplayer; should build
 a new index for seeking. The <guilabel>default</guilabel> setting uses the
-option from <guilabel>KPlayer Settings</guilabel>, <guilabel>yes</guilabel>
-builds an index if the file does not have it, <guilabel>no</guilabel> tells
-&mplayer; not to build an index, and <guilabel>force</guilabel> tells it to
-always build an index.</para></listitem>
+option from <link linkend="settings-advanced"><guilabel>&kplayer;
+Settings</guilabel></link>, <guilabel>yes</guilabel> builds an index if the file
+does not have it, <guilabel>no</guilabel> tells &mplayer; not to build an index,
+and <guilabel>force</guilabel> tells it to always build an
+index.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -527,7 +781,8 @@ always build an index.</para></listitem>
 <listitem><para>This property lets you choose whether to use a &kde; I/O
 Slave to transfer and play this file. The <guilabel>auto</guilabel> setting
 tells &kplayer; to decide it automatically using options set in
-<guilabel>KPlayer Settings</guilabel>.</para></listitem>
+<link linkend="settings-advanced"><guilabel>&kplayer;
+Settings</guilabel></link>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -535,8 +790,41 @@ tells &kplayer; to decide it automatically using options set in
 
 <listitem><para>This property lets you choose whether to use a temporary
 file for playing from &kde; I/O Slave. The <guilabel>default</guilabel>
-setting uses the option from <guilabel>KPlayer Settings</guilabel>. This
+setting uses the option from <link
+linkend="settings-advanced"><guilabel>&kplayer; Settings</guilabel></link>. This
 property has no effect for URLs passed directly to &mplayer;.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para><acronym>PVR</acronym> and <acronym>TV</acronym>
+<link linkend="howto-devices">devices</link> have some specific properties that
+are not applicable to other items.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="device-properties-advanced.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Hardware compression</guilabel></term>
+
+<listitem><para>This property lets you choose whether to use
+<acronym>MJPEG</acronym> hardware compression for a <acronym>PVR</acronym> or
+<acronym>TV</acronym> device and lets you specify the decimation or image size.
+For other items this property is not applicable and not shown.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Compression quality</guilabel></term>
+
+<listitem><para>This property lets you specify the compression quality from 0 to
+100 when hardware compression is enabled for a <acronym>PVR</acronym> or
+<acronym>TV</acronym> device. For other items this property is not applicable
+and not shown.</para></listitem>
 </varlistentry>
 
 </variablelist>

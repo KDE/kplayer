@@ -31,11 +31,12 @@ will then download the entire file into a temporary directory before playing it,
 which will consume some disk space temporarily, but will allow seeking and
 length detection.</para>
 
-<para>Note that with the <literal>audiocd</literal> slave you will probably have
-to play the <literal>.wav</literal> files from the <guilabel>By Track</guilabel>
-directory, since &mplayer; currently fails to play <literal>.cda</literal>
-files. Or you can use a <link linkend="howto-devices"><literal>cdda:</literal>
-<acronym>URL</acronym>s</link> instead.</para>
+<para>Note that using the <literal>audiocd</literal> slave is not recommended.
+Instead you should use &kplayer;'s own support for disk devices. It will detect
+an audio <acronym>CD</acronym>, find audio tracks on it and list them on a
+<link linkend="submenu-device">submenu</link> under the <guimenu>File</guimenu>
+menu for easy playback, and will also try to retrieve the disk and track titles
+from an online database.</para>
 
 </sect2>
 
@@ -44,32 +45,14 @@ files. Or you can use a <link linkend="howto-devices"><literal>cdda:</literal>
 
 <para>The best way to play <acronym>URL</acronym>s that
 <link linkend="howto-installation-mplayer">&mplayer;</link> supports is by
-passing them on to &mplayer; directly. However, there will be cases where you
-need to use &kplayer; support for playing from
-<link linkend="howto-slaves">&kde; <acronym>I/O</acronym> Slaves</link> for
-those types of <acronym>URL</acronym>s.</para>
-
-<para>For example, the &mplayer; folks managed to release &mplayer; 1.0-pre4
-with <acronym>FTP</acronym> support and handling of encodable characters in
-<acronym>URL</acronym>s both broken all the way down. So if you use that
-version, you will need to enable the use of <acronym>I/O</acronym> Slave for
-<acronym>FTP</acronym> on the
-<link linkend="settings-advanced">Advanced page</link> in
-<guilabel>&kplayer; Settings</guilabel>, and if you need to play an
-<acronym>HTTP</acronym> <acronym>URL</acronym> with a space in it for example,
-you will need to turn on the <acronym>HTTP</acronym> <acronym>I/O</acronym>
-Slave on the <guilabel>Advanced</guilabel> page either for that individual
+passing them on to &mplayer; directly. But if &mplayer; cannot play an
+<acronym>HTTP</acronym>, <acronym>FTP</acronym> or Samba <acronym>URL</acronym>
+for any reason, you have the option to tell &kplayer; to use a &kde;
+<acronym>I/O</acronym> Slave. You can do that on the
+<guilabel>Advanced</guilabel> page either for that individual
 <acronym>URL</acronym> in its <link linkend="properties-advanced">File
-Properties</link>, or globally for all <acronym>HTTP</acronym>
-<acronym>URL</acronym>s in <link linkend="settings-advanced">&kplayer;
-Settings</link>.</para>
-
-<para>Also, Samba support is still listed as experimental in &mplayer;,
-so if it is not compiled into your &mplayer; or it is broken, go to the
-<link linkend="settings-advanced">Advanced page</link> in
-<guilabel>&kplayer; Settings</guilabel> and turn on the use of &kde;
-<acronym>I/O</acronym> Slaves for <acronym>SMB</acronym>
-<acronym>URL</acronym>s.</para>
+Properties</link> or globally for all <acronym>URL</acronym>s of a particular
+type in <link linkend="settings-advanced">&kplayer; Settings</link>.</para>
 
 </sect2>
 
@@ -83,20 +66,18 @@ hand with large values it will take longer to fill the cache, especially with
 low bitrate streams like <link linkend="howto-streams">online radio
 stations</link>.</para>
 
-<para>&kplayer; uses one megabyte of cache by default, but in many cases you can
-go much lower than that, for example for most audio files 64 kilobytes is
-enough. The cache size can be set on the <guilabel>Advanced</guilabel> page
-either globally in <link linkend="settings-advanced">&kplayer; Settings</link>
-or in individual <link linkend="properties-advanced">File Properties</link>.
-Keep in mind that the global setting will also affect files played directly by
-&mplayer;, and changing it can cause unwanted side effects. For example, cache
-size lower than one megabyte has been found to cause <acronym>AVI</acronym>
-files take a few seconds to start playing.</para>
+<para>&kplayer; lets &mplayer; choose an optimal cache by default, but if you
+experience problems, you can try a cache size setting of one megabyte. The cache
+size can be set on the <guilabel>Advanced</guilabel> page either globally in
+<link linkend="settings-advanced">&kplayer; Settings</link> or in individual
+<link linkend="properties-advanced">File Properties</link>. Keep in mind that
+the global setting will also affect files played directly by &mplayer;, and
+changing it can cause unwanted side effects.</para>
 
 </sect2>
 
 <sect2 id="howto-slaves-playlists">
-<title>Playlists</title>
+<title>Playlist files</title>
 
 <para>When using a &kde; <acronym>I/O</acronym> Slave to play a playlist file,
 only the playlist file itself will be retrieved from the

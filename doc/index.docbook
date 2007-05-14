@@ -20,6 +20,7 @@
   <!ENTITY kplayer-howto-full-screen SYSTEM "howto-full-screen.docbook">
   <!ENTITY kplayer-howto-bug-reporting SYSTEM "howto-bug-reporting.docbook">
   <!ENTITY kplayer-howto-playlist SYSTEM "howto-playlist.docbook">
+  <!ENTITY kplayer-howto-library SYSTEM "howto-library.docbook">
   <!ENTITY kplayer-howto-subtitles SYSTEM "howto-subtitles.docbook">
   <!ENTITY kplayer-howto-devices SYSTEM "howto-devices.docbook">
   <!ENTITY kplayer-howto-streams SYSTEM "howto-streams.docbook">
@@ -35,30 +36,20 @@
 <bookinfo>
 <title>&kplayer; user manual</title>
 
-<authorgroup>
-<author>
-<firstname>kiriuja</firstname>
-<affiliation>
-<address><email>kplayer dash documentation at en dash directo dot net</email></address>
-</affiliation>
-</author>
-<!-- TRANS:ROLES_OF_TRANSLATORS -->
-</authorgroup>
-
 <copyright>
-<year>2004</year>
+<year>2004-2007</year>
 <holder>kiriuja</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-10-05</date>
-<releaseinfo>0.5.2</releaseinfo>
+<date>2007-05-13</date>
+<releaseinfo>0.6.2</releaseinfo>
 
 <abstract>
 <para><ulink url="http://kplayer.sourceforge.net/">&kplayer;</ulink> is a &kde;
-media player based on
-<ulink url="http://www.mplayerhq.hu/">&mplayer;</ulink>.</para>
+multimedia player that uses the
+<ulink url="http://www.mplayerhq.hu/">&mplayer;</ulink> engine.</para>
 
 <para>If you are having problems with &kplayer;, please have a look at the
 <link linkend="howto-troubleshooting">Troubleshooting micro-HOWTO</link>.</para>
@@ -98,10 +89,10 @@ media player based on
 &kplayer;
 </para>
 <para>
-Program copyright 2004 kiriuja <email>kplayer dash developer at en dash directo dot net</email>
+Program copyright 2002-2007 kiriuja (<ulink url="http://kplayer.sourceforge.net/email.html">e-mail</ulink>)
 </para>
 <para>
-Documentation copyright 2004 kiriuja <email>kplayer dash documentation at en dash directo dot net</email>
+Documentation copyright 2002-2007 kiriuja (<ulink url="http://kplayer.sourceforge.net/email.html">e-mail</ulink>)
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->

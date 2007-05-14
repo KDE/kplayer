@@ -24,7 +24,7 @@ return to normal display.</para>
 <link linkend="popup-main"><mousebutton>right</mousebutton> click menu</link>
 lets you show the <link linkend="parts-menu-bar">menu bar</link>,
 <link linkend="parts-toolbar-main">toolbars</link>,
-<link linkend="parts-playlist-editor">playlist editor</link>,
+<link linkend="parts-library">multimedia library</link>,
 <link linkend="parts-message-log">message log</link> and
 <link linkend="parts-status-bar">status bar</link> in full screen mode.
 &kplayer; will remember your choices and show the same user interface next time
@@ -35,7 +35,7 @@ you go to full screen mode.</para>
 <sect2 id="howto-maximized-window">
 <title>Maximized window</title>
 
-<para>A maximized window covers the entire screen area not user by &kde; panels,
+<para>A maximized window covers the entire screen area not used by &kde; panels,
 and has a title and borders, as well as all the same user interface as a normal
 window. &kplayer; will not try to resize a maximized window automatically. To
 maximize the &kplayer; window <mousebutton>left</mousebutton> click the
@@ -56,28 +56,6 @@ pointer is in the video area, rolling the mouse wheel will seek, or move the
 playback point, forward when rolling the wheel up (away from you) or backward
 when rolling it down (towards you). If you hold down the &Ctrl; key on the
 keyboard, seeking will be faster.</para>
-
-</sect2>
-
-<sect2 id="howto-full-screen-problems">
-<title>Possible problems</title>
-
-<para>In &kplayer; 0.4 some people experienced a problem with endless flickering
-when coming back from full screen mode. That is believed to have been fixed in
-&kplayer; 0.5, but if you still see it, please report it following the
-instructions in the <link linkend="howto-bug-reporting">Bug reporting
-micro-HOWTO</link>. A temporary workaround is to disable the <guilabel>Resize
-main window automatically</guilabel> option at the top of the
-<link linkend="settings-general">General page</link> in <guilabel>&kplayer;
-Settings</guilabel>.</para>
-
-<para>There is also a known problem where the &kplayer; window may become very
-big after coming back from full screen mode. The same workaround as described
-above should help you fix the problem if you are experiencing it. Since I am
-not getting this problem myself, I will need help testing it when I get to
-fixing it. Watch the <ulink
-url="http://sourceforge.net/forum/forum.php?thread_id=1122221&amp;forum_id=244388">thread
-in the user forum</ulink> for updates.</para>
 
 </sect2>
 

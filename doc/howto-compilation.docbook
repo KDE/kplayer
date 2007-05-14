@@ -18,13 +18,13 @@ other development packages as well.</para>
 section</ulink> of &kplayer; project at SourceForge. Then extract it</para>
 
 <para><userinput><command>tar</command> <option>xjf</option>
-<filename>kplayer-0.5.2.tar.bz2</filename></userinput></para>
+<filename>kplayer-0.6.2.tar.bz2</filename></userinput></para>
 
-<para>The code will be in the <filename>kplayer-0.5.2</filename>
+<para>The code will be in the <filename>kplayer-0.6.2</filename>
 subdirectory</para>
 
 <para><userinput><command>cd</command>
-<filename>kplayer-0.5.2</filename></userinput></para>
+<filename>kplayer-0.6.2</filename></userinput></para>
 
 </sect3>
 
@@ -34,14 +34,14 @@ subdirectory</para>
 <para>Login to SourceForge CVS</para>
 
 <para><userinput><command>cvs</command>
-<option>-d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/kplayer</option>
+<option>-d:pserver:anonymous@kplayer.cvs.sourceforge.net:/cvsroot/kplayer</option>
 login</userinput></para>
 
 <para>and hit &Enter; if it asks for a password. Then download the code</para>
 
 <para><userinput><command>cvs</command> <option>-z3</option>
-<option>-d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/kplayer</option>
-co kplayer</userinput></para>
+<option>-d:pserver:anonymous@kplayer.cvs.sourceforge.net:/cvsroot/kplayer</option>
+co <option>-P</option> kplayer</userinput></para>
 
 <para>The code will be in the <filename>kplayer</filename> subdirectory</para>
 

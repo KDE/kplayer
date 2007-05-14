@@ -11,22 +11,23 @@
 as the multimedia backend for playing audio and video files and streams.
 This ensures maximum variety of supported types of files and encodings.</para>
 
-<para>You need to have &mplayer; version 0.90 or later. The recommended version
-is 1.0-pre5. If there are good binary packages for your distribution, use those.
-For example on Debian you would do</para>
+<para>You need to have &mplayer; version 1.0-pre8 or later. If there are good
+binary packages for your distribution, use those. For example on Debian you
+would do</para>
 
 <para><userinput><command>echo</command>
-'deb ftp://ftp.nerim.net/debian-marillat/ unstable main' >>
+'deb http://debian-multimedia.org unstable main' >>
 <filename>/etc/apt/sources.list</filename></userinput></para>
 
 <para><userinput><command>apt-get</command> update</userinput></para>
 
-<para><userinput><command>apt-get</command> install mplayer-k7</userinput></para>
+<para><userinput><command>apt-get</command> install mplayer</userinput></para>
 
 <para>Substitute <literal>unstable</literal> for <literal>stable</literal> or
-<literal>testing</literal> as required, and <literal>k7</literal> for
-<literal>386</literal>, <literal>586</literal>, <literal>686</literal> or
-<literal>k6</literal>, according to your processor type.</para>
+<literal>testing</literal> as required. The same repository also has a &kplayer;
+package, so you can install it as well:</para>
+
+<para><userinput><command>apt-get</command> install kplayer</userinput></para>
 
 <para>As always <ulink
 url="http://www.mplayerhq.hu/DOCS/HTML/en/faq.html#faq-compilation">compiling
@@ -37,8 +38,8 @@ from source</ulink> is an option.</para>
 <sect3 id="howto-installation-xvideo">
 <title>X11 and XVideo</title>
 
-<para>X11 is required. Recommended versions are XFree86 4.2.x and 4.3.x, as well
-as X Server versions released by X.org.</para>
+<para>X11 is required. The X Server and libraries released by X.org are
+recommended. XFree86 may also work.</para>
 
 <para>XVideo extension is recommended. You can check your
 <filename>/etc/X11/xorg.conf</filename> or
@@ -47,8 +48,9 @@ as X Server versions released by X.org.</para>
 <para><userinput>Load "extmod"</userinput></para>
 
 <para>This is the line that loads XVideo extension, so make sure it is not
-disabled. Also check <filename>/var/log/XFree86.0.log</filename> to make sure
-that XVideo is loaded without error.</para>
+disabled. Also check <filename>/var/log/Xorg.0.log</filename> or
+<filename>/var/log/XFree86.0.log</filename> to make sure that XVideo is loaded
+without error.</para>
 
 <para>See the <link linkend="howto-configuration">Configuration
 micro-HOWTO</link> if you want to use a different video output.</para>
@@ -58,9 +60,9 @@ micro-HOWTO</link> if you want to use a different video output.</para>
 <sect3 id="howto-installation-kde">
 <title>Qt and KDE</title>
 
-<para>&kplayer; 0.5 supports &kde; 3.1.x, 3.2.x and 3.3.x, so you need to either
-run a relatively recent &kde; (recommended) or at least have &kde; libraries
-and the corresponding Qt libraries on your system.</para>
+<para>&kplayer; 0.6 supports &kde; 3.1 and later, so you need to either run a
+relatively recent &kde; (recommended) or at least have &kde; libraries and the
+corresponding Qt libraries on your system.</para>
 
 </sect3>
 
@@ -76,9 +78,6 @@ and the corresponding Qt libraries on your system.</para>
 built specifically for your distribution. The
 <ulink url="http://kplayer.sourceforge.net/#downloads">Downloads section</ulink>
 of the &kplayer; home page lists the available packages and repositories.</para>
-
-<para><ulink url="http://sourceforge.net/sendmessage.php?touser=137121">Add
-a section for your distro</ulink></para>
 
 </sect3>
 

@@ -36,6 +36,9 @@ maximized.</para></listitem>
 <listitem><para><link linkend="howto-playlist">Playlist micro-HOWTO</link>
 describes playlist support in &kplayer;.</para></listitem>
 
+<listitem><para><link linkend="howto-library">Multimedia library
+micro-HOWTO</link> explains the multimedia library in detail.</para></listitem>
+
 <listitem><para><link linkend="howto-subtitles">Subtitles micro-HOWTO</link>
 gives useful information on playing video with subtitles.</para></listitem>
 
@@ -73,6 +76,7 @@ is a quick guide to help &kplayer; translators get going.</para></listitem>
 &kplayer-howto-properties;
 &kplayer-howto-full-screen;
 &kplayer-howto-playlist;
+&kplayer-howto-library;
 &kplayer-howto-subtitles;
 &kplayer-howto-devices;
 &kplayer-howto-streams;

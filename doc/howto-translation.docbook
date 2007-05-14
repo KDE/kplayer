@@ -29,7 +29,7 @@ template instead.</para>
 <para><ulink url="http://i18n.kde.org/tools/kbabel/">&kbabel;</ulink> is a great
 &kde; program for translating <literal>.po</literal> files. Once you are done,
 send your translation to
-<email>kplayer dash translations at en dash directo dot net</email>.</para>
+<ulink url="http://kplayer.sourceforge.net/email.html">kiriuja</ulink>.</para>
 
 </sect2>
 
@@ -49,11 +49,27 @@ subdirectory</ulink>, download the latest versions of all
 translate and save with the <literal>.po</literal> extension.</para>
 
 <para>When you are done translating all the files, send the finished translation
-to <email>kplayer dash translations at en dash directo dot net</email>.</para>
+to <ulink url="http://kplayer.sourceforge.net/email.html">kiriuja</ulink>.</para>
 
 <important><para>Do not translate the <literal>.docbook</literal> files
 directly. Such translation is very difficult to maintain, and therefore will not
 be accepted.</para></important>
+
+</sect2>
+
+<sect2 id="howto-translation-desktop">
+<title>Translating the .desktop files</title>
+
+<para>Action names and comments in the <literal>.desktop</literal> files that
+come with &kplayer; are also translatable. The translations go into the files
+themselves. Open the files with a <acronym>UTF</acronym> capable text editor and
+translate the entries using the same format as the translations to other
+languages in the same files and replacing the language code with the code for
+your language. Keep in mind that the action names are verbs, for example
+<guilabel>Queue</guilabel> means <quote>put in the queue</quote>. See the
+section of this manual describing the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> for details
+about those actions.</para>
 
 </sect2>
 

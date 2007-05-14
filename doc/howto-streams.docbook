@@ -12,19 +12,30 @@ types and ensures that they are reproduced correctly.</para>
 
 <para>The most widely used stream types for online media are RealMedia,
 QuickTime, Windows Media and ShoutCast (MP3). &kplayer; will play all but very
-few streams of those types. Choose <guimenuitem>Open URL</guimenuitem> on
-&kplayer;'s <guimenu>File</guimenu> menu and paste the <acronym>URL</acronym>
-into it. Alternatively, make sure your browser is configured to open &kplayer;
+few streams of those types. Choose <guimenuitem>Play URL...</guimenuitem> on
+&kplayer;'s <guimenu>File</guimenu> menu, paste the stream address into the
+<acronym>URL</acronym> box and select <guibutton>Open</guibutton>.
+Alternatively, make sure your browser is configured to open &kplayer;
 for the <acronym>MIME</acronym> types you would like to play with it, as well
 as for <literal>rtsp:</literal>, <literal>pnm:</literal> and
 <literal>mms:</literal> <acronym>URL</acronym>s. When you install &kplayer;,
 &konqueror; configuration is done automatically, you
 then just need to open <guilabel>File Association</guilabel> settings in
 &konqueror; or in &kcontrolcenter; and move &kplayer; to the top of the list
-for those file types that already had another program associated with them.
+for those file types that already had another program associated with them,
+including the special types under the <literal>uri</literal> section.
 Then you can simply click an <literal>http:</literal>, <literal>rtsp:</literal>,
 <literal>pnm:</literal> or <literal>mms:</literal> link to your media, and
 &kplayer; will start up and play it.</para>
+
+<para>If a stream has meta information embedded in it, &kplayer; will extract it
+and display it in the <link linkend="parts-library">multimedia library</link>,
+and if it finds the station name, it will also display it in the
+<link linkend="parts-title-bar">title bar</link> and on the
+<link linkend="parts-toolbar-playlist">current playlist</link>. Some music
+streams also provide the name of the song currently being played. &kplayer; will
+then display it in the title bar and on the current playlist instead of the
+station name.</para>
 
 </sect2>
 
@@ -52,13 +63,18 @@ correctly.</para>
 <sect2 id="howto-streams-cache">
 <title>Cache size</title>
 
-<para>By default &kplayer; tells &mplayer; to use one megabyte of cache, and
-that will work in almost all cases. But if you play a low bitrate media like
-a radio station, it may take a while to fill the cache. In that case you can
-lower the cache setting to 128 or even 64 kilobytes. You can do that for an
+<para>By default &kplayer; lets &mplayer; choose an optimal cache size, which
+will work in almost all cases. But if you play a low bitrate media like a radio
+station, it may take a while to fill the cache. In that case you can lower the
+cache setting to 128 or even 64 kilobytes if &mplayer; does not do it
+automatically. You can do that on the <guilabel>Advanced</guilabel> page for an
 individual stream in the <link linkend="properties-advanced">File Properties
 dialog</link>, or globally in <link linkend="settings-advanced">&kplayer;
-Settings</link>.</para>
+Settings</link>. Alternatively, you can set a lower minimum cache size required
+to start playback, the default one being 20%. That setting goes into the
+<guilabel>Additional command line parameters</guilabel> field on the same
+<guilabel>Advanced</guilabel> page, for example
+<literal>-cache-min 5</literal>.</para>
 
 </sect2>
 

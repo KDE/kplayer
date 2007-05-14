@@ -2,95 +2,203 @@
 <title>Playlist</title>
 
 <sect2 id="howto-playlist-builtin">
-<title>Built-in playlist</title>
+<title>Current playlist</title>
 
-<para>&kplayer; has had a simple playlist since version 0.4. It supports all
-basic playlist functions and options. You can add entries using
-<guimenuitem>Open</guimenuitem> and <guimenuitem>Open URL</guimenuitem> commands
-on the <guimenu>File</guimenu> menu, by starting &kplayer; with a file path from
-&konqueror; or from command line, or by dragging and dropping a file onto
-&kplayer; from &konqueror; or another program. You can also move entries around
-the list by dragging them with the mouse or by using the <guimenuitem>Move
-Up</guimenuitem> and <guimenuitem>Move Down</guimenuitem> commands on the
-<link linkend="menu-playlist"><guimenu>Playlist</guimenu> menu</link>, the
-<link linkend="popup-playlist">playlist popup menu</link> or the
-<link linkend="toolbar-editor">playlist editor toolbar</link>.</para>
+<para>&kplayer; keeps a list of files, directories, streams, tracks, titles and
+channels that are being played or are going to be played or have recently been
+played. It shows the current playlist in a drop down box on the
+<link linkend="parts-toolbar-playlist">playlist toolbar</link>. If there are any
+directories on the current playlist, the drop down list shows their contents
+instead of the directories themselves.</para>
 
-<variablelist>
+<para>The <link linkend="toolbar-playlist">playlist toolbar</link>, the
+<link linkend="menu-player"><guimenu>Player</guimenu> menu</link> and the
+<link linkend="popup-playlist">playlist popup menu</link> have
+<guimenuitem>Next</guimenuitem> and <guimenuitem>Previous</guimenuitem> commands
+that tell &kplayer; to play the next and previous item from the list
+respectively. Also, selecting an entry from the drop down list on the toolbar
+will make it the current entry and start playing it.</para>
 
-<varlistentry><term><guilabel>Playlist toolbar</guilabel></term>
-<listitem><para>The first command on the <guimenu>Playlist</guimenu> menu shows
-the <link linkend="parts-toolbar-playlist">Playlist toolbar</link> inside the
-&kplayer; window. The toolbar has <guimenuitem>Next</guimenuitem> and
-<guimenuitem>Previous</guimenuitem> commands, the playlist itself, and the
-<guimenuitem>Loop</guimenuitem> and <guimenuitem>Shuffle</guimenuitem> options.
-Selecting an entry from the list will start playing
-it.</para></listitem></varlistentry>
+<para>When you ask &kplayer; to play things in any of the following ways, it
+wipes out the current playlist and puts the new items on it:</para>
 
-<varlistentry><term><guilabel>Playlist editor</guilabel></term>
-<listitem><para>The second command on the <guimenu>Playlist</guimenu> menu shows
-the <link linkend="parts-playlist-editor">Playlist Editor</link> window. It
-allows you to move entries around, rename or delete them, start playing an entry
-or edit its <link
-linkend="howto-properties">properties</link>.</para></listitem></varlistentry>
+<itemizedlist>
 
-<varlistentry><term><guilabel>Playlist editor toolbar</guilabel></term>
-<listitem><para>The third command on the <guimenu>Playlist</guimenu> menu shows
-the <link linkend="parts-toolbar-editor">playlist editor toolbar</link> that has
-buttons for moving entries around and deleting them, as well as the
-<guimenuitem>Temporary list for new items</guimenuitem> aka Lock option. This
-toolbar is embedded into the playlist editor.</para></listitem></varlistentry>
+<listitem><para>any of the various <guimenuitem>Play</guimenuitem> commands on
+the <link linkend="menu-file"><guimenu>File</guimenu> menu</link> or its
+submenus;</para></listitem>
 
-<varlistentry><term><guilabel>Loop and Shuffle</guilabel></term>
-<listitem><para>If you choose both <guimenuitem>Loop</guimenuitem> and
-<guimenuitem>Shuffle</guimenuitem> options, the list will be reshuffled every
-time it loops. To reshuffle at any time, disable the
-<guimenuitem>Shuffle</guimenuitem> option and enable it
-again.</para></listitem></varlistentry>
+<listitem><para><guimenuitem>Play</guimenuitem> or
+<guimenuitem>Play Next</guimenuitem> command from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link>, except when
+you use them on items that are already on the current
+playlist;</para></listitem>
 
-<varlistentry><term><guilabel>Temporary list for new entries</guilabel>,
-aka Lock</term>
-<listitem><para>This option locks the playlist and tells &kplayer; to put new
-entries on a temporary list. The temporary list will only be shown in the drop
-down list on the <link linkend="toolbar-playlist">playlist toolbar</link>. The
-main list will stay in the editor, and you can resume playing from it by
-clicking an entry in the editor or choosing <guimenuitem>Play From
-Playlist</guimenuitem> from the
-<link linkend="menu-playlist"><guimenu>Playlist</guimenu>
-menu</link>.</para></listitem></varlistentry>
+<listitem><para>an equivalent command from a <mousebutton>right</mousebutton>
+click <link linkend="popup-menus">popup menu;</link></para></listitem>
 
-<varlistentry><term><guilabel>Play selection only</guilabel></term>
-<listitem><para>Selecting this option will make &kplayer; play only the items
-selected in the playlist editor. Newly added items will be initially
-selected.</para></listitem></varlistentry>
+<listitem><para>running &kplayer; with a file or directory path or a
+<acronym>URL</acronym> from &konqueror;, from the command line, from a script,
+etc.;</para></listitem>
 
-<varlistentry><term><guilabel>Clear before adding new entries</guilabel></term>
-<listitem><para>This option is set separately for the main list and for the
-temporary list. It will wipe out the current list before adding new entries,
-whether by using <guimenuitem>Open</guimenuitem> or <guimenuitem>Open
-URL</guimenuitem>, starting &kplayer; with a file parameter, or dropping
-files onto &kplayer; window.</para></listitem></varlistentry>
+<listitem><para><guilabel>Play</guilabel> or <guilabel>Play Next</guilabel>
+action in &konqueror;, &kicker; or any other program that supports those
+actions;</para></listitem>
 
-<varlistentry><term><guilabel>Allow duplicate entries</guilabel></term>
-<listitem><para>When this option is unchecked on the
-<link linkend="settings-playlist">Playlist page</link> in <guilabel>&kplayer;
-Settings</guilabel>, duplicate entries will be automatically removed from the
-playlist. Entries are duplicate if they have exactly the same
-<acronym>URL</acronym>.</para></listitem></varlistentry>
+<listitem><para>dragging and dropping files and directories or a
+<acronym>URL</acronym> from &konqueror; or another program onto any part of
+&kplayer; except the <link linkend="parts-library"><interface>multimedia
+library</interface></link>.</para></listitem>
 
-<varlistentry><term><guilabel>Playlist size limit</guilabel></term>
-<listitem><para>If you try to add more than the given number of entries, the
-topmost entries will be removed so the playlist stays under the specified
-size.</para></listitem></varlistentry>
+</itemizedlist>
 
-<varlistentry><term><guilabel>Cache size limit</guilabel></term>
-<listitem><para>&kplayer; will remember
-<link linkend="howto-properties">properties</link> of every file you play with
-it, until the total number reaches this limit. After that &kplayer; will start
-discarding properties of the oldest entries. Playing a file makes its entry the
-most recent.</para></listitem></varlistentry>
+<para>There are also several ways to add entries to the current playlist:</para>
 
-</variablelist>
+<itemizedlist>
+
+<listitem><para><guimenuitem>Queue</guimenuitem> or
+<guimenuitem>Queue Next</guimenuitem> command on the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<link linkend="popup-library">library popup menu</link> in the
+<interface>multimedia library</interface>; if you use these commands on items
+that are already on the current playlist, &kplayer; will move them to the end
+of the playlist;</para></listitem>
+
+<listitem><para><guilabel>Queue</guilabel> or <guilabel>Queue Next</guilabel>
+action in &konqueror;, &kicker; or any other program that supports those
+actions;</para></listitem>
+
+<listitem><para><menuchoice><guisubmenu>Add</guisubmenu>
+<guimenuitem>Files...</guimenuitem></menuchoice> or
+<menuchoice><guisubmenu>Add</guisubmenu>
+<guimenuitem>URL...</guimenuitem></menuchoice> on the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<link linkend="popup-library">library popup menu</link> in the
+<guilabel>Now Playing</guilabel> section of the
+<interface>multimedia library</interface> or from the
+<link linkend="popup-playlist">playlist popup menu</link>;</para></listitem>
+
+<listitem><para>dragging and dropping items from &konqueror; or another program
+or another part of the <interface>multimedia library</interface> into the
+<guilabel>Now Playing</guilabel> section of the library.</para></listitem>
+
+</itemizedlist>
+
+<para>&kplayer; has a few options that control the playlist behavior:</para>
+
+<itemizedlist>
+
+<listitem><para><guilabel>Loop</guilabel> option tells &kplayer; to play the
+current playlist again from the beginning after it finishes playing
+it.</para></listitem>
+
+<listitem><para><guilabel>Shuffle</guilabel> option arranges items on the
+current playlist in a random order.</para>
+
+<para>If the <guilabel>Loop</guilabel> option is also turned on, the playlist
+will be reshuffled after each loop. To reshuffle at any time, turn the
+<guilabel>Shuffle</guilabel> option off and then back on.</para>
+
+<para>These two options are available on the
+<link linkend="toolbar-playlist">playlist toolbar</link>, the
+<link linkend="menu-player"><guimenu>Player</guimenu> menu</link> and the
+<link linkend="popup-playlist">playlist popup menu</link>.</para></listitem>
+
+<listitem><para><guilabel>Allow duplicate entries on playlists</guilabel> option
+lets you put more than one entry with exactly the same <acronym>URL</acronym> on
+the playlist. When this option is turned off, &kplayer; will automatically
+remove duplicate entries from the playlist. However, you still can put the same
+entry in two different folders in the <guilabel>Now Playing</guilabel> section
+of the <link linkend="parts-library"><interface>multimedia
+library</interface></link>, and then they both will be on
+the current playlist. This option also affects playlists stored in the
+<guilabel>Playlists</guilabel> section of the library, as well as folders in the
+<guilabel>Recent</guilabel> section. This option is on the
+<link linkend="settings-general"><guilabel>General</guilabel> page</link>
+in <guilabel>&kplayer; Settings</guilabel>.</para></listitem>
+
+</itemizedlist>
+
+<para>To remove entries from the current playlist, or to change the order of
+entries, open the <guilabel>Now Playing</guilabel> section of the
+<interface>multimedia library</interface> by choosing
+<menuchoice><guimenu>Library</guimenu><guisubmenu>Go</guisubmenu>
+<guimenuitem>Now Playing</guimenuitem></menuchoice> or
+<mousebutton>right</mousebutton> clicking the playlist drop down box on the
+<link linkend="parts-toolbar-playlist">playlist toolbar</link> and choosing
+<menuchoice><guimenuitem>Edit</guimenuitem></menuchoice>. Then use the
+<guimenuitem>Remove</guimenuitem>, <guimenuitem>Move Up</guimenuitem> and
+<guimenuitem>Move Down</guimenuitem> commands from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<link linkend="popup-library">library popup menu</link> to edit the
+playlist. Clicking a column header in the <interface>list view</interface>
+resets the order of items in the current playlist folder and any expanded
+subfolders and sorts the folder by that column.</para>
+
+<para>You can save the current playlist in the <guilabel>Playlists</guilabel>
+or the <guilabel>Collection</guilabel> section of the <interface>multimedia
+library</interface> by <mousebutton>right</mousebutton> clicking the playlist
+drop down box on the <link linkend="parts-toolbar-playlist">playlist
+toolbar</link> and choosing <menuchoice><guisubmenu>Add to</guisubmenu>
+<guimenuitem>Playlists...</guimenuitem></menuchoice> or
+<menuchoice><guisubmenu>Add to</guisubmenu>
+<guimenuitem>Collection...</guimenuitem></menuchoice> respectively. The playlist
+will then appear on the <guisubmenu>Play List</guisubmenu> submenu of the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and several
+<link linkend="popup-menus">popup menus</link>, as well as on the
+<guisubmenu>Add to</guisubmenu> submenus of the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> and the
+<link linkend="popup-library">library popup menu</link>.
+<mousebutton>Right</mousebutton> clicking the playlist
+drop down box and choosing <menuchoice><guisubmenu>Add to</guisubmenu>
+<guimenuitem>an existing playlist name</guimenuitem></menuchoice> will add the
+contents of the current playlist to the existing playlist you choose.</para>
+
+<para>For more information on the multimedia library feature see the
+<link linkend="howto-library">Multimedia library micro-HOWTO</link>.</para>
+
+</sect2>
+
+<sect2 id="howto-playlist-stored">
+<title>Stored playlists</title>
+
+<para>To create a new playlist and store it in the
+<guilabel>Playlists</guilabel> section of the
+<link linkend="parts-library"><interface>multimedia library</interface></link>,
+select the multimedia you want to put on it in another section of the library,
+choose <menuchoice><guisubmenu>Add to</guisubmenu>
+<guimenuitem>New Playlist...</guimenuitem></menuchoice> from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<link linkend="popup-library">library popup menu</link>, and enter the name
+of the new playlist. If the multimedia is already stored in a folder, you can
+use the <menuchoice><guisubmenu>Add to</guisubmenu>
+<guimenuitem>Playlists</guimenuitem></menuchoice> command instead. These
+commands are also available on the <guisubmenu>Actions</guisubmenu> submenu
+of the <mousebutton>right</mousebutton> click popup menu in &konqueror;,
+&kicker; and other programs.</para>
+
+<para>The playlists you create in the <guilabel>Playlists</guilabel> section
+will appear on the <guisubmenu>Play List</guisubmenu> submenu of the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and several
+<link linkend="popup-menus">popup menus</link> that lets you play a list by
+choosing it from the menu, as well as on the <guisubmenu>Add to</guisubmenu>
+submenu of the <link linkend="menu-library"><guimenu>Library</guimenu>
+menu</link> and the <link linkend="popup-library">library popup menu</link>
+that allows you add more multimedia to an existing playlist. The
+<guilabel>Maximum entries on playlist menus</guilabel> option on the
+<link linkend="settings-general"><guilabel>General</guilabel> page</link> of
+<guilabel>&kplayer; Settings</guilabel> gives the maximum number of playlists
+that will be included on the submenus.</para>
+
+<para>Just like with the current playlist, you can edit a playlist stored in the
+<guilabel>Playlists</guilabel> section by opening the list in the
+<interface>multimedia library</interface> and using commands from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> and the
+<link linkend="popup-library">library popup menu</link>, or add more items to it
+by dragging and dropping them onto the playlist or any of its subfolders.</para>
+
+<para>For more details see the <link linkend="howto-library">Multimedia library
+micro-HOWTO</link>.</para>
 
 </sect2>
 
@@ -108,14 +216,18 @@ sometimes a playlist file will not have a playlist extension, or a file that
 is not a playlist can have a playlist extension. In those cases playback will
 initially fail. You can then go to the <link linkend="properties">General
 page</link> in <guilabel>File Properties</guilabel> and set the
-<guilabel>Playlist</guilabel> option correctly. kplayer; will remember the
+<guilabel>Playlist</guilabel> option correctly. &kplayer; will remember the
 option and use it the next time you play the same file or
 <acronym>URL</acronym>.</para>
 
 <para>If setting the <guilabel>Playlist</guilabel> option does not help, you
-will need to manually extract the actual path or <acronym>URL</acronym> from
-the file and paste it into the <guilabel>Open URL</guilabel> dialog that you
-can open from the <guimenu>File</guimenu> menu.</para>
+will need to manually extract the actual path or <acronym>URL</acronym> from the
+file and paste it into the <guilabel>Play URL</guilabel> dialog that you can
+open from the <guimenu>File</guimenu> menu or the <guilabel>Add URL</guilabel>
+dialog that you get when you <mousebutton>right</mousebutton> click the
+<link linkend="toolbar-playlist">playlist toolbar</link> and choose
+<menuchoice><guisubmenu>Add</guisubmenu>
+<guimenuitem>URL...</guimenuitem></menuchoice>.</para>
 
 <para>The playlist extensions &kplayer; recognizes are <literal>ram</literal>,
 <literal>rpm</literal>, <literal>smi</literal>, <literal>smil</literal>,

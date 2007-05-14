@@ -5,21 +5,19 @@
 <title>Getting support</title>
 
 <para>There are several ways to get help with &kplayer;. If you want to ask a
-question, the <ulink
+question, go to the <ulink url="irc://irc.freenode.net/#kplayer">#kplayer
+channel</ulink> on FreeNode <acronym>IRC</acronym> or post it on the <ulink
 url="http://sourceforge.net/forum/forum.php?forum_id=244388">user
-forum</ulink> is the best place to post it, since other users will be able to
-see it, as well as the developer who is of course subscribed to receive e-mail
-when a message is posted there. The user forum is also a good place to post
-about a problem that you are not sure is a bug.</para>
+forum</ulink> where other users will be able to see it, as well as the developer
+who is of course subscribed to receive e-mail when a message is posted there.
+The <acronym>IRC</acronym> channel and the user forum are also good places to
+get help with a problem.</para>
 
 <para>Bugs should be reported through the <ulink
 url="http://sourceforge.net/tracker/?atid=532182&amp;group_id=71710">bug
 tracking system</ulink>, following the instructions in the
-<link linkend="howto-bug-reporting">Bug reporting micro-HOWTO</link>. Bugs
-reported using the <guimenuitem>Report a bug</guimenuitem> option on the
-<guimenu>Help</guimenu> menu are still accepted, but are less helpful.</para>
-
-<para>Also there are special sections at the
+<link linkend="howto-bug-reporting">Bug reporting micro-HOWTO</link>. Also there
+are special sections at the
 <ulink url="http://sourceforge.net/projects/kplayer/">&kplayer; project</ulink>
 on SourceForge for <ulink
 url="http://sourceforge.net/tracker/?atid=532183&amp;group_id=71710">support
@@ -121,7 +119,7 @@ error.</para>
 
 <para>Look at the end of the message log to see what errors &mplayer; gives when
 trying to play the files. Hit
-<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo> if &kplayer; does
+<keycombo action="simul">&Ctrl;<keycap>G</keycap></keycombo> if &kplayer; does
 not show the log automatically.</para>
 
 <para>Try playing the files with <command>mplayer</command> from the command
@@ -145,7 +143,7 @@ field.</para>
 
 <para>Look at the end of the message log to see what errors &mplayer; gives when
 trying to play the file. Hit
-<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo> if &kplayer; does
+<keycombo action="simul">&Ctrl;<keycap>G</keycap></keycombo> if &kplayer; does
 not show the log automatically.</para>
 
 <para>Try playing the file with <command>mplayer</command> from the command
@@ -228,17 +226,6 @@ Properties</link> instead.</para>
 </sect3>
 
 <sect3>
-<title>Cannot play a DVD, video CD or audio CD</title>
-
-<para>Choose <guimenuitem>Open URL</guimenuitem> from <guimenu>File</guimenu>
-menu. Enter a <acronym>URL</acronym> like <userinput>dvd://1</userinput> or
-<userinput>vcd://1</userinput>. For more information about playback from various
-kinds of hardware devices see the <link linkend="howto-devices">Devices
-micro-HOWTO</link>.</para>
-
-</sect3>
-
-<sect3>
 <title>Problems when coming back from full screen mode</title>
 
 <para>If you are getting problems when you try to go back to normal window size
@@ -255,14 +242,18 @@ user forum</ulink> and watch it for updates.</para>
 <sect3>
 <title>Radio station takes too long to start playing</title>
 
-<para>By default &kplayer; uses one megabyte of cache. When playing low bitrate
-media like a radio station, it will take a long time to fill it. You can choose
-a lower <guilabel>Cache size</guilabel> setting on the
-<guilabel>Advanced</guilabel> page either globally in
+<para>By default &kplayer; lets &mplayer; choose an optimal cache size. When
+playing low bitrate media like a radio station, it may take a long time to fill
+the cache if it is too big. If that happens, you can either choose a lower
+<guilabel>Cache size</guilabel> setting or give a lower minimum cache size on
+the <guilabel>Advanced</guilabel> page either globally in
 <link linkend="settings-advanced">&kplayer; Settings</link> or in the
 individual <link linkend="properties-advanced">File Properties</link>.
-For more information on playing online media see the
-<link linkend="howto-streams">Streams micro-HOWTO</link>.</para>
+Enter the minimum cache size into the <guilabel>Additional command line
+parameters</guilabel> field, for example <literal>-cache-min 5</literal>, or
+choose <guilabel>set size</guilabel> for the <guilabel>Cache</guilabel> option
+and enter a size in kilobytes. For more information on playing online media see
+the <link linkend="howto-streams">Streams micro-HOWTO</link>.</para>
 
 </sect3>
 
@@ -270,8 +261,7 @@ For more information on playing online media see the
 <title>Large video files take too long to start playing</title>
 
 <para>You may have set the <guilabel>Cache size</guilabel> option too low in
-<link linkend="settings-advanced">&kplayer; Settings</link>. The default global
-setting is one megabyte, which should work fine in most cases. If you need to
+<link linkend="settings-advanced">&kplayer; Settings</link>. If you need to
 set it higher or lower for an individual file or stream, you can do so on the
 <link linkend="properties-advanced">Advanced page</link> in <guilabel>File
 Properties</guilabel>.</para>
@@ -279,14 +269,15 @@ Properties</guilabel>.</para>
 </sect3>
 
 <sect3>
-<title>Only video area is shown in &konqueror; or &kmldonkey;</title>
+<title>Only the video area is shown in &konqueror;</title>
 
 <para>If you open a web page with an embedded multimedia object in &konqueror;,
-only the video area is displayed, with no controls. Same happens when previewing
-partially downloaded files in &kmldonkey;. It is recommended that you right
-click the video area and choose the <guimenuitem>Start &kplayer;</guimenuitem>
-command. Playback will then stop, and the full &kplayer; will open up and start
-playing the file or <acronym>URL</acronym>.</para>
+only the video area is displayed, with no controls. Then you should
+<mousebutton>right</mousebutton> click the
+<link linkend="parts-video-area">video area</link> and choose the
+<guimenuitem>Start &kplayer;</guimenuitem> command. Playback will then stop, and
+the full &kplayer; will open up and start playing the file or
+<acronym>URL</acronym>.</para>
 
 </sect3>
 
@@ -294,39 +285,14 @@ playing the file or <acronym>URL</acronym>.</para>
 <title>Contrast and brightness controls do not work</title>
 
 <para>You need to enable the <link linkend="howto-installation-xvideo">XVideo
-extension</link> in your X11 configuration.</para>
-
-</sect3>
-
-<sect3>
-<title>Cannot upgrade kdelibs-data because of a conflict</title>
-
-<para>In Debian the <literal>kdelibs-data</literal> package contains
-<filename>rtsp.protocol</filename> file, which &kplayer; replaces with its own
-version. If later you try to upgrade the <literal>kdelibs-data</literal>
-package, <command>apt-get</command> will complain about a conflict. This is a
-bug in <command>apt-get</command>. To work around it, run the following
-commands:</para>
-
-<para><userinput><command>apt-get</command> remove kplayer</userinput></para>
-
-<para><userinput><command>apt-get</command> install
-kdelibs-data</userinput></para>
-
-<para><userinput><command>apt-get</command> install kplayer</userinput></para>
-
-<para>If you run <userinput><command>apt-get</command> install
-kdelibs-data</userinput> before <userinput><command>apt-get</command> remove
-kplayer</userinput>, another <command>apt-get</command> bug will prevent you
-from removing the <literal>kplayer</literal> package. The workaround is:</para>
-
-<para><userinput><command>dpkg</command> <option>-r</option>
-kplayer</userinput></para>
-
-<para><userinput><command>apt-get</command> <option>-f</option>
-install</userinput></para>
-
-<para><userinput><command>apt-get</command> install kplayer</userinput></para>
+extension</link> in your X11 configuration and make sure the XVideo video output
+is selected on the <link linkend="settings-advanced"><guilabel>Video</guilabel>
+page</link> in <guilabel>&kplayer; Settings</guilabel>. However, if you cannot
+use the XVideo output, you can still make the video controls to work by putting
+the <literal>-vf eq2</literal> or <literal>-vf eq</literal> option into the
+<guilabel>Additional command line parameters</guilabel> field on the
+<link linkend="properties-advanced">Advanced page</link> in <guilabel>&kplayer;
+Settings</guilabel>.</para>
 
 </sect3>
 

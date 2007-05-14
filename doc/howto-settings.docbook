@@ -28,40 +28,45 @@ But in that case you should also report the bug following instructions in the
 <link linkend="howto-bug-reporting">Reporting bugs
 micro-HOWTO</link>.</para></listitem></varlistentry>
 
-</variablelist>
+<varlistentry><term><guilabel>Maximum entries on playlist menus</guilabel>,
+<guilabel>Maximum entries on Play Recent menu</guilabel> and
+<guilabel>Maximum Recent entries in the library</guilabel></term>
+<listitem><para>These options control the size of playlist menus, the recent
+menu and the recent list in the
+<link linkend="parts-library"><interface>multimedia library</interface></link>
+respectively. If the limits are exceeded, the menus will show the top items
+up to the limit you provide, and items from the <guilabel>Recent</guilabel>
+section of the library that exceed the limit will be
+removed.</para></listitem></varlistentry>
 
-</sect2>
-
-<sect2 id="howto-settings-playlist">
-<title><link linkend="settings-playlist">Playlist</link> settings</title>
-
-<variablelist>
-
-<varlistentry><term><guilabel>Start playing new entries
-immediately</guilabel></term>
-<listitem><para>This option is turned on by default, so &kplayer; will start
-playing new entries you add to the playlist by using
-<guimenuitem>Open</guimenuitem> or <guimenuitem>Open URL</guimenuitem> commands
-on the <guimenu>File</guimenu> menu, or dragging and dropping files onto
-&kplayer; window, or launching files in &konqueror; etc. If you turn it off,
-the files will still be put on the currently playing list, but will not be
-played until their turn comes.</para></listitem></varlistentry>
-
-<varlistentry><term><guilabel>Allow duplicate entries</guilabel></term>
-<listitem><para>By default &kplayer; will remove duplicate entries from the
-playlist when adding new entries. Turning the option on allows you to have
-duplicate entries on your playlist. Duplicate means that the entries'
-<acronym>URL</acronym>s are exactly the same.</para></listitem></varlistentry>
-
-<varlistentry><term><guilabel>Cache size limit</guilabel></term>
+<varlistentry><term><guilabel>Meta information cache size
+limit</guilabel></term>
 <listitem><para>&kplayer; will remember the
 <link linkend="howto-properties">properties</link> of any files or
 <acronym>URL</acronym>s it has played, even when they are removed from the
-playlist. It will only start forgetting old file properties after a large
-number of files have been played. This setting controls that number, by
-default it is 1000. This has nothing to do with &mplayer; cache, look on
-the <link linkend="howto-settings-advanced">Advanced page</link> for
-that.</para></listitem></varlistentry>
+<interface>multimedia library</interface>. It will only start forgetting old
+file properties after a large number of files have been played. This setting
+controls that number, by default it is 10000. This has nothing to do with
+&mplayer; cache, look on the <link linkend="howto-settings-advanced">Advanced
+page</link> for that.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Allow duplicate entries on
+playlists</guilabel></term>
+<listitem><para>By default &kplayer; removes duplicate entries from playlists
+when adding new entries. Turning the option on allows you to have duplicate
+entries on playlists. Duplicate means that the entries' <acronym>URL</acronym>s
+are exactly the same. Note however that different playlist folders can have
+identical entries regardless of this setting.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Show messages if a file fails to
+play</guilabel></term>
+<listitem><para>When an error occurs while trying to play a file, &kplayer;
+shows an <guilabel>Error</guilabel> indicator in the status bar. You can then
+<mousebutton>left</mousebutton> click the indicator to show the
+<link linkend="parts-message-log">message log</link> containing the full output
+from &mplayer; and &kde; <acronym>I/O</acronym> Slaves. When this option is
+turned on, &kplayer; will show the message log automatically whenever an error
+occurs.</para></listitem></varlistentry>
 
 </variablelist>
 
@@ -81,16 +86,18 @@ properties micro-HOWTO</link> has more information.</para>
 
 <para>On this page you can choose the properties that will be remembered
 automatically for each file or <acronym>URL</acronym>. By default &kplayer;
-will remember audio delay, subtitle delay and subtitle <acronym>URL</acronym>
-(except autoloaded subtitles).</para></listitem></varlistentry>
+remembers the video aspect ratio, audio delay and subtitle
+delay.</para></listitem></varlistentry>
 
 <varlistentry><term><guilabel>Remember for current file any changes made with
 &Shift;</guilabel></term>
 <listitem><para>Alternatively, you can make &kplayer; remember a setting for
 the current file by holding the &Shift; key while changing that setting. For
 example, if you have a video file that needs too much resources to play
-correctly on your system, you can hold &Shift; and choose a frame dropping
-setting on the <link linkend="menu-player"><guimenu>Player</guimenu>
+correctly on your system, you can hold the &Shift; key and choose a frame
+dropping setting from the
+<link linkend="submenu-advanced"><guisubmenu>Advanced</guisubmenu>
+submenu</link> of the <link linkend="menu-player"><guimenu>Player</guimenu>
 menu</link>. &kplayer; will then use that setting for this file only, and will
 continue using the default setting for all other
 files.</para></listitem></varlistentry>
@@ -133,7 +140,7 @@ menu</link>.</para></listitem></varlistentry>
 
 </sect2>
 
-<sect2 id="howto-settings-audio">
+<sect2 id="howto-settings-audio-video">
 <title><link linkend="settings-audio">Audio</link> and
 <link linkend="settings-video">video</link> settings</title>
 
@@ -142,25 +149,21 @@ menu</link>.</para></listitem></varlistentry>
 <varlistentry><term><guilabel>Driver</guilabel></term>
 <listitem><para>This option allows you to choose the video or audio output that
 <link linkend="howto-installation-mplayer">&mplayer;</link> will use. The
-recommended outputs are XVideo for video and <acronym>OSS</acronym> or
-<acronym>ALSA</acronym> for audio. Right next to it there is a check box that
-tells &mplayer; to use a different output if the chosen one
-fails.</para></listitem></varlistentry>
+recommended outputs are XVideo for video and <acronym>ALSA</acronym> for
+audio.</para></listitem></varlistentry>
 
 <varlistentry><term><guilabel>Device</guilabel></term>
 <listitem><para>For some output types you can also specify the device that
 &mplayer; will use for output. For other output types this sets the output
 subtype instead. For still other output types this setting may not be meaningful
-at all. You can find the details on the mplayer(1)
-manpage.</para></listitem></varlistentry>
+at all. You can find the details on the <ulink url="man:/mplayer">&mplayer;
+manpage</ulink>.</para></listitem></varlistentry>
 
 <varlistentry><term><guilabel>Codec</guilabel></term>
-<listitem><para>This sets the decoder and codec &mplayer; will use for decoding
-the video or audio. Right next to it there is a check box that tells &mplayer;
-to use a different codec if the chosen one fails. The <guilabel>Codec</guilabel>
-option is not of much use anymore since &kplayer; 0.5 introduced
-<link linkend="howto-properties">file properties</link> and the ability to set
-the codec for each file or <acronym>URL</acronym>
+<listitem><para>This sets the preferred decoder and codec that &mplayer; should
+use for decoding video or audio. This option is not of much use anymore since
+&kplayer; 0.5 introduced <link linkend="howto-properties">file properties</link>
+and the ability to set the codec for each file or <acronym>URL</acronym>
 individually.</para></listitem></varlistentry>
 
 </variablelist>
@@ -194,6 +197,40 @@ It is disabled by default.</para></listitem></varlistentry>
 
 </sect2>
 
+<sect2 id="howto-settings-audio">
+<title><link linkend="settings-audio">Audio</link> settings</title>
+
+<variablelist>
+
+<varlistentry><term><guilabel>Control volume independently of other
+programs</guilabel></term>
+<listitem><para>This option tells &mplayer; to use software volume control,
+which does not affect global volume settings on your system, but may result
+in some distortion of the sound. When this is enabled, the maximum volume
+level is controlled by the <guilabel>Maximum volume</guilabel> setting, which
+is in percent of the normal volume level.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Mixer device</guilabel> and
+<guilabel>Mixer channel</guilabel></term>
+<listitem><para>These options let you choose an <acronym>ALSA</acronym> or
+<acronym>OSS</acronym> device and channel that will be used to control the
+sound volume. These options are not available when the software volume option
+above is enabled.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Delay adjustment amount</guilabel></term>
+<listitem><para>This option and a similar one for subtitles gives the amount by
+which the delay of audio or subtitles relative to video will be changed when
+using the <guimenuitem>Increase Delay</guimenuitem> and <guimenuitem>Decrease
+Delay</guimenuitem> commands on the
+<link linkend="submenu-audio"><guisubmenu>Audio</guisubmenu></link> or
+<link linkend="submenu-subtitles"><guisubmenu>Subtitles</guisubmenu></link>
+submenu of the <guimenu>Player</guimenu> menu or the corresponding keyboard
+shortcuts.</para></listitem></varlistentry>
+
+</variablelist>
+
+</sect2>
+
 <sect2 id="howto-settings-advanced">
 <title><link linkend="settings-advanced">Advanced</link> settings</title>
 
@@ -202,34 +239,39 @@ It is disabled by default.</para></listitem></varlistentry>
 <varlistentry><term><guilabel>Additional command line
 arguments</guilabel></term>
 <listitem><para>In this field you can place additional command line options
-you want to pass to <link linkend="howto-installation-mplayer">&mplayer;</link>
-when playing this <acronym>URL</acronym>. For example, to deinterlace a
-<acronym>DVD</acronym> put a video filtering option like <option>-vf
-pullup</option> here for a <literal>dvd://1</literal> <acronym>URL</acronym>.
-Choose the <guilabel>append</guilabel> option to add the options you put here
-to the ones you enter on the <link linkend="settings-advanced">Advanced
-page</link> in the <guilabel>&kplayer; Settings</guilabel> dialog, or the
-<guilabel>set to</guilabel> option to override
-them.</para></listitem></varlistentry>
+you want to pass to <link linkend="howto-installation-mplayer">&mplayer;</link>.
+For example, to get more informational output in the
+<link linkend="parts-message-log">message log</link>, put the
+<option>-v</option> option in this field. You can add more options for an
+individual file or <acronym>URL</acronym> in its
+<link linkend="howto-properties-advanced">file
+properties</link>.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Preferred demuxer</guilabel></term>
+<listitem><para>This sets the preferred demultiplexer that &mplayer; should
+use for decoding files and streams. You can also choose a demuxer for each
+individual file or stream in its <link linkend="howto-properties-advanced">file
+properties</link>. For example you can choose the <literal>lavf</literal>
+option if the <literal>libavformat</literal> demuxer works better for your
+multimedia than other &mplayer; demuxers.</para></listitem></varlistentry>
 
 <varlistentry><term><guilabel>Frame drop</guilabel></term>
 <listitem><para>If your system is too slow to play your files properly, this
-option will tell &mplayer; to drop some frames. This option is not of much use
-anymore, since &kplayer; 0.5 introduced <link linkend="howto-properties">file
-properties</link> and the ability to set the frame dropping option on per file
-or <acronym>URL</acronym> basis. Just hold down &Shift; key when selecting a
-frame dropping option from the
-<link linkend="menu-player"><guimenu>Player</guimenu> menu</link>, and &kplayer;
-will remember it for the current file or
-<acronym>URL</acronym>.</para></listitem></varlistentry>
+option will tell &mplayer; to drop some frames. You can also set the frame
+dropping option on a per file or <acronym>URL</acronym> basis. Just hold down
+the &Shift; key when selecting a frame dropping option from the
+<link linkend="submenu-advanced"><guisubmenu>Advanced</guisubmenu>
+submenu</link> of the <link linkend="menu-player"><guimenu>Player</guimenu>
+menu</link>, and &kplayer; will remember it for the current file or
+<acronym>URL</acronym>. If you need frame dropping, try the
+<guilabel>soft</guilabel> option first.</para></listitem></varlistentry>
 
 <varlistentry><term><guilabel>Cache</guilabel></term>
 <listitem><para>This is probably the most tricky of &mplayer; options. It is
 especially important when playing directly from a
 <link linkend="howto-slaves">&kde; <acronym>I/O</acronym> Slave</link>. Although
 most audio files will play fine with only 64 kilobyte cache, such a small cache
-will cause problems with many video files. For maximum compatibility the default
-cache size in &kplayer; is one megabyte. However, some slow media types like
+will cause problems with many video files. Also, some slow media types like
 <acronym>DVD</acronym>, <acronym>VCD</acronym>, <acronym>NFS</acronym>, Samba,
 etc. may sometimes require much larger cache like eight megabytes. On the other
 hand, low bitrate media like <link linkend="howto-streams">online radio
@@ -237,8 +279,8 @@ stations</link> may need smaller cache so they start playing more quickly. Also,
 according to &mplayer; crashing message, non-interleaved <acronym>AVI</acronym>
 files may need cache to be turned off. As usual, you can set the
 <guilabel>Cache</guilabel> option for each individual file or
-<acronym>URL</acronym> in its <link linkend="properties-advanced">File
-Properties</link>.</para></listitem></varlistentry>
+<acronym>URL</acronym> in its <link linkend="properties-advanced">file
+properties</link>.</para></listitem></varlistentry>
 
 <varlistentry><term><guilabel>Build new index</guilabel></term>
 <listitem><para>If a file does not have an index or has a broken one, so seeking
@@ -268,18 +310,10 @@ for individual files and
 directly by &mplayer; or using a <link linkend="howto-slaves">&kde;
 <acronym>I/O</acronym> Slave</link>. All three options are turned off by
 default, so the <acronym>URL</acronym>s are passed to &mplayer; directly. But
-for example &mplayer; 1.0-pre4 was released with <acronym>FTP</acronym>
-support broken all the way down, so if that is the &mplayer; version you are
-using, you will want to turn the <guilabel>FTP</guilabel> option on, so
-&kplayer; uses the <acronym>FTP</acronym> <acronym>I/O</acronym> Slave. The same
-&mplayer; version also had broken handling of <acronym>URL</acronym> encoded
-characters like a space, so you would either turn this option on for
-<guilabel>HTTP</guilabel> as well, or turn on the &kde; <acronym>I/O</acronym>
-Slave option in the <link linkend="properties-advanced">file properties</link>
-for any <acronym>HTTP</acronym> <acronym>URL</acronym> that has a character like
-that in it. Also Samba support in &mplayer; is still listed as experimental, so
-if you did not compile it in or if it does not work for you, turn the
-<guilabel>SMB</guilabel> option on.</para></listitem></varlistentry>
+if that does not work for any reason, you will want to turn the corresponding
+option on, so that &kplayer; uses the <acronym>I/O</acronym> Slave. You can also
+set this option in the individual <link linkend="howto-properties-advanced">file
+properties</link>.</para></listitem></varlistentry>
 
 </variablelist>
 

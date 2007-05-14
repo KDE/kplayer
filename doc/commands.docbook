@@ -1,9 +1,9 @@
 <chapter id="commands">
 <title>Command reference</title>
 
-<note><para>The shortcut key combinations shown in this chapter are the default
+<para>The shortcut key combinations shown in this chapter are the default
 ones. They can of course be
-<link linkend="configuration-shortcuts">changed</link>.</para></note>
+<link linkend="configuration-shortcuts">changed</link>.</para>
 
 <sect1 id="menubar">
 <title>Menu bar</title>
@@ -23,9 +23,9 @@ files.</para>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>O</keycap></keycombo>
 </shortcut>
-<guimenuitem>Open...</guimenuitem>
+<guimenuitem>Play...</guimenuitem>
 </menuchoice></term>
-<listitem><para>Displays the standard <guilabel>Open File</guilabel> dialog
+<listitem><para>Displays the standard <guilabel>Play files</guilabel> dialog
 and lets you choose a file or several files to put on the playlist and start
 playing.</para></listitem>
 </varlistentry>
@@ -35,25 +35,45 @@ playing.</para></listitem>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>U</keycap></keycombo>
 </shortcut>
-<guimenuitem>Open URL...</guimenuitem>
+<guimenuitem>Play URL...</guimenuitem>
 </menuchoice></term>
-<listitem><para>Displays the standard <guilabel>Open URL</guilabel> dialog
+<listitem><para>Displays the standard <guilabel>Play URL</guilabel> dialog
 and lets you type or paste in a <acronym>URL</acronym> to put on the playlist
 and start playing. The <acronym>URL</acronym> can be a remote network location,
-a local file path, a &kde; <acronym>I/O</acronym> Slave <acronym>URL</acronym>
-or a special <acronym>URL</acronym> for playing from various types of
-<link linkend="howto-devices">devices</link> like <acronym>DVD</acronym>, video
-<acronym>CD</acronym>, audio <acronym>CD</acronym>, <acronym>TV</acronym> or
-<acronym>DVB</acronym>.</para></listitem>
+a local file path, or a &kde; <acronym>I/O</acronym> Slave
+<acronym>URL</acronym>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guisubmenu>Open Recent</guisubmenu>
+<guisubmenu>Play List</guisubmenu>
 </menuchoice></term>
-<listitem><para>Displays a submenu listing the most recently opened files and
+<listitem><para>Displays a submenu listing all playlists and lets you choose one
+of them to play.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guisubmenu>Play Recent</guisubmenu>
+</menuchoice></term>
+<listitem><para>Displays a submenu listing the most recently played files and
 <acronym>URL</acronym>s and lets you choose one to put on the playlist and start
 playing.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guisubmenu>Device</guisubmenu>
+</menuchoice></term>
+<listitem><para>Displays a submenu with commands for the particular device. Each
+device has its own submenu. The submenu label reflects the kind of device it is,
+for example <guilabel>TV Device</guilabel> or <guilabel>DVD Device</guilabel>.
+When you put a disk in a disk drive, after a few seconds the label will change
+to reflect the kind of disk you inserted, for example <guilabel>Audio CD in DVD
+Device</guilabel>. The list of commands on the submenu will also be updated
+accordingly to include commands applicable to the disk and the tracks it has.
+See <link linkend="submenu-device">below</link> for details about the
+commands.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -63,43 +83,16 @@ playing.</para></listitem>
 </shortcut>
 <guimenuitem>Load Subtitles...</guimenuitem>
 </menuchoice></term>
-<listitem><para>Displays the standard <guilabel>Open File</guilabel> dialog
+<listitem><para>Displays the standard <guilabel>Load subtitles</guilabel> dialog
 and lets you choose a subtitle file to use with the current file or
-<acronym>URL</acronym>. If you load subtitles when video is playing, &kplayer;
-will restart playback with the subtitles. By default it will also remember the
+<acronym>URL</acronym>. After you click <guibutton>Open</guibutton>, &kplayer;
+will start showing the subtitles immediately if the video is already playing,
+and list the subtitle file on the <link
+linkend="submenu-subtitles"><guisubmenu>Subtitles</guisubmenu> submenu</link>
+of the <guimenu>Player</guimenu> menu. By default it will also remember the
 subtitles you choose in the current file
 <link linkend="properties">properties</link>. This command is available for
 video files.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Load Subtitle URL...</guimenuitem>
-</menuchoice></term>
-<listitem><para>Displays the standard <guilabel>Open URL</guilabel> dialog and
-lets you type or paste in a subtitle <acronym>URL</acronym> to use with the
-current file or <acronym>URL</acronym>. If you load subtitles when video is
-playing, &kplayer; will restart playback with the subtitles. By default it will
-also remember the subtitles you choose in the current file
-<link linkend="properties">properties</link>. This command is available for
-video files.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Unload Subtitles</guimenuitem>
-</menuchoice></term>
-<listitem><para>Unloads the currently loaded subtitles, and if video is
-playing, restarts playback without subtitles. This command is available
-when subtitles are loaded.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Clear Log</guimenuitem>
-</menuchoice></term>
-<listitem><para>Removes all messages from the
-<link linkend="parts-message-log">message log</link>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -128,12 +121,71 @@ for details.</para></listitem>
 
 </variablelist>
 
+<sect3 id="submenu-device">
+<title><guisubmenu>Device</guisubmenu> submenu</title>
+
+<variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Play Disk</guimenuitem>
+</menuchoice></term>
+<listitem><para>Plays the entire disk. This command is available if the device
+is a disk drive.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Play Title</guimenuitem>
+</menuchoice></term>
+<listitem><para>Plays one title of a video <acronym>DVD</acronym>. This command
+is available when &kplayer; detects a video <acronym>DVD</acronym> in a
+<acronym>DVD</acronym> drive and finds out the number of titles on it. Each
+title on the <acronym>DVD</acronym> has its own command on this
+submenu.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Play Track</guimenuitem>
+</menuchoice></term>
+<listitem><para>Plays one track of an audio or video <acronym>CD</acronym>. This
+command is available when &kplayer; detects an audio or video
+<acronym>CD</acronym> in a disk drive and finds out the number of tracks on it.
+Each track on the <acronym>CD</acronym> has its own command on this
+submenu.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Load Disk</guimenuitem>
+</menuchoice></term>
+<listitem><para>Detects the kind of disk that is in the disk drive, finds the
+number of titles or tracks on the disk and updates the submenu accordingly.
+Usually &kplayer; detects this information automatically, but sometimes this
+command can be useful to initiate the detection process manually. This command
+is available if the device is a disk drive.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Play Channel</guimenuitem>
+</menuchoice></term>
+<listitem><para>Plays a channel from a tuner device. This command is available
+if the device is a tuner device. Each channel on the device has its own command
+on this submenu.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
 </sect2>
 
 <sect2 id="menu-view">
 <title><guimenu>View</guimenu> menu</title>
 
-<note><para>Commands on this menu are only available for video files.</para></note>
+<para>Commands on this menu are only available for video files.</para>
 
 <variablelist>
 
@@ -300,12 +352,60 @@ is available when the player is not idle.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
+<keycombo action="simul">&Alt;<keycap>Down Arrow</keycap></keycombo>
+</shortcut>
+<guimenuitem>Next</guimenuitem>
+</menuchoice></term>
+<listitem><para>Starts playing the next item on the current
+playlist.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Alt;<keycap>Up Arrow</keycap></keycombo>
+</shortcut>
+<guimenuitem>Previous</guimenuitem>
+</menuchoice></term>
+<listitem><para>Starts playing the previous item on the current
+playlist.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Loop</guimenuitem>
+</menuchoice></term>
+<listitem><para>Toggles the option to start playing items from the beginning
+of the playlist after playing the last item on the playlist.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Shuffle</guimenuitem>
+</menuchoice></term>
+<listitem><para>Toggles the option to play playlist items in a random
+order.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<sect3 id="submenu-position">
+<title><guisubmenu>Position</guisubmenu> submenu</title>
+
+<para>This submenu and the commands it contains are available when playing a
+file.</para>
+
+<variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
 <keycap>Right Arrow</keycap>
 </shortcut>
 <guimenuitem>Forward</guimenuitem>
 </menuchoice></term>
 <listitem><para>Moves playback forward by one percent of the time length of the
-current file. This command is available when playing a file.</para></listitem>
+current file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -316,7 +416,7 @@ current file. This command is available when playing a file.</para></listitem>
 <guimenuitem>Fast Forward</guimenuitem>
 </menuchoice></term>
 <listitem><para>Moves playback forward by ten percent of the time length of the
-current file. This command is available when playing a file.</para></listitem>
+current file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -327,7 +427,7 @@ current file. This command is available when playing a file.</para></listitem>
 <guimenuitem>Backward</guimenuitem>
 </menuchoice></term>
 <listitem><para>Moves playback backward by one percent of the time length of the
-current file. This command is available when playing a file.</para></listitem>
+current file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -338,7 +438,7 @@ current file. This command is available when playing a file.</para></listitem>
 <guimenuitem>Fast Backward</guimenuitem>
 </menuchoice></term>
 <listitem><para>Moves playback backward by ten percent of the time length of the
-current file. This command is available when playing a file.</para></listitem>
+current file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -348,44 +448,29 @@ current file. This command is available when playing a file.</para></listitem>
 </shortcut>
 <guimenuitem>Back to Start</guimenuitem>
 </menuchoice></term>
-<listitem><para>Moves playback to the beginning of the current file.
-This command is available when playing a file.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Soft Frame Dropping</guimenuitem>
-</menuchoice></term>
-<listitem><para>Toggles the soft frame dropping option. If your system is too
-slow to play a file, &mplayer; can drop some frames so playback does not slow
-down. The soft option drops frames less agressively than the hard one, and
-should not cause playback problems. The <guilabel>Frame drop</guilabel> option
-can also be set on the <guilabel>Advanced</guilabel> page either globally in
-<link linkend="settings-advanced">&kplayer; Settings</link> or for a particular
-file in the <link linkend="properties-advanced">File
-Properties</link>.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Hard Frame Dropping</guimenuitem>
-</menuchoice></term>
-<listitem><para>Toggles the hard frame dropping option. If your system is too
-slow to play a file, &mplayer; can drop some frames so playback does not slow
-down. The hard option drops frames more agressively than the soft one, and may
-sometimes break decoding. The <guilabel>Frame drop</guilabel> option can also
-be set on the <guilabel>Advanced</guilabel> page either globally in
-<link linkend="settings-advanced">&kplayer; Settings</link> or for a particular
-file in the <link linkend="properties-advanced">File
-Properties</link>.</para></listitem>
+<listitem><para>Moves playback to the beginning of the current
+file.</para></listitem>
 </varlistentry>
 
 </variablelist>
+
+</sect3>
 
 <sect3 id="submenu-audio">
 <title><guisubmenu>Audio</guisubmenu> submenu</title>
 
 <variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Track</guimenuitem>
+</menuchoice></term>
+<listitem><para>Switches to the selected audio track. If the currently loaded
+file or stream has more than one audio track, each track will have a command
+that allows you to switch to that audio track. The command will be labelled with
+the audio track language if it is known. If there is only one audio track, this
+command will not be available.</para></listitem>
+</varlistentry>
 
 <varlistentry>
 <term><menuchoice>
@@ -444,9 +529,19 @@ Properties</link>.</para></listitem>
 <sect3 id="submenu-video">
 <title><guisubmenu>Video</guisubmenu> submenu</title>
 
-<note><para>This menu is only available for video files.</para></note>
+<para>This submenu is only available for video files.</para>
 
 <variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Track</guimenuitem>
+</menuchoice></term>
+<listitem><para>Switches to the selected video track. If the currently loaded
+file or stream has more than one video track, each track will have a command
+that allows you to switch to that video track. If there is only one video track,
+this command will not be available.</para></listitem>
+</varlistentry>
 
 <varlistentry>
 <term><menuchoice>
@@ -535,15 +630,28 @@ Properties</link>.</para></listitem>
 <sect3 id="submenu-subtitles">
 <title><guisubmenu>Subtitles</guisubmenu> submenu</title>
 
-<note><para>This menu is only available when subtitles are loaded.</para></note>
+<para>This menu is only available when a video file has embedded subtitles or
+when external subtitles are loaded.</para>
 
 <variablelist>
 
 <varlistentry>
 <term><menuchoice>
-<guimenuitem>Show</guimenuitem>
+<guimenuitem>None</guimenuitem>
 </menuchoice></term>
-<listitem><para>Shows or hides the subtitles.</para></listitem>
+<listitem><para>Stops showing subtitles while playing video.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Track</guimenuitem>
+</menuchoice></term>
+<listitem><para>Switches to the selected subtitles. If the currently loaded
+file or stream has embedded subtitle tracks, each track will have a command
+that allows you to switch to that subtitle track. The command will be labelled
+with the subtitle track language if it is known. If you load external subtitles,
+they will also have a command, labelled with the subtitle file name, that allows
+you to switch to the external subtitles.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -553,7 +661,7 @@ Properties</link>.</para></listitem>
 </shortcut>
 <guimenuitem>Move Down</guimenuitem>
 </menuchoice></term>
-<listitem><para>Moves the subtitles down.</para></listitem>
+<listitem><para>Moves the subtitles down in the video area.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -563,7 +671,7 @@ Properties</link>.</para></listitem>
 </shortcut>
 <guimenuitem>Move Up</guimenuitem>
 </menuchoice></term>
-<listitem><para>Moves the subtitles up.</para></listitem>
+<listitem><para>Moves the subtitles up in the video area.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -590,129 +698,156 @@ Properties</link>.</para></listitem>
 
 </sect3>
 
+<sect3 id="submenu-advanced">
+<title><guisubmenu>Advanced</guisubmenu> submenu</title>
+
+<para>If your system is too slow to play a file, &mplayer; can drop some frames
+so playback does not slow down. This submenu lets you choose a frame dropping
+option. The soft frame dropping option drops frames less agressively than the
+hard one and should not cause playback problems. You should try it when you get
+video lagging behind audio, for example because you cannot use an accelerated
+video output. The hard option drops frames more agressively than the soft one
+and may sometimes break decoding.</para>
+
+<variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Soft Frame Dropping</guimenuitem>
+</menuchoice></term>
+<listitem><para>Toggles the soft frame dropping option.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Hard Frame Dropping</guimenuitem>
+</menuchoice></term>
+<listitem><para>Toggles the hard frame dropping option.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>To turn frame dropping off, unselect the currently selected frame dropping
+option. The <guilabel>Frame drop</guilabel> option can also be set on the
+<guilabel>Advanced</guilabel> page either globally in <link
+linkend="settings-advanced">&kplayer; Settings</link> or for a particular file
+in the <link linkend="properties-advanced">File Properties</link>.</para>
+
+</sect3>
+
 </sect2>
 
-<sect2 id="menu-playlist">
-<title><guimenu>Playlist</guimenu> menu</title>
+<sect2 id="menu-library">
+<title><guimenu>Library</guimenu> menu</title>
 
-<para>For a detailed description of the playlist feature see the
-<link linkend="howto-playlist">Playlist micro-HOWTO</link>.</para>
+<para>The commands on this menu work on the <link
+linkend="parts-library">multimedia library</link>. Most of the commands are
+available when the library is shown using the <guimenuitem>Show
+Library</guimenuitem> command on the <link
+linkend="menu-settings"><guimenu>Settings</guimenu> menu</link> or one of the
+commands on the <link linkend="submenu-go"><guisubmenu>Go</guisubmenu>
+submenu</link>. Other commands become available when you select some items in
+the library. For a detailed description of the multimedia library feature see
+the <link linkend="howto-library">Multimedia library micro-HOWTO</link>.</para>
 
 <variablelist>
 
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>Enter</keycap></keycombo>
 </shortcut>
-<guimenuitem>Show Playlist</guimenuitem>
+<guimenuitem>Play</guimenuitem>
 </menuchoice></term>
-<listitem><para>Shows or hides the
-<link linkend="parts-toolbar-playlist">playlist
-toolbar</link>.</para></listitem>
+<listitem><para>Puts the selected items on the current playlist and starts
+playing them.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo>
-</shortcut>
-<guimenuitem>Show Editor</guimenuitem>
+<guimenuitem>Play Next</guimenuitem>
 </menuchoice></term>
-<listitem><para>Shows or hides the
-<link linkend="parts-playlist-editor">playlist editor</link>.</para></listitem>
+<listitem><para>Puts the selected items on the current playlist and plays them
+after the currently playing item.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenuitem>Show Toolbar</guimenuitem>
+<guimenuitem>Queue</guimenuitem>
 </menuchoice></term>
-<listitem><para>Shows or hides the <link linkend="parts-toolbar-editor">playlist
-editor toolbar</link>.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Alt;<keycap>Right Arrow</keycap></keycombo>
-</shortcut>
-<guimenuitem>Next</guimenuitem>
-</menuchoice></term>
-<listitem><para>Starts playing the next item on the current
+<listitem><para>Adds the selected items to the current
 playlist.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
+<guimenuitem>Queue Next</guimenuitem>
+</menuchoice></term>
+<listitem><para>Adds the selected items to the current playlist and plays them
+after the currently playing item.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Add to</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows a submenu with commands that add the current selection to
+different locations in the <interface>multimedia library</interface>.
+See <link linkend="submenu-add-to">below</link> for details on each available
+command.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Add</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows a submenu with commands that allow you to add items to the
+current folder. See <link linkend="submenu-add">below</link> for details on each
+available command.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Select All</guimenuitem>
+</menuchoice></term>
+<listitem><para>Selects all items in the current folder.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Move Up</guimenuitem>
+</menuchoice></term>
+<listitem><para>Moves the currently selected items up in the
+<interface>multimedia library</interface>. This command is available for items
+in the <guilabel>Now Playing</guilabel>, <guilabel>Recent</guilabel> and
+<guilabel>Playlists</guilabel> sections of the library. You can also move items
+around in those sections by clicking and dragging them with the
+&LMB;.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Move Down</guimenuitem>
+</menuchoice></term>
+<listitem><para>Moves the currently selected items down in the
+<interface>multimedia library</interface>. This command is available for items
+in the <guilabel>Now Playing</guilabel>, <guilabel>Recent</guilabel> and
+<guilabel>Playlists</guilabel> sections of the library. You can also move items
+around in those sections by clicking and dragging them with the
+&LMB;.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;<keycap>Left Arrow</keycap></keycombo>
+<keycap>Delete</keycap>
 </shortcut>
-<guimenuitem>Previous</guimenuitem>
+<guimenuitem>Remove</guimenuitem>
 </menuchoice></term>
-<listitem><para>Starts playing the previous item on the current
-playlist.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Loop</guimenuitem>
-</menuchoice></term>
-<listitem><para>Toggles the option to start playing items from the beginning
-of the playlist after playing the last item on the playlist.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Shuffle</guimenuitem>
-</menuchoice></term>
-<listitem><para>Toggles the option to play playlist items in a random
-order.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Temporary List For New Entries</guimenuitem>
-</menuchoice></term>
-<listitem><para>Toggles the option to use a temporary playlist when adding
-new entries. When enabled, this option locks the main playlist, so when
-you load new items using
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></menuchoice>
-or
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open URL</guimenuitem></menuchoice>
-commands, by dragging and dropping files onto &kplayer; window, or by starting
-&kplayer; with file arguments, it creates a temporary playlist, puts the new
-items on it and starts playing them. To start playing items from the main
-playlist again, choose <menuchoice><guimenu>Playlist</guimenu><guimenuitem>Play
-From Playlist</guimenuitem></menuchoice>.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Play Selection Only</guimenuitem>
-</menuchoice></term>
-<listitem><para>Toggles the option to only play items selected in the playlist
-editor.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Clear Before Adding Entries</guimenuitem>
-</menuchoice></term>
-<listitem><para>Toggles the option to clear the current playlist before adding
-new items to it. The current playlist can be either the main playlist or the
-temporary playlist when the
-<guimenuitem>Temporary List For New Entries</guimenuitem> option is
-enabled.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Play From Playlist</guimenuitem>
-</menuchoice></term>
-<listitem><para>Starts playing items from the main playlist. This command
-is only available when a temporary playlist is being used that has been
-created because the <guimenuitem>Temporary List For New Entries</guimenuitem>
-option had been enabled.</para></listitem>
+<listitem><para>Removes the currently selected items from the
+<interface>multimedia library</interface>. Note that &kplayer; never deletes any
+multimedia files from your system, so this command is not available for files
+and directories.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -723,61 +858,232 @@ option had been enabled.</para></listitem>
 <guimenuitem>Rename</guimenuitem>
 </menuchoice></term>
 <listitem><para>Starts edit mode for the current item in the
-<link linkend="parts-playlist-editor">playlist editor</link> so you can change
-the item name. This command is available when playlist editor is shown and is
-not empty.</para></listitem>
+<interface>multimedia library</interface> so that you can change the item
+name.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Edit</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows a submenu with commands that start edit mode for the
+chosen field of the current item in the <interface>multimedia
+library</interface>. Each editable field has its own command on this submenu.
+If the field column is not shown, this command will show it. After you are done
+editing the field, press &Enter; to apply the changes, or &Tab; or
+<keycombo action="simul">&Shift;&Tab;</keycombo> to apply the changes and edit
+the next or the previous field, or <keycap>Down Arrow</keycap> or <keycap>Up
+Arrow</keycap> to apply the changes and edit the same field of the next or
+previous item.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
 <guimenuitem>Properties...</guimenuitem>
 </menuchoice></term>
-<listitem><para>Opens <link linkend="properties">File Properties</link> dialog
-for the current item in the playlist editor. See the
-<link linkend="howto-properties">File properties micro-HOWTO</link> for details.
-This command is available when playlist editor is shown and is not
-empty.</para></listitem>
+<listitem><para>Opens the <link linkend="properties">File Properties</link>
+dialog for the current item in the <interface>multimedia library</interface>.
+This command currently does not apply to folders, but it is available for
+devices and optical disks as well as other items. See the
+<link linkend="howto-properties">File properties micro-HOWTO</link> for
+details.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenuitem>Move Up</guimenuitem>
+<guimenuitem>Columns</guimenuitem>
 </menuchoice></term>
-<listitem><para>Moves the currently selected items up in the playlist editor.
-This command is available when playlist editor is shown and some items are
-selected.</para></listitem>
+<listitem><para>Shows a submenu with commands that show or hide the chosen
+column in the <interface>list view</interface> of the <interface>multimedia
+library</interface>. Each available column has its own command on this
+submenu.</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice>
-<guimenuitem>Move Down</guimenuitem>
+<guimenuitem>Go</guimenuitem>
 </menuchoice></term>
-<listitem><para>Moves the currently selected items down in the playlist editor.
-This command is available when playlist editor is shown and some items are
-selected.</para>
-<note><para> You can also move items around by clicking and dragging them with
-the &LMB;.</para></note></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Remove</guimenuitem>
-</menuchoice></term>
-<listitem><para>Removes from the main playlist items currently selected in the
-playlist editor. This command is available when playlist editor is shown and
-some items are selected.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Clear</guimenuitem>
-</menuchoice></term>
-<listitem><para>Removes all items from the main playlist in the playlist editor.
-This command is available when playlist editor is shown and is not
-empty.</para></listitem>
+<listitem><para>Shows a submenu with commands that let you navigate the
+<interface>multimedia library</interface>.
+See <link linkend="submenu-go">below</link> for details on each available
+command.</para></listitem>
 </varlistentry>
 
 </variablelist>
+
+<sect3 id="submenu-add-to">
+<title><guisubmenu>Add to</guisubmenu> submenu</title>
+
+<variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Playlist</guimenuitem>
+</menuchoice></term>
+<listitem><para>Adds the selected items to the playlist you choose from the
+list. Each playlist in the <guilabel>Playlist</guilabel>s section of the library
+has its own command on this submenu.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>New Playlist...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows a dialog allowing you to enter a name for a new playlist
+to add to the <guilabel>Playlists</guilabel> section of the
+<interface>multimedia library</interface> and adds the selected items to the new
+playlist.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Playlists</guimenuitem>
+</menuchoice></term>
+<listitem><para>Adds the selected items to the <guilabel>Playlists</guilabel>
+section of the <interface>multimedia library</interface>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Collection</guimenuitem>
+</menuchoice></term>
+<listitem><para>Adds the selected items to the <guilabel>Collection</guilabel>
+section of the <interface>multimedia library</interface>.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="submenu-add">
+<title><guisubmenu>Add</guisubmenu> submenu</title>
+
+<variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Files...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Displays the standard <guilabel>Add files</guilabel> dialog
+and lets you choose a file or several files to add to the current
+folder.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>URL...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Displays the standard <guilabel>Add URL</guilabel> dialog
+and lets you type or paste in a <acronym>URL</acronym> to add to the current
+folder.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Folder...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows a dialog allowing you to enter a name for a new subfolder
+to add to the current folder.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Playlist...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows a dialog allowing you to enter a name for a new playlist
+to add to the playlist selected in the <interface>multimedia
+library</interface>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Device...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows a dialog allowing you to enter a name, type and path for a
+new device to add to the <guilabel>Devices</guilabel> section of the
+<interface>multimedia library</interface>. Some device types need additional
+settings. See the <link linkend="howto-devices">Devices micro-HOWTO</link> for
+details.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="submenu-go">
+<title><guisubmenu>Go</guisubmenu> submenu</title>
+
+<variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Folder</guimenuitem>
+</menuchoice></term>
+<listitem><para>Opens the selected folder in the <interface>multimedia
+library</interface>. If the library window is not shown, this command will show
+it. Each folder in the recent history has its own command on this submenu. Each
+top level folder also has its own command.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Alt;<keycap>Left Arrow</keycap></keycombo>
+</shortcut>
+<guimenuitem>Back</guimenuitem>
+</menuchoice></term>
+<listitem><para>Opens the previous folder.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Alt;<keycap>Right Arrow</keycap></keycombo>
+</shortcut>
+<guimenuitem>Forward</guimenuitem>
+</menuchoice></term>
+<listitem><para>Opens the next folder. This command will be available after you
+use the <guimenuitem>Back</guimenuitem> command.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Alt;&Shift;<keycap>Up Arrow</keycap></keycombo>
+</shortcut>
+<guimenuitem>Up</guimenuitem>
+</menuchoice></term>
+<listitem><para>Opens the parent folder of the selected
+folder.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Alt;&Shift;<keycap>Down Arrow</keycap></keycombo>
+</shortcut>
+<guimenuitem>Down</guimenuitem>
+</menuchoice></term>
+<listitem><para>Opens the selected folder.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Alt;&Shift;<keycap>Left Arrow</keycap></keycombo>
+</shortcut>
+<guimenuitem>To Origin</guimenuitem>
+</menuchoice></term>
+<listitem><para>Opens the origin folder of the selected folder. This command is
+available when the currently selected folder is linked to an origin folder. For
+an explanation of linked folders, see the
+<link linkend="howto-library-linked-folders">Multimedia library
+micro-HOWTO</link>.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
 
 </sect2>
 
@@ -808,7 +1114,30 @@ bar</link>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
+<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
+</shortcut>
+<guimenuitem>Show Playlist</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows or hides the
+<link linkend="parts-toolbar-playlist">playlist
+toolbar</link>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
 <keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>
+</shortcut>
+<guimenuitem>Show Library</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows or hides the
+<link linkend="parts-library">multimedia library</link>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>G</keycap></keycombo>
 </shortcut>
 <guimenuitem>Show Message Log</guimenuitem>
 </menuchoice></term>
@@ -888,6 +1217,15 @@ shortcut and also not to use the &Shift; key for your new shortcuts, because the
 
 <varlistentry>
 <term><menuchoice>
+<guimenuitem>Configure Toolbars...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Opens a <link linkend="configuration-toolbars">dialog</link>
+that lets you see and change the command buttons available on &kplayer;'s
+toolbars.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
 <guimenuitem>Configure &kplayer;...</guimenuitem>
 </menuchoice></term>
 <listitem><para>Opens a dialog that lets you configure the program, modifying
@@ -926,11 +1264,9 @@ functionality.</para></listitem>
 <term><menuchoice>
 <guimenuitem>Report Bug...</guimenuitem>
 </menuchoice></term>
-<listitem><para>Opens a dialog that allows you to send a bug report to the
-&kplayer; developer. However, the recommended way to report a bug is to collect
-information using this dialog and then submit it following the instructions in
-the <link linkend="howto-bug-reporting">Bug reporting
-micro-HOWTO</link>.</para></listitem>
+<listitem><para>Opens a <link linkend="howto-bug-reporting">help topic</link>
+that explains the recommended way to report a bug in
+&kplayer;.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -966,10 +1302,10 @@ options.</para>
 
 <itemizedlist>
 
-<listitem><para><guimenuitem>Open</guimenuitem> and
-<guimenuitem>Open URL</guimenuitem> buttons invoke the corresponding actions
-from the <link linkend="menu-file"><guimenu>File</guimenu> menu</link> that
-display dialog boxes allowing you to open and play local files or remote
+<listitem><para><guimenuitem>Play</guimenuitem> and <guimenuitem>Play
+URL</guimenuitem> buttons invoke the corresponding actions from the <link
+linkend="menu-file"><guimenu>File</guimenu> menu</link> that display dialog
+boxes allowing you to play local files or remote
 <acronym>URL</acronym>s.</para></listitem>
 
 <listitem><para><guimenuitem>Properties</guimenuitem> button corresponds to the
@@ -1016,31 +1352,32 @@ settings will be applied only to the current file and stored in its
 <sect2 id="toolbar-playlist">
 <title><guilabel>Playlist</guilabel> toolbar</title>
 
-<para>The playlist toolbar contains the current playlist and the most
-frequently used playlist commands and options.</para>
+<para>The <link linkend="parts-toolbar-playlist">playlist toolbar</link>
+contains the current playlist and the most frequently used playlist commands and
+options.</para>
 
 <itemizedlist>
+
+<listitem><para><guimenuitem>Next</guimenuitem> and
+<guimenuitem>Previous</guimenuitem> buttons correspond to the commands
+on the <link linkend="menu-player"><guimenu>Player</guimenu>
+menu</link> and will select the next or previous item on the playlist
+and start playing it.</para></listitem>
 
 <listitem><para>The playlist combo box in the closed state displays the
 current playlist item. You can drop down the combo box to see the entire
 list and select a different item to load and play.</para></listitem>
 
-<listitem><para><guimenuitem>Next</guimenuitem> and
-<guimenuitem>Previous</guimenuitem> buttons correspond to the commands
-on the <link linkend="menu-playlist"><guimenu>Playlist</guimenu>
-menu</link> and will select the next or previous item on the playlist
-and start playing it.</para></listitem>
-
 <listitem><para><guimenuitem>Loop</guimenuitem> button is the same as the
 corresponding command on the
-<link linkend="menu-playlist"><guimenu>Playlist</guimenu> menu</link> that
-toggles the option to continue playing from the top of the current playlist
-after playing the last item.</para></listitem>
+<link linkend="menu-player"><guimenu>Player</guimenu> menu</link> that toggles
+the option to continue playing from the top of the current playlist after
+playing the last item.</para></listitem>
 
 <listitem><para><guimenuitem>Shuffle</guimenuitem> button is also the same
 as the corresponding command on the
-<link linkend="menu-playlist"><guimenu>Playlist</guimenu> menu</link> and
-will toggle the option to play items in random order.</para></listitem>
+<link linkend="menu-player"><guimenu>Player</guimenu> menu</link> that toggles
+the option to play items in random order.</para></listitem>
 
 </itemizedlist>
 
@@ -1204,43 +1541,6 @@ and will hide the toolbar when clicked.</para></listitem>
 
 </sect2>
 
-<sect2 id="toolbar-editor">
-<title><guilabel>Playlist editor</guilabel> toolbar</title>
-
-<para><link linkend="parts-playlist-editor">Playlist editor</link> has its own
-toolbar that contains a few commands and an option that affect the editor and
-are also available on the
-<link linkend="menu-settings"><guimenu>Playlist</guimenu> menu</link>.</para>
-
-<itemizedlist>
-
-<listitem><para><guimenuitem>Temporary List For New Entries</guimenuitem> button
-toggles the option to use a temporary playlist when adding new entries. When
-enabled, this option locks the main playlist, so when you load new items using
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></menuchoice>
-or
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open URL</guimenuitem></menuchoice>
-commands, by dragging and dropping files onto &kplayer; window, or by starting
-&kplayer; with file arguments, it creates a temporary playlist, puts the new items
-on it and starts playing them. To start playing items from the main playlist
-again, choose <menuchoice><guimenu>Playlist</guimenu><guimenuitem>Play From
-Playlist</guimenuitem></menuchoice>.</para></listitem>
-
-<listitem><para><guimenuitem>Move Up</guimenuitem> and
-<guimenuitem>Move Down</guimenuitem> buttons move the items currently selected
-in the playlist editor. You can also move the items around by clicking and
-dragging them with the &LMB;.</para></listitem>
-
-<listitem><para><guimenuitem>Remove</guimenuitem> button removes the currently
-selected items from the playlist editor.</para></listitem>
-
-<listitem><para><guimenuitem>Clear</guimenuitem> button removes all items from
-the playlist editor.</para></listitem>
-
-</itemizedlist>
-
-</sect2>
-
 </sect1>
 
 <sect1 id="popup-menus">
@@ -1262,11 +1562,16 @@ options.</para>
 
 <itemizedlist>
 
-<listitem><para><guimenuitem>Open</guimenuitem> and
-<guimenuitem>Open URL</guimenuitem> commands invoke the corresponding actions
-from the <link linkend="menu-file"><guimenu>File</guimenu> menu</link> that
-display dialog boxes allowing you to open and play local files or remote
+<listitem><para><guimenuitem>Play</guimenuitem> and <guimenuitem>Play
+URL</guimenuitem> commands invoke the corresponding actions from the <link
+linkend="menu-file"><guimenu>File</guimenu> menu</link> that display dialog
+boxes allowing you to play local files or remote
 <acronym>URL</acronym>s.</para></listitem>
+
+<listitem><para><guisubmenu>Play List</guisubmenu> and <guisubmenu>Play
+Recent</guisubmenu> show the submenus from the <link
+linkend="menu-file"><guimenu>File</guimenu> menu</link> that allow you to
+play a playlist or a recent item respectively.</para></listitem>
 
 <listitem><para><guimenuitem>Properties</guimenuitem> command corresponds to the
 command on the <link linkend="menu-file"><guimenu>File</guimenu> menu</link>
@@ -1293,12 +1598,16 @@ are the same as the commands on the
 <link linkend="menu-settings"><guimenu>Settings</guimenu> menu</link> and will
 show or hide the <link linkend="parts-menu-bar">menu bar</link>,
 <link linkend="parts-status-bar">status bar</link>,
-<link linkend="parts-message-log">message log</link>,
 <link linkend="toolbar-playlist">playlist toolbar</link>,
-<link linkend="parts-playlist-editor">playlist editor</link>,
+<link linkend="parts-library">multimedia library</link>,
+<link linkend="parts-message-log">message log</link>,
 <link linkend="toolbar-main">main toolbar</link>,
 <link linkend="toolbar-progress">progress and seeking toolbar</link>
 and <link linkend="toolbar-volume">volume toolbar</link>.</para></listitem>
+
+<listitem><para><guimenuitem>Quit</guimenuitem> command invokes the action on
+the <link linkend="menu-file"><guimenu>File</guimenu> menu</link> that stops
+playback, saves all settings and closes &kplayer;.</para></listitem>
 
 </itemizedlist>
 
@@ -1307,53 +1616,121 @@ and <link linkend="toolbar-volume">volume toolbar</link>.</para></listitem>
 <sect2 id="popup-playlist">
 <title>Playlist popup menu</title>
 
-<para>When you <mousebutton>right</mousebutton> click an item on the playlist,
-&kplayer; displays a menu that lists commands applicable to the playlist item
-or to the currently selected items, as well as some playlist options.</para>
+<para>When you <mousebutton>right</mousebutton> click the playlist drop down box
+on the <link linkend="toolbar-playlist">playlist toolbar</link>, &kplayer;
+displays a menu that lists commands that work on the current playlist.</para>
 
 <itemizedlist>
 
-<listitem><para><guimenuitem>Play</guimenuitem> command loads and plays the
-item you <mousebutton>right</mousebutton> clicked.</para></listitem>
+<listitem><para><guimenuitem>Play...</guimenuitem> and <guimenuitem>Play
+URL...</guimenuitem> commands invoke the corresponding actions from the <link
+linkend="menu-file"><guimenu>File</guimenu> menu</link> that display dialog
+boxes allowing you to play local files or remote
+<acronym>URL</acronym>s.</para></listitem>
 
-<listitem><para><guimenuitem>Rename</guimenuitem> command starts edit mode
-for the item you <mousebutton>right</mousebutton> clicked so you can change
-its name.</para></listitem>
+<listitem><para><guisubmenu>Play List</guisubmenu> and <guisubmenu>Play
+Recent</guisubmenu> show the submenus from the <link
+linkend="menu-file"><guimenu>File</guimenu> menu</link> that allow you to
+play a playlist or a recent item respectively.</para></listitem>
 
-<listitem><para><guimenuitem>Properties...</guimenuitem> command opens the
-<link linkend="properties">File Properties</link> dialog for the item you
-<mousebutton>right</mousebutton> clicked. See the
-<link linkend="howto-properties">File properties micro-HOWTO</link> for
+<listitem><para><guisubmenu>Device</guisubmenu> submenus are also the same as
+the ones on the <link linkend="menu-file"><guimenu>File</guimenu> menu</link>.
+Please refer to the <link linkend="submenu-device">description above</link> for
 details.</para></listitem>
 
-<listitem><para><guimenuitem>Temporary List For New Entries</guimenuitem> command
-toggles the option to use a temporary playlist when adding new entries. When
-enabled, this option locks the main playlist, so when you load new items using
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></menuchoice>
-or
-<menuchoice><guimenu>File</guimenu><guimenuitem>Open URL</guimenuitem></menuchoice>
-commands, by dragging and dropping files onto &kplayer; window, or by starting
-&kplayer; with file arguments, it creates a temporary playlist, puts the new
-items on it and starts playing them. To start playing items from the main
-playlist again, choose <menuchoice><guimenu>Playlist</guimenu><guimenuitem>Play
-From Playlist</guimenuitem></menuchoice>.</para></listitem>
+<listitem><para><guimenuitem>Next</guimenuitem> and
+<guimenuitem>Previous</guimenuitem> commands invoke the corresponding actions
+from the <link linkend="menu-player"><guimenu>Player</guimenu>
+menu</link> and will select the next or previous item on the playlist
+and start playing it.</para></listitem>
 
-<listitem><para><guimenuitem>Play Selection Only</guimenuitem> command toggles
-the option to only play items selected in the
-<link linkend="parts-playlist-editor">playlist editor</link>.</para></listitem>
+<listitem><para><guimenuitem>Loop</guimenuitem> and
+<guimenuitem>Shuffle</guimenuitem> commands are also the same as the ones on the
+<link linkend="menu-player"><guimenu>Player</guimenu> menu</link> that toggle
+the options to continue playing from the top of the current playlist after
+playing the last item and to play items in random order
+respectively.</para></listitem>
 
-<listitem><para><guimenuitem>Move Up</guimenuitem> and
-<guimenuitem>Move Down</guimenuitem> commands move the items currently selected
-in the playlist editor. You can also move the items around by clicking and
-dragging them with the &LMB;.</para></listitem>
-
-<listitem><para><guimenuitem>Remove</guimenuitem> command removes the currently
-selected items from the playlist editor.</para></listitem>
-
-<listitem><para><guimenuitem>Clear</guimenuitem> command removes all items from
-the playlist editor.</para></listitem>
+<listitem><para><guimenuitem>Edit</guimenuitem> command opens the current
+playlist in the <link linkend="parts-library">multimedia library</link>,
+allowing you to edit it.</para></listitem>
 
 </itemizedlist>
+
+<sect3 id="submenu-playlist-add">
+<title><guisubmenu>Add</guisubmenu> submenu</title>
+
+<variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Files...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Displays the standard <guilabel>Add files</guilabel> dialog
+and lets you choose a file or several files to add to the current
+playlist.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>URL...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Displays the standard <guilabel>Add URL</guilabel> dialog
+and lets you type or paste in a <acronym>URL</acronym> to add to the current
+playlist.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="submenu-add-playlist-to">
+<title><guisubmenu>Add to</guisubmenu> submenu</title>
+
+<variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Playlist</guimenuitem>
+</menuchoice></term>
+<listitem><para>Adds the contents of the current playlist to the playlist you
+choose from the list. Each playlist in the <guilabel>Playlists</guilabel>
+section of the library has its own command on this submenu.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Playlists...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows a dialog allowing you to enter a name for a new playlist
+and saves the current playlist in the <guilabel>Playlists</guilabel> section of
+the <interface>multimedia library</interface> under that name.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenuitem>Collection...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Shows a dialog allowing you to enter a name for a new folder
+and saves the current playlist in the <guilabel>Collection</guilabel> section of
+the <interface>multimedia library</interface> under that name.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="popup-library">
+<title>Library popup menu</title>
+
+<para>When you <mousebutton>right</mousebutton> click an item in the
+<link linkend="parts-library"><interface>multimedia library</interface></link>,
+&kplayer; displays a menu that lists commands applicable to that item or to the
+currently selected items or to the current folder. The menu is the same as the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> on the menu
+bar.</para>
 
 </sect2>
 
@@ -1372,6 +1749,9 @@ text in the message log.</para></listitem>
 <listitem><para><guimenuitem>Copy</guimenuitem> command copies the selected
 message log text to the clipboard.</para></listitem>
 
+<listitem><para><guimenuitem>Clear</guimenuitem> command removes all messages
+from the message log.</para></listitem>
+
 </itemizedlist>
 
 </sect2>
@@ -1379,9 +1759,11 @@ message log text to the clipboard.</para></listitem>
 <sect2 id="popup-toolbar">
 <title>Toolbar popup menu</title>
 
-<para>When you <mousebutton>right</mousebutton> click a &kplayer; toolbar,
-you get a standard &kde; toolbar popup menu. It contains options that allow
-you to change the toolbar orientation, text position and icon size.</para>
+<para>When you <mousebutton>right</mousebutton> click a &kplayer; toolbar, you
+get a standard &kde; toolbar popup menu. It contains options that allow you to
+change the toolbar orientation, text position and icon size, as well as a
+command that opens the <link linkend="configuration-toolbars-dialog">Toolbar
+configuration dialog</link>.</para>
 
 </sect2>
 
@@ -1396,8 +1778,8 @@ corner of &kplayer; window or by pressing
 commands that let you maximize, minimize, restore, move and resize the &kplayer;
 window, as well as a few options, some of which you may find useful. For
 example, the <guimenuitem>Keep Above Others</guimenuitem> option on the
-<guisubmenu>Advanced</guisubmenu> lets you keep the &kplayer; window on top of
-all other program windows.</para>
+<guisubmenu>Advanced</guisubmenu> submenu lets you keep the &kplayer; window on
+top of all other program windows.</para>
 
 </sect2>
 
@@ -1434,20 +1816,37 @@ page, only the <mousebutton>right</mousebutton> click
 <sect2 id="kpart-menu">
 <title><guilabel>Player</guilabel> menu</title>
 
-<para>This menu contains <guilabel>Play</guilabel>, <guilabel>Pause</guilabel>,
+<para>This menu contains the following commands, most of which are the same as
+the corresponding commands in the full &kplayer;:</para>
+
+<itemizedlist>
+
+<listitem><para><guilabel>Play</guilabel>, <guilabel>Pause</guilabel>,
 <guilabel>Stop</guilabel>, <guilabel>Forward</guilabel>, <guilabel>Fast
 Forward</guilabel>, <guilabel>Backward</guilabel>, <guilabel>Fast
 Backward</guilabel> and <guilabel>Back to Start</guilabel> commands from the
 <link linkend="menu-player"><guimenu>Player</guimenu> menu</link> of the full
-&kplayer;, and <guilabel>Decrease Volume</guilabel>, <guilabel>Increase
-Volume</guilabel> and <guilabel>Mute</guilabel> commands from its
-<link linkend="submenu-audio"><guisubmenu>Audio</guisubmenu> submenu</link>,
-as well as <guilabel>Maintain Aspect</guilabel> command from the
-<link linkend="popup-main">general popup menu</link> and
-<guilabel>Properties</guilabel> command from the
-<link linkend="menu-file"><guimenu>File</guimenu> menu</link> found in the full
-&kplayer;, as well as <guilabel>Start &kplayer;</guilabel> command from the
-<link linkend="kpart-popup">KPart popup menu</link> described below.</para>
+&kplayer;;</para></listitem>
+
+<listitem><para><guilabel>Decrease Volume</guilabel>, <guilabel>Increase
+Volume</guilabel> and <guilabel>Mute</guilabel> commands from the
+<link linkend="submenu-audio"><guisubmenu>Audio</guisubmenu>
+submenu</link> of the <guimenu>Player</guimenu> menu of the full
+&kplayer;;</para></listitem>
+
+<listitem><para><guilabel>Maintain Aspect</guilabel> command from the
+<link linkend="popup-main">general popup menu</link> of the full
+&kplayer;;</para></listitem>
+
+<listitem><para><guilabel>Properties</guilabel> command from the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> of the full
+&kplayer;;</para></listitem>
+
+<listitem><para><guilabel>Start &kplayer;</guilabel> command from the
+<link linkend="kpart-popup">KPart popup menu</link> described
+below.</para></listitem>
+
+</itemizedlist>
 
 </sect2>
 
@@ -1517,8 +1916,8 @@ you) decreases it. You can hold down the &Ctrl; key on the keyboard when rolling
 the wheel to change the setting faster.</para>
 
 <para>Rolling the wheel when the mouse pointer is positioned over a window that
-has a scroll bar, like the <link linkend="parts-playlist-editor">playlist
-editor</link> or the <link linkend="parts-message-log">message log</link>, will
+has a scroll bar, like the <link linkend="parts-library">multimedia
+library</link> or the <link linkend="parts-message-log">message log</link>, will
 scroll the window up or down. Rolling the wheel over the
 <link linkend="toolbar-playlist">playlist combo box</link> will likewise scroll
 it up or down, switch to a different entry and start playing it.</para>

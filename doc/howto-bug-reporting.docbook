@@ -60,7 +60,8 @@ go to <menuchoice><guimenu>Preferences</guimenu>
 <guimenuitem>History</guimenuitem></menuchoice> and set the
 <guilabel>Unlimited</guilabel> option.</para>
 
-<para>Run &kplayer; from the console.</para>
+<para>Run &kplayer; from the console. If the bug is in &kplayer;'s KPart, run
+the program that uses the KPart instead.</para>
 
 <para>Reproduce the bug.</para>
 

@@ -14,18 +14,18 @@ as well as network locations using many types of protocols.</para>
 
 <para>However, &kplayer; is much more that just an &mplayer; frontend. In
 addition to &kde; integration and an easy to use interface that follows &kde;
-standards, it offers a simple but full featured
-<link linkend="howto-playlist">playlist</link>, many additional input methods
-using <link linkend="howto-slaves">&kde; I/O Slaves</link>, and last but not
-least the <link linkend="howto-properties">ability</link> to easily choose many
-different options for each individual file or <acronym>URL</acronym>, giving you
-flexibility not found in any other media player.</para>
+standards, it offers a <link linkend="howto-library">multimedia library</link>,
+<link linkend="howto-playlist">playlist</link> support, many additional input
+methods using <link linkend="howto-slaves">&kde; I/O Slaves</link>, and last but
+not least the <link linkend="howto-properties">ability</link> to easily choose
+many different options for each individual file or <acronym>URL</acronym>,
+giving you flexibility not found in any other media player.</para>
 
 <para>&kplayer; is a fully customizable program that you can
 <link linkend="configuration">configure</link> and fine tune for your system and
 your personal preferences, from changing the way video is shown and sound is
 played and setting any playback option &mplayer; understands to arranging the
-player controls inside &kplayer; window, changing the number and positions of
-toolbars and defining new shortcut key combinations.</para>
+player controls inside &kplayer; window, changing the buttons on the toolbars
+and defining new shortcut key combinations.</para>
 
 </chapter>
