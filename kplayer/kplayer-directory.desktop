@@ -26,6 +26,7 @@ Name[pt]=Adicionar à lista de reprodução
 Name[pt_BR]=Adicionar à Lista de Reprodução
 Name[sv]=Lägg till i spellistor
 Name[tr]=Çalma listelerine ekle
+Name[xx]=xxAdd to playlistsxx
 Icon=kplayer
 Exec=kplayer --add-to-playlists -- %U
 
@@ -52,5 +53,6 @@ Name[pt]=Adicionar à colecção
 Name[pt_BR]=Adicionar à coleção
 Name[sv]=Lägg till i samling
 Name[tr]=Koleksiyona ekle
+Name[xx]=xxAdd to collectionxx
 Icon=kplayer
 Exec=kplayer --add-to-collection -- %U
