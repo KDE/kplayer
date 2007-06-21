@@ -52,6 +52,7 @@ Name[pl]=Kolejkuj jako następny
 Name[pt]=Seguinte em espera
 Name[pt_BR]=Próximo em espera
 Name[sv]=Köa nästa
+Name[tr]=Sonrakini sıraya ekle
 Name[xx]=xxQueue nextxx
 Icon=kplayer
 Exec=kplayer --queue-next -- %U
