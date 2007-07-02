@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -24,6 +24,7 @@
 #include <qobject.h>
 #include <qptrlist.h>
 
+class KPlayerConfiguration;
 class KPlayerTrackProperties;
 class KPlayerSettings;
 class KTempFile;
@@ -208,14 +209,16 @@ public:
   void frameDrop (int);
 
   /** Returns whether the file information is available. */
-  bool isInfoAvailable (void)
+  bool isInfoAvailable (void) const
     { return m_info_available; }
   /** Returns whether a 0.9x version of MPlayer was detected. */
-  bool is09Version (void)
+  bool is09Version (void) const
     { return m_09_version; }
   /** Returns true unless playing directly from KIOSlave. */
-  bool isSeekable (void)
+  bool isSeekable (void) const
     { return m_seekable; }
+  bool gettingInfo (void) const
+    { return m_helper != 0; }
 
 public slots:
   void progressSliderReleased (void);
@@ -225,6 +228,8 @@ protected:
   KPlayerSettings* settings (void) const;
   /** Properties. */
   KPlayerTrackProperties* properties (void) const;
+  /** Configuration. */
+  KPlayerConfiguration* configuration (void) const;
 
   /** Sends the given command to the MPlayer process. */
   void sendPlayerCommand (QCString&);

@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -405,6 +405,13 @@ protected:
   /** Runs amixer with the given command and parameter. */
   void runAmixer (const QString& command, const QString& parameter = QString::null);
 
+  /** Sets up the progress slider. */
+  void setupProgressSlider (int maximum);
+  /** Tells the process to start playback. */
+  void startPlaying (void);
+  /** Shows the selected subtitles. */
+  void showSubtitles (void);
+
   QString m_path;
 
   /** Video track action list. */
@@ -468,6 +475,8 @@ protected:
   int m_progress_factor;
   /** Do not play any more URLs. */
   bool m_stop;
+  /** Start playing when size is known. */
+  bool m_play_pending;
 
 signals:
   /** Emitted when a window state changes. */

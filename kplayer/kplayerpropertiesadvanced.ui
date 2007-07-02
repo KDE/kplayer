@@ -124,9 +124,6 @@
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
-                            <property name="text">
-                                <string></string>
-                            </property>
                             <property name="toolTip" stdset="0">
                                 <string>Additional options to be passed to MPlayer</string>
                             </property>

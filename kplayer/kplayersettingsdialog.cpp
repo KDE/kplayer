@@ -9,20 +9,23 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include <kfontcombo.h>
 #include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
+#include <qfontdatabase.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qregexp.h>
+#include <qslider.h>
 #include <math.h>
 #include <stdlib.h>
 
@@ -473,7 +476,11 @@ void KPlayerSettingsAudio::save (void)
       configuration() -> setMaximumSoftwareVolume (maximum);
   }
   configuration() -> setAudioCodec (listEntry (c_codec));
-  configuration() -> setAudioDelayStep (fabs (c_delay_step -> text().toFloat()));
+  float value = fabs (c_delay_step -> text().toFloat());
+  if ( value )
+    configuration() -> setAudioDelayStep (value);
+  else
+    configuration() -> resetAudioDelayStep();
 }
 
 void KPlayerSettingsAudio::defaultAlsaChannels (void)
@@ -733,115 +740,207 @@ void KPlayerSettingsSliders::load (void)
 {
   c_preferred_slider_length -> setText (QString::number (configuration() -> preferredSliderLength()));
   c_minimum_slider_length -> setText (QString::number (configuration() -> minimumSliderLength()));
+  c_show_slider_marks -> setChecked (configuration() -> showSliderMarks());
+  showMarksChanged (c_show_slider_marks -> isChecked());
 }
 
 void KPlayerSettingsSliders::save (void)
 {
-  configuration() -> setPreferredSliderLength (labs (c_preferred_slider_length -> text().toInt()));
-  configuration() -> setMinimumSliderLength (labs (c_minimum_slider_length -> text().toInt()));
+  int value = labs (c_preferred_slider_length -> text().toInt());
+  if ( value )
+    configuration() -> setPreferredSliderLength (value);
+  else
+    configuration() -> resetPreferredSliderLength();
+  value = labs (c_minimum_slider_length -> text().toInt());
+  if ( value )
+    configuration() -> setMinimumSliderLength (value);
+  else
+    configuration() -> resetMinimumSliderLength();
+  configuration() -> setShowSliderMarks (c_show_slider_marks -> isChecked());
+  value = labs (c_slider_marks -> text().toInt());
+  if ( value )
+    configuration() -> setSliderMarks (value);
+  else
+    configuration() -> resetSliderMarks();
+}
+
+void KPlayerSettingsSliders::showMarksChanged (bool showMarksChecked)
+{
+  if ( showMarksChecked )
+    c_slider_marks -> setText (QString::number (configuration() -> sliderMarks()));
+  else
+    c_slider_marks -> setText ("");
+  l_slider_marks -> setEnabled (showMarksChecked);
+  c_slider_marks -> setEnabled (showMarksChecked);
+  l_slider_marks_percent -> setEnabled (showMarksChecked);
 }
 
 KPlayerSettingsSubtitles::KPlayerSettingsSubtitles (QWidget* parent, const char* name)
   : KPlayerSettingsSubtitlesPage (parent, name)
 {
+  m_initialized = m_recursion = false;
+  loadLists();
   load();
+  m_initialized = true;
+}
+
+void fillEncodingCombobox (QComboBox* combobox);
+
+void KPlayerSettingsSubtitles::loadLists (void)
+{
+  QValueList<int> sizes (QFontDatabase::standardSizes());
+  QValueList<int>::ConstIterator it (sizes.begin());
+  for ( int i = 1; i < *it; ++ i )
+    c_text_size -> insertItem (QString::number (i));
+  while ( it != sizes.end() )
+  {
+    c_text_size -> insertItem (QString::number (*it));
+    ++ it;
+  }
+  fillEncodingCombobox (c_encoding);
 }
 
 void KPlayerSettingsSubtitles::load (void)
 {
+  c_font_name -> setEditText (configuration() -> subtitleFontName());
+  c_bold -> setChecked (configuration() -> subtitleFontBold());
+  c_italic -> setChecked (configuration() -> subtitleFontItalic());
+  if ( configuration() -> subtitleTextSize() )
+    c_text_size -> setEditText (QString::number (configuration() -> subtitleTextSize()));
+  else
+    c_text_size -> setCurrentItem (0);
+  c_autoscale -> setChecked (configuration() -> subtitleAutoscale());
+  c_outline -> setText (QString::number (configuration() -> subtitleFontOutline()));
+  outlineEditChanged (c_outline -> text());
+  c_width -> setText (QString::number (configuration() -> subtitleTextWidth()));
+  widthEditChanged (c_width -> text());
   c_position_step -> setText (QString::number (configuration() -> subtitlePositionStep()));
   c_delay_step -> setText (QString::number (configuration() -> subtitleDelayStep()));
+  if ( configuration() -> hasSubtitleEncoding() )
+  {
+    QString encoding = configuration() -> subtitleEncoding();
+    c_encoding -> setEditText (encoding);
+    encoding += ": ";
+    for ( int i = 1; i < c_encoding -> count(); ++ i )
+      if ( c_encoding -> text (i).startsWith (encoding) )
+      {
+        c_encoding -> setCurrentItem (i);
+        break;
+      }
+  }
+  else
+    c_encoding -> setCurrentItem (0);
+  c_embedded_fonts -> setChecked (configuration() -> subtitleEmbeddedFonts());
+  c_closed_caption -> setChecked (configuration() -> subtitleClosedCaption());
+  c_subtitles_autoexpand -> setChecked (configuration() -> hasSubtitleAutoexpand());
+  autoexpandChanged (c_subtitles_autoexpand -> isChecked());
   c_subtitles_autoload -> setChecked (configuration() -> subtitleAutoload());
-  autoloadSubtitlesChanged (configuration() -> subtitleAutoload());
+  autoloadSubtitlesChanged (c_subtitles_autoload -> isChecked());
 }
 
 void KPlayerSettingsSubtitles::save (void)
 {
+  configuration() -> setSubtitleFontName (c_font_name -> currentText());
+  configuration() -> setSubtitleFontBold (c_bold -> isChecked());
+  configuration() -> setSubtitleFontItalic (c_italic -> isChecked());
+  float value = fabs (c_text_size -> currentText().toFloat());
+  if ( value )
+    configuration() -> setSubtitleTextSize (value);
+  else
+    configuration() -> resetSubtitleTextSize();
+  configuration() -> setSubtitleAutoscale (c_autoscale -> isChecked());
+  configuration() -> setSubtitleFontOutline (c_outline -> text().toFloat());
+  configuration() -> setSubtitleTextWidth (c_width -> text().toInt());
   configuration() -> setSubtitlePositionStep (labs (c_position_step -> text().toInt()));
-  configuration() -> setSubtitleDelayStep (fabs (c_delay_step -> text().toFloat()));
+  value = fabs (c_delay_step -> text().toFloat());
+  if ( value )
+    configuration() -> setSubtitleDelayStep (value);
+  else
+    configuration() -> resetSubtitleDelayStep();
+  if ( c_encoding -> currentItem() )
+    configuration() -> setSubtitleEncoding (c_encoding -> currentText().section (':', 0, 0));
+  else
+    configuration() -> resetSubtitleEncoding();
+  configuration() -> setSubtitleEmbeddedFonts (c_embedded_fonts -> isChecked());
+  configuration() -> setSubtitleClosedCaption (c_closed_caption -> isChecked());
+  if ( c_subtitles_autoexpand -> isChecked() )
+    configuration() -> setSubtitleAutoexpand (c_aspect -> currentItem() + 1);
+  else
+    configuration() -> resetSubtitleAutoexpand();
   configuration() -> setSubtitleAutoload (c_subtitles_autoload -> isChecked());
-  if ( configuration() -> subtitleAutoload() )
-  {
-    configuration() -> setAutoloadAqtSubtitles (c_subtitles_aqt -> isChecked());
-    configuration() -> setAutoloadAssSubtitles (c_subtitles_ass -> isChecked());
-    configuration() -> setAutoloadJsSubtitles (c_subtitles_js -> isChecked());
-    configuration() -> setAutoloadJssSubtitles (c_subtitles_jss -> isChecked());
-    configuration() -> setAutoloadRtSubtitles (c_subtitles_rt -> isChecked());
-    configuration() -> setAutoloadSmiSubtitles (c_subtitles_smi -> isChecked());
-    configuration() -> setAutoloadSrtSubtitles (c_subtitles_srt -> isChecked());
-    configuration() -> setAutoloadSsaSubtitles (c_subtitles_ssa -> isChecked());
-    configuration() -> setAutoloadSubSubtitles (c_subtitles_sub -> isChecked());
-    configuration() -> setAutoloadTxtSubtitles (c_subtitles_txt -> isChecked());
-    configuration() -> setAutoloadUtfSubtitles (c_subtitles_utf -> isChecked());
-    configuration() -> setAutoloadVobsubSubtitles (c_subtitles_vobsub -> isChecked());
-    configuration() -> setAutoloadOtherSubtitles (c_subtitles_other -> isChecked());
-    if ( configuration() -> autoloadOtherSubtitles() )
-      configuration() -> setAutoloadExtensionList (c_subtitles_list -> text());
-  }
+  if ( c_subtitles_autoload -> isChecked() )
+    configuration() -> setAutoloadExtensionList (c_subtitles_list -> text());
 }
 
-void KPlayerSettingsSubtitles::otherSubtitlesChanged (bool otherSubtitlesChecked)
+void KPlayerSettingsSubtitles::widthSliderChanged (int value)
 {
-  if ( otherSubtitlesChecked )
-    c_subtitles_list -> setText (configuration() -> autoloadExtensionList());
-  else
-    c_subtitles_list -> setText ("");
-  c_subtitles_list -> setEnabled (otherSubtitlesChecked);
-  if ( otherSubtitlesChecked && sender() )
+  if ( ! m_recursion )
+    c_width -> setText (QString::number (value));
+}
+
+void KPlayerSettingsSubtitles::widthEditChanged (const QString& value)
+{
+  int number = value.toInt();
+  if ( number < 10 )
+    number = 10;
+  else if ( number > 100 )
+    number = 100;
+  m_recursion = true;
+  c_width_slider -> setValue (number);
+  m_recursion = false;
+}
+
+void KPlayerSettingsSubtitles::outlineSliderChanged (int value)
+{
+  if ( ! m_recursion )
+    c_outline -> setText (QString::number (float (value) / 20));
+}
+
+void KPlayerSettingsSubtitles::outlineEditChanged (const QString& value)
+{
+  int number = int (value.toFloat() * 20 + 0.5);
+  if ( number < 0 )
+    number = 0;
+  else if ( number > 200 )
+    number = 200;
+  m_recursion = true;
+  c_outline_slider -> setValue (number);
+  m_recursion = false;
+}
+
+void KPlayerSettingsSubtitles::autoexpandChanged (bool autoexpandChecked)
+{
+  if ( autoexpandChecked )
   {
-    c_subtitles_list -> setFocus();
-    c_subtitles_list -> selectAll();
+    if ( c_aspect -> text (0).isEmpty() )
+      c_aspect -> removeItem (0);
+    int value = configuration() -> subtitleAutoexpand();
+    c_aspect -> setCurrentItem (value ? value - 1 : 1);
   }
+  else
+  {
+    c_aspect -> insertItem ("", 0);
+    c_aspect -> setCurrentItem (0);
+  }
+  c_aspect -> setEnabled (autoexpandChecked);
 }
 
 void KPlayerSettingsSubtitles::autoloadSubtitlesChanged (bool autoloadSubtitlesChecked)
 {
   if ( autoloadSubtitlesChecked )
   {
-    c_subtitles_aqt -> setChecked (configuration() -> autoloadAqtSubtitles());
-    c_subtitles_ass -> setChecked (configuration() -> autoloadAssSubtitles());
-    c_subtitles_js -> setChecked (configuration() -> autoloadJsSubtitles());
-    c_subtitles_jss -> setChecked (configuration() -> autoloadJssSubtitles());
-    c_subtitles_rt -> setChecked (configuration() -> autoloadRtSubtitles());
-    c_subtitles_smi -> setChecked (configuration() -> autoloadSmiSubtitles());
-    c_subtitles_srt -> setChecked (configuration() -> autoloadSrtSubtitles());
-    c_subtitles_ssa -> setChecked (configuration() -> autoloadSsaSubtitles());
-    c_subtitles_sub -> setChecked (configuration() -> autoloadSubSubtitles());
-    c_subtitles_txt -> setChecked (configuration() -> autoloadTxtSubtitles());
-    c_subtitles_utf -> setChecked (configuration() -> autoloadUtfSubtitles());
-    c_subtitles_vobsub -> setChecked (configuration() -> autoloadVobsubSubtitles());
-    c_subtitles_other -> setChecked (configuration() -> autoloadOtherSubtitles());
+    c_subtitles_list -> setText (configuration() -> autoloadExtensionList());
+    c_subtitles_list -> setCursorPosition (0);
   }
   else
+    c_subtitles_list -> setText ("");
+  l_extensions -> setEnabled (autoloadSubtitlesChecked);
+  c_subtitles_list -> setEnabled (autoloadSubtitlesChecked);
+  if ( autoloadSubtitlesChecked && m_initialized )
   {
-    c_subtitles_aqt -> setChecked (false);
-    c_subtitles_ass -> setChecked (false);
-    c_subtitles_js -> setChecked (false);
-    c_subtitles_jss -> setChecked (false);
-    c_subtitles_rt -> setChecked (false);
-    c_subtitles_smi -> setChecked (false);
-    c_subtitles_srt -> setChecked (false);
-    c_subtitles_ssa -> setChecked (false);
-    c_subtitles_sub -> setChecked (false);
-    c_subtitles_txt -> setChecked (false);
-    c_subtitles_utf -> setChecked (false);
-    c_subtitles_vobsub -> setChecked (false);
-    c_subtitles_other -> setChecked (false);
+    c_subtitles_list -> setFocus();
+    c_subtitles_list -> selectAll();
   }
-  c_subtitles_aqt -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_ass -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_js -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_jss -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_rt -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_smi -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_srt -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_ssa -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_sub -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_txt -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_utf -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_vobsub -> setEnabled (autoloadSubtitlesChecked);
-  c_subtitles_other -> setEnabled (autoloadSubtitlesChecked);
-  otherSubtitlesChanged (c_subtitles_other -> isChecked());
 }
 
 KPlayerSettingsVideo::KPlayerSettingsVideo (QWidget* parent, const char* name)
@@ -929,7 +1028,6 @@ void KPlayerSettingsProgress::load (void)
   c_progress_seek_units -> setCurrentItem (configuration() -> progressNormalSeekUnits());
   c_progress_fast -> setText (QString::number (configuration() -> progressFastSeek()));
   c_progress_fast_units -> setCurrentItem (configuration() -> progressFastSeekUnits());
-  c_progress_marks -> setText (QString::number (configuration() -> progressMarks()));
 }
 
 void KPlayerSettingsProgress::save (void)
@@ -938,7 +1036,6 @@ void KPlayerSettingsProgress::save (void)
   configuration() -> setProgressFastSeekUnits (c_progress_fast_units -> currentItem());
   configuration() -> setProgressNormalSeek (labs (c_progress_seek -> text().toInt()));
   configuration() -> setProgressFastSeek (labs (c_progress_fast -> text().toInt()));
-  configuration() -> setProgressMarks (labs (c_progress_marks -> text().toInt()));
 }
 
 KPlayerSettingsVolume::KPlayerSettingsVolume (QWidget* parent, const char* name)
@@ -951,7 +1048,6 @@ void KPlayerSettingsVolume::load (void)
 {
   c_volume_minimum -> setText (QString::number (configuration() -> volumeMinimum()));
   c_volume_maximum -> setText (QString::number (configuration() -> volumeMaximum()));
-  c_volume_marks -> setText (QString::number (configuration() -> volumeMarks()));
   c_volume_step -> setText (QString::number (configuration() -> volumeStep()));
   c_volume_reset -> setChecked (configuration() -> volumeReset());
   resetChanged (configuration() -> volumeReset());
@@ -960,7 +1056,6 @@ void KPlayerSettingsVolume::load (void)
 void KPlayerSettingsVolume::save (void)
 {
   configuration() -> setVolumeMinimumMaximum (labs (c_volume_minimum -> text().toInt()), labs (c_volume_maximum -> text().toInt()));
-  configuration() -> setVolumeMarks (labs (c_volume_marks -> text().toInt()));
   configuration() -> setVolumeStep (labs (c_volume_step -> text().toInt()));
   configuration() -> setVolumeReset (c_volume_reset -> isChecked());
   if ( configuration() -> volumeReset() )
@@ -1004,7 +1099,6 @@ void KPlayerSettingsContrast::load (void)
 {
   c_contrast_minimum -> setText (QString::number (configuration() -> contrastMinimum()));
   c_contrast_maximum -> setText (QString::number (configuration() -> contrastMaximum()));
-  c_contrast_marks -> setText (QString::number (configuration() -> contrastMarks()));
   c_contrast_step -> setText (QString::number (configuration() -> contrastStep()));
   c_contrast_reset -> setChecked (configuration() -> contrastReset());
   resetChanged (configuration() -> contrastReset());
@@ -1013,7 +1107,6 @@ void KPlayerSettingsContrast::load (void)
 void KPlayerSettingsContrast::save (void)
 {
   configuration() -> setContrastMinimumMaximum (c_contrast_minimum -> text().toInt(), c_contrast_maximum -> text().toInt());
-  configuration() -> setContrastMarks (labs (c_contrast_marks -> text().toInt()));
   configuration() -> setContrastStep (labs (c_contrast_step -> text().toInt()));
   configuration() -> setContrastReset (c_contrast_reset -> isChecked());
   if ( configuration() -> contrastReset() )
@@ -1057,7 +1150,6 @@ void KPlayerSettingsBrightness::load (void)
 {
   c_brightness_minimum -> setText (QString::number (configuration() -> brightnessMinimum()));
   c_brightness_maximum -> setText (QString::number (configuration() -> brightnessMaximum()));
-  c_brightness_marks -> setText (QString::number (configuration() -> brightnessMarks()));
   c_brightness_step -> setText (QString::number (configuration() -> brightnessStep()));
   c_brightness_reset -> setChecked (configuration() -> brightnessReset());
   resetChanged (configuration() -> brightnessReset());
@@ -1066,7 +1158,6 @@ void KPlayerSettingsBrightness::load (void)
 void KPlayerSettingsBrightness::save (void)
 {
   configuration() -> setBrightnessMinimumMaximum (c_brightness_minimum -> text().toInt(), c_brightness_maximum -> text().toInt());
-  configuration() -> setBrightnessMarks (labs (c_brightness_marks -> text().toInt()));
   configuration() -> setBrightnessStep (labs (c_brightness_step -> text().toInt()));
   configuration() -> setBrightnessReset (c_brightness_reset -> isChecked());
   if ( configuration() -> brightnessReset() )
@@ -1110,7 +1201,6 @@ void KPlayerSettingsHue::load (void)
 {
   c_hue_minimum -> setText (QString::number (configuration() -> hueMinimum()));
   c_hue_maximum -> setText (QString::number (configuration() -> hueMaximum()));
-  c_hue_marks -> setText (QString::number (configuration() -> hueMarks()));
   c_hue_step -> setText (QString::number (configuration() -> hueStep()));
   c_hue_reset -> setChecked (configuration() -> hueReset());
   resetChanged (configuration() -> hueReset());
@@ -1119,7 +1209,6 @@ void KPlayerSettingsHue::load (void)
 void KPlayerSettingsHue::save (void)
 {
   configuration() -> setHueMinimumMaximum (c_hue_minimum -> text().toInt(), c_hue_maximum -> text().toInt());
-  configuration() -> setHueMarks (labs (c_hue_marks -> text().toInt()));
   configuration() -> setHueStep (labs (c_hue_step -> text().toInt()));
   configuration() -> setHueReset (c_hue_reset -> isChecked());
   if ( configuration() -> hueReset() )
@@ -1163,7 +1252,6 @@ void KPlayerSettingsSaturation::load (void)
 {
   c_saturation_minimum -> setText (QString::number (configuration() -> saturationMinimum()));
   c_saturation_maximum -> setText (QString::number (configuration() -> saturationMaximum()));
-  c_saturation_marks -> setText (QString::number (configuration() -> saturationMarks()));
   c_saturation_step -> setText (QString::number (configuration() -> saturationStep()));
   c_saturation_reset -> setChecked (configuration() -> saturationReset());
   resetChanged (configuration() -> saturationReset());
@@ -1172,7 +1260,6 @@ void KPlayerSettingsSaturation::load (void)
 void KPlayerSettingsSaturation::save (void)
 {
   configuration() -> setSaturationMinimumMaximum (c_saturation_minimum -> text().toInt(), c_saturation_maximum -> text().toInt());
-  configuration() -> setSaturationMarks (labs (c_saturation_marks -> text().toInt()));
   configuration() -> setSaturationStep (labs (c_saturation_step -> text().toInt()));
   configuration() -> setSaturationReset (c_saturation_reset -> isChecked());
   if ( configuration() -> saturationReset() )

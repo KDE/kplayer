@@ -9,10 +9,11 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include <kcursor.h>
 #include <klocale.h>
 #include <qtimer.h>
 #include <qwhatsthis.h>
@@ -25,6 +26,7 @@
 #include "kplayerwidget.h"
 #include "kplayerwidget.moc"
 #include "kplayerengine.h"
+#include "kplayerprocess.h"
 #include "kplayersettings.h"
 
 void KPlayerX11SetInputFocus (uint id);
@@ -61,7 +63,7 @@ KPlayerWidget::KPlayerWidget (QWidget *parent, const char *name)
 #ifdef DEBUG_KPLAYER_WIDGET
   kdDebugTime() << "Creating widget\n";
 #endif
-  connect (kPlayerProcess(), SIGNAL (stateChanged (KPlayerProcess::State, KPlayerProcess::State)), this, SLOT (playerStateChanged (KPlayerProcess::State, KPlayerProcess::State)));
+  connect (kPlayerProcess(), SIGNAL (stateChanged (KPlayerProcess::State, KPlayerProcess::State)), SLOT (playerStateChanged (KPlayerProcess::State, KPlayerProcess::State)));
   QWhatsThis::add (this, i18n("Video area is the central part of KPlayer. When playing a file that has video, it will display the video and optionally subtitles. Normally it will be hidden when playing an audio only file."));
   setFocusPolicy (QWidget::NoFocus);
   //setEnabled (false);
@@ -144,6 +146,12 @@ void KPlayerWidget::resizeEvent (QResizeEvent* event)
 #endif
 }
 
+void KPlayerWidget::mouseMoveEvent (QMouseEvent* event)
+{
+  QWidget::mouseMoveEvent (event);
+  event -> ignore();
+}
+
 void KPlayerWidget::mousePressEvent (QMouseEvent* event)
 {
 #ifdef DEBUG_KPLAYER_WIDGET
@@ -223,13 +231,16 @@ void KPlayerWidget::playerStateChanged (KPlayerProcess::State state, KPlayerProc
 }
 
 KPlayerWorkspace::KPlayerWorkspace (QWidget* parent, const char* name)
-  : QWidget (parent, name)
+  : QWidget (parent, name), m_timer (this)
 {
 #ifdef DEBUG_KPLAYER_WORKSPACE
   kdDebugTime() << "Creating workspace\n";
 #endif
-  m_resizing = false;
+  m_mouse_activity = m_resizing = false;
   m_widget = new KPlayerWidget (this);
+  connect (&m_timer, SIGNAL (timeout()), SLOT (cursorTimeout()));
+  connect (kPlayerProcess(), SIGNAL (stateChanged (KPlayerProcess::State, KPlayerProcess::State)), SLOT (playerStateChanged (KPlayerProcess::State, KPlayerProcess::State)));
+  connect (kPlayerProcess(), SIGNAL (sizeAvailable()), SLOT (setMouseCursorTracking()));
   QWhatsThis::add (this, i18n("Video area is the central part of KPlayer. When playing a file that has video, it will display the video and optionally subtitles. Normally it will be hidden when playing an audio only file."));
   setEraseColor (QColor (0, 0, 0));
   setMinimumSize (QSize (0, 0));
@@ -237,10 +248,12 @@ KPlayerWorkspace::KPlayerWorkspace (QWidget* parent, const char* name)
   QWidget* proxy = new QWidget (parent);
   proxy -> setEraseColor (QColor (0, 0, 0));
   proxy -> setFocusPolicy (QWidget::StrongFocus);
-  proxy -> setGeometry (0, 0, 1, 1);
+  proxy -> setGeometry (-4, -4, 1, 1);
   proxy -> lower();
   proxy -> show();
   setFocusProxy (proxy);
+  m_hidden_widget = new QWidget (this);
+  m_hidden_widget -> setGeometry (-10, -10, 5, 5);
 }
 
 void KPlayerWorkspace::setDisplaySize (QSize size)
@@ -278,6 +291,12 @@ void KPlayerWorkspace::resizeEvent (QResizeEvent* event)
   }
 }
 
+void KPlayerWorkspace::mouseMoveEvent (QMouseEvent* event)
+{
+  QWidget::mouseMoveEvent (event);
+  mouseActivity();
+}
+
 void KPlayerWorkspace::contextMenuEvent (QContextMenuEvent* event)
 {
 #ifdef DEBUG_KPLAYER_WORKSPACE
@@ -300,6 +319,7 @@ void KPlayerWorkspace::mousePressEvent (QMouseEvent* event)
   }
   else
     event -> ignore();
+  mouseActivity();
 }
 
 void KPlayerWorkspace::mouseReleaseEvent (QMouseEvent* event)
@@ -309,6 +329,7 @@ void KPlayerWorkspace::mouseReleaseEvent (QMouseEvent* event)
 #endif
   QWidget::mouseReleaseEvent (event);
   event -> ignore();
+  mouseActivity();
 }
 
 void KPlayerWorkspace::mouseDoubleClickEvent (QMouseEvent* event)
@@ -319,6 +340,7 @@ void KPlayerWorkspace::mouseDoubleClickEvent (QMouseEvent* event)
   QWidget::mouseDoubleClickEvent (event);
   kPlayerEngine() -> doubleClick();
   event -> accept();
+  mouseActivity();
 }
 
 void KPlayerWorkspace::wheelEvent (QWheelEvent* event)
@@ -331,6 +353,7 @@ void KPlayerWorkspace::wheelEvent (QWheelEvent* event)
   QWidget::wheelEvent (event);
   kPlayerEngine() -> wheel (event -> delta(), event -> state());
   event -> accept();
+  mouseActivity();
 }
 
 void KPlayerWorkspace::windowActivationChange (bool old)
@@ -362,4 +385,45 @@ void KPlayerWorkspace::focusOutEvent (QFocusEvent* event)
   kdDebugTime() << "Workspace focus out event\n";
 #endif
   QWidget::focusOutEvent (event);
+}
+
+void KPlayerWorkspace::mouseActivity (void)
+{
+  m_mouse_activity = true;
+  setMouseCursor();
+  m_timer.start (1000, true);
+}
+
+void KPlayerWorkspace::setMouseCursor (void)
+{
+  if ( ! m_mouse_activity && kPlayerEngine() -> process() -> state() == KPlayerProcess::Playing
+      && kPlayerEngine() -> properties() -> hasVideo() )
+  {
+    setCursor (KCursor::blankCursor());
+    widget() -> setCursor (KCursor::blankCursor());
+  }
+  else
+  {
+    unsetCursor();
+    widget() -> unsetCursor();
+  }
+}
+
+void KPlayerWorkspace::cursorTimeout (void)
+{
+  m_mouse_activity = false;
+  setMouseCursor();
+}
+
+void KPlayerWorkspace::setMouseCursorTracking (void)
+{
+  setMouseCursor();
+  bool track = kPlayerProcess() -> state() == KPlayerProcess::Playing && kPlayerEngine() -> properties() -> hasVideo();
+  setMouseTracking (track);
+  widget() -> setMouseTracking (track);
+}
+
+void KPlayerWorkspace::playerStateChanged (KPlayerProcess::State, KPlayerProcess::State)
+{
+  setMouseCursorTracking();
 }

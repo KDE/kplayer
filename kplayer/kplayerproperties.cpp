@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -19,6 +19,7 @@
 #include <qfileinfo.h>
 #include <qregexp.h>
 
+#define KPLAYER_PROCESS_SIZE_IDS
 #ifdef DEBUG
 #define DEBUG_KPLAYER_PROPERTIES
 #endif
@@ -63,9 +64,19 @@ QString timeString (float l, bool zero_ok)
   int lHour = int (l) / 3600;
   if ( lHour > 0 )
     l -= lHour * 3600;
+  if ( l >= 3600 )
+  {
+    lHour ++;
+    l -= 3600;
+  }
   int lMinute = int (l) / 60;
   if ( lMinute > 0 )
     l -= lMinute * 60;
+  if ( l >= 60 )
+  {
+    lMinute ++;
+    l -= 60;
+  }
   QString s;
   if ( lHour > 0 )
     s.sprintf ("%u:%02u:%04.1f", lHour, lMinute, l);
@@ -311,7 +322,8 @@ KPlayerProperty* KPlayerComboStringPropertyInfo::copy (const KPlayerProperty* pr
 
 bool KPlayerComboStringPropertyInfo::exists (KPlayerProperties* properties, const QString& name) const
 {
-  return properties -> config() -> hasKey (name) || properties -> config() -> hasKey (name + " Option");
+  return KPlayerStringPropertyInfo::exists (properties, name)
+    || KPlayerStringPropertyInfo::exists (properties, name + " Option");
 }
 
 KPlayerTranslatedStringPropertyInfo::~KPlayerTranslatedStringPropertyInfo()
@@ -327,6 +339,28 @@ KPlayerProperty* KPlayerTranslatedStringPropertyInfo::copy (const KPlayerPropert
 {
   return new KPlayerTranslatedStringProperty (* (KPlayerTranslatedStringProperty*) property);
 }
+
+/*
+KPlayerStringHistoryPropertyInfo::~KPlayerStringHistoryPropertyInfo()
+{
+}
+
+KPlayerProperty* KPlayerStringHistoryPropertyInfo::create (KPlayerProperties* properties) const
+{
+  return new KPlayerStringHistoryProperty;
+}
+
+KPlayerProperty* KPlayerStringHistoryPropertyInfo::copy (const KPlayerProperty* property) const
+{
+  return new KPlayerStringHistoryProperty (* (KPlayerStringHistoryProperty*) property);
+}
+
+bool KPlayerStringHistoryPropertyInfo::exists (KPlayerProperties* properties, const QString& name) const
+{
+  return KPlayerStringPropertyInfo::exists (properties, name)
+    || KPlayerStringPropertyInfo::exists (properties, name + " 0");
+}
+*/
 
 KPlayerNamePropertyInfo::~KPlayerNamePropertyInfo()
 {
@@ -359,6 +393,12 @@ KPlayerProperty* KPlayerAppendablePropertyInfo::create (KPlayerProperties*) cons
 KPlayerProperty* KPlayerAppendablePropertyInfo::copy (const KPlayerProperty* property) const
 {
   return new KPlayerAppendableProperty (* (KPlayerAppendableProperty*) property);
+}
+
+bool KPlayerAppendablePropertyInfo::exists (KPlayerProperties* properties, const QString& name) const
+{
+  return KPlayerStringPropertyInfo::exists (properties, name)
+    || KPlayerStringPropertyInfo::exists (properties, name + " Option");
 }
 
 KPlayerStringListPropertyInfo::~KPlayerStringListPropertyInfo()
@@ -732,12 +772,13 @@ int KPlayerStringProperty::compare (KPlayerProperty* property) const
 
 void KPlayerStringProperty::read (KConfig* config, const QString& name)
 {
-  setValue (config -> readEntry (name, value()));
+  m_value = config -> readEntry (name, value());
 }
 
 void KPlayerStringProperty::save (KConfig* config, const QString& name) const
 {
-  config -> writeEntry (name, value());
+  if ( ! value().isEmpty() )
+    config -> writeEntry (name, value());
 }
 
 KPlayerComboStringProperty::~KPlayerComboStringProperty()
@@ -746,7 +787,7 @@ KPlayerComboStringProperty::~KPlayerComboStringProperty()
 
 QString KPlayerComboStringProperty::asString (void) const
 {
-  return option().isEmpty() ? value() : option();
+  return option().isNull() ? value() : option();
 }
 
 void KPlayerComboStringProperty::read (KConfig* config, const QString& name)
@@ -757,8 +798,7 @@ void KPlayerComboStringProperty::read (KConfig* config, const QString& name)
 
 void KPlayerComboStringProperty::save (KConfig* config, const QString& name) const
 {
-  if ( ! value().isEmpty() )
-    KPlayerStringProperty::save (config, name);
+  KPlayerStringProperty::save (config, name);
   if ( ! option().isNull() )
     config -> writeEntry (name + " Option", option());
 }
@@ -785,6 +825,69 @@ QString KPlayerTranslatedStringProperty::asString (void) const
   return mimetype -> comment();
 }
 
+/*
+KPlayerStringHistoryProperty::~KPlayerStringHistoryProperty()
+{
+}
+
+void KPlayerStringHistoryProperty::setValue (const QString& value)
+{
+#ifdef DEBUG_KPLAYER_PROPERTIES
+  kdDebugTime() << "KPlayerStringHistoryProperty::setValue\n";
+#endif
+  KPlayerStringProperty::setValue (value);
+  if ( ! value.isEmpty() )
+  {
+    m_history.remove (value);
+    m_history.prepend (value);
+#ifdef DEBUG_KPLAYER_PROPERTIES
+    kdDebugTime() << " History " << value << "\n";
+#endif
+  }
+}
+
+void KPlayerStringHistoryProperty::read (KConfig* config, const QString& name)
+{
+#ifdef DEBUG_KPLAYER_PROPERTIES
+  kdDebugTime() << "KPlayerStringHistoryProperty::read\n";
+#endif
+  KPlayerStringProperty::read (config, name);
+  if ( ! value().isEmpty() )
+  {
+    m_history << value();
+#ifdef DEBUG_KPLAYER_PROPERTIES
+    kdDebugTime() << " History " << value() << "\n";
+#endif
+  }
+  QString history;
+  for ( int i = 0; i < 10 && config -> hasKey (history = name + " " + QString::number (i)); i ++ )
+  {
+    m_history << config -> readEntry (history);
+#ifdef DEBUG_KPLAYER_PROPERTIES
+    kdDebugTime() << " History " << m_history.last() << "\n";
+#endif
+  }
+}
+
+void KPlayerStringHistoryProperty::save (KConfig* config, const QString& name) const
+{
+#ifdef DEBUG_KPLAYER_PROPERTIES
+  kdDebugTime() << "KPlayerStringHistoryProperty::save\n";
+#endif
+  KPlayerStringProperty::save (config, name);
+  QStringList::ConstIterator it (history().begin());
+  if ( it != history().end() && *it == value() )
+    ++ it;
+  for ( int i = 0; i < 10 && it != history().end(); i ++ )
+  {
+#ifdef DEBUG_KPLAYER_PROPERTIES
+    kdDebugTime() << " History " << *it << "\n";
+#endif
+    config -> writeEntry (name + " " + QString::number (i), * it ++);
+  }
+}
+*/
+
 KPlayerNameProperty::~KPlayerNameProperty()
 {
 }
@@ -810,14 +913,14 @@ KPlayerAppendableProperty::~KPlayerAppendableProperty()
 {
 }
 
-QString KPlayerAppendableProperty::value (const QString& current) const
+QString KPlayerAppendableProperty::appendableValue (const QString& current) const
 {
   if ( option() == 0 )
     return value();
   return value().isEmpty() ? current : current.isEmpty() ? value() : current + " " + value();
 }
 
-void KPlayerAppendableProperty::setValue (const QString& value, bool append)
+void KPlayerAppendableProperty::setAppendableValue (const QString& value, bool append)
 {
   setOption (append);
   setValue (value);
@@ -1458,6 +1561,11 @@ bool KPlayerProperties::hasComboString (const QString& key) const
   return ! getComboString (key).isEmpty();
 }
 
+/*const QStringList& KPlayerProperties::getHistory (const QString& key) const
+{
+  return has (key) ? ((KPlayerStringHistoryProperty*) m_properties [key]) -> history() : nullStringList;
+}*/
+
 int KPlayerProperties::getAppendableOption (const QString& key) const
 {
   return ! has (key) ? 0 : ((KPlayerAppendableProperty*) m_properties [key]) -> option() ? 2 : 1;
@@ -1469,7 +1577,7 @@ void KPlayerProperties::setAppendable (const QString& key, const QString& value,
     reset (key);
   else
   {
-    ((KPlayerAppendableProperty*) get (key)) -> setValue (value, option == 2);
+    ((KPlayerAppendableProperty*) get (key)) -> setAppendableValue (value, option == 2);
     updated (key);
   }
 }
@@ -1600,12 +1708,12 @@ void KPlayerProperties::initialize (void)
 #endif
   KPlayerPropertyInfo* info = new KPlayerUrlPropertyInfo;
   info -> setCaption (i18n("Path"));
-  info -> setGroup (6);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_LOCATION);
   info -> setCanReset (false);
   m_info.insert ("Path", info);
   info = new KPlayerNamePropertyInfo;
   info -> setCaption (i18n("Name"));
-  info -> setGroup (0);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_BASIC);
   info -> setCanEdit (true);
   m_info.insert ("Name", info);
   info = new KPlayerStringListPropertyInfo;
@@ -1618,7 +1726,7 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Group By", info);
   info = new KPlayerComboStringPropertyInfo;
   info -> setCaption (i18n("Demuxer"));
-  info -> setGroup (2);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_FORMAT);
   m_info.insert ("Demuxer", info);
   info = new KPlayerDisplaySizePropertyInfo;
   m_info.insert ("Display Size", info);
@@ -1635,11 +1743,19 @@ void KPlayerProperties::initialize (void)
   boolinfo = new KPlayerBooleanPropertyInfo;
   boolinfo -> setDefaultValue (true);
   m_info.insert ("Subtitle Visibility", boolinfo);
+  info = new KPlayerBooleanPropertyInfo;
+  m_info.insert ("Closed Caption", info);
+  info = new KPlayerStringPropertyInfo;
+  m_info.insert ("Subtitle Encoding", info);
+  info = new KPlayerFloatPropertyInfo;
+  m_info.insert ("Subtitle Framerate", info);
   KPlayerIntegerPropertyInfo* intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (100);
   m_info.insert ("Subtitle Position", intinfo);
   info = new KPlayerFloatPropertyInfo;
   m_info.insert ("Subtitle Delay", info);
+//info = new KPlayerBooleanPropertyInfo;
+//m_info.insert ("Autoexpanded", info);
   intinfo = new KPlayerRelativePropertyInfo;
   intinfo -> setDefaultValue (50);
   m_info.insert ("Volume", intinfo);
@@ -1660,7 +1776,7 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Video Device", info);
   info = new KPlayerComboStringPropertyInfo;
   info -> setCaption (i18n("Video codec"));
-  info -> setGroup (3);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_VIDEO);
   m_info.insert ("Video Codec", info);
   info = new KPlayerIntegerPropertyInfo;
   m_info.insert ("Video Scaler", info);
@@ -1685,7 +1801,7 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Mixer Channel", info);
   info = new KPlayerComboStringPropertyInfo;
   info -> setCaption (i18n("Audio codec"));
-  info -> setGroup (4);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_AUDIO);
   m_info.insert ("Audio Codec", info);
   strinfo = new KPlayerStringPropertyInfo;
   strinfo -> setDefaultValue ("mplayer");
@@ -1707,7 +1823,7 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("OSD Level", info);
   info = new KPlayerTranslatedStringPropertyInfo;
   info -> setCaption (i18n("Type"));
-  info -> setGroup (2);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_FORMAT);
   info -> setCanReset (false);
   m_info.insert ("Type", info);
   info = new KPlayerStringPropertyInfo;
@@ -1747,28 +1863,39 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Tracks", info);
   info = new KPlayerFrequencyPropertyInfo;
   info -> setCaption (i18n("Frequency"));
-  info -> setGroup (1);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_GENERAL);
   m_info.insert ("Frequency", info);
   info = new KPlayerLengthPropertyInfo;
   info -> setCaption (i18n("Length"));
-  info -> setGroup (1);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_GENERAL);
   info -> setCanReset (false);
   m_info.insert ("Length", info);
   info = new KPlayerLengthPropertyInfo;
   m_info.insert ("MSF", info);
   info = new KPlayerSizePropertyInfo;
+  info -> setCaption (i18n("Resolution"));
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_SIZE);
+  info -> setCanReset (false);
+  m_info.insert ("Resolution", info);
+  info = new KPlayerSizePropertyInfo;
   info -> setCaption (i18n("Video size"));
-  info -> setGroup (2);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_SIZE);
   info -> setCanReset (false);
   m_info.insert ("Video Size", info);
+  info = new KPlayerSizePropertyInfo;
+  info -> setCanReset (false);
+  m_info.insert ("Current Resolution", info);
+  info = new KPlayerSizePropertyInfo;
+  info -> setCanReset (false);
+  m_info.insert ("Current Size", info);
   info = new KPlayerIntegerPropertyInfo;
   info -> setCaption (i18n("Video bit rate"));
-  info -> setGroup (3);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_VIDEO);
   info -> setCanReset (false);
   m_info.insert ("Video Bitrate", info);
   info = new KPlayerFloatPropertyInfo;
   info -> setCaption (i18n("Frame rate"));
-  info -> setGroup (3);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_VIDEO);
   info -> setCanReset (false);
   m_info.insert ("Framerate", info);
   intinfo = new KPlayerIntegerPropertyInfo;
@@ -1778,17 +1905,17 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Video IDs", info);
   info = new KPlayerIntegerPropertyInfo;
   info -> setCaption (i18n("Audio bit rate"));
-  info -> setGroup (4);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_AUDIO);
   info -> setCanReset (false);
   m_info.insert ("Audio Bitrate", info);
   info = new KPlayerIntegerPropertyInfo;
   info -> setCaption (i18n("Sample rate"));
-  info -> setGroup (4);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_AUDIO);
   info -> setCanReset (false);
   m_info.insert ("Samplerate", info);
   intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setCaption (i18n("Channels"));
-  intinfo -> setGroup (4);
+  intinfo -> setGroup (KPLAYER_PROPERTY_GROUP_AUDIO);
   intinfo -> setCanReset (false);
   intinfo -> setDefaultValue (2);
   m_info.insert ("Channels", intinfo);
@@ -1799,7 +1926,7 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Audio IDs", info);
   info = new KPlayerIntegerPropertyInfo;
   info -> setCaption (i18n("Track"));
-  info -> setGroup (5);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_INFO);
   info -> setCanEdit (true);
   m_info.insert ("Track", info);
   info = new KPlayerBooleanPropertyInfo;
@@ -1809,7 +1936,7 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Has Video", boolinfo);
   info = new KPlayerPersistentUrlPropertyInfo;
   info -> setCaption (i18n("External Subtitles"));
-  info -> setGroup (6);
+  info -> setGroup (KPLAYER_PROPERTY_GROUP_LOCATION);
   m_info.insert ("Subtitle URL", info);
   info = new KPlayerBooleanPropertyInfo;
   m_info.insert ("Vobsub", info);
@@ -1823,7 +1950,7 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Vobsub ID", intinfo);
   info = new KPlayerIntegerStringMapPropertyInfo (false);
   m_info.insert ("Vobsub IDs", info);
-  m_meta_info.setGroup (5);
+  m_meta_info.setGroup (KPLAYER_PROPERTY_GROUP_INFO);
   m_meta_info.setCanEdit (true);
   m_meta_attributes << I18N_NOOP("Track") << I18N_NOOP("Title") << I18N_NOOP("Album")
     << I18N_NOOP("Artist") << I18N_NOOP("Year") << I18N_NOOP("Genre");
@@ -1894,6 +2021,12 @@ void KPlayerProperties::initialize (void)
   intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (100);
   m_info.insert ("Minimum Slider Length", intinfo);
+  boolinfo = new KPlayerBooleanPropertyInfo;
+  boolinfo -> setDefaultValue (true);
+  m_info.insert ("Show Slider Marks", boolinfo);
+  intinfo = new KPlayerIntegerPropertyInfo;
+  intinfo -> setDefaultValue (10);
+  m_info.insert ("Slider Marks", intinfo);
   intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (1);
   m_info.insert ("Normal Seek", intinfo);
@@ -1904,17 +2037,11 @@ void KPlayerProperties::initialize (void)
   m_info.insert ("Fast Seek", intinfo);
   info = new KPlayerIntegerPropertyInfo;
   m_info.insert ("Fast Seek Units", info);
-  intinfo = new KPlayerIntegerPropertyInfo;
-  intinfo -> setDefaultValue (10);
-  m_info.insert ("Progress Marks", intinfo);
   info = new KPlayerIntegerPropertyInfo;
   m_info.insert ("Volume Minimum", info);
   intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (100);
   m_info.insert ("Volume Maximum", intinfo);
-  intinfo = new KPlayerIntegerPropertyInfo;
-  intinfo -> setDefaultValue (10);
-  m_info.insert ("Volume Marks", intinfo);
   intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (1);
   m_info.insert ("Volume Step", intinfo);
@@ -1932,9 +2059,6 @@ void KPlayerProperties::initialize (void)
   intinfo -> setDefaultValue (100);
   m_info.insert ("Contrast Maximum", intinfo);
   intinfo = new KPlayerIntegerPropertyInfo;
-  intinfo -> setDefaultValue (20);
-  m_info.insert ("Contrast Marks", intinfo);
-  intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (1);
   m_info.insert ("Contrast Step", intinfo);
   info = new KPlayerIntegerPropertyInfo;
@@ -1949,9 +2073,6 @@ void KPlayerProperties::initialize (void)
   intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (50);
   m_info.insert ("Brightness Maximum", intinfo);
-  intinfo = new KPlayerIntegerPropertyInfo;
-  intinfo -> setDefaultValue (10);
-  m_info.insert ("Brightness Marks", intinfo);
   intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (1);
   m_info.insert ("Brightness Step", intinfo);
@@ -1968,9 +2089,6 @@ void KPlayerProperties::initialize (void)
   intinfo -> setDefaultValue (100);
   m_info.insert ("Hue Maximum", intinfo);
   intinfo = new KPlayerIntegerPropertyInfo;
-  intinfo -> setDefaultValue (20);
-  m_info.insert ("Hue Marks", intinfo);
-  intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (1);
   m_info.insert ("Hue Step", intinfo);
   info = new KPlayerIntegerPropertyInfo;
@@ -1986,9 +2104,6 @@ void KPlayerProperties::initialize (void)
   intinfo -> setDefaultValue (100);
   m_info.insert ("Saturation Maximum", intinfo);
   intinfo = new KPlayerIntegerPropertyInfo;
-  intinfo -> setDefaultValue (20);
-  m_info.insert ("Saturation Marks", intinfo);
-  intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (1);
   m_info.insert ("Saturation Step", intinfo);
   info = new KPlayerIntegerPropertyInfo;
@@ -2002,52 +2117,39 @@ void KPlayerProperties::initialize (void)
   KPlayerFloatPropertyInfo* floatinfo = new KPlayerFloatPropertyInfo;
   floatinfo -> setDefaultValue (0.1);
   m_info.insert ("Audio Delay Step", floatinfo);
+  strinfo = new KPlayerStringPropertyInfo;
+  strinfo -> setDefaultValue ("Sans");
+  m_info.insert ("Subtitle Font Name", strinfo);
+  info = new KPlayerBooleanPropertyInfo;
+  m_info.insert ("Subtitle Font Bold", info);
+  info = new KPlayerBooleanPropertyInfo;
+  m_info.insert ("Subtitle Font Italic", info);
+  floatinfo = new KPlayerFloatPropertyInfo;
+  floatinfo -> setDefaultValue (3);
+  m_info.insert ("Subtitle Text Size", floatinfo);
+  boolinfo = new KPlayerBooleanPropertyInfo;
+  boolinfo -> setDefaultValue (true);
+  m_info.insert ("Subtitle Autoscale", boolinfo);
+  intinfo = new KPlayerIntegerPropertyInfo;
+  intinfo -> setDefaultValue (100);
+  m_info.insert ("Subtitle Text Width", intinfo);
+  floatinfo = new KPlayerFloatPropertyInfo;
+  floatinfo -> setDefaultValue (0.75);
+  m_info.insert ("Subtitle Font Outline", floatinfo);
+  boolinfo = new KPlayerBooleanPropertyInfo;
+  boolinfo -> setDefaultValue (true);
+  m_info.insert ("Subtitle Embedded Fonts", boolinfo);
+  info = new KPlayerIntegerPropertyInfo;
+  m_info.insert ("Subtitle Autoexpand", info);
   intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (1);
   m_info.insert ("Subtitle Position Step", intinfo);
   floatinfo = new KPlayerFloatPropertyInfo;
   floatinfo -> setDefaultValue (0.1);
   m_info.insert ("Subtitle Delay Step", floatinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Aqt Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Ass Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Js Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Jss Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Rt Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Smi Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Srt Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Ssa Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Sub Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Txt Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Utf Subtitles", boolinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Autoload Vobsub Subtitles", boolinfo);
-  info = new KPlayerBooleanPropertyInfo;
-  m_info.insert ("Autoload Other Subtitles", info);
-  info = new KPlayerStringPropertyInfo;
-  m_info.insert ("Autoload Extension List", info);
+  strinfo = new KPlayerStringPropertyInfo;
+  strinfo -> setDefaultValue ("aqt ass idx ifo js jss rt smi srt ssa sub txt utf utf8 utf-8");
+  m_info.insert ("Autoload Extension List", strinfo);
   info = new KPlayerBooleanPropertyInfo;
   m_info.insert ("Show Messages On Error", info);
   info = new KPlayerBooleanPropertyInfo;
@@ -2187,10 +2289,11 @@ bool KPlayerConfiguration::autoloadSubtitles (const QString& key) const
   return getBoolean (key);
 }
 
+bool vobsub (const QString& path);
+
 bool KPlayerConfiguration::getVobsubSubtitles (const QString&, const KURL& url) const
 {
-  static QRegExp re_vobsub_url ("^file:/.*\\.(?:idx|ifo)$", false);
-  return re_vobsub_url.search (url.url()) >= 0;
+  return url.isLocalFile() && vobsub (url.path());
 }
 
 bool KPlayerConfiguration::getPlaylist (const QString&, const KURL& url) const
@@ -2238,6 +2341,18 @@ void KPlayerConfiguration::itemReset (void)
     iterator.data() -> setOverride (false);
     ++ iterator;
   }
+}
+
+QSize KPlayerConfiguration::autoexpandAspect (void) const
+{
+  int option = subtitleAutoexpand();
+  return option == 1 ? QSize (1, 1) : option == 2 ? QSize (4, 3) : option == 3 ? QSize (16, 9) : QSize();
+}
+
+int KPlayerConfiguration::sliderMarksInterval (int span) const
+{
+  int interval = span * sliderMarks() / 100;
+  return interval > 0 ? interval : 1;
 }
 
 KPlayerMedia::KPlayerMedia (KPlayerProperties* parent, const KURL& url)
@@ -2404,7 +2519,7 @@ const QString& KPlayerMedia::getComboString (const QString& key) const
 QString KPlayerMedia::getAppendable (const QString& key) const
 {
   QString current (parent() -> getAppendable (key));
-  return has (key) ? ((KPlayerAppendableProperty*) m_properties [key]) -> value (current) : current;
+  return has (key) ? ((KPlayerAppendableProperty*) m_properties [key]) -> appendableValue (current) : current;
 }
 
 KPlayerGenericProperties* KPlayerMedia::genericProperties (const KURL& url)
@@ -2922,7 +3037,7 @@ struct KPlayerChannelList channellists[] = {
   { "russia", I18N_NOOP("Russia"), russia, sizeof (russia) / sizeof (struct KPlayerChannelGroup) }
 };
 
-extern const uint channellistcount = sizeof (channellists) / sizeof (struct KPlayerChannelList);
+const uint channellistcount = sizeof (channellists) / sizeof (struct KPlayerChannelList);
 
 KPlayerTVProperties::KPlayerTVProperties (KPlayerProperties* parent, const KURL& url)
   : KPlayerTunerProperties (parent, url)
@@ -3173,8 +3288,8 @@ KPlayerTrackProperties::~KPlayerTrackProperties()
 
 void KPlayerTrackProperties::setDisplaySize (const QSize& size, int option)
 {
-  if ( ! size.isEmpty() && hasOriginalSize() && (option == 1 && originalSize() == size
-      || option == 2 && size.width() * originalSize().height() == size.height() * originalSize().width()) )
+  if ( ! size.isEmpty() && hasOriginalSize() && (option == 1 && currentSize() == size
+      || option == 2 && size.width() * currentSize().height() == size.height() * currentSize().width()) )
     resetDisplaySize();
   else
     KPlayerMediaProperties::setDisplaySize (size, option);
@@ -3283,7 +3398,7 @@ void KPlayerTrackProperties::importMeta (QString key, QString value)
 void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
 {
   static QRegExp re_video ("^V(?:IDE)?O: *\\S+ +(\\d+)x(\\d+)");
-  static QRegExp re_vo ("^V(?:IDE)?O:.* => +(\\d+)x(\\d+)");
+  static QRegExp re_vo ("^V(?:IDE)?O:.* (\\d+)x(\\d+) +=> +(\\d+)x(\\d+)");
   static QRegExp re_vc ("^(?:ID_VIDEO_CODEC=|Selected video codec: \\[)([A-Za-z0-9,:.-]+)(?:$|\\])");
   static QRegExp re_ac ("^(?:ID_AUDIO_CODEC=|Selected audio codec: \\[)([A-Za-z0-9,:.-]+)(?:$|\\])");
 #ifdef KPLAYER_PROCESS_SIZE_IDS
@@ -3309,6 +3424,7 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
   static QRegExp re_name ("^ID_CLIP_INFO_NAME[0-9]+=(.+)$");
   static QRegExp re_value ("^ID_CLIP_INFO_VALUE[0-9]+=(.+)$");
   static QRegExp re_icyinfo ("^ICY Info: StreamTitle='([^']*)'");
+  static int width = 0;
   static QString key;
   static bool seen_length = false;
   if ( str.startsWith ("ID_FILENAME=") )
@@ -3340,35 +3456,50 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
   }
   else if ( (update || ! heightAdjusted()) && re_vo.search (str) >= 0 )
   {
-    setOriginalSize (QSize (re_vo.cap(1).toInt(), re_vo.cap(2).toInt()));
+    QSize res (re_vo.cap(1).toInt(), re_vo.cap(2).toInt());
+    QSize size (re_vo.cap(3).toInt(), re_vo.cap(4).toInt());
+    if ( res == resolution() )
+    {
+      setOriginalSize (size);
 #ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << "Process: Adjusted width " << originalSize().width() << " height " << originalSize().height() << "\n";
+      kdDebugTime() << "Process: Adjusted width " << originalSize().width() << " height " << originalSize().height() << "\n";
 #endif
+      resetCurrentResolution();
+      resetCurrentSize();
+    }
+    else
+    {
+      setCurrentResolution (res);
+      setCurrentSize (size);
+#ifdef DEBUG_KPLAYER_PROPERTIES
+      kdDebugTime() << "Process: Current width " << currentSize().width() << " height " << currentSize().height() << "\n";
+#endif
+    }
     m_height_adjusted = update;
   }
-  else if ( ! heightAdjusted() && originalSize().isEmpty() && re_video.search (str) >= 0 )
+  else if ( (update || ! hasResolution()) && re_video.search (str) >= 0 )
   {
-    setOriginalSize (QSize (re_video.cap(1).toInt(), re_video.cap(2).toInt()));
+    setResolution (QSize (re_video.cap(1).toInt(), re_video.cap(2).toInt()));
 #ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << "Process: Width " << originalSize().width() << " Height " << originalSize().height() << "\n";
+    kdDebugTime() << "Process: Width " << resolution().width() << " Height " << resolution().height() << "\n";
 #endif
   }
 #ifdef KPLAYER_PROCESS_SIZE_IDS
-  else if ( ! heightAdjusted() && originalSize().width() <= 0 && re_vw.search (str) >= 0 )
+  else if ( resolution().width() <= 0 && re_vw.search (str) >= 0 )
   {
-    setOriginalSize (QSize (re_vw.cap(1).toInt(), originalSize().height()));
+    width = re_vw.cap(1).toInt();
 #ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << "Process: Width " << originalSize().width() << "\n";
+    kdDebugTime() << "Process: Width " << width << "\n";
 #endif
   }
-  else if ( ! heightAdjusted() && originalSize().height() <= 0 && re_vh.search (str) >= 0 )
+  else if ( width > 0 && resolution().height() <= 0 && re_vh.search (str) >= 0 )
   {
-    setOriginalSize (QSize (originalSize().width(), re_vh.cap(1).toInt()));
+    setResolution (QSize (width, re_vh.cap(1).toInt()));
 #ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << "Process: Height " << originalSize().height() << "\n";
+    kdDebugTime() << "Process: Height " << resolution().height() << "\n";
 #endif
   }
-  else if ( ! heightAdjusted() && ! originalSize().isEmpty() && re_va.search (str) >= 0 )
+  else if ( (update || ! heightAdjusted()) && re_va.search (str) >= 0 )
   {
     int w = 0, h = 0;
     float a = stringToFloat (re_va.cap(1)), b;
@@ -3390,11 +3521,11 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
 #ifdef DEBUG_KPLAYER_PROPERTIES
       kdDebugTime() << "Process: Aspect " << a << " (" << w << "x" << h << ")\n";
 #endif
-      setOriginalSize (QSize (originalSize().width(), originalSize().width() * h / w));
+      setOriginalSize (QSize (resolution().width(), (resolution().width() * h + w / 2) / w));
 #ifdef DEBUG_KPLAYER_PROPERTIES
-      kdDebugTime() << "Process: Adjusted width " << originalSize().width() << "\n";
+      kdDebugTime() << "Process: Adjusted height " << originalSize().height() << "\n";
 #endif
-      m_height_adjusted = true;
+      m_height_adjusted = false;
     }
   }
 #endif
@@ -3568,8 +3699,8 @@ int KPlayerTrackProperties::fastSeek (void) const
 
 QSize KPlayerTrackProperties::getDisplaySize (const QString& key) const
 {
-  const QSize& original (originalSize());
-  return has (key) ? ((KPlayerDisplaySizeProperty*) m_properties [key]) -> value (original) : original;
+  const QSize& current (currentSize());
+  return has (key) ? ((KPlayerDisplaySizeProperty*) m_properties [key]) -> value (current) : current;
 }
 
 int KPlayerTrackProperties::getTrackOption (const QString& key) const
@@ -3639,19 +3770,79 @@ void KPlayerTrackProperties::setSubtitleOption (int option)
   if ( option > 0 && option <= scount )
     setTrackOption ("Subtitle ID", option);
   else
-    reset ("Subtitle ID");
+    resetSubtitleID();
   if ( option > scount && option <= scount + int (vobsubIDs().count()) )
     setTrackOption ("Vobsub ID", option - scount);
   else
-    reset ("Vobsub ID");
+    resetVobsubID();
 }
 
 void KPlayerTrackProperties::showSubtitleUrl (const KURL& url)
 {
-  setSubtitleUrl (url);
+  if ( url != subtitleUrl() )
+  {
+    setSubtitleUrl (url);
+    resetSubtitleID();
+    resetVobsubID();
+  }
   setShowSubtitles (true);
-  resetSubtitleID();
-  resetVobsubID();
+}
+
+bool KPlayerTrackProperties::needsExpanding (void) const
+{
+  //static QRegExp re_expand ("(?:^| )-vf +(?:[^ ]*,)?expand=");
+  if ( hasOriginalSize() && configuration() -> hasSubtitleAutoexpand() )
+  {
+    QSize aspect = configuration() -> autoexpandAspect();
+    const QSize& size = currentSize();
+    return size.height() * aspect.width() * 20 < size.width() * aspect.height() * 19;
+  }
+  return false;
+}
+
+void KPlayerTrackProperties::autoexpand (void)
+{
+  static QRegExp re_expand ("((?:^|.* )-vf +[^ ]+)(.*)");
+#ifdef DEBUG_KPLAYER_PROPERTIES
+  kdDebugTime() << "KPlayerTrackProperties::autoexpand\n";
+#endif
+  if ( hasOriginalSize() && configuration() -> hasSubtitleAutoexpand() )
+  {
+    QSize aspect = configuration() -> autoexpandAspect();
+    const QSize& res = currentResolution();
+    const QSize& size = currentSize();
+    int height = size.width() * aspect.height() * res.height() / (aspect.width() * size.height());
+#ifdef DEBUG_KPLAYER_PROPERTIES
+    kdDebugTime() << " Resolution " << res.width() << "x" << res.height() << "\n";
+    kdDebugTime() << " Size   " << size.width() << "x" << size.height() << "\n";
+    kdDebugTime() << " Aspect " << aspect.width() << "x" << aspect.height() << "\n";
+#endif
+    if ( height > res.height() )
+    {
+      QString expand = "expand=" + QString::number (res.width()) + ":" + QString::number (height);
+      int offset = res.width() / 10;
+      height -= res.height();
+      if ( offset + offset > height )
+      {
+        if ( offset > height )
+          offset = height;
+        if ( subtitlePosition() > 50 )
+          offset = height - offset;
+        expand += ":0:" + QString::number (offset);
+      }
+#ifdef DEBUG_KPLAYER_PROPERTIES
+      kdDebugTime() << " Expand " << expand << "\n";
+#endif
+      if ( ! hasCommandLine() )
+        setCommandLineOption ("-vf " + expand, 2);
+      else if ( re_expand.search (commandLineValue()) >= 0 )
+        setCommandLine (re_expand.cap(1) + "," + expand + re_expand.cap(2));
+      else
+        setCommandLine (commandLineValue() + " -vf " + expand);
+      setCurrentResolution (QSize (size.width(), height));
+      setCurrentSize (QSize (size.width(), size.width() * aspect.height() / aspect.width()));
+    }
+  }
 }
 
 KPlayerDiskTrackProperties::KPlayerDiskTrackProperties (KPlayerProperties* parent, const KURL& url)
@@ -3975,14 +4166,14 @@ void KPlayerItemProperties::setupMeta (void)
           {
             key = key.lower();
             capitalizeWords (key);
-            if ( key == "Resolution" )
-              key = "Video Size";
+            //if ( key == "Resolution" )
+            //  key = "Video Size";
             if ( ! has (key) )
             {
 #ifdef DEBUG_KPLAYER_PROPERTIES
               kdDebugTime() << " Extracted size " << key << " " << item.value().toSize().width() << "x" << item.value().toSize().height() << "\n";
 #endif
-              //setSize (key, item.value().toSize()); // MPEG resolution is usually wrong
+              setSize (key, item.value().toSize());
             }
           }
           else if ( item.type() != QVariant::Bool )

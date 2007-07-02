@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -63,14 +63,14 @@ void KPlayerSettings::load (const KURL& url)
     properties() -> commit();
   KPlayerMedia::release (m_properties);
   m_properties = KPlayerMedia::trackProperties (url);
-  setAspect (properties() -> originalAspect());
+  setAspect (properties() -> currentAspect());
   if ( hadAspect || aspect().isValid() )
     setDisplaySizeOverride (false);
   if ( properties() -> displaySizeOption() == 1 )
     setDisplaySize (properties() -> displaySize());
   configuration() -> itemReset();
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Display size " << properties() -> displaySizeOption() << " " << properties() -> displaySize().width() << "x" << properties() -> displaySize().height() << " " << properties() -> originalSize().width() << "x" << properties() -> originalSize().height() << " -> " << displaySize().width() << "x" << displaySize().height() << "\n";
+  kdDebugTime() << "Display size " << properties() -> displaySizeOption() << " " << properties() -> displaySize().width() << "x" << properties() -> displaySize().height() << " " << properties() -> currentSize().width() << "x" << properties() -> currentSize().height() << " -> " << displaySize().width() << "x" << displaySize().height() << "\n";
   kdDebug() << "             Maintain aspect " << properties() -> maintainAspect() << " " << configuration() -> maintainAspect() << " -> " << maintainAspect() << " " << aspect().width() << "x" << aspect().height() << "\n";
   kdDebug() << "             Volume " << properties() -> volume() << " " << properties() -> volumeOption() << " " << configuration() -> volume() << " " << configuration() -> mute() << " -> " << actualVolume() << "\n";
   kdDebug() << "             Audio delay " << properties() -> audioDelay() << " " << configuration() -> audioDelay() << " -> " << audioDelay() << "\n";
@@ -163,7 +163,7 @@ void KPlayerSettings::setAspect (QSize aspect)
       == aspect.height() * m_aspect.width() || aspect.isEmpty() && m_aspect.isEmpty() )
     return;
   m_aspect = aspect;
-  aspect = properties() -> originalAspect();
+  aspect = properties() -> currentAspect();
   setAspectOverride (! aspect.isEmpty() && ! m_aspect.isEmpty() && aspect.width() * m_aspect.height() != aspect.height() * m_aspect.width());
 }
 
@@ -266,9 +266,39 @@ QString KPlayerSettings::currentSubtitles (void) const
   return subtitles().first();
 }
 
+static bool vobsubExtension (const QString& path)
+{
+  return path.endsWith (".idx", false) || path.endsWith (".ifo", false) || path.endsWith (".sub", false);
+}
+
+static QString vobsubBasePath (const QString& path)
+{
+  return vobsubExtension (path) ? path.left (path.length() - 4) : path;
+}
+
+bool vobsub (const QString& path)
+{
+  if ( ! vobsubExtension (path) )
+    return false;
+  if ( ! path.endsWith (".sub", false) )
+    return true;
+  QFile file (path);
+  if ( ! file.open (IO_ReadOnly) )
+    return false;
+  char data [4];
+  int length = file.readBlock (data, sizeof (data));
+  file.close();
+  return length == sizeof (data) && memcmp (data, "\0\0\1\272", sizeof (data)) == 0;
+}
+
 void KPlayerSettings::addSubtitlePath (const QString& path)
 {
-  if ( subtitles().find (path) == subtitles().end() )
+  if ( path == properties() -> subtitleUrlString() ? properties() -> vobsubSubtitles() : vobsub (path) )
+  {
+    if ( vobsubBasePath (m_vobsub) != vobsubBasePath (path) )
+      m_vobsub = path;
+  }
+  else if ( subtitles().find (path) == subtitles().end() )
     m_subtitles.append (path);
 }
 
@@ -301,13 +331,13 @@ bool KPlayerSettings::isZoomFactor (int m, int d)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
   kdDebugTime() << "Settings::isZoomFactor (" << m << ", " << d << ") "
-    << properties() -> originalSize().width() << "x" << properties() -> originalSize().height()
+    << properties() -> currentSize().width() << "x" << properties() -> currentSize().height()
     << " " << displaySize().width() << "x" << displaySize().height()
     << " " << aspect().width() << "x" << aspect().height() << "\n";
 #endif
   if ( fullScreen() || maximized() || ! properties() -> hasOriginalSize() )
     return false;
-  QSize size (properties() -> originalSize() * m / d);
+  QSize size (properties() -> currentSize() * m / d);
   if ( ! aspect().isEmpty() )
     size.setHeight (size.width() * aspect().height() / aspect().width());
   bool result = size == displaySize();
@@ -355,7 +385,7 @@ bool KPlayerSettings::setInitialDisplaySize (void)
     return false;
   if ( ! aspectOverride() )
   {
-    setAspect (properties() -> originalAspect());
+    setAspect (properties() -> currentAspect());
     setAspectOverride (false);
 #ifdef DEBUG_KPLAYER_SETTINGS
     kdDebugTime() << "Settings: Initial aspect: " << aspect().width() << "x" << aspect().height() << " " << maintainAspect() << "\n";
@@ -370,14 +400,14 @@ bool KPlayerSettings::setInitialDisplaySize (void)
     size = QSize (configuration() -> minimumInitialWidth(), 0);
   else
   {
-    int d = 1, n = (configuration() -> minimumInitialWidth() - 1) / properties() -> originalSize().width();
-    if ( n > 0 && properties() -> originalSize().width() * n
-        + properties() -> originalSize().width() / 2 >= configuration() -> minimumInitialWidth() )
+    int d = 1, n = (configuration() -> minimumInitialWidth() - 1) / properties() -> currentSize().width();
+    if ( n > 0 && properties() -> currentSize().width() * n
+        + properties() -> currentSize().width() / 2 >= configuration() -> minimumInitialWidth() )
       n *= d = 2;
 #ifdef DEBUG_KPLAYER_SETTINGS
     kdDebugTime() << "Initial Zoom Factor " << (n + 1) << " / " << d << "\n";
 #endif
-    size = adjustSize (properties() -> originalSize() * (n + 1) / d);
+    size = adjustSize (properties() -> currentSize() * (n + 1) / d);
   }
 #ifdef DEBUG_KPLAYER_SETTINGS
   kdDebugTime() << "Settings: Initial size: " << size.width() << "x" << size.height() << "\n";

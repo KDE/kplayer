@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -259,6 +259,11 @@ inline KPlayerTrackProperties* KPlayerProcess::properties (void) const
   return settings() -> properties();
 }
 
+inline KPlayerConfiguration* KPlayerProcess::configuration (void) const
+{
+  return KPlayerEngine::engine() -> configuration();
+}
+
 KPlayerProcess::KPlayerProcess (void)
 {
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -365,8 +370,6 @@ void KPlayerProcess::setState (State state)
     return;
   State previous = m_state;
   m_state = state;
-  //if ( previous == Running && state == Playing && ! settings() -> subtitleVisibility() )
-  //  showSubtitles (false);
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Process: New state: " << state << ", previous state: " << previous << ", position: " << m_position << "\n";
 #endif
@@ -408,8 +411,12 @@ void KPlayerProcess::get_info (void)
 {
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Process: Get info\n";
+  kdDebugTime() << " Widget " << kPlayerWorkspace() -> hiddenWidget() -> x()
+    << "x" << kPlayerWorkspace() -> hiddenWidget() -> y()
+    << " " << kPlayerWorkspace() -> hiddenWidget() -> width()
+    << "x" << kPlayerWorkspace() -> hiddenWidget() -> height() << "\n";
 #endif
-  m_info_available = m_delayed_helper = m_kill = false;
+  m_delayed_helper = m_kill = false;
   m_helper_seek = m_helper_seek_count = 0;
   m_helper_position = 0;
   if ( properties() -> url().isEmpty() || ! properties() -> deviceOption().isEmpty() )
@@ -425,11 +432,12 @@ void KPlayerProcess::get_info (void)
     }
   }
   m_helper = new KPlayerLineOutputProcess;
-  *m_helper << properties() -> executablePath() << "-slave" << "-ao" << "null" << "-vo" << "null";
+  *m_helper << properties() -> executablePath() << "-slave" << "-ao" << "null" << "-vo" << "x11"
+    << "-wid" << QString::number (kPlayerWorkspace() -> hiddenWidget() -> winId());
   if ( properties() -> cache() == 1 || ! properties() -> url().isLocalFile() && ! properties() -> useKioslave() )
     *m_helper << "-nocache";
   else if ( properties() -> cache() == 2 )
-    *m_helper << "-cache" << QString().setNum (properties() -> cacheSize());
+    *m_helper << "-cache" << QString::number (properties() -> cacheSize());
   connect (m_helper, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
     SLOT (receivedHelperLine (KPlayerLineOutputProcess*, char*, int)));
   if ( ! run (m_helper) )
@@ -493,7 +501,7 @@ void KPlayerProcess::start (void)
   }*/
   m_player = new KPlayerLineOutputProcess;
   *m_player << properties() -> executablePath() << "-zoom" << "-noautosub" << "-slave"
-    << "-wid" << QCString().setNum (kPlayerWidget() -> winId());
+    << "-wid" << QString::number (kPlayerWidget() -> winId());
   QString driver (properties() -> videoDriverString());
   if ( ! driver.isEmpty() )
   {
@@ -549,17 +557,18 @@ void KPlayerProcess::start (void)
   if ( settings() -> hasSubtitles() && settings() -> showSubtitles() )
   {
     m_subtitle_index = properties() -> subtitleIndex();
+    if ( settings() -> hasVobsubSubtitles() )
+    {
+      *m_player << "-vobsub" << settings() -> vobsubSubtitles();
+      if ( properties() -> hasVobsubID() )
+        *m_player << "-vobsubid" << QString::number (properties() -> vobsubID());
+    }
     if ( properties() -> hasSubtitleID() )
-      *m_player << "-sid" << QCString().setNum (properties() -> subtitleID());
-    else if ( properties() -> hasVobsubID() )
-      *m_player << "-vobsubid" << QCString().setNum (properties() -> vobsubID());
+      *m_player << "-sid" << QString::number (properties() -> subtitleID());
     else
     {
       QString urls (settings() -> currentSubtitles());
-      if ( urls == properties() -> subtitleUrlString() ? properties() -> vobsubSubtitles()
-          : KPlayerEngine::engine() -> configuration() -> getVobsubSubtitles ("Vobsub", KURL::fromPathOrURL (urls)) )
-        *m_player << "-vobsub" << urls;
-      else if ( urls.find (',') < 0 )
+      if ( urls.find (',') < 0 )
         *m_player << "-sub" << urls;
       else
       {
@@ -576,6 +585,29 @@ void KPlayerProcess::start (void)
   m_subtitle_position = settings() -> subtitlePosition();
   if ( m_subtitle_position != 100 )
     *m_player << "-subpos" << QCString().setNum (m_subtitle_position);
+  QString font (configuration() -> subtitleFontName());
+  if ( configuration() -> subtitleFontBold() )
+    font += ":bold";
+  if ( configuration() -> subtitleFontItalic() )
+    font += ":italic";
+  *m_player << "-fontconfig" << "-font" << font;
+  *m_player << "-subfont-autoscale" << (configuration() -> subtitleAutoscale() ? "3" : "0");
+  if ( configuration() -> subtitleTextSize() )
+    *m_player << "-subfont-text-scale" << QString::number (configuration() -> subtitleTextSize());
+  if ( configuration() -> hasSubtitleFontOutline() )
+    *m_player << "-ffactor" << configuration() -> subtitleFontOutlineString();
+  if ( configuration() -> hasSubtitleTextWidth() )
+    *m_player << "-subwidth" << configuration() -> subtitleTextWidthString();
+  const QString& encoding (properties() -> subtitleEncoding());
+  if ( encoding == "UTF-8" )
+    *m_player << "-utf8";
+  else if ( ! encoding.isEmpty() )
+    *m_player << "-subcp" << encoding;
+  if ( properties() -> hasSubtitleFramerate() )
+    *m_player << "-subfps" << properties() -> subtitleFramerateString();
+  *m_player << (configuration() -> subtitleEmbeddedFonts() ? "-embeddedfonts" : "-noembeddedfonts");
+  if ( properties() -> subtitleClosedCaption() )
+    *m_player << "-subcc";
   if ( properties() -> videoDoubleBuffering() )
     *m_player << "-double";
   if ( properties() -> videoDirectRendering() && ! settings() -> showSubtitles() )
@@ -692,6 +724,7 @@ void KPlayerProcess::restart (void)
 
 bool KPlayerProcess::run (KPlayerLineOutputProcess* player)
 {
+  static QRegExp re_space (" +");
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Process: Run\n";
 #endif
@@ -709,8 +742,9 @@ bool KPlayerProcess::run (KPlayerLineOutputProcess* player)
   else if ( properties() -> buildNewIndex() == 2 )
     *player << "-forceidx";
   *player << "-noquiet" << "-msglevel" << "identify=4";
-  if ( ! properties() -> commandLine().isEmpty() )
-    *player << QStringList::split (QChar (' '), properties() -> commandLine());
+  QString commandline = properties() -> commandLine();
+  if ( ! commandline.isEmpty() )
+    *player << QStringList::split (re_space, commandline);
   codec = properties() -> deviceSetting();
   if ( ! codec.isEmpty() )
     *player << properties() -> deviceOption() << codec;
@@ -1107,13 +1141,14 @@ void KPlayerProcess::subtitleVisibility (void)
 
 void KPlayerProcess::subtitles (void)
 {
-  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+  if ( ! m_player || m_quit || state() == Idle )
     return;
   int index = properties() -> subtitleIndex();
   int count = properties() -> subtitleIDs().count() + properties() -> vobsubIDs().count();
   if ( index < count )
   {
     subtitleIndex (index);
+    m_send_subtitle_load = false;
     return;
   }
   QString subtitle (settings() -> currentSubtitles());
@@ -1121,6 +1156,7 @@ void KPlayerProcess::subtitles (void)
   if ( index >= 0 )
   {
     subtitleIndex (index + count);
+    m_send_subtitle_load = false;
     return;
   }
   if ( m_sent || state() == Running )
@@ -1168,7 +1204,7 @@ void KPlayerProcess::audioID (int id)
   }
   if ( id != m_audio_id )
   {
-    QRegExp demuxers (KPlayerEngine::engine() -> configuration() -> switchAudioDemuxers());
+    QRegExp demuxers (configuration() -> switchAudioDemuxers());
     if ( demuxers.search (properties() -> demuxerString()) >= 0 )
     {
       QCString s ("switch_audio ");
@@ -1644,7 +1680,7 @@ void KPlayerProcess::receivedOutputLine (KPlayerLineOutputProcess* proc, char* s
 #ifdef DEBUG_KPLAYER_PROCESS
     kdDebugTime() << "Process: Subtitle file " << m_subtitles.last() << "\n";
 #endif
-    if ( settings() -> showExternalSubtitles() && settings() -> currentSubtitles() == m_subtitles.last() )
+    if ( settings() -> currentSubtitles() == m_subtitles.last() )
       subtitleIndex (properties() -> subtitleIDs().count() + properties() -> vobsubIDs().count() + m_subtitles.count() - 1);
   }
   else if ( m_state < Playing || strncmp (str, "ID_", 3) == 0

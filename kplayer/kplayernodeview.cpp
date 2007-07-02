@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -1503,9 +1503,7 @@ bool KPlayerNodeView::event (QEvent* e)
 #ifdef DEBUG_KPLAYER_NODEVIEW
     kdDebugTime() << "KPlayerNodeView::event AccelOverride " << key << " " << state << "\n";
 #endif
-    if ( state == 0 && (key == Qt::Key_Return || key == Qt::Key_Enter || key == Qt::Key_Space
-      || key == Qt::Key_Left || key == Qt::Key_Right)
-      || (state & Qt::ControlButton) == Qt::ControlButton
+    if ( (state & Qt::ControlButton) == Qt::ControlButton
       && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_A) )
     {
 #ifdef DEBUG_KPLAYER_NODEVIEW

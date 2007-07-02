@@ -9,13 +9,14 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
 #ifndef KPLAYERPROPERTIES_H
 #define KPLAYERPROPERTIES_H
 
+#include <float.h>
 #include <kurl.h>
 #include <limits.h>
 #include <math.h>
@@ -43,6 +44,15 @@ class KPlayerTVChannelProperties;
 class KPlayerDVBChannelProperties;
 class KPlayerItemProperties;
 
+#define KPLAYER_PROPERTY_GROUP_BASIC    0
+#define KPLAYER_PROPERTY_GROUP_GENERAL  1
+#define KPLAYER_PROPERTY_GROUP_FORMAT   2
+#define KPLAYER_PROPERTY_GROUP_SIZE     3
+#define KPLAYER_PROPERTY_GROUP_VIDEO    4
+#define KPLAYER_PROPERTY_GROUP_AUDIO    5
+#define KPLAYER_PROPERTY_GROUP_INFO     6
+#define KPLAYER_PROPERTY_GROUP_LOCATION 7
+
 /** Compares the given strings. */
 extern int compareStrings (const QString& s1, const QString& s2);
 
@@ -69,9 +79,9 @@ inline void limit4 (int& lowerValue, int& higherValue, int minValue, int maxValu
   higherValue = limit (higherValue, minValue, maxValue);
 }
 
-inline float flimit (float value, float minValue)
+inline float flimit (float value, float minValue, float maxValue = FLT_MAX)
 {
-  return value < minValue ? minValue : value;
+  return value < minValue ? minValue : value > maxValue ? maxValue : value;
 }
 
 /** The KPlayer media map by URL string.
@@ -495,6 +505,36 @@ public:
   virtual QString asString (void) const;
 };
 
+#if 0
+/** The string history property.
+  * @author kiriuja
+  */
+class KPlayerStringHistoryProperty : public KPlayerStringProperty
+{
+public:
+  /** Constructor. Initializes the property. */
+  KPlayerStringHistoryProperty (void) { }
+  /** Destructor. */
+  virtual ~KPlayerStringHistoryProperty();
+
+  /** Sets the property value. */
+  virtual void setValue (const QString& value);
+
+  /** Returns the string history. */
+  const QStringList& history (void) const
+    { return m_history; }
+
+  /** Reads the value from the given config under the given name. */
+  virtual void read (KConfig*, const QString&);
+  /** Saves the value to the given config under the given name. */
+  virtual void save (KConfig*, const QString&) const;
+
+protected:
+  /** String history. */
+  QStringList m_history;
+};
+#endif
+
 /** The name property.
   * @author kiriuja
   */
@@ -532,17 +572,10 @@ public:
   /** Destructor. */
   virtual ~KPlayerAppendableProperty();
 
-  /** Returns the property value. */
-  const QString& value (void) const
-    { return m_value; }
-  /** Sets the property value. */
-  void setValue (const QString& value)
-    { m_value = value; }
-
   /** Returns the property value based on the option and the given value. */
-  QString value (const QString& current) const;
+  QString appendableValue (const QString& current) const;
   /** Sets the property value and option. */
-  void setValue (const QString& value, bool append);
+  void setAppendableValue (const QString& value, bool append);
 
   /** Returns the property option. */
   bool option (void) const
@@ -651,7 +684,7 @@ protected:
   KURL m_value;
 };
 
-/** The subtitle URL property.
+/** The persistent URL property.
   * @author kiriuja
   */
 class KPlayerPersistentUrlProperty : public KPlayerUrlProperty
@@ -1008,6 +1041,28 @@ public:
   virtual KPlayerProperty* copy (const KPlayerProperty*) const;
 };
 
+#if 0
+/** The KPlayer string history property information.
+  * @author kiriuja
+  */
+class KPlayerStringHistoryPropertyInfo : public KPlayerStringPropertyInfo
+{
+public:
+  /** Constructor. Sets up the property information. */
+  KPlayerStringHistoryPropertyInfo (void) { }
+  /** Destructor. */
+  virtual ~KPlayerStringHistoryPropertyInfo();
+
+  /** Creates and returns a property of the corresponding type. */
+  virtual KPlayerProperty* create (KPlayerProperties*) const;
+  /** Makes a copy of the given property. */
+  virtual KPlayerProperty* copy (const KPlayerProperty*) const;
+
+  /** Returns whether the property exists for the current URL. */
+  virtual bool exists (KPlayerProperties* properties, const QString& name) const;
+};
+#endif
+
 /** The KPlayer name property information.
   * @author kiriuja
   */
@@ -1043,6 +1098,9 @@ public:
   virtual KPlayerProperty* create (KPlayerProperties*) const;
   /** Makes a copy of the given property. */
   virtual KPlayerProperty* copy (const KPlayerProperty*) const;
+
+  /** Returns whether the property exists for the current URL. */
+  virtual bool exists (KPlayerProperties* properties, const QString& name) const;
 };
 
 /** The KPlayer string list property information.
@@ -1105,7 +1163,7 @@ public:
   virtual KPlayerProperty* copy (const KPlayerProperty*) const;
 };
 
-/** The KPlayer subtitle URL property information.
+/** The KPlayer persistent URL property information.
   * @author kiriuja
   */
 class KPlayerPersistentUrlPropertyInfo : public KPlayerUrlPropertyInfo
@@ -1300,6 +1358,8 @@ public:
   const QString& getStringOption (const QString& key) const;
   void setStringOption (const QString& key, const QString& value);
 
+  //const QStringList& getHistory (const QString& key) const;
+
   virtual QString getAppendable (const QString& key) const = 0;
   int getAppendableOption (const QString& key) const;
   void setAppendable (const QString& key, const QString& value, int option);
@@ -1356,6 +1416,20 @@ public:
     { return autoloadSubtitles ("Autoload Subtitles"); }
   void setSubtitleAutoload (bool value)
     { return setBoolean ("Autoload Subtitles", value); }
+
+  bool subtitleClosedCaption (void) const
+    { return getBoolean ("Closed Caption"); }
+  void setSubtitleClosedCaption (bool enable)
+    { setBoolean ("Closed Caption", enable); }
+
+  const QString& subtitleEncoding (void) const
+    { return getString ("Subtitle Encoding"); }
+  void setSubtitleEncoding (const QString& encoding)
+    { set ("Subtitle Encoding", encoding); }
+  bool hasSubtitleEncoding (void) const
+    { return has ("Subtitle Encoding"); }
+  void resetSubtitleEncoding (void)
+    { reset ("Subtitle Encoding"); }
 
   int subtitlePosition (void) const
     { return getInteger ("Subtitle Position"); }
@@ -1467,6 +1541,8 @@ public:
     { return getAppendable ("Command Line"); }
   void setCommandLine (const QString& line)
     { setString ("Command Line", line); }
+  //const QStringList& commandLineHistory (void) const
+  //  { return getHistory ("Command Line"); }
 
   const QString& demuxer (void) const
     { return getStringValue ("Demuxer"); }
@@ -1766,11 +1842,6 @@ public:
     //setVolume (limit (volume(), volumeMinimum(), volumeMaximum()));
   }
 
-  int volumeMarks (void) const
-    { return getInteger ("Volume Marks"); }
-  void setVolumeMarks (int volume)
-    { setInteger ("Volume Marks", limit (volume, 1, volumeMaximum() - volumeMinimum())); }
-
   int volumeStep (void) const
     { return getInteger ("Volume Step"); }
   void setVolumeStep (int volume)
@@ -1812,11 +1883,6 @@ public:
     setContrastMaximum (maximum);
     //setContrast (limit (contrast(), contrastMinimum(), contrastMaximum()));
   }
-
-  int contrastMarks (void) const
-    { return getInteger ("Contrast Marks"); }
-  void setContrastMarks (int contrast)
-    { setInteger ("Contrast Marks", limit (contrast, 1, contrastMaximum() - contrastMinimum())); }
 
   int contrastStep (void) const
     { return getInteger ("Contrast Step"); }
@@ -1860,11 +1926,6 @@ public:
     //setBrightness (limit (brightness(), brightnessMinimum(), brightnessMaximum()));
   }
 
-  int brightnessMarks (void) const
-    { return getInteger ("Brightness Marks"); }
-  void setBrightnessMarks (int brightness)
-    { setInteger ("Brightness Marks", limit (brightness, 1, brightnessMaximum() - brightnessMinimum())); }
-
   int brightnessStep (void) const
     { return getInteger ("Brightness Step"); }
   void setBrightnessStep (int brightness)
@@ -1907,11 +1968,6 @@ public:
     //setHue (limit (hue(), hueMinimum(), hueMaximum()));
   }
 
-  int hueMarks (void) const
-    { return getInteger ("Hue Marks"); }
-  void setHueMarks (int hue)
-    { setInteger ("Hue Marks", limit (hue, 1, hueMaximum() - hueMinimum())); }
-
   int hueStep (void) const
     { return getInteger ("Hue Step"); }
   void setHueStep (int hue)
@@ -1953,11 +2009,6 @@ public:
     setSaturationMaximum (maximum);
     //setSaturation (limit (saturation(), saturationMinimum(), saturationMaximum()));
   }
-
-  int saturationMarks (void) const
-    { return getInteger ("Saturation Marks"); }
-  void setSaturationMarks (int saturation)
-    { setInteger ("Saturation Marks", limit (saturation, 1, saturationMaximum() - saturationMinimum())); }
 
   int saturationStep (void) const
     { return getInteger ("Saturation Step"); }
@@ -2007,22 +2058,34 @@ public:
   void setProgressFastSeekUnits (int units)
     { setInteger ("Fast Seek Units", limit (units, 0, 1)); }
 
-  int progressMarks (void) const
-    { return getInteger ("Progress Marks"); }
-  void setProgressMarks (int marks)
-    { setInteger ("Progress Marks", limit (marks, 1, 100)); }
-
   // Slider configuration
 
   int preferredSliderLength (void) const
     { return getInteger ("Preferred Slider Length"); }
   void setPreferredSliderLength (int length)
     { setInteger ("Preferred Slider Length", limit (length, 50)); }
+  void resetPreferredSliderLength (void)
+    { reset ("Preferred Slider Length"); }
 
   int minimumSliderLength (void) const
     { return getInteger ("Minimum Slider Length"); }
   void setMinimumSliderLength (int length)
     { setInteger ("Minimum Slider Length", limit (length, 50)); }
+  void resetMinimumSliderLength (void)
+    { reset ("Minimum Slider Length"); }
+
+  bool showSliderMarks (void) const
+    { return getBoolean ("Show Slider Marks"); }
+  void setShowSliderMarks (bool show)
+    { setBoolean ("Show Slider Marks", show); }
+
+  int sliderMarksInterval (int span) const;
+  int sliderMarks (void) const
+    { return getInteger ("Slider Marks"); }
+  void setSliderMarks (int marks)
+    { setInteger ("Slider Marks", limit (marks, 1, 100)); }
+  void resetSliderMarks (void)
+    { reset ("Slider Marks"); }
 
   // Message configuration
 
@@ -2042,6 +2105,8 @@ public:
     { return getFloat ("Audio Delay Step"); }
   void setAudioDelayStep (float step)
     { setFloat ("Audio Delay Step", flimit (step, 0.01)); }
+  void resetAudioDelayStep (void)
+    { reset ("Audio Delay Step"); }
 
   void setAudioDriver (const QString& driver)
     { setString ("Audio Driver", driver); }
@@ -2074,6 +2139,56 @@ public:
 
   // Subtitle configuration
 
+  const QString& subtitleFontName (void) const
+    { return getString ("Subtitle Font Name"); }
+  void setSubtitleFontName (const QString& name)
+    { setString ("Subtitle Font Name", name); }
+
+  bool subtitleFontBold (void) const
+    { return getBoolean ("Subtitle Font Bold"); }
+  void setSubtitleFontBold (bool bold)
+    { setBoolean ("Subtitle Font Bold", bold); }
+
+  bool subtitleFontItalic (void) const
+    { return getBoolean ("Subtitle Font Italic"); }
+  void setSubtitleFontItalic (bool italic)
+    { setBoolean ("Subtitle Font Italic", italic); }
+
+  float subtitleTextSize (void) const
+    { return getFloat ("Subtitle Text Size"); }
+  void setSubtitleTextSize (float size)
+    { setFloat ("Subtitle Text Size", flimit (size, 0.1, 100)); }
+  void resetSubtitleTextSize (void)
+    { reset ("Subtitle Text Size"); }
+
+  bool subtitleAutoscale (void) const
+    { return getBoolean ("Subtitle Autoscale"); }
+  void setSubtitleAutoscale (bool scale)
+    { setBoolean ("Subtitle Autoscale", scale); }
+
+  float subtitleFontOutline (void) const
+    { return getFloat ("Subtitle Font Outline"); }
+  void setSubtitleFontOutline (float outline)
+    { setFloat ("Subtitle Font Outline", flimit (outline, 0, 10)); }
+  bool hasSubtitleFontOutline (void) const
+    { return has ("Subtitle Font Outline"); }
+  QString subtitleFontOutlineString (void) const
+    { return asString ("Subtitle Font Outline"); }
+
+  int subtitleTextWidth (void) const
+    { return getInteger ("Subtitle Text Width"); }
+  void setSubtitleTextWidth (int width)
+    { setInteger ("Subtitle Text Width", limit (width, 10, 100)); }
+  bool hasSubtitleTextWidth (void) const
+    { return has ("Subtitle Text Width"); }
+  QString subtitleTextWidthString (void) const
+    { return asString ("Subtitle Text Width"); }
+
+  bool subtitleEmbeddedFonts (void) const
+    { return getBoolean ("Subtitle Embedded Fonts"); }
+  void setSubtitleEmbeddedFonts (bool enable)
+    { setBoolean ("Subtitle Embedded Fonts", enable); }
+
   int subtitlePositionStep (void) const
     { return getInteger ("Subtitle Position Step"); }
   void setSubtitlePositionStep (int step)
@@ -2083,71 +2198,18 @@ public:
     { return getFloat ("Subtitle Delay Step"); }
   void setSubtitleDelayStep (float step)
     { setFloat ("Subtitle Delay Step", flimit (step, 0.01)); }
+  void resetSubtitleDelayStep (void)
+    { reset ("Subtitle Delay Step"); }
 
-  bool autoloadAqtSubtitles (void) const
-    { return getBoolean ("Autoload Aqt Subtitles"); }
-  void setAutoloadAqtSubtitles (bool autoload)
-    { setBoolean ("Autoload Aqt Subtitles", autoload); }
-
-  bool autoloadAssSubtitles (void) const
-    { return getBoolean ("Autoload Ass Subtitles"); }
-  void setAutoloadAssSubtitles (bool autoload)
-    { setBoolean ("Autoload Ass Subtitles", autoload); }
-
-  bool autoloadJsSubtitles (void) const
-    { return getBoolean ("Autoload Js Subtitles"); }
-  void setAutoloadJsSubtitles (bool autoload)
-    { setBoolean ("Autoload Js Subtitles", autoload); }
-
-  bool autoloadJssSubtitles (void) const
-    { return getBoolean ("Autoload Jss Subtitles"); }
-  void setAutoloadJssSubtitles (bool autoload)
-    { setBoolean ("Autoload Jss Subtitles", autoload); }
-
-  bool autoloadRtSubtitles (void) const
-    { return getBoolean ("Autoload Rt Subtitles"); }
-  void setAutoloadRtSubtitles (bool autoload)
-    { setBoolean ("Autoload Rt Subtitles", autoload); }
-
-  bool autoloadSmiSubtitles (void) const
-    { return getBoolean ("Autoload Smi Subtitles"); }
-  void setAutoloadSmiSubtitles (bool autoload)
-    { setBoolean ("Autoload Smi Subtitles", autoload); }
-
-  bool autoloadSrtSubtitles (void) const
-    { return getBoolean ("Autoload Srt Subtitles"); }
-  void setAutoloadSrtSubtitles (bool autoload)
-    { setBoolean ("Autoload Srt Subtitles", autoload); }
-
-  bool autoloadSsaSubtitles (void) const
-    { return getBoolean ("Autoload Ssa Subtitles"); }
-  void setAutoloadSsaSubtitles (bool autoload)
-    { setBoolean ("Autoload Ssa Subtitles", autoload); }
-
-  bool autoloadSubSubtitles (void) const
-    { return getBoolean ("Autoload Sub Subtitles"); }
-  void setAutoloadSubSubtitles (bool autoload)
-    { setBoolean ("Autoload Sub Subtitles", autoload); }
-
-  bool autoloadTxtSubtitles (void) const
-    { return getBoolean ("Autoload Txt Subtitles"); }
-  void setAutoloadTxtSubtitles (bool autoload)
-    { setBoolean ("Autoload Txt Subtitles", autoload); }
-
-  bool autoloadUtfSubtitles (void) const
-    { return getBoolean ("Autoload Utf Subtitles"); }
-  void setAutoloadUtfSubtitles (bool autoload)
-    { setBoolean ("Autoload Utf Subtitles", autoload); }
-
-  bool autoloadVobsubSubtitles (void) const
-    { return getBoolean ("Autoload Vobsub Subtitles"); }
-  void setAutoloadVobsubSubtitles (bool autoload)
-    { setBoolean ("Autoload Vobsub Subtitles", autoload); }
-
-  bool autoloadOtherSubtitles (void) const
-    { return getBoolean ("Autoload Other Subtitles"); }
-  void setAutoloadOtherSubtitles (bool autoload)
-    { setBoolean ("Autoload Other Subtitles", autoload); }
+  int subtitleAutoexpand (void) const
+    { return getInteger ("Subtitle Autoexpand"); }
+  void setSubtitleAutoexpand (int expand)
+    { setInteger ("Subtitle Autoexpand", limit (expand, 0, 3)); }
+  void resetSubtitleAutoexpand (void)
+    { reset ("Subtitle Autoexpand"); }
+  bool hasSubtitleAutoexpand (void) const
+    { return has ("Subtitle Autoexpand"); }
+  QSize autoexpandAspect (void) const;
 
   const QString& autoloadExtensionList (void) const
     { return getString ("Autoload Extension List"); }
@@ -2275,6 +2337,8 @@ public:
     { set ("Name", name); }
   bool hasName (void) const
     { return ! getString ("Name").isEmpty(); }
+  //const QStringList& nameHistory (void) const
+  //  { return getHistory ("Name"); }
 
   QString defaultName (void) const;
   void setDefaultName (const QString& name)
@@ -2446,6 +2510,11 @@ public:
   void resetSubtitleDelay (void)
     { reset ("Subtitle Delay"); }
 
+  int subtitleClosedCaptionOption (void) const
+    { return getBooleanOption ("Closed Caption"); }
+  void setSubtitleClosedCaptionOption (int value)
+    { return setBooleanOption ("Closed Caption", value); }
+
   // Audio properties
 
   int volumeOption (void) const
@@ -2579,6 +2648,8 @@ public:
     { return getStringValue ("Command Line"); }
   void setCommandLineOption (const QString& value, int option)
     { return setAppendable ("Command Line", value, option); }
+  bool hasCommandLine (void) const
+    { return has ("Command Line"); }
 
   const QString& demuxerValue (void) const
     { return getString ("Demuxer"); }
@@ -2704,7 +2775,7 @@ struct KPlayerChannelList
   /** List ID. */
   const char* id;
   /** List name. */
-  QString name;
+  const char* name;
   /** Channel groups. */
   struct KPlayerChannelGroup* groups;
   /** Group count. */
@@ -2889,6 +2960,28 @@ public:
   bool hasTrack (void) const
     { return has ("Track"); }
 
+  const QSize& resolution (void) const
+    { return getSize ("Resolution"); }
+  void setResolution (const QSize& size)
+    { setSize ("Resolution", size); }
+  bool hasResolution (void) const
+    { return has ("Resolution"); }
+  /** Resolution size as string. */
+  QString resolutionString (void) const
+    { return asString ("Resolution"); }
+  /** Resolution width as string. */
+  QString resolutionWidthString (void) const
+  {
+    const QSize& size (resolution());
+    return size.isEmpty() ? QString::null : QString::number (size.width());
+  }
+  /** Resolution height as string. */
+  QString resolutionHeightString (void) const
+  {
+    const QSize& size (resolution());
+    return size.isEmpty() ? QString::null : QString::number (size.height());
+  }
+
   const QSize& originalSize (void) const
     { return getSize ("Video Size"); }
   void setOriginalSize (const QSize& size)
@@ -2911,20 +3004,69 @@ public:
     return size.isEmpty() ? QString::null : QString::number (size.height());
   }
 
+  const QSize& currentResolution (void) const
+    { return hasCurrentResolution() ? getSize ("Current Resolution") : resolution(); }
+  void setCurrentResolution (const QSize& size)
+    { setSize ("Current Resolution", size); }
+  void resetCurrentResolution (void)
+    { reset ("Current Resolution"); }
+  bool hasCurrentResolution (void) const
+    { return has ("Current Resolution"); }
+
+  const QSize& currentSize (void) const
+    { return hasCurrentSize() ? getSize ("Current Size") : originalSize(); }
+  void setCurrentSize (const QSize& size)
+    { setSize ("Current Size", size); }
+  void resetCurrentSize (void)
+    { reset ("Current Size"); }
+  bool hasCurrentSize (void) const
+    { return has ("Current Size"); }
+  /** Current size as string. */
+  QString currentSizeString (void) const
+    { return asString ("Current Size"); }
+  /** Current width as string. */
+  QString currentWidthString (void) const
+  {
+    const QSize& size (currentSize());
+    return size.isEmpty() ? QString::null : QString::number (size.width());
+  }
+  /** Current height as string. */
+  QString currentHeightString (void) const
+  {
+    const QSize& size (currentSize());
+    return size.isEmpty() ? QString::null : QString::number (size.height());
+  }
+
   QSize originalAspect (void) const
     { return hasDisplaySize() ? displaySize() : originalSize(); }
+  QSize currentAspect (void) const
+    { return hasDisplaySize() ? displaySize() : currentSize(); }
 
   bool hasVideo (void) const
-    { return hasOriginalSize(); }
+    { return hasOriginalSize() || hasDisplaySize(); }
   bool hasNoVideo (void) const
     { return ! hasOriginalSize() && ! getBoolean ("Has Video"); }
   void setHasVideo (bool value)
     { return setBoolean ("Has Video", value); }
 
+  /** Returns whether the original video size is known. */
+  bool originalSizeKnown (void) const
+    { return hasVideo() || hasNoVideo(); }
+
+  /** Returns whether the video area needs to be expanded to accomodate subtitles. */
+  bool needsExpanding (void) const;
+  /** Expands the video area to accomodate subtitles. */
+  void autoexpand (void);
+
   bool hasDemuxer (void) const
     { return hasComboValue ("Demuxer"); }
   bool hasDemuxerOption (void) const
     { return hasComboString ("Demuxer"); }
+
+  /* bool autoexpanded (void) const
+    { return getBoolean ("Autoexpanded"); }
+  void setAutoexpanded (bool autoexpanded)
+    { setBoolean ("Autoexpanded", autoexpanded); } */
 
   const KURL& subtitleUrl (void) const
     { return getUrl ("Subtitle URL"); }
@@ -3016,6 +3158,17 @@ public:
     { return hasIntegerStringMapKey ("Vobsub IDs", sid); }
   bool hasVobsubLanguage (int sid) const
     { return hasIntegerStringMapValue ("Vobsub IDs", sid); }
+
+  float subtitleFramerate (void) const
+    { return getFloat ("Subtitle Framerate"); }
+  void setSubtitleFramerate (float framerate)
+    { setFloat ("Subtitle Framerate", framerate); }
+  bool hasSubtitleFramerate (void) const
+    { return has ("Subtitle Framerate"); }
+  QString subtitleFramerateString (void) const
+    { return asString ("Subtitle Framerate"); }
+  void resetSubtitleFramerate (void)
+    { reset ("Subtitle Framerate"); }
 
   int audioBitrate (void) const
     { return getInteger ("Audio Bitrate"); }
@@ -3324,8 +3477,6 @@ public:
     { return getBooleanOption ("Autoload Subtitles"); }
   void setSubtitleAutoloadOption (int value)
     { return setBooleanOption ("Autoload Subtitles", value); }
-  void resetSubtitleAutoload (void)
-    { reset ("Autoload Subtitles"); }
 
   /** Resets the meta info timer. */
   static void resetMetaInfoTimer (void)

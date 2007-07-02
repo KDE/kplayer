@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -22,12 +22,20 @@
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SLIDERS
+#define DEBUG_KPLAYER_SLIDER_HINTS
 #endif
 
 #include "kplayerslideraction.h"
 #include "kplayerslideraction.moc"
 #include "kplayerengine.h"
 #include "kplayersettings.h"
+
+KPlayerPopupFrame::~KPlayerPopupFrame()
+{
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "KPlayerPopupFrame destroyed\n";
+#endif
+}
 
 void KPlayerPopupFrame::keyPressEvent (QKeyEvent* ev)
 {
@@ -63,11 +71,6 @@ KPlayerPopupSliderAction::KPlayerPopupSliderAction (const QString& text,
 
 KPlayerPopupSliderAction::~KPlayerPopupSliderAction()
 {
-#ifdef DEBUG_KPLAYER_SLIDERS
-  kdDebugTime() << "Destorying KPlayerPopupSliderAction\n";
-#endif
-  delete m_frame;
-  m_frame = 0;
 #ifdef DEBUG_KPLAYER_SLIDERS
   kdDebugTime() << "KPlayerPopupSliderAction destroyed\n";
 #endif
@@ -140,10 +143,6 @@ KPlayerSliderAction::KPlayerSliderAction (const QString& text, const KShortcut& 
 KPlayerSliderAction::~KPlayerSliderAction()
 {
 #ifdef DEBUG_KPLAYER_SLIDERS
-  kdDebugTime() << "Destorying KPlayerSliderAction\n";
-#endif
-  delete slider();
-#ifdef DEBUG_KPLAYER_SLIDERS
   kdDebugTime() << "KPlayerSliderAction destroyed\n";
 #endif
 }
@@ -179,10 +178,7 @@ KPlayerSlider::KPlayerSlider (Qt::Orientation orientation, QWidget* parent, cons
   : QSlider (orientation, parent, name)
 {
   m_dragging = m_changing_orientation = false;
-  setTickmarks (QSlider::Both);
   connect (this, SIGNAL (valueChanged (int)), this, SLOT (sliderValueChanged (int)));
-  //connect (this, SIGNAL (sliderPressed()), this, SLOT (sliderThumbPressed()));
-  //connect (this, SIGNAL (sliderReleased()), this, SLOT (sliderThumbReleased()));
 }
 
 KPlayerSlider::~KPlayerSlider()
@@ -304,25 +300,18 @@ void KPlayerSlider::setValue (int value, int)
     QSlider::setValue (- value);
 }
 
-void KPlayerSlider::setup (int minValue, int maxValue, int value, int tickInterval, int pageStep, int lineStep)
+void KPlayerSlider::setup (int minValue, int maxValue, int value,
+  bool tickMarks, int tickInterval, int pageStep, int lineStep)
 {
   setMinValue (minValue);
   setMaxValue (maxValue);
   setLineStep (lineStep);
   setPageStep (pageStep);
+  setTickmarks (tickMarks ? QSlider::Both : QSlider::NoMarks);
   setTickInterval (tickInterval);
   setValue (value);
+  updateGeometry();
 }
-
-/*void KPlayerSlider::sliderThumbPressed (void)
-{
-  m_dragging = true;
-}
-
-void KPlayerSlider::sliderThumbReleased (void)
-{
-  m_dragging = false;
-}*/
 
 void KPlayerSlider::sliderValueChanged (int)
 {

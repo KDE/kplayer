@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -174,7 +174,7 @@ public:
 
   /** Updates the track action list. */
   void update (bool show, const QMap<int, QString>& sids, int sid, const QMap<int, QString>& vsids,
-    int vsid, const QStringList& files, const QString& current, bool external);
+    int vsid, const QStringList& files, const QString& current);
 
 protected:
   /** Selects the track with the given index by emitting the activated signal. */

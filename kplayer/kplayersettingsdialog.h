@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -131,6 +131,9 @@ public:
 
   void load (void);
   void save (void);
+
+protected:
+  virtual void showMarksChanged (bool);
 };
 
 class KPlayerSettingsGeneral : public KPlayerSettingsGeneralPage
@@ -160,12 +163,21 @@ public:
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
 
+  void loadLists (void);
   void load (void);
   void save (void);
 
 protected:
+  virtual void widthSliderChanged (int);
+  virtual void widthEditChanged (const QString&);
+  virtual void outlineSliderChanged (int);
+  virtual void outlineEditChanged (const QString&);
+  virtual void autoexpandChanged (bool);
   virtual void autoloadSubtitlesChanged (bool);
-  virtual void otherSubtitlesChanged (bool);
+  /** Recursion prevention. */
+  bool m_recursion;
+  /** Leave focus alone. */
+  bool m_initialized;
 };
 
 class KPlayerSettingsVideo : public KPlayerSettingsVideoPage

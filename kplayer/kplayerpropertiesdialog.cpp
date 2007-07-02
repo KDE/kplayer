@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -426,6 +426,17 @@ KPlayerPropertiesAdvanced* KPlayerItemPropertiesDialog::createAdvancedPage (QFra
   return new KPlayerPropertiesItemAdvanced (frame, name.utf8());
 }
 
+/*void setupHistory (QComboBox* combo, const QStringList& history)
+{
+  for ( QStringList::ConstIterator it (history.begin()); it != history.end(); ++ it )
+  {
+    combo -> insertItem (*it);
+#ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
+    kdDebugTime() << " History " << *it << "\n";
+#endif
+  }
+}*/
+
 KPlayerPropertiesGeneral::KPlayerPropertiesGeneral (QWidget* parent, const char* name)
   : KPlayerPropertiesGeneralPage (parent, name)
 {
@@ -442,6 +453,7 @@ void KPlayerPropertiesGeneral::setup (const KURL& url)
   kdDebugTime() << "KPlayerPropertiesGeneral::setup\n";
 #endif
   setupMedia (url);
+  //setupHistory (c_name, properties() -> nameHistory());
   setupControls();
   load();
 }
@@ -815,10 +827,18 @@ void KPlayerPropertiesDeviceSize::setupControls (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
   kdDebugTime() << "KPlayerPropertiesDeviceSize::setupControls\n";
 #endif
+  l_resolution -> hide();
+  c_resolution_width -> hide();
+  l_resolution_by -> hide();
+  c_resolution_height -> hide();
   l_original_size -> hide();
   c_original_width -> hide();
   l_original_by -> hide();
   c_original_height -> hide();
+  l_current_size -> hide();
+  c_current_width -> hide();
+  l_current_by -> hide();
+  c_current_height -> hide();
 }
 
 KPlayerPropertiesTrackSize::KPlayerPropertiesTrackSize (QWidget* parent, const char* name)
@@ -836,8 +856,12 @@ void KPlayerPropertiesTrackSize::setupMedia (const KURL& url)
 
 void KPlayerPropertiesTrackSize::load (void)
 {
+  c_resolution_width -> setText (properties() -> resolutionWidthString());
+  c_resolution_height -> setText (properties() -> resolutionHeightString());
   c_original_width -> setText (properties() -> originalWidthString());
   c_original_height -> setText (properties() -> originalHeightString());
+  c_current_width -> setText (properties() -> currentWidthString());
+  c_current_height -> setText (properties() -> currentHeightString());
   KPlayerPropertiesSize::load();
 }
 
@@ -889,6 +913,19 @@ void KPlayerPropertiesSubtitles::hideUrl (void)
   c_url -> hide();
   l_vobsub -> hide();
   c_vobsub -> hide();
+  l_encoding -> hide();
+  c_encoding -> hide();
+  l_framerate -> hide();
+  c_framerate -> hide();
+}
+
+void KPlayerPropertiesSubtitles::hideClosedCaption (void)
+{
+#ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
+  kdDebugTime() << "KPlayerPropertiesSubtitles::hideClosedCaption\n";
+#endif
+  l_closed_caption -> hide();
+  c_closed_caption -> hide();
 }
 
 void KPlayerPropertiesSubtitles::load (void)
@@ -897,6 +934,7 @@ void KPlayerPropertiesSubtitles::load (void)
   positionChanged (c_position_set -> currentItem());
   c_delay_set -> setCurrentItem (properties() -> hasSubtitleDelay() ? 1 : 0);
   delayChanged (c_delay_set -> currentItem());
+  c_closed_caption -> setCurrentItem (properties() -> subtitleClosedCaptionOption());
 }
 
 void KPlayerPropertiesSubtitles::save (void)
@@ -909,6 +947,7 @@ void KPlayerPropertiesSubtitles::save (void)
     properties() -> setSubtitleDelayValue (c_delay -> text().toFloat());
   else
     properties() -> resetSubtitleDelay();
+  properties() -> setSubtitleClosedCaptionOption (c_closed_caption -> currentItem());
 }
 
 void KPlayerPropertiesSubtitles::positionChanged (int option)
@@ -1045,12 +1084,135 @@ KPlayerPropertiesDiskTrackSubtitles::KPlayerPropertiesDiskTrackSubtitles (QWidge
 {
 }
 
+struct KPlayerSubtitleEncoding
+{
+  /** Encoding ID. */
+  const char* id;
+  /** Encoding name. */
+  const char* name;
+};
+
+struct KPlayerSubtitleEncoding subtitleencodings[] = {
+  { "UTF-8", I18N_NOOP("Unicode") },
+  { "UTF-16", I18N_NOOP("Unicode") },
+  { "UTF-16BE", I18N_NOOP("Unicode") },
+  { "UTF-16LE", I18N_NOOP("Unicode") },
+  { "UTF-32", I18N_NOOP("Unicode") },
+  { "UTF-32BE", I18N_NOOP("Unicode") },
+  { "UTF-32LE", I18N_NOOP("Unicode") },
+  { "UCS-2", I18N_NOOP("Unicode") },
+  { "UCS-2BE", I18N_NOOP("Unicode") },
+  { "UCS-2LE", I18N_NOOP("Unicode") },
+  { "UCS-4", I18N_NOOP("Unicode") },
+  { "UCS-4BE", I18N_NOOP("Unicode") },
+  { "UCS-4LE", I18N_NOOP("Unicode") },
+  { "ISO-8859-1", I18N_NOOP("Western Europe") },
+  { "ISO-8859-2", I18N_NOOP("Central and Eastern Europe") },
+  { "ISO-8859-3", I18N_NOOP("Southern Europe") },
+  { "ISO-8859-4", I18N_NOOP("Northern Europe") },
+  { "ISO-8859-5", I18N_NOOP("Cyrillic") },
+  { "ISO-8859-6", I18N_NOOP("Arabic") },
+  { "ISO-8859-7", I18N_NOOP("Greek") },
+  { "ISO-8859-8", I18N_NOOP("Hebrew") },
+  { "ISO-8859-9", I18N_NOOP("Turkish") },
+  { "ISO-8859-10", I18N_NOOP("Nordic") },
+  { "ISO-8859-11", I18N_NOOP("Thai") },
+  { "ISO-8859-13", I18N_NOOP("Baltic") },
+  { "ISO-8859-14", I18N_NOOP("Celtic") },
+  { "ISO-8859-15", I18N_NOOP("Western Europe") },
+  { "ISO-8859-16", I18N_NOOP("South-Eastern Europe") },
+  { "ARMSCII-8", I18N_NOOP("Armenian") },
+  { "GEORGIAN-ACADEMY", I18N_NOOP("Georgian") },
+  { "GEORGIAN-PS", I18N_NOOP("Georgian") },
+  { "KOI8-R", I18N_NOOP("Russian") },
+  { "KOI8-U", I18N_NOOP("Ukrainian") },
+  { "KOI8-RU", I18N_NOOP("Cyrillic") },
+  { "KOI8-T", I18N_NOOP("Tajik") },
+  { "MULELAO-1", I18N_NOOP("Lao") },
+  { "PT154", I18N_NOOP("Kazakh") },
+  { "TIS-620", I18N_NOOP("Thai") },
+  { "VISCII", I18N_NOOP("Vietnamese") },
+  { "TCVN", I18N_NOOP("Vietnamese") },
+  { "ISO646-JP", I18N_NOOP("Japanese") },
+  { "JIS_X0201", I18N_NOOP("Japanese") },
+  { "JIS_X0208", I18N_NOOP("Japanese") },
+  { "JIS_X0212", I18N_NOOP("Japanese") },
+  { "EUC-JP", I18N_NOOP("Japanese") },
+  { "SHIFT_JIS", I18N_NOOP("Japanese") },
+  { "ISO-2022-JP", I18N_NOOP("Japanese") },
+  { "ISO-2022-JP-1", I18N_NOOP("Japanese") },
+  { "ISO-2022-JP-2", I18N_NOOP("Japanese") },
+  { "ISO646-CN", I18N_NOOP("Simplified Chinese") },
+  { "GB_2312-80", I18N_NOOP("Simplified Chinese") },
+  { "EUC-CN", I18N_NOOP("Simplified Chinese") },
+  { "GBK", I18N_NOOP("Simplified Chinese") },
+  { "GB18030", I18N_NOOP("Simplified Chinese") },
+  { "ISO-2022-CN", I18N_NOOP("Simplified Chinese") },
+  { "HZ", I18N_NOOP("Simplified Chinese") },
+  { "EUC-TW", I18N_NOOP("Traditional Chinese") },
+  { "BIG5", I18N_NOOP("Traditional Chinese") },
+  { "BIG5-HKSCS", I18N_NOOP("Hong Kong") },
+  { "ISO-2022-CN-EXT", I18N_NOOP("Hong Kong") },
+  { "KSC_5601", I18N_NOOP("Korean") },
+  { "EUC-KR", I18N_NOOP("Korean") },
+  { "JOHAB", I18N_NOOP("Korean") },
+  { "ISO-2022-KR", I18N_NOOP("Korean") },
+  { "CP850", I18N_NOOP("Western Europe") },
+  { "CP862", I18N_NOOP("Hebrew") },
+  { "CP866", I18N_NOOP("Cyrillic") },
+  { "CP874", I18N_NOOP("Thai") },
+  { "CP932", I18N_NOOP("Japanese") },
+  { "CP936", I18N_NOOP("Simplified Chinese") },
+  { "CP949", I18N_NOOP("Korean") },
+  { "CP950", I18N_NOOP("Traditional Chinese") },
+  { "CP1133", I18N_NOOP("Lao") },
+  { "CP1250", I18N_NOOP("Central and Eastern Europe") },
+  { "CP1251", I18N_NOOP("Cyrillic") },
+  { "CP1252", I18N_NOOP("Western Europe") },
+  { "CP1253", I18N_NOOP("Greek") },
+  { "CP1254", I18N_NOOP("Turkish") },
+  { "CP1255", I18N_NOOP("Hebrew") },
+  { "CP1256", I18N_NOOP("Arabic") },
+  { "CP1257", I18N_NOOP("Baltic") },
+  { "CP1258", I18N_NOOP("Vietnamese") }
+};
+
+const float framerates[] = {
+  14.985,
+  15,
+  23.976,
+  24,
+  25,
+  29.97,
+  30,
+  50,
+  59.94,
+  60
+};
+
+void fillEncodingCombobox (QComboBox* combobox)
+{
+  for ( uint i = 0; i < sizeof (subtitleencodings) / sizeof (struct KPlayerSubtitleEncoding); i ++ )
+  {
+    const struct KPlayerSubtitleEncoding& encoding = subtitleencodings[i];
+    combobox -> insertItem (QString (encoding.id) + ": " + i18n(encoding.name));
+  }
+}
+
+void KPlayerPropertiesDiskTrackSubtitles::setupEncoding (void)
+{
+  fillEncodingCombobox (c_encoding);
+  for ( uint i = 0; i < sizeof (framerates) / sizeof (float); ++ i )
+    c_framerate -> insertItem (QString::number (framerates[i]));
+}
+
 void KPlayerPropertiesDiskTrackSubtitles::setupControls (void)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
   kdDebugTime() << "KPlayerPropertiesDiskTrackSubtitles::setupControls\n";
 #endif
   addTracks();
+  setupEncoding();
   hideAutoload();
 }
 
@@ -1058,6 +1220,29 @@ void KPlayerPropertiesDiskTrackSubtitles::load (void)
 {
   c_url -> setText (properties() -> subtitlePath());
   c_vobsub -> setCurrentItem (properties() -> vobsubSubtitlesOption());
+  if ( properties() -> hasSubtitleEncoding() )
+  {
+    QString encoding = properties() -> subtitleEncoding();
+    if ( encoding.isEmpty() )
+      c_encoding -> setCurrentItem (1);
+    else
+    {
+      c_encoding -> setEditText (encoding);
+      encoding += ": ";
+      for ( int i = 2; i < c_encoding -> count(); ++ i )
+        if ( c_encoding -> text (i).startsWith (encoding) )
+        {
+          c_encoding -> setCurrentItem (i);
+          break;
+        }
+    }
+  }
+  else
+    c_encoding -> setCurrentItem (0);
+  if ( properties() -> hasSubtitleFramerate() )
+    c_framerate -> setEditText (properties() -> subtitleFramerateString());
+  else
+    c_framerate -> setCurrentItem (0);
   KPlayerPropertiesTrackSubtitles::load();
 }
 
@@ -1065,6 +1250,16 @@ void KPlayerPropertiesDiskTrackSubtitles::save (void)
 {
   properties() -> setSubtitleUrl (c_url -> text());
   properties() -> setVobsubSubtitlesOption (c_vobsub -> currentItem());
+  if ( c_encoding -> currentItem() == 0 )
+    properties() -> resetSubtitleEncoding();
+  else if ( c_encoding -> currentItem() == 1 )
+    properties() -> setSubtitleEncoding ("");
+  else
+    properties() -> setSubtitleEncoding (c_encoding -> currentText().section (':', 0, 0));
+  if ( c_framerate -> currentItem() )
+    properties() -> setSubtitleFramerate (c_framerate -> currentText().toFloat());
+  else
+    properties() -> resetSubtitleFramerate();
   KPlayerPropertiesTrackSubtitles::save();
 }
 
@@ -1079,8 +1274,10 @@ void KPlayerPropertiesItemSubtitles::setupControls (void)
   kdDebugTime() << "KPlayerPropertiesItemSubtitles::setupControls\n";
 #endif
   addTracks();
+  setupEncoding();
   if ( ! properties() -> url().isLocalFile() )
     hideAutoload();
+  hideClosedCaption();
 }
 
 void KPlayerPropertiesItemSubtitles::load (void)
@@ -1774,6 +1971,7 @@ void KPlayerPropertiesAdvanced::setup (const KURL& url)
     for ( int i = 0; i < engine() -> demuxerCount(); i ++ )
       c_demuxer -> insertItem (engine() -> demuxerName (i));
   }
+  //setupHistory (c_command_line, properties() -> commandLineHistory());
   setupControls();
   load();
 }

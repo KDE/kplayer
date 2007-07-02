@@ -9,13 +9,14 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
 #ifndef KPLAYERWIDGET_H
 #define KPLAYERWIDGET_H
 
+#include <qtimer.h>
 #include <qwidget.h>
 
 #include "kplayerprocess.h"
@@ -46,6 +47,8 @@ protected:
   /** Processes the widget show event. Ensures that MPlayer
       continues to display video with correct size. */
   virtual void showEvent (QShowEvent*);
+  /** Ignores a mouse move event. */
+  virtual void mouseMoveEvent (QMouseEvent*);
   /** Ignores a mouse press event. */
   virtual void mousePressEvent (QMouseEvent*);
   /** Ignores a mouse release event. */
@@ -80,6 +83,10 @@ public:
   KPlayerWidget* widget (void) const
     { return m_widget; }
 
+  /** Returns a pointer to the hidden widget object. */
+  QWidget* hiddenWidget (void) const
+    { return m_hidden_widget; }
+
   /** Resizes the widget to the given size. */
   void setDisplaySize (QSize);
 
@@ -95,6 +102,8 @@ public:
 protected:
   /** Processes the widget resize event. Resizes the KPlayerWidget to the video size. */
   virtual void resizeEvent (QResizeEvent*);
+  /** Shows mouse cursor and starts timer. */
+  virtual void mouseMoveEvent (QMouseEvent*);
   /** Emits context menu signal on a right click in a part. */
   virtual void mousePressEvent (QMouseEvent*);
   /** Ignores a mouse release event. */
@@ -109,12 +118,24 @@ protected:
   virtual void focusInEvent (QFocusEvent*);
   virtual void focusOutEvent (QFocusEvent*);
 
+  /** Starts timer and sets the cursor. */
+  void mouseActivity (void);
+  /** Sets the mouse cursor to either blank or hand. */
+  void setMouseCursor (void);
+
   /** The pointer to the KPlayerWidget object. */
   KPlayerWidget* m_widget;
+
+  /** The pointer to the hidden widget object. */
+  QWidget* m_hidden_widget;
 
   // Following should be private
   /** Window manager is resizing the top level window. */
   bool m_resizing;
+  /** Mouse activity indicator. */
+  bool m_mouse_activity;
+  /** Mouse activity timer. */
+  QTimer m_timer;
 
 signals:
   /** Emitted when the widget is resized. */
@@ -123,6 +144,14 @@ signals:
   void userResize (void);
   /** Emitted when the context menu event is received. */
   void contextMenu (const QPoint& global_position);
+
+protected slots:
+  /** Set the mouse cursor and tracking. */
+  void setMouseCursorTracking (void);
+  /** Receives the stateChanged signal from KPlayerProcess. */
+  void playerStateChanged (KPlayerProcess::State, KPlayerProcess::State);
+  /** Receives the timeout signal from the mouse activity timer. */
+  void cursorTimeout (void);
 };
 
 #endif

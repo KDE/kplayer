@@ -164,62 +164,6 @@
                 </widget>
                 <widget class="QLabel" row="2" column="0">
                     <property name="name">
-                        <cstring>l_contrast_marks</cstring>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>1</hsizetype>
-                            <vsizetype>5</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="text">
-                        <string>Distance between slider &amp;marks</string>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignVCenter|AlignLeft</set>
-                    </property>
-                    <property name="buddy" stdset="0">
-                        <cstring>c_contrast_marks</cstring>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string>Distance between contrast slider tick marks as a percentage</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Option to specify the distance between tick marks on the contrast slider, in percents of slider length.</string>
-                    </property>
-                </widget>
-                <widget class="QLineEdit" row="2" column="1">
-                    <property name="name">
-                        <cstring>c_contrast_marks</cstring>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>0</hsizetype>
-                            <vsizetype>0</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="maximumSize">
-                        <size>
-                            <width>60</width>
-                            <height>32767</height>
-                        </size>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string>Distance between contrast slider tick marks as a percentage</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Option to specify the distance between tick marks on the contrast slider, in percents of slider length.</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="3" column="0">
-                    <property name="name">
                         <cstring>l_contrast_step</cstring>
                     </property>
                     <property name="sizePolicy">
@@ -246,7 +190,7 @@
                         <string>Option to specify the amount by which to change video contrast when using Increase/Decrease Contrast commands on Player/Video menu or the corresponding keyboard shortcuts.</string>
                     </property>
                 </widget>
-                <widget class="QLineEdit" row="3" column="1">
+                <widget class="QLineEdit" row="2" column="1">
                     <property name="name">
                         <cstring>c_contrast_step</cstring>
                     </property>
@@ -274,7 +218,7 @@
                         <string>Option to specify the amount by which to change video contrast when using Increase/Decrease Contrast commands on Player/Video menu or the corresponding keyboard shortcuts.</string>
                     </property>
                 </widget>
-                <widget class="QLayoutWidget" row="4" column="0" rowspan="1" colspan="2">
+                <widget class="QLayoutWidget" row="3" column="0" colspan="2">
                     <property name="name">
                         <cstring>layout3</cstring>
                     </property>

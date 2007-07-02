@@ -9,14 +9,13 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
 #include <dcopclient.h>
 #include <kapplication.h>
 #include <kconfig.h>
-#include <kcursor.h>
 #include <klocale.h>
 #include <kmainwindow.h>
 #include <krecentdocument.h>
@@ -100,7 +99,7 @@ KPlayerEngine::KPlayerEngine (KActionCollection* ac, QWidget* parent, const char
   m_ac = ac;
   m_light = config == 0;
   m_progress_factor = 0;
-  m_stop = m_updating = m_zooming = m_enable_screen_saver = m_amixer_running = false;
+  m_stop = m_updating = m_zooming = m_play_pending = m_enable_screen_saver = m_amixer_running = false;
   m_config = light() ? new KConfig ("kplayerrc") : config;
   m_store = new KConfig ("kplayerlibraryrc");
   m_meta = new KConfig ("kplayerplaylistrc");
@@ -526,8 +525,7 @@ void KPlayerEngine::setupActions (void)
 
   m_updating = true;
   KPlayerSliderAction* sa = new KPlayerSliderAction (i18n("Progress"), 0, this, SLOT (progressChanged (int)), m_ac, "player_progress");
-  sa -> slider() -> setup (0, 0, 0, 0, 0, 0);
-//sa -> slider() -> setTracking (false);
+  sa -> slider() -> setup (0, 0, 0, configuration() -> showSliderMarks(), 0, 0, 0);
   sa -> setStatusText (i18n("Shows player progress and allows seeking"));
   sa -> setWhatsThis (i18n("Progress slider shows playback progress and allows seeking."));
   connect (sa -> slider(), SIGNAL (sliderReleased()), kPlayerProcess(), SLOT (progressSliderReleased()));
@@ -726,15 +724,15 @@ void KPlayerEngine::refreshSettings (void)
 #endif
   m_updating = true;
   int value = settings() -> volume();
+  int minimum = configuration() -> volumeMinimum();
+  int maximum = configuration() -> volumeMaximum();
+  int interval = configuration() -> sliderMarksInterval (maximum - minimum);
+  bool show = configuration() -> showSliderMarks();
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "  Volume " << value << "\n";
+  kdDebugTime() << "  Volume " << value << ": " << minimum << " - " << maximum << " / " << interval << "\n";
 #endif
-  sliderAction ("audio_volume") -> slider() -> setup (configuration() -> volumeMinimum(),
-    configuration() -> volumeMaximum(), value, configuration() -> volumeMarks(),
-    configuration() -> volumeMarks(), 1);
-  popupAction ("popup_volume") -> slider() -> setup (configuration() -> volumeMinimum(),
-    configuration() -> volumeMaximum(), value, configuration() -> volumeMarks(),
-    configuration() -> volumeMarks(), 1);
+  sliderAction ("audio_volume") -> slider() -> setup (minimum, maximum, value, show, interval, interval, 1);
+  popupAction ("popup_volume") -> slider() -> setup (minimum, maximum, value, show, interval, interval, 1);
   m_last_volume = settings() -> volume();
   if ( properties() -> audioDriverString().startsWith ("alsa") )
     getAlsaVolume();
@@ -745,60 +743,51 @@ void KPlayerEngine::refreshSettings (void)
     return;
   }
   value = settings() -> contrast();
+  minimum = configuration() -> contrastMinimum();
+  maximum = configuration() -> contrastMaximum();
+  interval = configuration() -> sliderMarksInterval (maximum - minimum);
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "  Contrast " << value << "\n";
+  kdDebugTime() << "  Contrast " << value << ": " << minimum << " - " << maximum << " / " << interval << "\n";
 #endif
-  sliderAction ("video_contrast") -> slider() -> setup (configuration() -> contrastMinimum(),
-    configuration() -> contrastMaximum(), value, configuration() -> contrastMarks(),
-    configuration() -> contrastMarks(), 1);
-  popupAction ("popup_contrast") -> slider() -> setup (configuration() -> contrastMinimum(),
-    configuration() -> contrastMaximum(), value, configuration() -> contrastMarks(),
-    configuration() -> contrastMarks(), 1);
+  sliderAction ("video_contrast") -> slider() -> setup (minimum, maximum, value, show, interval, interval, 1);
+  popupAction ("popup_contrast") -> slider() -> setup (minimum, maximum, value, show, interval, interval, 1);
   process() -> contrast (value);
   value = settings() -> brightness();
+  minimum = configuration() -> brightnessMinimum();
+  maximum = configuration() -> brightnessMaximum();
+  interval = configuration() -> sliderMarksInterval (maximum - minimum);
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "  Brightness " << value << "\n";
+  kdDebugTime() << "  Brightness " << value << ": " << minimum << " - " << maximum << " / " << interval << "\n";
 #endif
-  sliderAction ("video_brightness") -> slider() -> setup (configuration() -> brightnessMinimum(),
-    configuration() -> brightnessMaximum(), value, configuration() -> brightnessMarks(),
-    configuration() -> brightnessMarks(), 1);
-  popupAction ("popup_brightness") -> slider() -> setup (configuration() -> brightnessMinimum(),
-    configuration() -> brightnessMaximum(), value, configuration() -> brightnessMarks(),
-    configuration() -> brightnessMarks(), 1);
+  sliderAction ("video_brightness") -> slider() -> setup (minimum, maximum, value, show, interval, interval, 1);
+  popupAction ("popup_brightness") -> slider() -> setup (minimum, maximum, value, show, interval, interval, 1);
   process() -> brightness (value);
   value = settings() -> hue();
+  minimum = configuration() -> hueMinimum();
+  maximum = configuration() -> hueMaximum();
+  interval = configuration() -> sliderMarksInterval (maximum - minimum);
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "  Hue " << value << "\n";
+  kdDebugTime() << "  Hue " << value << ": " << minimum << " - " << maximum << " / " << interval << "\n";
 #endif
-  sliderAction ("video_hue") -> slider() -> setup (configuration() -> hueMinimum(),
-    configuration() -> hueMaximum(), value, configuration() -> hueMarks(), configuration() -> hueMarks(), 1);
-  popupAction ("popup_hue") -> slider() -> setup (configuration() -> hueMinimum(),
-    configuration() -> hueMaximum(), value, configuration() -> hueMarks(), configuration() -> hueMarks(), 1);
+  sliderAction ("video_hue") -> slider() -> setup (minimum, maximum, value, show, interval, interval, 1);
+  popupAction ("popup_hue") -> slider() -> setup (minimum, maximum, value, show, interval, interval, 1);
   process() -> hue (value);
   value = settings() -> saturation();
+  minimum = configuration() -> saturationMinimum();
+  maximum = configuration() -> saturationMaximum();
+  interval = configuration() -> sliderMarksInterval (maximum - minimum);
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "  Saturation " << value << "\n";
+  kdDebugTime() << "  Saturation " << value << ": " << minimum << " - " << maximum << " / " << interval << "\n";
 #endif
-  sliderAction ("video_saturation") -> slider() -> setup (configuration() -> saturationMinimum(),
-    configuration() -> saturationMaximum(), value, configuration() -> saturationMarks(),
-    configuration() -> saturationMarks(), 1);
-  popupAction ("popup_saturation") -> slider() -> setup (configuration() -> saturationMinimum(),
-    configuration() -> saturationMaximum(), value, configuration() -> saturationMarks(),
-    configuration() -> saturationMarks(), 1);
+  sliderAction ("video_saturation") -> slider() -> setup (minimum, maximum, value, show, interval, interval, 1);
+  popupAction ("popup_saturation") -> slider() -> setup (minimum, maximum, value, show, interval, interval, 1);
   process() -> saturation (value);
   if ( properties() -> hasLength() )
   {
 #ifdef DEBUG_KPLAYER_ENGINE
     kdDebugTime() << "  Length " << properties() -> length() << "\n";
 #endif
-    KPlayerSlider* slider = sliderAction ("player_progress") -> slider();
-    slider -> setTickInterval (slider -> maxValue() * configuration() -> progressMarks() / 100);
-    slider -> setPageStep (properties() -> fastSeek() * m_progress_factor);
-    if ( slider -> pageStep() == 0 )
-      slider -> setPageStep (slider -> tickInterval());
-    slider -> setLineStep (properties() -> normalSeek() * m_progress_factor);
-    if ( slider -> lineStep() == 0 )
-      slider -> setLineStep (1);
+    setupProgressSlider (sliderAction ("player_progress") -> slider() -> maxValue());
   }
   m_updating = false;
   value = settings() -> frameDrop();
@@ -838,7 +827,7 @@ void KPlayerEngine::refreshProperties (void)
     m_audio_action_list -> update (properties() -> audioIDs(), properties() -> audioID());
     m_subtitle_action_list -> update (settings() -> showSubtitles(), properties() -> subtitleIDs(),
       properties() -> subtitleID(), properties() -> vobsubIDs(), properties() -> vobsubID(),
-      settings() -> subtitles(), settings() -> currentSubtitles(), settings() -> showExternalSubtitles());
+      settings() -> subtitles(), settings() -> currentSubtitles());
     toggleAction ("player_soft_frame_drop") -> setChecked (value == 1);
     toggleAction ("player_hard_frame_drop") -> setChecked (value == 2);
   }
@@ -852,6 +841,7 @@ void KPlayerEngine::refreshProperties (void)
   if ( ! light() )
     toggleAction ("view_full_screen") -> setChecked (settings() -> fullScreen()
       && toggleAction ("view_full_screen") -> isEnabled());
+  showSubtitles();
   refreshAspect();
 }
 
@@ -880,6 +870,19 @@ void KPlayerEngine::refreshAspect (void)
     toggleAction ("view_current_aspect") -> setChecked (true);
 }
 
+void KPlayerEngine::setupProgressSlider (int maximum)
+{
+  int interval = maximum * configuration() -> sliderMarks() / 100;
+  int pagestep = properties() -> fastSeek() * m_progress_factor;
+  if ( pagestep == 0 )
+    pagestep = interval;
+  int linestep = properties() -> normalSeek() * m_progress_factor;
+  if ( linestep == 0 )
+    linestep = 1;
+  KPlayerSlider* slider = sliderAction ("player_progress") -> slider();
+  slider -> setup (0, maximum, slider -> value(), configuration() -> showSliderMarks(), interval, pagestep, linestep);
+}
+
 void KPlayerEngine::playerStateChanged (KPlayerProcess::State state, KPlayerProcess::State previous)
 {
   if ( ! m_ac )
@@ -890,8 +893,6 @@ void KPlayerEngine::playerStateChanged (KPlayerProcess::State state, KPlayerProc
   toggleAction ("player_pause") -> setChecked (state == KPlayerProcess::Paused);
   enablePlayerActions();
   enableVideoActions();
-  widget() -> setCursor (state == KPlayerProcess::Playing && properties() -> hasVideo() ? KCursor::blankCursor()
-    : KCursor::arrowCursor());
   if ( state == KPlayerProcess::Playing )
     disableScreenSaver();
   else
@@ -917,16 +918,7 @@ void KPlayerEngine::playerProgressChanged (float progress, KPlayerProcess::Progr
   {
     int value = int (progress * m_progress_factor + 0.5);
     if ( value > maxValue )
-    {
-      slider -> setMaxValue (value);
-      slider -> setTickInterval (slider -> maxValue() * configuration() -> progressMarks() / 100);
-      slider -> setPageStep (properties() -> fastSeek() * m_progress_factor);
-      if ( slider -> pageStep() == 0 )
-        slider -> setPageStep (slider -> tickInterval());
-      slider -> setLineStep (properties() -> normalSeek() * m_progress_factor);
-      if ( slider -> lineStep() == 0 )
-        slider -> setLineStep (1);
-    }
+      setupProgressSlider (value);
     slider -> setValue (value);
   }
   m_updating = false;
@@ -940,7 +932,6 @@ void KPlayerEngine::playerInfoAvailable (void)
   kdDebugTime() << "Engine: Info available. Detected length: " << properties() -> length() << "\n";
 #endif
   m_updating = true;
-  KPlayerSlider* slider = sliderAction ("player_progress") -> slider();
   // QRangeControl breaks if its range is more than 524287
   if ( properties() -> length() > 50000 )
     m_progress_factor = 1;
@@ -948,14 +939,7 @@ void KPlayerEngine::playerInfoAvailable (void)
     m_progress_factor = 10;
   else
     m_progress_factor = 100;
-  slider -> setMaxValue (int (properties() -> length() * m_progress_factor + 0.5));
-  slider -> setTickInterval (slider -> maxValue() * configuration() -> progressMarks() / 100);
-  slider -> setPageStep (properties() -> fastSeek() * m_progress_factor);
-  if ( slider -> pageStep() == 0 )
-    slider -> setPageStep (slider -> tickInterval());
-  slider -> setLineStep (properties() -> normalSeek() * m_progress_factor);
-  if ( slider -> lineStep() == 0 )
-    slider -> setLineStep (1);
+  setupProgressSlider (int (properties() -> length() * m_progress_factor + 0.5));
   if ( properties() -> hasLength() )
     playerProgressChanged (process() -> position(), KPlayerProcess::Position);
   m_updating = false;
@@ -969,7 +953,7 @@ void KPlayerEngine::playerSizeAvailable (void)
   if ( ! properties() -> hasDisplaySize() && ! properties() -> hasOriginalSize() )
     properties() -> setHasVideo (false);
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine: Size Available. Video size " << properties() -> originalSize().width() << "x" << properties() -> originalSize().height() << "\n";
+  kdDebugTime() << "Engine: Size Available. Video size " << properties() -> currentSize().width() << "x" << properties() -> currentSize().height() << "\n";
 #endif
   if ( settings() -> setInitialDisplaySize() )
   {
@@ -981,6 +965,12 @@ void KPlayerEngine::playerSizeAvailable (void)
     toggleAction ("view_full_screen") -> setChecked (settings() -> fullScreen()
       && toggleAction ("view_full_screen") -> isEnabled());
   refreshAspect();
+  if ( m_play_pending )
+  {
+    m_play_pending = false;
+    if ( ! m_stop )
+      startPlaying();
+  }
 }
 
 void KPlayerEngine::enablePlayerActions (void)
@@ -1178,6 +1168,28 @@ bool isReadableFile (const QString& path)
   return info.exists() && info.isReadable() && ! info.isDir();
 }
 
+void KPlayerEngine::startPlaying (void)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Engine::startPlaying\n";
+#endif
+  m_play_pending = m_stop = false;
+  m_last_volume = settings() -> volume();
+  if ( properties() -> audioDriverString().startsWith ("alsa") )
+    getAlsaVolume();
+  if ( properties() -> originalSizeKnown() )
+    setDisplaySize();
+  if ( settings() -> hasSubtitles() && settings() -> showSubtitles() )
+    if ( ! properties() -> originalSizeKnown() && process() -> gettingInfo() )
+    {
+      m_play_pending = true;
+      return;
+    }
+    else if ( properties() -> needsExpanding() )
+      properties() -> autoexpand();
+  process() -> play();
+}
+
 void KPlayerEngine::load (KURL url)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
@@ -1198,6 +1210,7 @@ void KPlayerEngine::load (KURL url)
     stop();
   else
     m_stop = false;
+  m_play_pending = false;
   if ( settings() -> properties() )
     disconnect (settings() -> properties(), SIGNAL (updated()), this, SLOT (refreshProperties()));
   settings() -> load (url);
@@ -1205,25 +1218,19 @@ void KPlayerEngine::load (KURL url)
   connect (settings() -> properties(), SIGNAL (updated()), this, SLOT (refreshProperties()));
   playerProgressChanged (0, KPlayerProcess::Position);
   settings() -> clearSubtitles();
-  if ( properties() -> hasSubtitleUrl() && isReadableFile (properties() -> subtitleUrlString()) )
-    settings() -> addSubtitlePath (properties() -> subtitleUrlString());
   if ( properties() -> subtitleAutoload() )
     autoloadSubtitles();
+  if ( properties() -> hasSubtitleUrl() && isReadableFile (properties() -> subtitleUrlString()) )
+    settings() -> addSubtitlePath (properties() -> subtitleUrlString());
   refreshProperties();
-  if ( properties() -> hasVideo() || properties() -> hasNoVideo() )
+  if ( properties() -> originalSizeKnown() )
     playerSizeAvailable();
-  if ( properties() -> hasLength() ) // || settings() -> shift()
+  if ( properties() -> hasLength() )
     playerInfoAvailable();
-  else
+  if ( ! properties() -> hasLength() || ! properties() -> originalSizeKnown() )
     process() -> get_info();
   if ( ! m_stop )
-  {
-    if ( properties() -> audioDriverString().startsWith ("alsa") )
-      getAlsaVolume();
-    process() -> play();
-    if ( properties() -> hasVideo() || properties() -> hasNoVideo() )
-      setDisplaySize();
-  }
+    startPlaying();
 #ifdef DEBUG_KPLAYER_ENGINE
   else
     kdDebugTime() << "Engine::load: shift pressed, not starting playback\n";
@@ -1239,48 +1246,13 @@ void KPlayerEngine::autoloadSubtitles (void)
   if ( ! properties() -> url().isLocalFile() )
     return;
   QString urls (properties() -> subtitleUrlString());
-  QStringList exts;
-  if ( configuration() -> autoloadOtherSubtitles() )
+  QStringList exts, extlist (QStringList::split (re_split, configuration() -> autoloadExtensionList()));
+  QStringList::ConstIterator extiterator (extlist.constBegin());
+  while ( extiterator != extlist.constEnd() )
   {
-    QStringList list (QStringList::split (re_split, configuration() -> autoloadExtensionList()));
-    QStringList::ConstIterator extiterator (exts.constBegin()), end (exts.constEnd());
-    while ( extiterator != end )
-    {
-      if ( ! (*extiterator).isEmpty() )
-        exts.append ('.' + *extiterator);
-      ++ extiterator;
-    }
-  }
-  if ( configuration() -> autoloadAqtSubtitles() )
-    exts.append (".aqt");
-  if ( configuration() -> autoloadAssSubtitles() )
-    exts.append (".ass");
-  if ( configuration() -> autoloadJsSubtitles() )
-    exts.append (".js");
-  if ( configuration() -> autoloadJssSubtitles() )
-    exts.append (".jss");
-  if ( configuration() -> autoloadRtSubtitles() )
-    exts.append (".rt");
-  if ( configuration() -> autoloadSmiSubtitles() )
-    exts.append (".smi");
-  if ( configuration() -> autoloadSrtSubtitles() )
-    exts.append (".srt");
-  if ( configuration() -> autoloadSsaSubtitles() )
-    exts.append (".ssa");
-  if ( configuration() -> autoloadSubSubtitles() )
-    exts.append (".sub");
-  if ( configuration() -> autoloadTxtSubtitles() )
-    exts.append (".txt");
-  if ( configuration() -> autoloadUtfSubtitles() )
-  {
-    exts.append (".utf");
-    exts.append (".utf8");
-    exts.append (".utf-8");
-  }
-  if ( configuration() -> autoloadVobsubSubtitles() )
-  {
-    exts.append (".idx");
-    exts.append (".ifo");
+    if ( ! (*extiterator).isEmpty() )
+      exts.append ('.' + *extiterator);
+    ++ extiterator;
   }
   QString filename (properties() -> url().fileName());
   QString basename (filename.section ('.', 0, -2));
@@ -1302,8 +1274,8 @@ void KPlayerEngine::autoloadSubtitles (void)
       if ( name != filename && info -> filePath() != urls && name.startsWith (basename, false)
         && info -> exists() && info -> isReadable() && ! info -> isDir() )
       {
-        QStringList::ConstIterator extiterator (exts.constBegin()), end (exts.constEnd());
-        while ( extiterator != end )
+        extiterator = exts.constBegin();
+        while ( extiterator != exts.constEnd() )
         {
           if ( name.endsWith (*extiterator, false) )
           {
@@ -1318,6 +1290,24 @@ void KPlayerEngine::autoloadSubtitles (void)
       }
       ++ fileinfoiterator;
     }
+  }
+}
+
+void KPlayerEngine::showSubtitles (void)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Engine::showSubtitles\n";
+#endif
+  if ( settings() -> hasSubtitles() )
+  {
+    if ( settings() -> showSubtitles() && properties() -> needsExpanding() )
+    {
+      properties() -> autoexpand();
+      process() -> restart();
+    }
+    else
+      process() -> subtitles();
+    enableSubtitleActions();
   }
 }
 
@@ -1337,8 +1327,7 @@ void KPlayerEngine::loadSubtitle (KURL url)
   properties() -> showSubtitleUrl (url);
   settings() -> addSubtitlePath (properties() -> subtitleUrlString());
   properties() -> commit();
-  process() -> subtitles();
-  enableSubtitleActions();
+  showSubtitles();
 }
 
 void KPlayerEngine::fileOpenSubtitles (void)
@@ -1393,7 +1382,7 @@ void KPlayerEngine::zoomIn (void)
   if ( ! properties() -> hasOriginalSize() )
     return;
   normal();
-  settings() -> setDisplaySize (settings() -> displaySize() + properties() -> originalSize() / 2);
+  settings() -> setDisplaySize (settings() -> displaySize() + properties() -> currentSize() / 2);
   setDisplaySize (true);
 }
 
@@ -1402,7 +1391,7 @@ void KPlayerEngine::zoomOut (void)
   if ( ! properties() -> hasOriginalSize() )
     return;
   normal();
-  settings() -> setDisplaySize (settings() -> displaySize() - properties() -> originalSize() / 2);
+  settings() -> setDisplaySize (settings() -> displaySize() - properties() -> currentSize() / 2);
   setDisplaySize (true);
 }
 
@@ -1411,7 +1400,7 @@ void KPlayerEngine::zoomTo (int m, int d)
   if ( ! properties() -> hasOriginalSize() )
     return;
   normal();
-  settings() -> setDisplaySize (properties() -> originalSize() * m / d);
+  settings() -> setDisplaySize (properties() -> currentSize() * m / d);
   setDisplaySize (true);
 }
 
@@ -1449,7 +1438,7 @@ void KPlayerEngine::wheel (int delta, int state)
 {
   if ( ! settings() -> maximized() && ! settings() -> fullScreen() && properties() -> hasOriginalSize() )
   {
-    settings() -> setDisplaySize (settings() -> displaySize() + properties() -> originalSize() * delta / 1200);
+    settings() -> setDisplaySize (settings() -> displaySize() + properties() -> currentSize() * delta / 1200);
     setDisplaySize (true);
   }
   else if ( (state & Qt::ControlButton) == Qt::ControlButton )
@@ -1490,7 +1479,7 @@ void KPlayerEngine::emitWindowStateChanged (uint wid)
 
 void KPlayerEngine::maintainAspect (void)
 {
-  maintainAspect (toggleAction ("view_maintain_aspect") -> isChecked(), properties() -> originalAspect());
+  maintainAspect (toggleAction ("view_maintain_aspect") -> isChecked(), properties() -> currentAspect());
 }
 
 void KPlayerEngine::maintainOriginalAspect (void)
@@ -1527,13 +1516,7 @@ void KPlayerEngine::play (void)
   {
     if ( settings() -> shift() )
       kill();
-    m_stop = false;
-    m_last_volume = settings() -> volume();
-    if ( properties() -> audioDriverString().startsWith ("alsa") )
-      getAlsaVolume();
-    process() -> play();
-    if ( properties() -> hasVideo() || properties() -> hasNoVideo() )
-      setDisplaySize();
+    startPlaying();
   }
 }
 
@@ -1552,6 +1535,7 @@ void KPlayerEngine::pause (void)
 void KPlayerEngine::stop (void)
 {
   m_stop = true;
+  m_play_pending = false;
   process() -> stop();
   setDisplaySize();
 }
@@ -1559,6 +1543,7 @@ void KPlayerEngine::stop (void)
 void KPlayerEngine::kill (void)
 {
   m_stop = true;
+  m_play_pending = false;
   process() -> kill();
 }
 
@@ -1763,8 +1748,7 @@ void KPlayerEngine::subtitleStream (int index)
     if ( index > count )
       properties() -> setSubtitleUrl (settings() -> subtitles() [index - count - 1]);
     properties() -> setSubtitleOption (index);
-    process() -> subtitles();
-    enableSubtitleActions();
+    showSubtitles();
   }
 }
 

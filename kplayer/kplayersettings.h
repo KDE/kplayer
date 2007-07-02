@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -150,19 +150,26 @@ public:
 
   // Subtitle settings
 
+  bool hasSubtitles (void) const
+    { return properties() -> hasSubtitleIDs() || properties() -> hasVobsubIDs()
+      || hasExternalSubtitles() || hasVobsubSubtitles(); }
+  bool showSubtitles (void) const
+    { return hasSubtitles() && properties() -> showSubtitles(); }
+
+  QString currentSubtitles (void) const;
   const QStringList& subtitles (void) const
     { return m_subtitles; }
+  bool hasExternalSubtitles (void) const
+    { return ! m_subtitles.isEmpty(); }
+
+  const QString& vobsubSubtitles (void) const
+    { return m_vobsub; }
+  bool hasVobsubSubtitles (void) const
+    { return ! m_vobsub.isEmpty(); }
+
   void addSubtitlePath (const QString& path);
   void clearSubtitles (void)
-    { m_subtitles.clear(); }
-
-  bool hasSubtitles (void) const
-    { return properties() -> hasSubtitleIDs() || properties() -> hasVobsubIDs() || ! m_subtitles.isEmpty(); }
-  bool showSubtitles (void) const
-    { return properties() -> showInternalSubtitles() || showExternalSubtitles(); }
-  bool showExternalSubtitles (void) const
-    { return properties() -> showExternalSubtitles() && ! m_subtitles.isEmpty(); }
-  QString currentSubtitles (void) const;
+    { m_subtitles.clear(); m_vobsub = QString::null; }
 
   int subtitlePosition (void) const
     { return properties ("Subtitle Position") -> subtitlePosition(); }
@@ -183,7 +190,6 @@ protected:
   bool m_last_full_screen;
   QSize m_display_size;
   QSize m_aspect;
-  QSize m_original_aspect;
   bool m_control;
   bool m_shift;
   bool m_no_control;
@@ -191,6 +197,7 @@ protected:
   bool m_fake_control;
   bool m_fake_shift;
   QStringList m_subtitles;
+  QString m_vobsub;
 };
 
 inline KPlayerTrackProperties* KPlayerEngine::properties (void) const

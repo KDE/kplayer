@@ -227,6 +227,105 @@
                         </widget>
                         <widget class="QLabel" row="4" column="0">
                             <property name="name">
+                                <cstring>l_encoding</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Encoding</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_encoding</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Encoding of the subtitle file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the encoding of the subtitle file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="4" column="1" colspan="3">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_encoding</cstring>
+                            </property>
+                            <property name="editable">
+                                <bool>true</bool>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Encoding of the subtitle file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the encoding of the subtitle file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="5" column="0">
+                            <property name="name">
+                                <cstring>l_framerate</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Framerate</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_framerate</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Frame rate of the subtitle file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the frame rate of the subtitle file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="5" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_framerate</cstring>
+                            </property>
+                            <property name="editable">
+                                <bool>true</bool>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Frame rate of the subtitle file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the frame rate of the subtitle file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="6" column="0">
+                            <property name="name">
                                 <cstring>l_autoload</cstring>
                             </property>
                             <property name="text">
@@ -245,7 +344,7 @@
                                 <string>Option to automatically load subtitles for this file. Default uses options from Subtitles page in KPlayer Settings.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="4" column="1">
+                        <widget class="QComboBox" row="6" column="1">
                             <item>
                                 <property name="text">
                                     <string>default</string>
@@ -271,7 +370,7 @@
                                 <string>Option to automatically load subtitles for this file. Default uses options from Subtitles page in KPlayer Settings.</string>
                             </property>
                         </widget>
-                        <widget class="QLabel" row="5" column="0">
+                        <widget class="QLabel" row="7" column="0">
                             <property name="name">
                                 <cstring>l_position</cstring>
                             </property>
@@ -291,7 +390,7 @@
                                 <string>Option to set vertical position of subtitles. Default will use the same subtitle position as for other files. An easy way to set this property is by using keyboard shortcuts for subtitle position commands on Player/Subtitles menu while holding Shift down.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="5" column="1">
+                        <widget class="QComboBox" row="7" column="1">
                             <item>
                                 <property name="text">
                                     <string>default</string>
@@ -312,7 +411,7 @@
                                 <string>Option to set vertical position of subtitles. Default will use the same subtitle position as for other files. An easy way to set this property is by using keyboard shortcuts for subtitle position commands on Player/Subtitles menu while holding Shift down.</string>
                             </property>
                         </widget>
-                        <widget class="QLineEdit" row="5" column="2">
+                        <widget class="QLineEdit" row="7" column="2">
                             <property name="name">
                                 <cstring>c_position</cstring>
                             </property>
@@ -329,7 +428,7 @@
                                 <string>Option to set vertical position of subtitles. Default will use the same subtitle position as for other files. An easy way to set this property is by using keyboard shortcuts for subtitle position commands on Player/Subtitles menu while holding Shift down.</string>
                             </property>
                         </widget>
-                        <widget class="QLabel" row="6" column="0">
+                        <widget class="QLabel" row="8" column="0">
                             <property name="name">
                                 <cstring>l_delay</cstring>
                             </property>
@@ -349,7 +448,7 @@
                                 <string>Option to set delay of subtitles relative to video. By default subtitles are played without delay. An easier way to set this option is by using keyboard shortcuts for subtitle delay commands on Player/Subtitles menu. In the default configuration KPlayer will automatically store those changes in this property.</string>
                             </property>
                         </widget>
-                        <widget class="QComboBox" row="6" column="1">
+                        <widget class="QComboBox" row="8" column="1">
                             <item>
                                 <property name="text">
                                     <string>default</string>
@@ -370,7 +469,7 @@
                                 <string>Option to set delay of subtitles relative to video. By default subtitles are played without delay. An easier way to set this option is by using keyboard shortcuts for subtitle delay commands on Player/Subtitles menu. In the default configuration KPlayer will automatically store those changes in this property.</string>
                             </property>
                         </widget>
-                        <widget class="QLineEdit" row="6" column="2">
+                        <widget class="QLineEdit" row="8" column="2">
                             <property name="name">
                                 <cstring>c_delay</cstring>
                             </property>
@@ -387,7 +486,7 @@
                                 <string>Option to set delay of subtitles relative to video. By default subtitles are played without delay. An easier way to set this option is by using keyboard shortcuts for subtitle delay commands on Player/Subtitles menu. In the default configuration KPlayer will automatically store those changes in this property.</string>
                             </property>
                         </widget>
-                        <widget class="QLabel" row="6" column="3">
+                        <widget class="QLabel" row="8" column="3">
                             <property name="name">
                                 <cstring>l_delay_seconds</cstring>
                             </property>
@@ -410,6 +509,52 @@
                             </property>
                             <property name="whatsThis" stdset="0">
                                 <string>Option to set delay of subtitles relative to video. By default subtitles are played without delay. An easier way to set this option is by using keyboard shortcuts for subtitle delay commands on Player/Subtitles menu. In the default configuration KPlayer will automatically store those changes in this property.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="9" column="0">
+                            <property name="name">
+                                <cstring>l_closed_caption</cstring>
+                            </property>
+                            <property name="text">
+                                <string>C&amp;losed caption</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_closed_caption</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Display closed caption subtitles if they are available</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to display closed caption subtitles if they are available.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="9" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>yes</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>no</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_closed_caption</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Display closed caption subtitles if they are available</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to display closed caption subtitles if they are available.</string>
                             </property>
                         </widget>
                     </grid>

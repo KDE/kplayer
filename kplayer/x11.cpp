@@ -9,7 +9,7 @@
 /***************************************************************************
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation, either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
@@ -411,3 +411,16 @@ void KPlayerResetX11EventFilter (void)
   qt_set_x11_event_filter (PreviousX11EventFilter);
   PreviousX11EventFilter = 0;
 }
+
+// fixed for enable-final
+#undef Above
+#undef Always
+#undef Below
+#undef Bool
+#undef CursorShape
+#undef FocusIn
+#undef FocusOut
+#undef KeyPress
+#undef KeyRelease
+#undef None
+#undef Unsorted

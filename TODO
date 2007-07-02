@@ -1,3 +1,23 @@
+0.6.3
+ Subtitles
+  Font name
+  Bold and italic
+  + Text size and scale
+  + Text width
+  + Font outline
+  Use embedded fonts
+  + Closed caption
+  Encoding
+  Frame rate
+  + Auto expand
+ Dialogs
+  + Do not set focus on init
+  Brightness option
+ Library
+  Restore player shortcuts
+ + Video area
+  + Hide mouse cursor after delay
+
 0.6.x
  Devices
   Radio
@@ -17,7 +37,6 @@
   Panscan
   Xinerama
  Dialogs
-  History for text fields
   Collapse duplicate actions
 
 Basic functionality
@@ -80,13 +99,17 @@ Subtitles
    Font scaling
    Font encoding
 
-Configuration dialog
+Dialogs
  + Tree like interface
  + GUI-related options
  + MPlayer executable path
  + MPlayer additional options
  + Drivers and codecs
  + Cache size
+ + Properties dialog
+ + Update properties with Shift
+ + Controls page in Settings
+   History for text fields
    Filters
    Fine-tuning wizard
    Decimals in position and length
@@ -189,11 +212,6 @@ Multimedia library
    Searching
    Filtering
    Bookmarks
-
-Per file options
- + Properties dialog
- + Update properties with Shift
- + Controls page in Settings
 
 Tabbed interface
  Dock windows
