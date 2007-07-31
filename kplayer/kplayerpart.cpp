@@ -30,7 +30,8 @@
 #include "kplayersettings.h"
 #include "kplayerwidget.h"
 
-static const char* description = I18N_NOOP("KPlayerPart, an embeddable KDE media player based on MPlayer");
+static const char* description = I18N_NOOP("KPlayerPart, an embeddable KDE media player");
+static const char* license = I18N_NOOP("This program is distributed under the terms of the GPL version 3 or later.");
 
 typedef KParts::GenericFactory<KPlayerPart> KPlayerPartFactory;
 K_EXPORT_COMPONENT_FACTORY (libkplayerpart, KPlayerPartFactory)
@@ -116,11 +117,13 @@ KPlayerPart::~KPlayerPart()
 #endif
 }
 
+QString resourcePath (const QString& filename);
+
 KAboutData* KPlayerPart::createAboutData (void)
 {
-  KAboutData* aboutData = new KAboutData ("kplayer", "KPlayerPart",
-    VERSION, description, KAboutData::License_GPL,
-    "(C) 2002-2007, kiriuja", 0, 0, "http://kplayer.sourceforge.net/email.html");
+  KAboutData* aboutData = new KAboutData ("kplayer", "KPlayerPart", VERSION, description, KAboutData::License_File,
+    "(C) 2002-2007, kiriuja", license, "http://kplayer.sourceforge.net/", "http://kplayer.sourceforge.net/email.html");
+  aboutData -> setLicenseTextFile (resourcePath ("COPYING"));
   aboutData -> addAuthor ("kiriuja", 0, "http://kplayer.sourceforge.net/email.html");
   return aboutData;
 }

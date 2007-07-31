@@ -1470,7 +1470,7 @@ void KPlayerProperties::setSize (const QString& key, const QSize& value)
 
 void KPlayerProperties::setSize (const QString& key, const QSize& value, int option)
 {
-  if ( value.isValid() && option != 0 )
+  if ( value.isValid() && value.width() > 0 && option != 0 )
   {
     ((KPlayerDisplaySizeProperty*) get (key)) -> setValue (value, option);
     updated (key);
@@ -2293,7 +2293,7 @@ bool vobsub (const QString& path);
 
 bool KPlayerConfiguration::getVobsubSubtitles (const QString&, const KURL& url) const
 {
-  return url.isLocalFile() && vobsub (url.path());
+  return url.isValid() && url.isLocalFile() && vobsub (url.path());
 }
 
 bool KPlayerConfiguration::getPlaylist (const QString&, const KURL& url) const
@@ -2341,6 +2341,20 @@ void KPlayerConfiguration::itemReset (void)
     iterator.data() -> setOverride (false);
     ++ iterator;
   }
+}
+
+QStringList KPlayerConfiguration::subtitleExtensions (void) const
+{
+  static QRegExp re_split ("\\s*[,;:. ]\\s*");
+  QStringList exts, extlist (QStringList::split (re_split, autoloadExtensionList()));
+  QStringList::ConstIterator extiterator (extlist.constBegin());
+  while ( extiterator != extlist.constEnd() )
+  {
+    if ( ! (*extiterator).isEmpty() )
+      exts.append ('.' + *extiterator);
+    ++ extiterator;
+  }
+  return exts;
 }
 
 QSize KPlayerConfiguration::autoexpandAspect (void) const
@@ -3629,6 +3643,8 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << "Process: Vobsub ID " << sid << "\n";
 #endif
+    if ( ! hasVobsubID() && ! hasVobsubIDs() && showSubtitles() )
+      setVobsubID (sid);
     if ( ! hasVobsubID (sid) )
       addVobsubID (sid);
   }
@@ -3750,7 +3766,7 @@ int KPlayerTrackProperties::subtitleIndex (void) const
   int vscount = vobsubIDs().count();
   if ( hasSubtitleID() )
     return getTrackOption ("Subtitle ID") + vscount - 1;
-  return showSubtitles() ? vscount + int (subtitleIDs().count()) : -1;
+  return ! showSubtitles() ? -1 : vobsubSubtitles() ? 0 : vscount + int (subtitleIDs().count());
 }
 
 int KPlayerTrackProperties::subtitleOption (void) const
@@ -3779,8 +3795,15 @@ void KPlayerTrackProperties::setSubtitleOption (int option)
 
 void KPlayerTrackProperties::showSubtitleUrl (const KURL& url)
 {
+#ifdef DEBUG_KPLAYER_PROPERTIES
+  kdDebugTime() << "KPlayerTrackProperties::showSubtitleUrl\n";
+#endif
   if ( url != subtitleUrl() )
   {
+#ifdef DEBUG_KPLAYER_PROPERTIES
+    kdDebugTime() << " Subtitle '" << url.url() << "'\n";
+    kdDebugTime() << "          '" << url.prettyURL (0, KURL::StripFileProtocol) << "'\n";
+#endif
     setSubtitleUrl (url);
     resetSubtitleID();
     resetVobsubID();
@@ -3794,7 +3817,7 @@ bool KPlayerTrackProperties::needsExpanding (void) const
   if ( hasOriginalSize() && configuration() -> hasSubtitleAutoexpand() )
   {
     QSize aspect = configuration() -> autoexpandAspect();
-    const QSize& size = currentSize();
+    QSize size = hasDisplaySize() ? displaySize() : currentSize();
     return size.height() * aspect.width() * 20 < size.width() * aspect.height() * 19;
   }
   return false;
@@ -3841,6 +3864,7 @@ void KPlayerTrackProperties::autoexpand (void)
         setCommandLine (commandLineValue() + " -vf " + expand);
       setCurrentResolution (QSize (size.width(), height));
       setCurrentSize (QSize (size.width(), size.width() * aspect.height() / aspect.width()));
+      resetDisplaySize();
     }
   }
 }

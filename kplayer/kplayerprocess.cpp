@@ -463,6 +463,23 @@ void KPlayerProcess::play (void)
   start();
 }
 
+QString resourcePath (const QString& filename)
+{
+#ifdef DEBUG_KPLAYER_PROCESS
+  kdDebugTime() << "Looking for " << filename << "\n";
+#endif
+  QString path (KGlobal::dirs() -> findResource ("appdata", filename));
+#ifdef DEBUG_KPLAYER_PROCESS
+  kdDebugTime() << " appdata '" << path << "'\n";
+#endif
+  if ( path.isEmpty() )
+    path = KGlobal::dirs() -> findResource ("data", "kplayer/" + filename);
+#ifdef DEBUG_KPLAYER_PROCESS
+  kdDebugTime() << " found '" << path << "'\n";
+#endif
+  return path;
+}
+
 void KPlayerProcess::start (void)
 {
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -501,7 +518,7 @@ void KPlayerProcess::start (void)
   }*/
   m_player = new KPlayerLineOutputProcess;
   *m_player << properties() -> executablePath() << "-zoom" << "-noautosub" << "-slave"
-    << "-wid" << QString::number (kPlayerWidget() -> winId());
+    << "-wid" << QString::number (kPlayerWidget() -> winId()) << "-stop-xscreensaver";
   QString driver (properties() -> videoDriverString());
   if ( ! driver.isEmpty() )
   {
@@ -554,31 +571,36 @@ void KPlayerProcess::start (void)
   if ( m_audio_id > -1 )
     *m_player << "-aid" << QCString().setNum (m_audio_id);
   m_subtitles.clear();
-  if ( settings() -> hasSubtitles() && settings() -> showSubtitles() )
+  m_vobsub = QString::null;
+  m_subtitle_index = properties() -> subtitleIndex();
+  if ( settings() -> hasSubtitles() )
   {
-    m_subtitle_index = properties() -> subtitleIndex();
-    if ( settings() -> hasVobsubSubtitles() )
+    if ( settings() -> showVobsubSubtitles() || settings() -> hasVobsubSubtitles() && ! settings() -> showSubtitles() )
     {
-      *m_player << "-vobsub" << settings() -> vobsubSubtitles();
+      m_vobsub = settings() -> vobsubSubtitles();
+      *m_player << "-vobsub" << m_vobsub;
       if ( properties() -> hasVobsubID() )
         *m_player << "-vobsubid" << QString::number (properties() -> vobsubID());
-    }
-    if ( properties() -> hasSubtitleID() )
-      *m_player << "-sid" << QString::number (properties() -> subtitleID());
-    else
-    {
-      QString urls (settings() -> currentSubtitles());
-      if ( urls.find (',') < 0 )
-        *m_player << "-sub" << urls;
       else
+        m_send_subtitle_index = m_subtitle_index;
+    }
+    else if ( settings() -> showSubtitles() )
+    {
+      if ( properties() -> hasSubtitleID() )
+        *m_player << "-sid" << QString::number (properties() -> subtitleID());
+      else if ( settings() -> hasExternalSubtitles() )
       {
-        m_subtitle_index = -1;
-        m_send_subtitle_load = true;
+        QString urls (settings() -> currentSubtitles());
+        if ( urls.find (',') < 0 )
+          *m_player << "-sub" << urls;
+        else
+        {
+          m_subtitle_index = -1;
+          m_send_subtitle_load = true;
+        }
       }
     }
   }
-  else
-    m_subtitle_index = -1;
   m_subtitle_delay = settings() -> subtitleDelay();
   if ( m_subtitle_delay != 0 )
     *m_player << "-subdelay" << QCString().setNum (m_subtitle_delay);
@@ -615,17 +637,7 @@ void KPlayerProcess::start (void)
   if ( ! properties() -> videoDriverString().startsWith ("sdl")
     && ! properties() -> videoDriverString().startsWith ("svga") )
   {
-    QString path (KGlobal::dirs() -> findResource ("appdata", "input.conf"));
-#ifdef DEBUG_KPLAYER_PROCESS
-    if ( path.isEmpty() )
-      kdDebugTime() << "Process: input.conf path is empty\n";
-#endif
-    if ( path.isEmpty() )
-      path = KGlobal::dirs() -> findResource ("data", "kplayer/input.conf");
-#ifdef DEBUG_KPLAYER_PROCESS
-    if ( path.isEmpty() )
-      kdDebugTime() << "Process: input.conf path is still empty\n";
-#endif
+    QString path = resourcePath ("input.conf");
     if ( ! path.isEmpty() )
       *m_player << "-input" << "conf=" + path;
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -702,6 +714,7 @@ void KPlayerProcess::start (void)
 #endif
     m_seekable = properties() -> playlist();
   }
+  properties() -> resetVobsubIDs();
 }
 
 void KPlayerProcess::restart (void)
@@ -1111,13 +1124,10 @@ void KPlayerProcess::subtitleIndex (int index)
     m_send_subtitle_index = index;
     return;
   }
-  if ( index != m_subtitle_index )
-  {
-    QCString s ("sub_select ");
-    s += QCString().setNum (index) + "\n";
-    sendPlayerCommand (s);
-    m_subtitle_index = index;
-  }
+  QCString s ("sub_select ");
+  s += QCString().setNum (index) + "\n";
+  sendPlayerCommand (s);
+  m_subtitle_index = index;
   m_send_subtitle_index = -2;
   if ( index == -1 == m_subtitle_visibility )
     subtitleVisibility();
@@ -1143,6 +1153,11 @@ void KPlayerProcess::subtitles (void)
 {
   if ( ! m_player || m_quit || state() == Idle )
     return;
+  if ( m_vobsub != settings() -> vobsubSubtitles() && settings() -> showVobsubSubtitles() )
+  {
+    restart();
+    return;
+  }
   int index = properties() -> subtitleIndex();
   int count = properties() -> subtitleIDs().count() + properties() -> vobsubIDs().count();
   if ( index < count )

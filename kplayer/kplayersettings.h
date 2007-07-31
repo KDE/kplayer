@@ -154,7 +154,8 @@ public:
     { return properties() -> hasSubtitleIDs() || properties() -> hasVobsubIDs()
       || hasExternalSubtitles() || hasVobsubSubtitles(); }
   bool showSubtitles (void) const
-    { return hasSubtitles() && properties() -> showSubtitles(); }
+    { return properties() -> showInternalSubtitles()
+      || (hasExternalSubtitles() || hasVobsubSubtitles()) && properties() -> showSubtitles(); }
 
   QString currentSubtitles (void) const;
   const QStringList& subtitles (void) const
@@ -166,6 +167,11 @@ public:
     { return m_vobsub; }
   bool hasVobsubSubtitles (void) const
     { return ! m_vobsub.isEmpty(); }
+  bool showVobsubSubtitles (void) const
+    { return showSubtitles() && hasVobsubSubtitles() && currentSubtitles() != properties() -> subtitleUrlString()
+      && ! properties() -> hasSubtitleID(); }
+
+  QString currentSubtitlePath (void) const;
 
   void addSubtitlePath (const QString& path);
   void clearSubtitles (void)

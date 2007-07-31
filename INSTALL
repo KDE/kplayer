@@ -16,8 +16,8 @@ Compiling from source tarball or CVS
 
 Extract the tarball
 
-  tar xjf kplayer-0.6.2.tar.bz2
-  cd kplayer-0.6.2
+  tar xjf kplayer-0.6.3.tar.bz2
+  cd kplayer-0.6.3
 
 Or download code from CVS
 

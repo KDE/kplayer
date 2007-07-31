@@ -2216,6 +2216,8 @@ public:
   void setAutoloadExtensionList (const QString& autoload)
     { setString ("Autoload Extension List", autoload); }
 
+  QStringList subtitleExtensions (void) const;
+
   // Advanced configuration
 
   bool useKioslaveForHttp (void) const
@@ -3096,9 +3098,7 @@ public:
   bool showInternalSubtitles (void) const
     { return hasSubtitleID() || hasVobsubID(); }
   bool showExternalSubtitles (void) const
-    { return showSubtitles() && ! showInternalSubtitles(); }
-  //bool hasNormalSubtitles (void) const
-  //  { return hasSubtitleUrl() && ! vobsubSubtitles(); }
+    { return hasSubtitleUrl() && showSubtitles() && ! showInternalSubtitles(); }
 
   bool vobsubSubtitles (void) const
     { return getVobsubSubtitles ("Vobsub", subtitleUrl()); }
@@ -3158,6 +3158,8 @@ public:
     { return hasIntegerStringMapKey ("Vobsub IDs", sid); }
   bool hasVobsubLanguage (int sid) const
     { return hasIntegerStringMapValue ("Vobsub IDs", sid); }
+  void resetVobsubIDs (void)
+    { return reset ("Vobsub IDs"); }
 
   float subtitleFramerate (void) const
     { return getFloat ("Subtitle Framerate"); }

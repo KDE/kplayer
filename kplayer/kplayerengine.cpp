@@ -702,13 +702,13 @@ void KPlayerEngine::setupActions (void)
 
   m_video_action_list = new KPlayerTrackActionList (i18n("Track %1"), i18n("Selects %1 video track"),
     i18n("Video %1 command switches to the selected video track."), this, "video_streams");
-  connect (m_video_action_list, SIGNAL (activated (int)), SLOT (videoStream (int)));
+  connect (videoActionList(), SIGNAL (activated (int)), SLOT (videoStream (int)));
   m_audio_action_list = new KPlayerTrackActionList (i18n("Track %1"), i18n("Selects %1 audio track"),
     i18n("Audio %1 command switches to the selected audio track."), this, "audio_streams");
-  connect (m_audio_action_list, SIGNAL (activated (int)), SLOT (audioStream (int)));
+  connect (audioActionList(), SIGNAL (activated (int)), SLOT (audioStream (int)));
   m_subtitle_action_list = new KPlayerSubtitleTrackActionList (i18n("Track %1"), i18n("Selects %1 subtitle track"),
     i18n("Subtitles %1 command switches to the selected subtitle track."), this, "subtitle_streams");
-  connect (m_subtitle_action_list, SIGNAL (activated (int)), SLOT (subtitleStream (int)));
+  connect (subtitleActionList(), SIGNAL (activated (int)), SLOT (subtitleStream (int)));
 
   refreshSettings();
   enablePlayerActions();
@@ -823,11 +823,11 @@ void KPlayerEngine::refreshProperties (void)
   int value = settings() -> frameDrop();
   if ( ! light() )
   {
-    m_video_action_list -> update (properties() -> videoIDs(), properties() -> videoID());
-    m_audio_action_list -> update (properties() -> audioIDs(), properties() -> audioID());
-    m_subtitle_action_list -> update (settings() -> showSubtitles(), properties() -> subtitleIDs(),
+    videoActionList() -> update (properties() -> videoIDs(), properties() -> videoID());
+    audioActionList() -> update (properties() -> audioIDs(), properties() -> audioID());
+    subtitleActionList() -> update (settings() -> showSubtitles(), properties() -> subtitleIDs(),
       properties() -> subtitleID(), properties() -> vobsubIDs(), properties() -> vobsubID(),
-      settings() -> subtitles(), settings() -> currentSubtitles());
+      settings() -> subtitles(), settings() -> vobsubSubtitles(), settings() -> currentSubtitlePath());
     toggleAction ("player_soft_frame_drop") -> setChecked (value == 1);
     toggleAction ("player_hard_frame_drop") -> setChecked (value == 2);
   }
@@ -1177,16 +1177,16 @@ void KPlayerEngine::startPlaying (void)
   m_last_volume = settings() -> volume();
   if ( properties() -> audioDriverString().startsWith ("alsa") )
     getAlsaVolume();
-  if ( properties() -> originalSizeKnown() )
-    setDisplaySize();
-  if ( settings() -> hasSubtitles() && settings() -> showSubtitles() )
+  if ( settings() -> showSubtitles() )
     if ( ! properties() -> originalSizeKnown() && process() -> gettingInfo() )
     {
       m_play_pending = true;
       return;
     }
     else if ( properties() -> needsExpanding() )
-      properties() -> autoexpand();
+      autoexpand();
+  if ( properties() -> originalSizeKnown() )
+    setDisplaySize();
   process() -> play();
 }
 
@@ -1239,21 +1239,13 @@ void KPlayerEngine::load (KURL url)
 
 void KPlayerEngine::autoloadSubtitles (void)
 {
-  static QRegExp re_split ("\\s*[,;:. ]\\s*");
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Autoloading subtitles\n";
 #endif
   if ( ! properties() -> url().isLocalFile() )
     return;
   QString urls (properties() -> subtitleUrlString());
-  QStringList exts, extlist (QStringList::split (re_split, configuration() -> autoloadExtensionList()));
-  QStringList::ConstIterator extiterator (extlist.constBegin());
-  while ( extiterator != extlist.constEnd() )
-  {
-    if ( ! (*extiterator).isEmpty() )
-      exts.append ('.' + *extiterator);
-    ++ extiterator;
-  }
+  QStringList exts (configuration() -> subtitleExtensions());
   QString filename (properties() -> url().fileName());
   QString basename (filename.section ('.', 0, -2));
   QDir dir (properties() -> url().directory(), QString::null, QDir::Name | QDir::IgnoreCase, QDir::Files);
@@ -1274,7 +1266,7 @@ void KPlayerEngine::autoloadSubtitles (void)
       if ( name != filename && info -> filePath() != urls && name.startsWith (basename, false)
         && info -> exists() && info -> isReadable() && ! info -> isDir() )
       {
-        extiterator = exts.constBegin();
+        QStringList::ConstIterator extiterator (exts.constBegin());
         while ( extiterator != exts.constEnd() )
         {
           if ( name.endsWith (*extiterator, false) )
@@ -1293,6 +1285,21 @@ void KPlayerEngine::autoloadSubtitles (void)
   }
 }
 
+void KPlayerEngine::autoexpand (void)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Engine::autoexpand\n";
+#endif
+  properties() -> autoexpand();
+  if ( settings() -> setInitialDisplaySize() )
+  {
+    emit initialSize();
+    setDisplaySize();
+    enableVideoActions();
+    refreshAspect();
+  }
+}
+
 void KPlayerEngine::showSubtitles (void)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
@@ -1302,7 +1309,7 @@ void KPlayerEngine::showSubtitles (void)
   {
     if ( settings() -> showSubtitles() && properties() -> needsExpanding() )
     {
-      properties() -> autoexpand();
+      autoexpand();
       process() -> restart();
     }
     else
@@ -1311,43 +1318,60 @@ void KPlayerEngine::showSubtitles (void)
   }
 }
 
-void KPlayerEngine::loadSubtitle (KURL url)
+bool KPlayerEngine::loadSubtitles (const KURL::List& urls, bool checkExtensions)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine::loadSubtitle (" << url.prettyURL() << ")\n";
+  kdDebugTime() << "Engine::loadSubtitles\n";
 #endif
-  if ( url.path().isEmpty() || url == properties() -> subtitleUrl() )
-    return;
-#ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Subtitle '" << url.url() << "'\n";
-  kdDebugTime() << "         '" << url.prettyURL (0, KURL::StripFileProtocol) << "'\n";
-#endif
-  if ( ! isReadableFile (url.path()) )
-    return;
-  properties() -> showSubtitleUrl (url);
-  settings() -> addSubtitlePath (properties() -> subtitleUrlString());
-  properties() -> commit();
-  showSubtitles();
+  if ( urls.isEmpty() || properties() -> url().isEmpty() )
+    return false;
+  QStringList exts (configuration() -> subtitleExtensions());
+  KURL::List::ConstIterator urliterator (urls.begin());
+  while ( urliterator != urls.end() )
+  {
+    const KURL& url (*urliterator);
+    if ( ! url.isLocalFile() )
+      return false;
+    QString path (url.path());
+    if ( path.isEmpty() )
+      return false;
+    QFileInfo info (path);
+    if ( ! info.exists() || ! info.isReadable() || info.isDir() )
+      return false;
+    if ( checkExtensions )
+    {
+      QStringList::ConstIterator extiterator (exts.constBegin());
+      while ( extiterator != exts.constEnd() )
+      {
+        if ( path.endsWith (*extiterator, false) )
+          break;
+        ++ extiterator;
+      }
+      if ( extiterator == exts.constEnd() )
+        return false;
+    }
+    ++ urliterator;
+  }
+  urliterator = urls.begin();
+  while ( urliterator != urls.end() )
+  {
+    settings() -> addSubtitlePath ((*urliterator).path());
+    ++ urliterator;
+  }
+  const KURL& url = urls.first();
+  if ( url != properties() -> subtitleUrl() )
+  {
+    properties() -> showSubtitleUrl (url);
+    properties() -> commit();
+    showSubtitles();
+  }
+  return true;
 }
 
 void KPlayerEngine::fileOpenSubtitles (void)
 {
-  KURL url (openSubtitle());
-  if ( ! url.path().isEmpty() )
-    loadSubtitle (url);
+  loadSubtitles (openSubtitles());
 }
-
-/*void KPlayerEngine::fileOpenSubtitleUrl (void)
-{
-  KURL url (openSubtitleUrl());
-  if ( ! url.path().isEmpty() )
-    loadSubtitle (url);
-}
-
-void KPlayerEngine::fileUnloadSubtitles (void)
-{
-  loadSubtitle (KURL());
-}*/
 
 void KPlayerEngine::fileProperties (void)
 {
@@ -1906,7 +1930,7 @@ KURL::List KPlayerEngine::openUrl (const QString& title, QWidget* parent)
   return list;
 }
 
-KURL KPlayerEngine::openSubtitle (QWidget* parent)
+KURL::List KPlayerEngine::openSubtitles (QWidget* parent)
 {
   static QString filter = i18n("*|All files\n*.aqt *.AQT *.ass *.ASS *.js *.JS *.jss *.JSS *.rt *.RT *.smi *.SMI *.srt *.SRT *.ssa *.SSA *.sub *.SUB *.txt *.TXT *.utf *.UTF *.idx *.IDX *.ifo *.IFO|All subtitle files\n*.aqt *.AQT|AQT files\n*.ass *.ASS|ASS files\n*.js *.JS|JS files\n*.jss *.JSS|JSS files\n*.rt *.RT|RT files\n*.smi *.SMI|SMI files\n*.srt *.SRT|SRT files\n*.ssa *.SSA|SSA files\n*.sub *.SUB|SUB files\n*.txt *.TXT|TXT files\n*.utf *.UTF *.utf8 *.UTF8 *.utf-8 *.UTF-8|UTF files\n*.idx *.IDX *.ifo *.IFO|VobSub files");
   KConfig* config = kPlayerConfig();
@@ -1918,7 +1942,7 @@ KURL KPlayerEngine::openSubtitle (QWidget* parent)
   int height = config -> readNumEntry ("Open Subtitle Height");
   KPlayerFileDialog dlg (dir, filter, parent, "filedialog");
   dlg.setOperationMode (KFileDialog::Opening);
-  dlg.setMode (KFile::File | KFile::ExistingOnly);
+  dlg.setMode (KFile::Files | KFile::ExistingOnly);
   dlg.setCaption (i18n("Load Subtitles"));
   if ( width > 0 && height > 0 )
     dlg.resize (width, height);
@@ -1929,12 +1953,7 @@ KURL KPlayerEngine::openSubtitle (QWidget* parent)
 //config -> writeEntry ("Open Subtitle Top", dlg.y());
   config -> writeEntry ("Open Subtitle Width", dlg.width());
   config -> writeEntry ("Open Subtitle Height", dlg.height());
-  KURL url (dlg.selectedURL());
-#ifdef DEBUG_KPLAYER_ENGINE
-  if ( ! url.isEmpty() && url.isValid() )
-    kdDebugTime() << "Subtitle '" << dlg.selectedFile() << "'\n";
-#endif
-  return url;
+  return dlg.selectedURLs();
 }
 
 /*KURL KPlayerEngine::openSubtitleUrl (QWidget* parent)

@@ -289,6 +289,8 @@ protected:
   int m_subtitle_index;
   /** Current list of external subtitles. */
   QStringList m_subtitles;
+  /** Current vobsub external subtitles. */
+  QString m_vobsub;
 
   /** Current audio delay. */
   float m_audio_delay;

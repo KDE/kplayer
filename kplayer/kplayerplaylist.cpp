@@ -403,7 +403,7 @@ void KPlayerPlaylist::playUrls (const KURL::List& urls)
   kdDebugTime() << "KPlayerPlaylist::playUrls\n";
   kdDebugTime() << " URLs   " << urls.count() << "\n";
 #endif
-  if ( checkUrls (urls) )
+  if ( checkUrls (urls) && ! engine() -> loadSubtitles (urls, true) )
   {
     KPlayerNodeList list (KPlayerNodeList::fromUrlList (urls));
     if ( ! list.isEmpty() )

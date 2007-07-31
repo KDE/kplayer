@@ -14,13 +14,14 @@
  ***************************************************************************/
 
 #include <kaboutdata.h>
-//#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
 #include "kplayer.h"
 
-static const char* description = I18N_NOOP("KPlayer, a KDE media player based on MPlayer");
+static const char* description = I18N_NOOP("KPlayer, a KDE media player");
+static const char* license = I18N_NOOP("This program is distributed under the terms of the GPL version 3 or later.");
+KAboutData* about;
 
 static KCmdLineOptions options[] =
 {
@@ -37,11 +38,11 @@ static KCmdLineOptions options[] =
 
 int main (int argc, char *argv[])
 {
-  KAboutData aboutData ("kplayer", "KPlayer",
-    VERSION, description, KAboutData::License_GPL,
-    "(C) 2002-2007, kiriuja", 0, 0, "http://kplayer.sourceforge.net/email.html");
-  aboutData.addAuthor ("kiriuja", 0, "http://kplayer.sourceforge.net/email.html");
-  KCmdLineArgs::init (argc, argv, &aboutData);
+  about = new KAboutData ("kplayer", "KPlayer", VERSION, description, KAboutData::License_File,
+    "(C) 2002-2007, kiriuja", license, "http://kplayer.sourceforge.net/", "http://kplayer.sourceforge.net/email.html");
+  about -> setLicenseText (license);
+  about -> addAuthor ("kiriuja", 0, "http://kplayer.sourceforge.net/email.html");
+  KCmdLineArgs::init (argc, argv, about);
   KCmdLineArgs::addCmdLineOptions (options);  // Add our own options.
   KPlayerApplication::addCmdLineOptions();
   return KPlayerApplication().exec();

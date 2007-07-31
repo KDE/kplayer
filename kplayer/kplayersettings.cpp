@@ -266,14 +266,15 @@ QString KPlayerSettings::currentSubtitles (void) const
   return subtitles().first();
 }
 
+QString KPlayerSettings::currentSubtitlePath (void) const
+{
+  QString current (currentSubtitles());
+  return hasVobsubSubtitles() && current != properties() -> subtitleUrlString() ? vobsubSubtitles() : current;
+}
+
 static bool vobsubExtension (const QString& path)
 {
   return path.endsWith (".idx", false) || path.endsWith (".ifo", false) || path.endsWith (".sub", false);
-}
-
-static QString vobsubBasePath (const QString& path)
-{
-  return vobsubExtension (path) ? path.left (path.length() - 4) : path;
 }
 
 bool vobsub (const QString& path)
@@ -295,8 +296,8 @@ void KPlayerSettings::addSubtitlePath (const QString& path)
 {
   if ( path == properties() -> subtitleUrlString() ? properties() -> vobsubSubtitles() : vobsub (path) )
   {
-    if ( vobsubBasePath (m_vobsub) != vobsubBasePath (path) )
-      m_vobsub = path;
+    if ( path == properties() -> subtitleUrlString() || m_vobsub.isEmpty() )
+      m_vobsub = vobsubExtension (path) ? path.left (path.length() - 4) : path;
   }
   else if ( subtitles().find (path) == subtitles().end() )
     m_subtitles.append (path);

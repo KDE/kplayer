@@ -94,8 +94,8 @@ public:
   void load (KURL);
   /** Autoloads subtitles as specified in the settings. */
   void autoloadSubtitles (void);
-  /** Loads the given subtitle URL and restarts playback if needed. */
-  void loadSubtitle (KURL);
+  /** Load subtitles from the given URLs if they look like subtitles and restarts playback if needed. */
+  bool loadSubtitles (const KURL::List& urls, bool checkExtensions = false);
 
   /** Displays the open file dialog and lets the user choose a file or files.
       Returns the list of chosen URLs or an empty list if the user did not choose any. */
@@ -105,7 +105,7 @@ public:
   KURL::List openUrl (const QString& title, QWidget* = 0);
   /** Displays the open file dialog and lets the user choose a subtitle file.
       Returns the chosen URL or an empty URL if the user did not choose any. */
-  KURL openSubtitle (QWidget* = 0);
+  KURL::List openSubtitles (QWidget* = 0);
   /** Displays the URL requester dialog and lets the user enter a subtitle URL.
       Returns the entered URL or an empty URL if the user did not enter any. */
   //KURL openSubtitleUrl (QWidget* = 0);
@@ -411,6 +411,8 @@ protected:
   void startPlaying (void);
   /** Shows the selected subtitles. */
   void showSubtitles (void);
+  /** Autoexpands video and updates settings. */
+  void autoexpand (void);
 
   QString m_path;
 

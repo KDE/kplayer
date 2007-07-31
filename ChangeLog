@@ -1,3 +1,10 @@
+0.6.3 release
+2007-07-28
+ - Improved support for subtitles with many new options
+ - Vobsub and closed caption subtitles now supported
+ - Many bug fixes and other improvements
+ - Updated translations
+
 0.6.2 release
 2007-05-13
  - User manual updated with all the new 0.6 features

@@ -428,7 +428,7 @@ KPlayerSubtitleTrackActionList::~KPlayerSubtitleTrackActionList()
 }
 
 void KPlayerSubtitleTrackActionList::update (bool show, const QMap<int, QString>& sids, int sid,
-  const QMap<int, QString>& vsids, int vsid, const QStringList& files, const QString& current)
+  const QMap<int, QString>& vsids, int vsid, QStringList files, const QString& vobsub, const QString& current)
 {
   unplug();
   if ( sids.count() > 0 || vsids.count() > 0 || files.count() > 0 )
@@ -442,6 +442,8 @@ void KPlayerSubtitleTrackActionList::update (bool show, const QMap<int, QString>
     m_actions.append (action);
     addActions (sids, sid);
     addActions (vsids, vsid);
+    if ( vsids.isEmpty() )
+      files << vobsub;
     QStringList::ConstIterator iterator (files.constBegin()), end (files.constEnd());
     while ( iterator != end )
     {

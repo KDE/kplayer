@@ -1503,7 +1503,8 @@ bool KPlayerNodeView::event (QEvent* e)
 #ifdef DEBUG_KPLAYER_NODEVIEW
     kdDebugTime() << "KPlayerNodeView::event AccelOverride " << key << " " << state << "\n";
 #endif
-    if ( (state & Qt::ControlButton) == Qt::ControlButton
+    if ( (state & Qt::ShiftButton) == Qt::ShiftButton && (key == Qt::Key_Left || key == Qt::Key_Right)
+      || (state & Qt::ControlButton) == Qt::ControlButton
       && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_A) )
     {
 #ifdef DEBUG_KPLAYER_NODEVIEW

@@ -174,7 +174,7 @@ public:
 
   /** Updates the track action list. */
   void update (bool show, const QMap<int, QString>& sids, int sid, const QMap<int, QString>& vsids,
-    int vsid, const QStringList& files, const QString& current);
+    int vsid, QStringList files, const QString& vobsub, const QString& current);
 
 protected:
   /** Selects the track with the given index by emitting the activated signal. */

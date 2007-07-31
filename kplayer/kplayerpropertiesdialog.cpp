@@ -774,8 +774,6 @@ void KPlayerPropertiesSize::setupControls (void)
 void KPlayerPropertiesSize::load (void)
 {
   c_display_size -> setCurrentItem (properties() -> displaySizeOption());
-  c_display_width -> setText (properties() -> displayWidthString());
-  c_display_height -> setText (properties() -> displayHeightString());
   displaySizeChanged (c_display_size -> currentItem());
   c_full_screen -> setCurrentItem (properties() -> fullScreenOption());
   c_maximized -> setCurrentItem (properties() -> maximizedOption());
@@ -784,8 +782,26 @@ void KPlayerPropertiesSize::load (void)
 
 void KPlayerPropertiesSize::save (void)
 {
-  properties() -> setDisplaySize (QSize (labs (c_display_width -> text().toInt()),
-    labs (c_display_height -> text().toInt())), c_display_size -> currentItem());
+  int width = labs (c_display_width -> text().toInt());
+  int height = labs (c_display_height -> text().toInt());
+  if ( width == 0 && c_display_size -> currentItem() == 2 && c_display_width -> text().stripWhiteSpace().toDouble() > 0 )
+  {
+    QRegExp re ("^\\s*(\\d*)[,.](\\d*)\\s*$");
+    if ( re.search (c_display_width -> text()) >= 0 )
+    {
+      width = (re.cap(1) + re.cap(2)).toInt();
+      for ( uint i = 0; i < re.cap(2).length(); i ++ )
+        height *= 10;
+    }
+  }
+  if ( c_display_size -> currentItem() == 2 )
+    for ( int i = 2; i <= height; i ++ )
+      if ( width / i * i == width && height / i * i == height )
+      {
+        width /= i;
+        height /= i --;
+      }
+  properties() -> setDisplaySize (QSize (width, height), c_display_size -> currentItem());
   properties() -> setFullScreenOption (c_full_screen -> currentItem());
   properties() -> setMaximizedOption (c_maximized -> currentItem());
   properties() -> setMaintainAspectOption (c_maintain_aspect -> currentItem());
@@ -797,12 +813,9 @@ void KPlayerPropertiesSize::displaySizeChanged (int option)
   c_display_width -> setEnabled (enable);
   l_display_by -> setEnabled (enable);
   c_display_height -> setEnabled (enable);
-  if ( ! enable )
-  {
-    c_display_width -> setText ("");
-    c_display_height -> setText ("");
-  }
-  else if ( sender() )
+  c_display_width -> setText (enable ? properties() -> displayWidthString() : "");
+  c_display_height -> setText (enable ? properties() -> displayHeightString() : "");
+  if ( enable && sender() )
   {
     c_display_width -> setFocus();
     c_display_width -> selectAll();
@@ -1037,7 +1050,10 @@ void KPlayerPropertiesTrackSubtitles::addTracks (void)
 
 void KPlayerPropertiesTrackSubtitles::load (void)
 {
-  c_track_set -> setCurrentItem (properties() -> subtitleOption());
+  int option = properties() -> subtitleOption();
+  if ( option == c_track_set -> count() - 1 )
+    option = 0;
+  c_track_set -> setCurrentItem (option);
   trackChanged (c_track_set -> currentItem());
   KPlayerPropertiesSubtitles::load();
 }

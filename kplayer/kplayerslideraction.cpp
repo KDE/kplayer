@@ -340,7 +340,7 @@ void KPlayerSlider::mouseReleaseEvent (QMouseEvent* event)
 void KPlayerSlider::keyPressEvent (QKeyEvent* event)
 {
   int key = event -> key();
-  if ( key == Key_Left || key == Key_Right || (event -> state() & KeyButtonMask) != 0
+  if ( key == Key_Left || key == Key_Right || (event -> state() & (ControlButton | AltButton | MetaButton)) != 0
     && (key == Key_Up || key == Key_Down || key == Key_PageUp || key == Key_PageDown
     || key == Key_Home || key == Key_End) )
   {
