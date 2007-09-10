@@ -1,0 +1,58 @@
+[Desktop Entry]
+ServiceTypes=inode/directory
+Actions=AddToPlaylists;AddToCollection
+Encoding=UTF8
+
+[Desktop Action AddToPlaylists]
+Name=Add to playlists
+Name[af]=Voeg by speel lys
+Name[be]=Дадаць у спісы прайгравання
+Name[bg]=Добавяне към списъци
+Name[cs]=Přidat do seznamů skladeb
+Name[da]=Tilføj til spillelister
+Name[de]=Zur Wiedergabeliste hinzufügen
+Name[el]=Προσθήκη στις λίστες αναπαραγωγής
+Name[es]=Añadir a las listas de reproducción
+Name[et]=Lisa esitusnimekirjadesse
+Name[fr]=Ajouter à la liste de lecture
+Name[ga]=Cuir le seinmliostaí
+Name[it]=Aggiungi alle scalette
+Name[ja]=プレイリストに追加
+Name[lt]=Pridėti prie grojaraščių
+Name[nl]=Toevoegen aan afspeellijst
+Name[pa]=ਸੰਗੀਤ-ਸੂਚੀ 'ਚ ਸ਼ਾਮਿਲ
+Name[pl]=Dodaj do listy odtwarzania kplayer
+Name[pt]=Adicionar à lista de reprodução
+Name[pt_BR]=Adicionar à lista de reprodução
+Name[sk]=Pridať do zoznamu
+Name[sv]=Lägg till i spellistor
+Name[tr]=Çalma listelerine ekle
+Icon=kplayer
+Exec=kplayer --add-to-playlists -- %U
+
+[Desktop Action AddToCollection]
+Name=Add to collection
+Name[af]=Voeg by versameling
+Name[be]=Дадаць у калекцыю
+Name[bg]=Добавяне към колекция
+Name[cs]=Přidat do kolekce
+Name[da]=Tilføj til samling
+Name[de]=Zur Sammlung hinzufügen
+Name[el]=Προσθήκη στη συλλογή
+Name[es]=Añadir a la colección
+Name[et]=Lisa kogusse
+Name[fr]=Ajouter à la collection
+Name[ga]=Cuir le bailiúchán
+Name[it]=Aggiungi alla collezione
+Name[ja]=コレクションに追加
+Name[lt]=Įdėti į fonoteką
+Name[nl]=Toevoegen aan collectie
+Name[pa]=ਭੰਡਾਰ 'ਚ ਸ਼ਾਮਿਲ
+Name[pl]=Dodaj do kolekcji
+Name[pt]=Adicionar à colecção
+Name[pt_BR]=Adicionar à coleção
+Name[sk]=Pridať do kolekcie
+Name[sv]=Lägg till i samling
+Name[tr]=Koleksiyona ekle
+Icon=kplayer
+Exec=kplayer --add-to-collection -- %U

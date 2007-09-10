@@ -1,0 +1,366 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerSettingsBrightnessPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerSettingsBrightnessPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>648</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame4</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>l_brightness_minimum</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>Mi&amp;nimum</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>c_brightness_minimum</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Lower limit on the video brightness</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify a lower limit on the video brightness setting.</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>c_brightness_minimum</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>60</width>
+                            <height>32767</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Lower limit on the video brightness</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify a lower limit on the video brightness setting.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>l_brightness_maximum</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>Ma&amp;ximum</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>c_brightness_maximum</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Upper limit on the video brightness</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify an upper limit on the video brightness setting.</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="1" column="1">
+                    <property name="name">
+                        <cstring>c_brightness_maximum</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>60</width>
+                            <height>32767</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Upper limit on the video brightness</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify an upper limit on the video brightness setting.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="2" column="0">
+                    <property name="name">
+                        <cstring>l_brightness_step</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>Adjustment a&amp;mount</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignVCenter|AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>c_brightness_step</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Amount of adjustment to video brightness when using Increase/Decrease commands</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify the amount by which to change video brightness when using Increase/Decrease Brightness commands on Player/Video menu or the corresponding keyboard shortcuts.</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="2" column="1">
+                    <property name="name">
+                        <cstring>c_brightness_step</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                        <size>
+                            <width>60</width>
+                            <height>32767</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Amount of adjustment to video brightness when using Increase/Decrease commands</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Option to specify the amount by which to change video brightness when using Increase/Decrease Brightness commands on Player/Video menu or the corresponding keyboard shortcuts.</string>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget" row="3" column="0" colspan="2">
+                    <property name="name">
+                        <cstring>layout2</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>c_brightness_reset</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Reset</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Reset brightness to a specific setting for each new file or KPlayer session</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to reset video brightness to a specific setting for each new file or KPlayer session.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>l_brightness_to</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>1</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>&amp;to</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_brightness_default</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Reset brightness to a specific setting for each new file or KPlayer session</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to reset video brightness to a specific setting for each new file or KPlayer session.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>c_brightness_default</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>60</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Reset brightness to a specific setting for each new file or KPlayer session</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to reset video brightness to a specific setting for each new file or KPlayer session.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>l_brightness_every</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>1</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>for &amp;every</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_brightness_every</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Reset brightness to a specific setting for each new file or KPlayer session</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to reset video brightness to a specific setting for each new file or KPlayer session.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox">
+                            <item>
+                                <property name="text">
+                                    <string>file</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>session</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_brightness_every</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Reset brightness to a specific setting for each new file or KPlayer session</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to reset video brightness to a specific setting for each new file or KPlayer session.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>c_brightness_reset</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>KPlayerSettingsBrightnessPage</receiver>
+        <slot>resetChanged(bool)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">resetChanged(bool)</slot>
+</slots>
+<layoutdefaults spacing="12" margin="0"/>
+</UI>

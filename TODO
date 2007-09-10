@@ -1,0 +1,281 @@
+0.6.3
+ + Subtitles
+  + Font name
+  + Bold and italic
+  + Text size and scale
+  + Text width
+  + Font outline
+  + Use embedded fonts
+  + Closed caption
+  + Encoding
+  + Frame rate
+  + Auto expand
+  + Open and drop
+  + Vobsub
+  + Allow loading multiple subtitles
+ + Dialogs
+  + Do not set focus on init
+  + Allow Shift-arrow on sliders
+  + Empty display size
+ + Library
+  + Restore player shortcuts
+  + Leave Shift-Right and Shift-Left for library
+ + Video area
+  + Hide mouse cursor after delay
+  + Screen saver disabling
+ + Documentation
+  + Update manual
+  + Update screenshots
+  + Update license
+  + Update version
+  + Release notes
+
+0.6.x
+ Devices
+  Radio
+   Channels
+   Properties
+  PVR
+   Channels
+   Properties
+  TV
+   Allow playing from webcam
+  Allow playing disks from files and directories
+  Allow removing and readding channels and tracks
+ Process
+  Kill runaway MPlayers
+ Main window
+  Smooth resizing while keeping aspect ratio
+  Panscan
+  Xinerama
+ Dialogs
+  Collapse duplicate actions
+
+Basic functionality
+ + Play files
+ + Play URL
+ + Start
+ + Stop
+ + Pause
+ + Quit
+ + Full screen
+ + Context menu
+ + Shortcut keys
+ + Main window title
+ + Volume
+ + Mute
+ + Seek
+ + Autosize
+ + Status
+ + Recent files
+ + Maintain Aspect and Force Aspect options
+ + Persist options between sessions
+ + Maintain video size when docking states change
+ + Enable and disable actions according to state
+ + Drag and grop
+
+Additional controls
+ + Zoom
+ + Frame drop
+ + Contrast
+ + Brightness
+ + Hue
+ + Saturation
+ + Popup sliders
+ + Display mplayer text output
+ + Message log and error handling
+ + Audio delay
+ + Tooltips when dragging a slider
+ + Always on top
+ + Volume control
+   + Mixer device and channel
+   + Software volume control
+   Audio equalizer
+   Quit when done playing
+   Frame stepping
+   Playback speed
+   Recording
+
+Subtitles
+ + Load from file
+ + Load from URL
+ + Autoload
+ + Unload
+ + Delay
+ + Position
+ + Visibility
+   Alignment
+   Font face
+   Font size
+   Font style
+   Font scaling
+   Font encoding
+
+Dialogs
+ + Tree like interface
+ + GUI-related options
+ + MPlayer executable path
+ + MPlayer additional options
+ + Drivers and codecs
+ + Cache size
+ + Properties dialog
+ + Update properties with Shift
+ + Controls page in Settings
+   History for text fields
+   Filters
+   Fine-tuning wizard
+   Decimals in position and length
+
+Playlist
+ + List
+ + Play
+ + Next
+ + Previous
+ + Loop
+ + Shuffle
+ + Edit
+   Hierarchical shuffling
+
+Multimedia library
+ + Name
+ + Path or URL
+ + Type
+ + Length
+ + Video size
+ + Formats
+ + Bitrates
+ + Play file
+ + Play URL
+ + Play recent
+ + Order
+   + By name
+   + By key
+   + Custom
+ + Allow duplicate entries
+ + Size limit
+ + Settings
+ + Hierarchical structure
+   + Directories as playlists
+   + Meta information
+ + Metadata
+   + Extract
+   + Store
+   + Display
+   + Update
+   + Change
+   + Video IDs
+   + Audio IDs
+   + Subtitle IDs
+   + Demuxer
+ + Columns
+   + Hiding
+   + Moving
+   + Meta sync
+ + Drag and drop
+   + Copy
+   + Link
+   + Move
+   + Set action
+   + Reorder
+   + URL
+ + Context menu
+   + Play
+   + Queue next
+   + Queue
+   + Add files
+   + Add URL
+   + Add group
+   + Save as playlist
+   + Add to playlist
+   + Add to collection
+   + Open
+   + Rename/Edit
+   + Properties
+   + Move up
+   + Move down
+   + Select all
+   + Remove
+   + Go back
+   + Go forward
+   + Go up
+   + Go down
+   + Go to source
+     Remove missing files
+     Accumulate
+     Grouping
+     Sources
+     + Root
+     + Directory
+     + Store
+     + Origin
+     + List
+     + Devices
+     + Device
+       + CD
+       + DVD
+       + TV
+       + DVB
+         Radio
+    Group
+    Key
+    Search
+    Playlist
+    Slave
+   Searching
+   Filtering
+   Bookmarks
+
+Tabbed interface
+ Dock windows
+
+Documentation
+ + Readme
+ + Install
+ + HowTo
+ + User manual
+
+Disk and tuner devices
+ + Disks
+ + Tracks
+ + Titles
+   Chapters
+   Menus
+   Navigation
+ + Video stream
+ + Audio stream
+ + Subtitle stream
+ + Channels
+ + Frequencies
+ + Devices
+   Eject
+ + Properties
+ + DVD
+   + Load
+   + Play title
+   + Play DVD
+ + VCD
+   + Load
+   + Play track
+   + Play VCD
+ + Audio CD
+   + Load
+   + Play track
+   + Play CD
+ + TV
+   + Play channel
+ + DVB
+   + Play channel
+ Radio
+   Play channel
+ PVR
+   Properties
+ Webcam
+   Properties
+
+KDE Integration
+ + MIME file types
+ + KPart
+ + Playing from KIOSlaves
+ + KFileMetaInfo
+   Window manager size hints
+   Remember dialog size and position

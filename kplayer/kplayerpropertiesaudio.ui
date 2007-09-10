@@ -1,0 +1,782 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPlayerPropertiesAudioPage</class>
+<widget class="QFrame">
+    <property name="name">
+        <cstring>KPlayerPropertiesAudioPage</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>640</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="frameShape">
+        <enum>NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+        <enum>Plain</enum>
+    </property>
+    <property name="lineWidth">
+        <number>0</number>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>frame1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Plain</enum>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget" row="0" column="0">
+                    <property name="name">
+                        <cstring>layout3</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>l_track</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Track</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_track_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio track to play</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the audio track to play.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="0" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set ID</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_track_set</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio track to play</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the audio track to play.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="0" column="2">
+                            <property name="name">
+                                <cstring>c_track</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio track to play</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the audio track to play.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="0">
+                            <property name="name">
+                                <cstring>l_volume</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Volume</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_volume_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Sound volume level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust sound volume level for this file. Default uses the same volume as for other files, Set To adjusts volume to the given level, Add and Subtract turn volume up and down respectively by the given amount. It is easier to set this option by moving volume slider while having Shift key pressed.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="1" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set to</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>add</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>subtract</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_volume_set</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Sound volume level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust sound volume level for this file. Default uses the same volume as for other files, Set To adjusts volume to the given level, Add and Subtract turn volume up and down respectively by the given amount. It is easier to set this option by moving volume slider while having Shift key pressed.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="1" column="2">
+                            <property name="name">
+                                <cstring>c_volume</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Sound volume level for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to adjust sound volume level for this file. Default uses the same volume as for other files, Set To adjusts volume to the given level, Add and Subtract turn volume up and down respectively by the given amount. It is easier to set this option by moving volume slider while having Shift key pressed.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="2" column="0">
+                            <property name="name">
+                                <cstring>l_delay</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Dela&amp;y</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_delay_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Delay of audio relative to video</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to set delay of sound relative to video for this file. By default sound is played without delay. An easier way to set this option is by using keyboard shortcuts for Audio Delay commands on Player/Audio menu. In the default configuration KPlayer will automatically store those changes in this property.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="2" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>default</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set to</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_delay_set</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio delay for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to set delay of sound relative to video for this file. By default sound is played without delay. An easier way to set this option is by using keyboard shortcuts for Audio Delay commands on Player/Audio menu. In the default configuration KPlayer will automatically store those changes in this property.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="2" column="2">
+                            <property name="name">
+                                <cstring>c_delay</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio delay for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to set delay of sound relative to video for this file. By default sound is played without delay. An easier way to set this option is by using keyboard shortcuts for Audio Delay commands on Player/Audio menu. In the default configuration KPlayer will automatically store those changes in this property.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="2" column="3">
+                            <property name="name">
+                                <cstring>l_seconds</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>100</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>seconds</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio delay for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to set delay of sound relative to video for this file. By default sound is played without delay. An easier way to set this option is by using keyboard shortcuts for Audio Delay commands on Player/Audio menu. In the default configuration KPlayer will automatically store those changes in this property.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="3" column="0">
+                            <property name="name">
+                                <cstring>l_codec</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Cod&amp;ec</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_codec</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio codec to use for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available codecs and lets you choose the one to be used for this file. Default uses the option from KPlayer Settings, Auto lets MPlayer decide which codec to use automatically.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="3" column="1" colspan="3">
+                            <property name="name">
+                                <cstring>c_codec</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>1</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio codec to use for this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option that lists available codecs and lets you choose the one to be used for this file. Default uses the option from KPlayer Settings, Auto lets MPlayer decide which codec to use automatically.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="4" column="0">
+                            <property name="name">
+                                <cstring>l_bitrate</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Bitrate</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_bitrate</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio bitrate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows audio bitrate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="4" column="1">
+                            <property name="name">
+                                <cstring>c_bitrate</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="readOnly">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio bitrate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows audio bitrate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="4" column="2">
+                            <property name="name">
+                                <cstring>l_kbps</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>4</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>kbps</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio bitrate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows audio bitrate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="5" column="0">
+                            <property name="name">
+                                <cstring>l_samplerate</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Samplerate</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_samplerate</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio sample rate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows audio sample rate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="5" column="1">
+                            <property name="name">
+                                <cstring>c_samplerate</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="readOnly">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio sample rate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows audio sample rate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="5" column="2">
+                            <property name="name">
+                                <cstring>l_hz</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>4</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>Hz</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio sample rate of this file</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Property that shows audio sample rate of this file.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="6" column="0">
+                            <property name="name">
+                                <cstring>l_mode</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Mode</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_mode</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio mode to request from the device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the audio mode to request from the device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="6" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>mono</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>stereo</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>language 1</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>language 2</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_mode</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio mode to request from the device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose the audio mode to request from the device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="7" column="0">
+                            <property name="name">
+                                <cstring>l_input</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Input</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_input_set</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio card input ID</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the audio card input ID to use for capturing audio.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="7" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>auto</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>set to</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_input_set</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio card input ID</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the audio card input ID to use for capturing audio.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="7" column="2">
+                            <property name="name">
+                                <cstring>c_input</cstring>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>70</width>
+                                    <height>32767</height>
+                                </size>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio card input ID</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the audio card input ID to use for capturing audio.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox" row="7" column="3">
+                            <property name="name">
+                                <cstring>c_immediate</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>2</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>immediate m&amp;ode</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Choose whether audio comes through a sound card connected to the TV card</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to choose specify where audio comes from. Select this option if your TV card is connected with a cable to a sound card. When this option is not selected, audio comes along with video from the TV card.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="8" column="0">
+                            <property name="name">
+                                <cstring>l_capture</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Capture</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignLeft</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_capture</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio capture system and device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the audio capture system and device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox" row="8" column="1">
+                            <item>
+                                <property name="text">
+                                    <string>ALSA</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>OSS</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>c_capture</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio capture system and device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the audio capture system and device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="8" column="2">
+                            <property name="name">
+                                <cstring>l_device</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>1</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>&amp;device</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter|AlignRight</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>c_device</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio capture system and device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the audio capture system and device.</string>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit" row="8" column="3">
+                            <property name="name">
+                                <cstring>c_device</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>3</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>2</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Audio capture system and device</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Option to specify the audio capture system and device.</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>c_track_set</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesAudioPage</receiver>
+        <slot>trackChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_volume_set</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesAudioPage</receiver>
+        <slot>volumeChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_delay_set</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesAudioPage</receiver>
+        <slot>delayChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_codec</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesAudioPage</receiver>
+        <slot>codecChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>c_input_set</sender>
+        <signal>activated(int)</signal>
+        <receiver>KPlayerPropertiesAudioPage</receiver>
+        <slot>inputChanged(int)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot access="protected">trackChanged(int)</slot>
+    <slot access="protected">volumeChanged(int)</slot>
+    <slot access="protected">delayChanged(int)</slot>
+    <slot access="protected">codecChanged(int)</slot>
+    <slot access="protected">inputChanged(int)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="0"/>
+</UI>
