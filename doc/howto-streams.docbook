@@ -1,0 +1,142 @@
+<sect1 id="howto-streams">
+<title>Online radio and TV</title>
+
+<para>One of the major advantages of &kplayer; is the use of
+<link linkend="howto-installation-mplayer">&mplayer;</link> as the multimedia
+playing backend. It allows &kplayer; to support the widest variety of media
+types and encodings. In addition to that, &kplayer; detects most playlist file
+types and ensures that they are reproduced correctly.</para>
+
+<sect2 id="howto-streams-types">
+<title>Major stream types</title>
+
+<para>The most widely used stream types for online media are RealMedia,
+QuickTime, Windows Media and ShoutCast (MP3). &kplayer; will play all but very
+few streams of those types. Choose <guimenuitem>Play URL...</guimenuitem> on
+&kplayer;'s <guimenu>File</guimenu> menu, paste the stream address into the
+<acronym>URL</acronym> box and select <guibutton>Open</guibutton>.
+Alternatively, make sure your browser is configured to open &kplayer;
+for the <acronym>MIME</acronym> types you would like to play with it, as well
+as for <literal>rtsp:</literal>, <literal>pnm:</literal> and
+<literal>mms:</literal> <acronym>URL</acronym>s. When you install &kplayer;,
+&konqueror; configuration is done automatically, you
+then just need to open <guilabel>File Association</guilabel> settings in
+&konqueror; or in &kcontrolcenter; and move &kplayer; to the top of the list
+for those file types that already had another program associated with them,
+including the special types under the <literal>uri</literal> section.
+Then you can simply click an <literal>http:</literal>, <literal>rtsp:</literal>,
+<literal>pnm:</literal> or <literal>mms:</literal> link to your media, and
+&kplayer; will start up and play it.</para>
+
+<para>If a stream has meta information embedded in it, &kplayer; will extract it
+and display it in the <link linkend="parts-library">multimedia library</link>,
+and if it finds the station name, it will also display it in the
+<link linkend="parts-title-bar">title bar</link> and on the
+<link linkend="parts-toolbar-playlist">current playlist</link>. Some music
+streams also provide the name of the song currently being played. &kplayer; will
+then display it in the title bar and on the current playlist instead of the
+station name.</para>
+
+</sect2>
+
+<sect2 id="howto-streams-playlists">
+<title>Playlist files</title>
+
+<para>If the file a URL points to is a playlist,
+<link linkend="howto-installation-mplayer">&mplayer;</link> needs a special
+option to be able to play that file correctly. &kplayer; tries to detect
+playlist files by looking at the file extension. If the extension is
+<literal>ram</literal>, <literal>smi</literal>, <literal>smil</literal>,
+<literal>rpm</literal>, <literal>asx</literal>, <literal>pls</literal>,
+<literal>m3u</literal> or <literal>strm</literal>, and the protocol is
+<literal>file</literal>, <literal>http</literal>, <literal>http_proxy</literal>,
+<literal>ftp</literal> or <literal>smb</literal>, then &kplayer; passes the
+playlist option to &mplayer;. But sometimes a playlist file may have a different
+extension, or a file that is not a playlist may have one of those extensions.
+In those cases playback will initially fail, and you will need to open the
+<link linkend="properties-general">File Properties dialog</link> from the
+<guimenu>File</guimenu> menu and set the <guilabel>Playlist</guilabel> option
+correctly.</para>
+
+</sect2>
+
+<sect2 id="howto-streams-cache">
+<title>Cache size</title>
+
+<para>By default &kplayer; lets &mplayer; choose an optimal cache size, which
+will work in almost all cases. But if you play a low bitrate media like a radio
+station, it may take a while to fill the cache. In that case you can lower the
+cache setting to 128 or even 64 kilobytes if &mplayer; does not do it
+automatically. You can do that on the <guilabel>Advanced</guilabel> page for an
+individual stream in the <link linkend="properties-advanced">File Properties
+dialog</link>, or globally in <link linkend="settings-advanced">&kplayer;
+Settings</link>. Alternatively, you can set a lower minimum cache size required
+to start playback, the default one being 20%. That setting goes into the
+<guilabel>Additional command line parameters</guilabel> field on the same
+<guilabel>Advanced</guilabel> page, for example
+<literal>-cache-min 5</literal>.</para>
+
+</sect2>
+
+<sect2 id="howto-streams-embedded">
+<title>Embedded streams</title>
+
+<para>A lot of times a media stream will be embedded as an object into a web
+page. &kplayer; supports that and will play the stream if it is configured as
+the default player for that media type. But it is recommended that you right
+click on the web page object and choose <guimenuitem>Start
+&kplayer;</guimenuitem>. You will then get better interface and more
+options.</para>
+
+</sect2>
+
+<sect2 id="howto-streams-slaves">
+<title>Playing through HTTP I/O Slave</title>
+
+<para>In &mplayer; 1.0-pre4 there was a bug that made it impossible to play
+<acronym>HTTP</acronym> <acronym>URL</acronym>s that had <acronym>URL</acronym>
+encodable characters like a space in them. For those <acronym>URL</acronym>s
+you can turn on the <guilabel>Use KIOSlave</guilabel> option in the
+<link linkend="properties-advanced">File Properties</link>. &kplayer; will then
+use the <acronym>HTTP</acronym> <acronym>I/O</acronym> Slave to play the file,
+sending data to &mplayer; through a named pipe.</para>
+
+</sect2>
+
+<sect2 id="howto-streams-finding">
+<title>Where to find stations</title>
+
+<para>There is no single best resource for finding online radio and TV stations.
+<ulink url="http://www.vtuner.com/">VTuner</ulink> online directory is pretty
+good but not very complete.
+<ulink url="http://www.radios.com.br/">Radios.com.br</ulink> is rather spammy
+but more complete, their directory of online
+<ulink url="http://www.radios.com.br/novo/tvs.htm">TV</ulink> and
+<ulink url="http://www.radios.com.br/novo/inter.htm">radio</ulink> stations from
+all over the world probably is the most complete on the Internet today. Finally,
+<ulink url="http://www.tvradioworld.com/">TVRadioWorld</ulink> is an excellent
+resource for finding on-the-air <acronym>TV</acronym> and radio stations (online
+or not), and it links to online streams for some of them.</para>
+
+</sect2>
+
+<sect2 id="howto-streams-recording">
+<title>Recording streams</title>
+
+<para>Open <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Properties</guimenuitem></menuchoice> for the stream you want to
+record, go to the
+<link linkend="properties-advanced">Advanced page</link> and enter
+<option>-dumpstream</option> into the <guilabel>Additional command line
+arguments</guilabel> field. Then start playing the stream.
+A <filename>stream.dump</filename> file will then be created in the current
+directory. You can later rename it with the correct extension. Or add
+<userinput><option>-dumpfile</option>
+<filename><replaceable>filename.ext</replaceable></filename></userinput> to the
+same <guilabel>Additional command line arguments</guilabel> field. The option in
+that field have to be separated with spaces, and the file name must not have
+spaces in it.</para>
+
+</sect2>
+
+</sect1>

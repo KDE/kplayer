@@ -1,0 +1,513 @@
+<chapter id="basics">
+<title>Basics</title>
+
+<important><para>Like all &kde; applications, &kplayer; is highly configurable.
+The default settings have been chosen for optimal performance and maximum
+compatibility. This chapter describes how &kplayer; behaves with these default
+settings.</para></important>
+
+<sect1 id="starting">
+<title>Starting &kplayer;</title>
+
+<para>There are several ways to start &kplayer;. Which one you use is your
+personal preference, and may depend on what type of media you are going to
+play.</para>
+
+<itemizedlist>
+
+<listitem><para>From the &kmenu;, select
+<menuchoice><guisubmenu>Multimedia</guisubmenu>
+<guimenuitem>&kplayer;</guimenuitem></menuchoice></para></listitem>
+
+<listitem><para>Or you can put &kplayer; icon on the desktop or on the &kicker;
+panel. Then you can <mousebutton>left</mousebutton> click it to start
+&kplayer;.</para></listitem>
+
+<listitem><para><keycombo action="simul">&Alt;<keycap>F2</keycap></keycombo>
+will open a <guilabel>Run Command</guilabel> dialog box, type
+<userinput><command>kplayer</command></userinput> (lower case) and press
+&Enter; or click the <guibutton>Run</guibutton> button.</para></listitem>
+
+<listitem><para>In a terminal program like &konsole; type
+<userinput><command>kplayer</command></userinput> and press
+&Enter;.</para></listitem>
+
+<listitem><para>Depending on the type of content you are going to play,
+there may be other ways to start &kplayer;. They are described in the
+sections about playing <link linkend="playing">local files</link> and
+<link linkend="playing-urls">remote addresses</link>.</para></listitem>
+
+</itemizedlist>
+
+</sect1>
+
+<sect1 id="playing">
+<title>Playing multimedia</title>
+
+<para>&kplayer; can play multimedia from many different sources. In addition to
+<link linkend="playing-files">local files</link>, it can play
+<link linkend="playing-urls">remote network addresses</link> or
+<acronym>URL</acronym>s, various devices like
+<link linkend="playing-devices">disks and cards</link>, and many other sources
+like <link linkend="playing-slaves">network locations and compressed
+files</link> using &kde; feature known as <acronym>I/O</acronym> Slaves.</para>
+
+<sect2 id="playing-files">
+<title>Local files</title>
+
+<para>Use any of the following ways to start playing local files from your
+hard drive or any other device mounted as a directory on your system.</para>
+
+<itemizedlist>
+
+<listitem><para>When &kplayer; is running, select
+<menuchoice><guimenu>Library</guimenu><guisubmenu>Go</guisubmenu>
+<guimenuitem>Home Directory</guimenuitem></menuchoice>. &kplayer; will open your
+home directory in the <link linkend="parts-library"><interface>multimedia
+library</interface></link> and list any multimedia files you have in it. Then
+you can select the file or files you want to play or look for multimedia files
+in other directories.</para></listitem>
+
+<listitem><para>The <interface>multimedia library</interface> allows you to
+organize your multimedia collection for easier access. For example, once you
+create some playlists, playing one of them becomes as easy as selecting
+<menuchoice><guimenu>File</guimenu><guisubmenu>Play List</guisubmenu>
+</menuchoice> and then selecting the playlist name from the
+submenu.</para></listitem>
+
+<listitem><para>If your file does not show up in the library, select
+<menuchoice><guimenu>File</guimenu><guimenuitem>Play...</guimenuitem></menuchoice>,
+or click the <guibutton>Play</guibutton> button on the main toolbar.
+The standard <guilabel>Play files</guilabel>
+dialog will appear, letting you choose a local file or several files. After
+you click the <guibutton>Open</guibutton> button or press &Enter;, &kplayer;
+will put your selection on the current playlist and start playing
+it.</para></listitem>
+
+<listitem><para>&kplayer; is associated with all media file types it can play.
+If a type has more than one program associated to it, you need to move &kplayer;
+to the top of the list on the <guilabel>File Associations</guilabel> page in the
+&konqueror; configuration dialog. Then you can simply execute a media file in
+&konqueror; File Manager with the <mousebutton>left</mousebutton> mouse button,
+and it will open &kplayer; if it is not yet running and start playing the
+file.</para></listitem>
+
+<listitem><para><mousebutton>Right</mousebutton> click context menu in
+&konqueror; File Manager will show the <guimenuitem>Play</guimenuitem> command
+when a multimedia file or files are selected. Selecting the command will open
+&kplayer;, put all the selected files on the current playlist and play them.
+You can also <mousebutton>right</mousebutton> click a directory and play all
+multimedia files contained in it and in all of its
+subdirectories.</para></listitem>
+
+<listitem><para>You can also drag files and directories from &konqueror; File
+Manager and drop them on the &kplayer; window. &kplayer; will then put them on
+the current playlist and start playing them.</para></listitem>
+
+<listitem><para>In a terminal program like &konsole; type</para>
+
+<para><userinput><command>kplayer</command>
+<filename><replaceable>filename</replaceable></filename></userinput></para>
+
+<para>where <filename><replaceable>filename</replaceable></filename> can be an
+absolute or relative path to the file or directory you want to play, or just the
+name if the file or directory is in the current directory. You can give multiple
+file and directory names separated with spaces. After you press &Enter;,
+&kplayer; will start if it is not already running, add the files and directories
+to the current playlist and start playing them.</para></listitem>
+
+</itemizedlist>
+
+</sect2>
+
+<sect2 id="playing-urls">
+<title>Remote URLs</title>
+
+<para>Use any of the following ways to start playing a remote file or stream
+with a remote <acronym>URL</acronym> using a network protocol like
+<acronym>HTTP</acronym>, <acronym>FTP</acronym>, Samba, <acronym>MMS</acronym>,
+<acronym>RTSP</acronym>, <acronym>PNM</acronym>, etc.</para>
+
+<itemizedlist>
+
+<listitem><para>Once &kplayer; starts, select
+<menuchoice><guimenu>File</guimenu><guimenuitem>Play
+URL...</guimenuitem></menuchoice>, or click the <guibutton>Play URL</guibutton>
+button on the main toolbar. The standard <guilabel>Play URL</guilabel> dialog
+will appear, letting you type or paste in a remote <acronym>URL</acronym>.
+After you click the <guibutton>Open</guibutton> button or press &Enter;,
+&kplayer; will start playing the <acronym>URL</acronym> you
+entered.</para></listitem>
+
+<listitem><para>&kplayer; is associated with all media types it can play.
+If a type has more than one program associated to it, you need to move &kplayer;
+to the top of the list on the <guilabel>File Associations</guilabel> page in the
+&konqueror; configuration dialog. Then you can simply
+<mousebutton>left</mousebutton> click a link to a media file or stream of that
+type in &konqueror; Web Browser, and it will open &kplayer; if it is not yet
+running, put the link on the <link linkend="parts-toolbar-playlist">current
+playlist</link> and start playing it.</para></listitem>
+
+<listitem><para>Sometimes a web page will have a media object embedded in
+it. If &kplayer; is at the top of the list of programs associated with the
+media type of the object, when you open the page in &konqueror; Web Browser
+it will embed &kplayer; into the web page and start playing the media. However,
+it is recommended that you <mousebutton>right</mousebutton> click the media
+object and choose <guimenuitem>Start &kplayer;</guimenuitem> so that the full
+&kplayer; opens up and starts playing the media. This will give you a better
+interface and more options than an embedded &kplayer;.</para></listitem>
+
+<listitem><para>Just like with <link linkend="playing-files">local files</link>,
+you can start &kplayer; from a terminal program like &konsole; with the
+<acronym>URL</acronym> you want to play. This is useful for example if you
+copied the <acronym>URL</acronym> to the clipboard in a text editor. In the
+terminal program type</para>
+
+<para><userinput><command>kplayer</command>
+<filename><replaceable>mediaurl</replaceable></filename></userinput></para>
+
+<para>where <filename><replaceable>mediaurl</replaceable></filename> can be any
+of the many <acronym>URL</acronym> types &kplayer; supports. You have to give
+the full <acronym>URL</acronym>, and if it has spaces or other special
+characters in it, you need to enclose the <acronym>URL</acronym> in single
+quotes so your shell does not try to interpret them. You can give multiple
+<acronym>URL</acronym>s separated with spaces. After you press &Enter;,
+&kplayer; will start if it is not already running, put the
+<acronym>URL</acronym>s on the <link linkend="parts-toolbar-playlist">current
+playlist</link> and start playing them.</para></listitem>
+
+<listitem><para>And of course you can keep your favorite multimedia links in the
+<link linkend="parts-library">multimedia library</link> and include them on your
+playlists. Then you can play a playlist by choosing its name from the
+<menuchoice><guimenu>File</guimenu><guisubmenu>Play
+List</guisubmenu></menuchoice> submenu.</para></listitem>
+
+</itemizedlist>
+
+</sect2>
+
+<sect2 id="playing-devices">
+<title>Disk and tuner devices</title>
+
+<para>&kplayer; finds any disk and tuner devices you have on your computer
+and shows them on the <link linkend="submenu-device"><guimenu>File</guimenu>
+menu</link> and in the <interface>Devices</interface> section of the <link
+linkend="parts-library">multimedia library</link>.</para>
+
+<para>When you insert a disk into a <acronym>DVD</acronym> or
+<acronym>CD</acronym> device, &kplayer; finds the titles or tracks on the disk
+and shows them on the <link linkend="submenu-device">device submenu</link> under
+the <guimenu>File</guimenu> menu as well as in the <interface>multimedia
+library</interface>.</para>
+
+<para>To play the whole disk:</para>
+
+<itemizedlist>
+
+<listitem><para>Select <menuchoice><guimenuitem>Play
+Disk</guimenuitem></menuchoice> from the device submenu under the
+<guimenu>File</guimenu> menu, or</para></listitem>
+
+<listitem><para><mousebutton>Right</mousebutton> click the device node in the
+<interface>Devices</interface> section of the <interface>multimedia
+library</interface> and select
+<menuchoice><guimenuitem>Play</guimenuitem></menuchoice>, or</para></listitem>
+
+<listitem><para><mousebutton>Left</mousebutton> click the disk icon when it
+shows in the <interface>Devices</interface> applet in the &kde; task bar and
+select <menuchoice><guimenuitem>Play</guimenuitem></menuchoice> from the
+menu, or</para></listitem>
+
+<listitem><para><mousebutton>Right</mousebutton> click the disk icon when it
+shows on the desktop and select
+<menuchoice><guimenuitem>Play</guimenuitem></menuchoice> from the
+menu.</para></listitem>
+
+</itemizedlist>
+
+<para>To play a title or track:</para>
+
+<itemizedlist>
+
+<listitem><para>Select the title or track from the device submenu under the
+<guimenu>File</guimenu> menu, or</para></listitem>
+
+<listitem><para>Open the device node in the <interface>Devices</interface>
+section of the <interface>multimedia library</interface> and execute the title
+or track with the <mousebutton>left</mousebutton> mouse button or
+<mousebutton>right</mousebutton> click it and select
+<menuchoice><guimenuitem>Play</guimenuitem></menuchoice>.</para></listitem>
+
+</itemizedlist>
+
+<para>For tuner devices like <acronym>TV</acronym> or <acronym>DVB</acronym>
+&kplayer; shows the available channels on the device submenu under the
+<guimenu>File</guimenu> menu as well as under the device node in the
+<interface>Devices</interface> section of the <interface>multimedia
+library</interface>.</para>
+
+<para>To play a channel:</para>
+
+<itemizedlist>
+
+<listitem><para>Select the channel from the device submenu under the
+<guimenu>File</guimenu> menu, or</para></listitem>
+
+<listitem><para>Open the device node in the <interface>Devices</interface>
+section of the <interface>multimedia library</interface> and execute the channel
+with the <mousebutton>left</mousebutton> mouse button or
+<mousebutton>right</mousebutton> click it and select
+<menuchoice><guimenuitem>Play</guimenuitem></menuchoice>.</para></listitem>
+
+</itemizedlist>
+
+</sect2>
+
+<sect2 id="playing-slaves">
+<title>&kde; I/O slaves: fish, sftp, webdav, tar, zip, audiocd, etc.</title>
+
+<para>&kde; has a great way to access all kinds of data through a system known
+as <acronym>I/O</acronym> Slaves. They are little programs that let you
+represent many different sources of data as <acronym>URL</acronym> like
+addresses, and open them in &kde; programs like &konqueror; and &kplayer;.
+For example you can access a network host over <acronym>SSH</acronym> with
+a <acronym>URL</acronym> like
+<filename>fish:/<replaceable>host/path</replaceable></filename>, or a zip file
+with a <acronym>URL</acronym> like
+<filename>zip:/<replaceable>home/cooldude/my.zip</replaceable></filename>.</para>
+
+<para>So you paste a <acronym>URL</acronym> like that in &konqueror; address
+bar, hit &Enter; and see the data source as if it was a usual file or a
+directory with files and subdirectories in it. If one of those files happens
+to be a multimedia file like an MP3 file for example, you can execute it with
+the <mousebutton>left</mousebutton> mouse button so that &kplayer; opens up and
+starts playing the file, just like with plain local files. As usual, for this to
+work &kplayer; needs to be the top program for that file type on the
+<guilabel>File Associations</guilabel> page in &konqueror; or
+&kcontrolcenter;.</para>
+
+<para>Those same <acronym>URL</acronym>s will work in the <guilabel>Play
+files</guilabel> dialog that you get when you select
+<menuchoice><guimenu>File</guimenu><guimenuitem>Play...</guimenuitem></menuchoice>,
+or click the <guibutton>Play</guibutton> button in &kplayer;. Or if you have the
+full <acronym>URL</acronym> to the media file itself, like
+<filename>fish:/<replaceable>host/path/song.mp3</replaceable></filename> or
+<filename>zip:/<replaceable>home/cooldude/my.zip/subdir/song.mp3</replaceable></filename>,
+you can paste it into the <guilabel>Play URL</guilabel> dialog that you get by
+selecting <menuchoice><guimenu>File</guimenu><guimenuitem>Play
+URL...</guimenuitem></menuchoice> or clicking the <guibutton>Play URL</guibutton>
+button in &kplayer;.</para>
+
+<para>Just like with <link linkend="playing-files">local files</link> and
+<link linkend="playing-urls">remote addresses</link>, you can start &kplayer;
+from a terminal program like &konsole; with the <acronym>URL</acronym> you want
+to play. This is useful for example if you copied the <acronym>URL</acronym> to
+the clipboard in a text editor. In the terminal program type</para>
+
+<para><userinput><command>kplayer</command>
+<filename><replaceable>mediaurl</replaceable></filename></userinput></para>
+
+<para>where <filename><replaceable>mediaurl</replaceable></filename> can be any
+of the many <acronym>URL</acronym> types &kplayer; supports. You have to give
+the full <acronym>URL</acronym>, and if it has spaces or other special
+characters in it, you need to enclose the <acronym>URL</acronym> in single
+quotes so your shell does not try to interpret them. You can give multiple
+<acronym>URL</acronym>s separated with spaces. After you press &Enter;,
+&kplayer; will start if it is not already running, add the
+<acronym>URL</acronym>s to the playlist and start playing them.</para>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="parts">
+<title>Parts of &kplayer;</title>
+
+<para>Here is a brief look at the main parts of &kplayer; window:</para>
+
+<mediaobject>
+<imageobject><imagedata format="PNG" fileref="dvd-bear.png"/></imageobject>
+<textobject>
+<phrase>A screenshot of &kplayer;</phrase>
+</textobject>
+</mediaobject>
+
+<para>&kplayer; lets you choose what parts of it you want to be visible
+and position them exactly where you want. You can use the
+<link linkend="menu-settings"><guimenu>Settings</guimenu></link> menu to choose
+whether to show or hide the <link linkend="parts-menu-bar">menu bar</link>,
+<link linkend="parts-toolbar-main">toolbars</link>,
+the <link linkend="parts-library">multimedia library</link>,
+the <link linkend="parts-message-log">message log</link>
+and the <link linkend="parts-status-bar">status bar</link>.
+The <link linkend="parts-title-bar">title bar</link> as well as the window
+borders will be hidden when you choose the <guimenuitem>Full
+Screen</guimenuitem> option from the <guimenu>View</guimenu> menu.</para>
+
+<sect2 id="parts-title-bar">
+<title>Title bar</title>
+
+<para><interface>Title bar</interface> is the strip across the top of &kplayer;
+window, and operates in the same way as for other &kde; applications.
+<mousebutton>Right</mousebutton> click the central portion to bring up the
+<link linkend="popup-title-bar">title bar popup menu</link>.</para>
+
+</sect2>
+
+<sect2 id="parts-menu-bar">
+<title>Menu bar</title>
+
+<para><interface>Menu bar</interface> is the strip containing names of drop-down
+menus. <mousebutton>Left</mousebutton> click a name to alternately show and hide
+that menu, or use <keycombo action="simul">&Alt;<keycap>the underlined
+letter</keycap></keycombo> in the name as a hot key, for example
+<keycombo action="simul">&Alt;<keycap>F</keycap></keycombo> to show the
+<guimenu>File</guimenu> menu. The various menus are described in the <link 
+linkend="menubar">Menu bar</link> section of this document.</para>
+
+</sect2>
+
+<sect2 id="parts-toolbar-main">
+<title>Main toolbar</title>
+
+<para><interface>Main toolbar</interface> contains buttons for commonly used
+operations. <mousebutton>Left</mousebutton> clicking an icon will activate
+the corresponding action. If you have enabled tooltips in the &kcontrolcenter;
+<menuchoice><guimenu>Appearance &amp; Themes</guimenu>
+<guisubmenu>Style</guisubmenu></menuchoice> dialog, a brief description of what
+that icon does will appear when you hover the mouse pointer over it. Some of the
+main toolbar buttons will pop up slider controls when clicked. The sliders let
+you change various player controls: sound volume, video contrast, brightness,
+hue and saturation. The video controls will only be available for video
+files. See the <link linkend="toolbar-main">Toolbars</link> section of this
+manual for a full description of the buttons and their actions.</para>
+
+</sect2>
+
+<sect2 id="parts-toolbar-playlist">
+<title>Playlist toolbar</title>
+
+<para><interface>Playlist toolbar</interface> shows the multimedia title
+currently loaded or being played, offers commands to go to the next or previous
+items on the playlist, and also lets you see the entire playlist that consists
+of items that are currently being played or have been played recently. If you
+select a different item from the list, &kplayer; will load and start playing it.
+The toolbar also contains options to loop and shuffle the playlist.
+See the <link linkend="toolbar-playlist">Playlist toolbar</link> section of the
+<link linkend="commands">Command reference</link> chapter of this manual for a
+full description of the buttons and their actions.</para>
+
+</sect2>
+
+<sect2 id="parts-video-area">
+<title>Video area</title>
+
+<para><interface>Video area</interface> is the central part of &kplayer;.
+When playing a file that has video, it will display the video and optionally
+subtitles. Normally it will be hidden when playing an audio only file.
+<mousebutton>Right</mousebutton> clicking the video area brings up the
+<link linkend="popup-main">general popup menu</link>.</para>
+
+</sect2>
+
+<sect2 id="parts-toolbar-slider">
+<title>Slider toolbars</title>
+
+<para><interface>Slider toolbars</interface> contain a slider and one or more
+related buttons. The <link linkend="toolbar-progress">progress and seeking
+toolbar</link> is shown when the time length of a media file is known. It
+displays the playback progress and also allows seeking, that is, moving the
+playback point back and forth within the file. To seek to a specific position,
+drag the slider thumb to that position with the &LMB;, or simply click at that
+position with the &MMB;. To move forward or backward in steps,
+<mousebutton>left</mousebutton> click the slider to the left or right of the
+thumb, or click the <guibutton>Forward</guibutton> and
+<guibutton>Backward</guibutton> buttons.</para>
+
+<para>Other <interface>slider toolbars</interface> show sliders for volume,
+contrast, brightness, hue and saturation. These are the same sliders you get
+from the pop-up slider buttons on the <link linkend="parts-toolbar-main">main
+toolbar</link>, but they will not disappear when you click elsewhere. The
+sliders show the current setting and allow you to change it. You can get these
+toolbars using options on the
+<link linkend="menu-settings"><guimenu>Settings</guimenu> menu</link>.</para>
+
+</sect2>
+
+<sect2 id="parts-status-bar">
+<title>Status bar</title>
+
+<para><interface>Status bar</interface> runs across the bottom of the &kplayer;
+window and shows general information about the player status and progress.</para>
+
+<para>If an error occurs during playback, the left portion of the status bar
+will show the word <guilabel>Error</guilabel>, and then you can
+<mousebutton>left</mousebutton> click it to show the
+<link linkend="parts-message-log">message log</link> and see the error
+messages.</para>
+
+<para>The middle portion displays the current player state, whether it is
+<guilabel>Idle</guilabel>, <guilabel>Running</guilabel>,
+<guilabel>Playing</guilabel> or <guilabel>Paused</guilabel>. The right portion
+displays the current playback time, as well as the total time if it is
+known.</para>
+
+</sect2>
+
+<sect2 id="parts-library">
+<title>Multimedia library</title>
+
+<mediaobject>
+<imageobject><imagedata format="PNG" fileref="multimedia-library.png"/></imageobject>
+<textobject>
+<phrase>A screenshot of the multimedia library</phrase>
+</textobject>
+</mediaobject>
+
+<para><interface>Multimedia library</interface> allows you to easily access the
+multimedia available to you from your computer. In the <interface>multimedia
+library</interface> window you can browse directories mounted on your system
+for multimedia files, which include all video, audio and playlist files.
+A separate section shows your <acronym>CD</acronym> and <acronym>DVD</acronym>
+drives, disks you insert in them, titles or tracks on those disks, as well as
+tuner devices like <acronym>TV</acronym> or <acronym>DVB</acronym> cards you
+have on your system and channels available on those devices.</para>
+
+<para>Other sections allow you to organize your multimedia files and links
+to Internet media in a multimedia collection, create playlists, and view the
+currently and recently played multimedia. You can use the commands on the <link
+linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the <link
+linkend="popup-library"><mousebutton>right</mousebutton> click menu</link> to
+add entries to the collection and playlists, move them around, and play your
+selection. Additional commands allow you to show or change various information
+about the media and its <link linkend="properties">properties</link>.</para>
+
+<para>For details on the available commands and options see the <link
+linkend="menu-library"><guilabel>Library</guilabel> menu</link> and the <link
+linkend="popup-library">library popup menu</link> sections of this manual.
+For a detailed description of the multimedia library feature see the
+<link linkend="howto-library">Multimedia library micro-HOWTO</link>.</para>
+
+</sect2>
+
+<sect2 id="parts-message-log">
+<title>Message log</title>
+
+<mediaobject>
+<imageobject><imagedata format="PNG" fileref="message-log.png"/></imageobject>
+<textobject>
+<phrase>A screenshot of the message log</phrase>
+</textobject>
+</mediaobject>
+
+<para><interface>Message log</interface> is a window where &kplayer; shows
+messages it receives from &mplayer; and &kde; <acronym>I/O</acronym> Slaves.
+<mousebutton>Right</mousebutton> clicking the message log brings up the <link
+linkend="popup-message-log">message log popup menu</link> that allows you to
+select all messages, copy the current selection or remove all messages.</para>
+
+</sect2>
+
+</sect1>
+
+</chapter>

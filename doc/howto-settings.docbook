@@ -1,0 +1,372 @@
+<sect1 id="howto-settings">
+<title>Advanced configuration</title>
+
+<para>This micro-HOWTO describes some of the more advanced settings available
+in the <link linkend="settings">&kplayer; Settings</link> dialog that you can
+open using the <guimenuitem>Configure &kplayer;</guimenuitem> command on the
+<link linkend="menu-settings"><guimenu>Settings</guimenu> menu</link>.</para>
+
+<sect2 id="howto-settings-general">
+<title><link linkend="settings-general">General</link> settings</title>
+
+<variablelist>
+
+<varlistentry><term><guilabel>Resize main window automatically</guilabel></term>
+<listitem><para>By default &kplayer; resizes the main window automatically
+unless it is maximized or full screen. When &kplayer; loads and starts playing
+a new video, it scales it in increments of 50% of the original video size until
+the video width reaches the <guilabel>Minimum initial video width</guilabel>
+setting. It also automatically resizes the window to maintain the video aspect
+if that option is turned on.</para>
+
+<para>If you would like to avoid automatic resizing and always keep the window
+the size you make it, turn this option off. &kplayer; will then maintain the
+video aspect by constraining the video within the window, as if the window was
+maximized for example. You will also want to turn this option off if you get
+problems coming back from full screen mode, like endless flickering for example.
+But in that case you should also report the bug following instructions in the
+<link linkend="howto-bug-reporting">Reporting bugs
+micro-HOWTO</link>.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Maximum entries on playlist menus</guilabel>,
+<guilabel>Maximum entries on Play Recent menu</guilabel> and
+<guilabel>Maximum Recent entries in the library</guilabel></term>
+<listitem><para>These options control the size of playlist menus, the recent
+menu and the recent list in the
+<link linkend="parts-library"><interface>multimedia library</interface></link>
+respectively. If the limits are exceeded, the menus will show the top items
+up to the limit you provide, and items from the <guilabel>Recent</guilabel>
+section of the library that exceed the limit will be
+removed.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Meta information cache size
+limit</guilabel></term>
+<listitem><para>&kplayer; will remember the
+<link linkend="howto-properties">properties</link> of any files or
+<acronym>URL</acronym>s it has played, even when they are removed from the
+<interface>multimedia library</interface>. It will only start forgetting old
+file properties after a large number of files have been played. This setting
+controls that number, by default it is 10000. This has nothing to do with
+&mplayer; cache, look on the <link linkend="howto-settings-advanced">Advanced
+page</link> for that.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Allow duplicate entries on
+playlists</guilabel></term>
+<listitem><para>By default &kplayer; removes duplicate entries from playlists
+when adding new entries. Turning the option on allows you to have duplicate
+entries on playlists. Duplicate means that the entries' <acronym>URL</acronym>s
+are exactly the same. Note however that different playlist folders can have
+identical entries regardless of this setting.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Show messages if a file fails to
+play</guilabel></term>
+<listitem><para>When an error occurs while trying to play a file, &kplayer;
+shows an <guilabel>Error</guilabel> indicator in the status bar. You can then
+<mousebutton>left</mousebutton> click the indicator to show the
+<link linkend="parts-message-log">message log</link> containing the full output
+from &mplayer; and &kde; <acronym>I/O</acronym> Slaves. When this option is
+turned on, &kplayer; will show the message log automatically whenever an error
+occurs.</para></listitem></varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="howto-settings-controls">
+<title><link linkend="settings-controls">Control</link> settings</title>
+
+<variablelist>
+
+<varlistentry><term><guilabel>Always remember the following settings for
+each file</guilabel></term>
+<listitem><para>&kplayer; 0.5 and later comes with the ability to set a good
+number of different options on a per file or <acronym>URL</acronym> basis. Those
+options are called file properties. The <link linkend="howto-properties">File
+properties micro-HOWTO</link> has more information.</para>
+
+<para>On this page you can choose the properties that will be remembered
+automatically for each file or <acronym>URL</acronym>. By default &kplayer;
+remembers the video aspect ratio, audio delay and subtitle
+delay.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Remember for current file any changes made with
+&Shift;</guilabel></term>
+<listitem><para>Alternatively, you can make &kplayer; remember a setting for
+the current file by holding the &Shift; key while changing that setting. For
+example, if you have a video file that needs too much resources to play
+correctly on your system, you can hold the &Shift; key and choose a frame
+dropping setting from the
+<link linkend="submenu-advanced"><guisubmenu>Advanced</guisubmenu>
+submenu</link> of the <link linkend="menu-player"><guimenu>Player</guimenu>
+menu</link>. &kplayer; will then use that setting for this file only, and will
+continue using the default setting for all other
+files.</para></listitem></varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="howto-settings-progress">
+<title><link linkend="settings-progress">Progress</link> and seeking control
+settings</title>
+
+<variablelist>
+
+<varlistentry><term><guilabel>Seek amount</guilabel></term>
+<listitem><para>This option allows you to choose how much &kplayer; will seek
+forward or backward when you use the seek commands on the
+<link linkend="menu-player"><guimenu>Player</guimenu> menu</link>. You can set
+the amounts in percentages of the video length or in
+seconds.</para></listitem></varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="howto-settings-volume">
+<title><link linkend="settings-volume">Volume</link> and
+<link linkend="settings-contrast">video</link> control settings</title>
+
+<variablelist>
+
+<varlistentry><term><guilabel>Adjustment amount</guilabel></term>
+<listitem><para>This is the amount by which a setting like volume or contrast
+will change when you use commands like <guimenuitem>Increase
+Volume</guimenuitem> or <guimenuitem>Decrease Contrast</guimenuitem> on the
+<link linkend="menu-player"><guimenu>Player</guimenu>
+menu</link>.</para></listitem></varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="howto-settings-audio-video">
+<title><link linkend="settings-audio">Audio</link> and
+<link linkend="settings-video">video</link> settings</title>
+
+<variablelist>
+
+<varlistentry><term><guilabel>Driver</guilabel></term>
+<listitem><para>This option allows you to choose the video or audio output that
+<link linkend="howto-installation-mplayer">&mplayer;</link> will use. The
+recommended outputs are XVideo for video and <acronym>ALSA</acronym> for
+audio.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Device</guilabel></term>
+<listitem><para>For some output types you can also specify the device that
+&mplayer; will use for output. For other output types this sets the output
+subtype instead. For still other output types this setting may not be meaningful
+at all. You can find the details on the <ulink url="man:/mplayer">&mplayer;
+manpage</ulink>.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Codec</guilabel></term>
+<listitem><para>This sets the preferred decoder and codec that &mplayer; should
+use for decoding video or audio. This option is not of much use anymore since
+&kplayer; 0.5 introduced <link linkend="howto-properties">file properties</link>
+and the ability to set the codec for each file or <acronym>URL</acronym>
+individually.</para></listitem></varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="howto-settings-video">
+<title><link linkend="settings-video">Video</link> settings</title>
+
+<variablelist>
+
+<varlistentry><term><guilabel>Scaler</guilabel></term>
+<listitem><para>When using a video output that does not support hardware
+scaling, like X11, this option sets the scaler type to use. Since normally
+you would use XVideo or another video output that supports hardware scaling,
+this option will have no effect. But if you use X11 output or otherwise
+enable software scaler, you can play around with this option to see what
+setting gives you the best results. Bicubic and bicubic spline are supposed
+to give smooth picture in most cases.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Double buffering</guilabel></term>
+<listitem><para>This option is enabled by default. It gives smoother video
+in most cases.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Direct rendering</guilabel></term>
+<listitem><para>This option may give better performance. However, it will
+not work with double buffering, and also causes subtitles to be jerky.
+It is disabled by default.</para></listitem></varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="howto-settings-audio">
+<title><link linkend="settings-audio">Audio</link> settings</title>
+
+<variablelist>
+
+<varlistentry><term><guilabel>Control volume independently of other
+programs</guilabel></term>
+<listitem><para>This option tells &mplayer; to use software volume control,
+which does not affect global volume settings on your system, but may result
+in some distortion of the sound. When this is enabled, the maximum volume
+level is controlled by the <guilabel>Maximum volume</guilabel> setting, which
+is in percent of the normal volume level.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Mixer device</guilabel> and
+<guilabel>Mixer channel</guilabel></term>
+<listitem><para>These options let you choose an <acronym>ALSA</acronym> or
+<acronym>OSS</acronym> device and channel that will be used to control the
+sound volume. These options are not available when the software volume option
+above is enabled.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Delay adjustment amount</guilabel></term>
+<listitem><para>This option and a similar one for subtitles gives the amount by
+which the delay of audio or subtitles relative to video will be changed when
+using the <guimenuitem>Increase Delay</guimenuitem> and <guimenuitem>Decrease
+Delay</guimenuitem> commands on the
+<link linkend="submenu-audio"><guisubmenu>Audio</guisubmenu></link> or
+<link linkend="submenu-subtitles"><guisubmenu>Subtitles</guisubmenu></link>
+submenu of the <guimenu>Player</guimenu> menu or the corresponding keyboard
+shortcuts.</para></listitem></varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="howto-settings-subtitles">
+<title><link linkend="settings-subtitles">Subtitle</link> settings</title>
+
+<variablelist>
+
+<varlistentry><term><guilabel>Font name</guilabel>, <guilabel>Bold</guilabel>,
+<guilabel>Italic</guilabel> and <guilabel>Outline</guilabel></term>
+<listitem><para>These options select the font for subtitle display and determine
+its style and appearance.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Text size</guilabel>
+and <guilabel>Auto scale</guilabel></term>
+<listitem><para>These options determine the size of subtitle text. When
+<guilabel>Auto scale</guilabel> is checked, the size option gives the scale
+factor, otherwise it gives the font size in
+points.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Encoding</guilabel></term>
+<listitem><para>This option selects the default encoding of text in subtitle
+files. You can also specify the encoding of individual subtitle files in the
+<link linkend="properties-subtitles">subtitle properties</link> of the
+corresponding video file.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Auto expand video area to aspect ratio</guilabel></term>
+<listitem><para>This option automatically expands the video area to fit the
+aspect ratio you choose and displays subtitles in the black area below or above
+the video. &kplayer; will only expand the video when playing it with subtitles,
+and only if the video is wider than the aspect ratio you choose.</para>
+
+<para>Normally you should choose the aspect ratio to match your monitor, usually
+<guilabel>4:3</guilabel>. Then, if the video aspect ratio is higher, for example
+16:9, and you play it with subtitles, &kplayer; will expand it to fit the 4:3
+aspect ratio, so that the subtitles appear in the black area below the
+video.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Autoload subtitles</guilabel>
+and <guilabel>Extensions</guilabel></term>
+<listitem><para>These options enable automatic loading of external subtitle
+files from the same directory where the video file is located. &kplayer; will
+use the name of the video file and the specified extensions to look for any
+matching subtitle files and automatically load them. If any files are found,
+one of them will be automatically used to display subtitles, and all of the
+subtitle files will appear on the <guisubmenu>Subtitles</guisubmenu> submenu
+of the <guimenu>Player</guimenu> menu, allowing you to choose another file to
+display.</para></listitem></varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="howto-settings-advanced">
+<title><link linkend="settings-advanced">Advanced</link> settings</title>
+
+<variablelist>
+
+<varlistentry><term><guilabel>Additional command line
+arguments</guilabel></term>
+<listitem><para>In this field you can place additional command line options
+you want to pass to <link linkend="howto-installation-mplayer">&mplayer;</link>.
+For example, to get more informational output in the
+<link linkend="parts-message-log">message log</link>, put the
+<option>-v</option> option in this field. You can add more options for an
+individual file or <acronym>URL</acronym> in its
+<link linkend="howto-properties-advanced">file
+properties</link>.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Preferred demuxer</guilabel></term>
+<listitem><para>This sets the preferred demultiplexer that &mplayer; should
+use for decoding files and streams. You can also choose a demuxer for each
+individual file or stream in its <link linkend="howto-properties-advanced">file
+properties</link>. For example you can choose the <literal>lavf</literal>
+option if the <literal>libavformat</literal> demuxer works better for your
+multimedia than other &mplayer; demuxers.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Frame drop</guilabel></term>
+<listitem><para>If your system is too slow to play your files properly, this
+option will tell &mplayer; to drop some frames. You can also set the frame
+dropping option on a per file or <acronym>URL</acronym> basis. Just hold down
+the &Shift; key when selecting a frame dropping option from the
+<link linkend="submenu-advanced"><guisubmenu>Advanced</guisubmenu>
+submenu</link> of the <link linkend="menu-player"><guimenu>Player</guimenu>
+menu</link>, and &kplayer; will remember it for the current file or
+<acronym>URL</acronym>. If you need frame dropping, try the
+<guilabel>soft</guilabel> option first.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Cache</guilabel></term>
+<listitem><para>This is probably the most tricky of &mplayer; options. It is
+especially important when playing directly from a
+<link linkend="howto-slaves">&kde; <acronym>I/O</acronym> Slave</link>. Although
+most audio files will play fine with only 64 kilobyte cache, such a small cache
+will cause problems with many video files. Also, some slow media types like
+<acronym>DVD</acronym>, <acronym>VCD</acronym>, <acronym>NFS</acronym>, Samba,
+etc. may sometimes require much larger cache like eight megabytes. On the other
+hand, low bitrate media like <link linkend="howto-streams">online radio
+stations</link> may need smaller cache so they start playing more quickly. Also,
+according to &mplayer; crashing message, non-interleaved <acronym>AVI</acronym>
+files may need cache to be turned off. As usual, you can set the
+<guilabel>Cache</guilabel> option for each individual file or
+<acronym>URL</acronym> in its <link linkend="properties-advanced">file
+properties</link>.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Build new index</guilabel></term>
+<listitem><para>If a file does not have an index or has a broken one, so seeking
+is not functional, you can try setting this option to see if it gives an
+improvement. Turning it on usually does not hurt, but the
+<guilabel>force</guilabel> setting should only be set in the
+<link linkend="properties-advanced">properties</link> of an individual file or
+<acronym>URL</acronym>.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Use temporary file for playing from
+KIOSlave</guilabel></term>
+<listitem><para>This option will only have effect when using a
+<link linkend="howto-slaves">&kde; <acronym>I/O</acronym> Slave</link>. By
+default it is turned off, so data is sent to &mplayer; through a named pipe.
+This works most of the time, the only disadvantage being that seeking is not
+possible and the time length will usually be unknown. If playing directly from
+a &kde; <acronym>I/O</acronym> Slave does not work for you, turn this option on.
+Then &kplayer; will download and save the file locally before playing it. This
+will take more time and also take up some disk space temporarily, but it will
+make length detection and seeking possible. This option is also available in
+<link linkend="properties-advanced">file properties</link>, so you can change it
+for individual files and
+<acronym>URL</acronym>s.</para></listitem></varlistentry>
+
+<varlistentry><term><guilabel>Use KIOSlave for HTTP, FTP, SMB</guilabel></term>
+<listitem><para>Those three <acronym>URL</acronym> types can be played either
+directly by &mplayer; or using a <link linkend="howto-slaves">&kde;
+<acronym>I/O</acronym> Slave</link>. All three options are turned off by
+default, so the <acronym>URL</acronym>s are passed to &mplayer; directly. But
+if that does not work for any reason, you will want to turn the corresponding
+option on, so that &kplayer; uses the <acronym>I/O</acronym> Slave. You can also
+set this option in the individual <link linkend="howto-properties-advanced">file
+properties</link>.</para></listitem></varlistentry>
+
+</variablelist>
+
+</sect2>
+
+</sect1>

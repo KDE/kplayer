@@ -1,0 +1,1257 @@
+<chapter id="settings">
+<title>Configuration dialog</title>
+
+<sect1 id="settings-overview">
+<title>Overview</title>
+
+<para>The <guilabel>&kplayer; Settings</guilabel> dialog allows you to control
+most aspects of &kplayer;'s behavior, as well as choose options that are passed
+to &mplayer; and control quality and performance of media playback.</para>
+
+<para>Select <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+&kplayer;...</guimenuitem></menuchoice> to open the dialog box.</para>
+
+<para>The dialog contains several sections which are selected by
+<mousebutton>left</mousebutton> clicking one of the items on the left side of
+the dialog box.</para>
+
+<variablelist>
+
+<varlistentry>
+<term><link linkend="settings-general">General</link> section</term>
+<listitem><para>Contains options that affect general &kplayer;
+behavior.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-controls">Controls</link> section</term>
+<listitem><para>Contains advanced options that control how your choices made
+using various &kplayer; controls are applied and stored.</para>
+
+<variablelist>
+
+<varlistentry>
+<term><link linkend="settings-progress">Progress</link> section</term>
+<listitem><para>Contains options that affect the progress slider control
+and the seeking function.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-volume">Volume</link> section</term>
+<listitem><para>Contains options that affect the volume slider
+control.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-contrast">Contrast</link> section</term>
+<listitem><para>Contains options that affect the contrast slider
+control.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-brightness">Brightness</link> section</term>
+<listitem><para>Contains options that affect the brightness slider
+control.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-hue">Hue</link> section</term>
+<listitem><para>Contains options that affect the hue slider
+control.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-saturation">Saturation</link> section</term>
+<listitem><para>Contains options that affect the saturation slider
+control.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-sliders">Sliders</link> section</term>
+<listitem><para>Contains miscellaneous options that affect all slider
+controls in &kplayer;.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-video">Video</link> section</term>
+<listitem><para>Contains options that control video output.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-audio">Audio</link> section</term>
+<listitem><para>Contains options that control audio output.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-subtitles">Subtitles</link> section</term>
+<listitem><para>Contains options that control subtitle display.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link linkend="settings-advanced">Advanced</link> section</term>
+<listitem><para>Contains various options that affect advanced command line
+parameters passed to &mplayer;, as well as interaction with &kde; I/O
+Slaves.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>The buttons at the bottom of the dialog let you make choices about the
+contents of all sections of the dialog.</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guibutton>OK</guibutton> button</term>
+<listitem><para>Accepts your changes and closes the dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Cancel</guibutton> button</term>
+<listitem><para>Closes the dialog without saving the changes.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Apply</guibutton> button</term>
+<listitem><para>Applies the changes without closing the dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Defaults</guibutton> button</term>
+<listitem><para>Restores all settings to their original, predefined values and
+applies them.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Close</guibutton> button</term>
+<listitem><para>After you choose <guibutton>Apply</guibutton> or
+<guibutton>Defaults</guibutton>, the <guibutton>Cancel</guibutton> button
+changes to <guibutton>Close</guibutton>. Clicking it closes the dialog
+and discards changes you made since the last time changes were
+applied.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Help</guibutton> button</term>
+<listitem><para>Opens this user manual and displays the section that describes
+the currently selected section of the dialog.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<note><para>You can also click the small <guibutton>What's This</guibutton>
+button with a question mark at the top right of the dialog and then click a
+configuration option to get a brief explanation of it.</para></note>
+
+<para>Clicking the rightmost button at the top of the dialog closes the dialog
+discarding any unapplied changes.</para>
+
+</sect1>
+
+<sect1 id="settings-general">
+<title><guilabel>General</guilabel> section</title>
+
+<para>This section contains options that affect general &kplayer;
+behavior.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-general.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Resize main window automatically</guilabel></term>
+
+<listitem><para>By default &kplayer; resizes the main window automatically
+unless it is maximized or full screen. When &kplayer; loads and starts
+playing a new video, it scales it in increments of 50% of the original
+video size until the video width reaches the <guilabel>Minimum initial
+video width</guilabel> setting. It also automatically resizes the window
+to maintain the video aspect if that option is turned on.</para>
+
+<para>If you would like to avoid automatic resizing and always keep the window
+the size you make it, turn this option off. &kplayer; will then maintain the
+video aspect by constraining the video within the window, as if the window was
+maximized for example. You will also want to turn this option off if you get
+problems coming back from full screen mode, like endless flickering for example.
+But in that case you should also report the bug following instructions in
+Reporting bugs HOWTO.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Minimum initial video width</guilabel></term>
+
+<listitem><para>If <guilabel>Resize main window automatically</guilabel>
+option is enabled, when &kplayer; loads and starts playing a new video,
+it scales it in increments of 50% of the original video size until the
+video width in pixels reaches this setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximum entries on playlist menus</guilabel></term>
+
+<listitem><para>This option tells &kplayer; the maximum number of entries to put
+on the <guisubmenu>Play List</guisubmenu> submenu of the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and
+<mousebutton>right</mousebutton> click <link linkend="popup-menus">popup
+menus</link> and on the <guisubmenu>Add to</guisubmenu> submenu of the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> and the
+<link linkend="popup-library">library popup menu</link>. The
+<link linkend="parts-library"><interface>multimedia library</interface></link>
+allows you to create as many playlists as you like, and you can always access
+them in the <guilabel>Playlists</guilabel> section of the library regardless of
+this setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximum entries on Play Recent menu</guilabel></term>
+
+<listitem><para>This option tells &kplayer; the maximum number of entries to put
+on the <guisubmenu>Play Recent</guisubmenu> submenu of the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and
+<mousebutton>right</mousebutton> click <link linkend="popup-menus">popup
+menus</link>. When the number of entries is exceeded, &kplayer; will remove the
+oldest entries from the menu, but depending on the option below you may still
+find them in the <interface>multimedia library</interface>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximum Recent entries in the library</guilabel></term>
+
+<listitem><para>This option tells &kplayer; the maximum number of entries to put
+in the <guilabel>Recent</guilabel> section of the <interface>multimedia
+library</interface>. When the number of entries is exceeded, &kplayer; will
+remove the oldest entries. Note that playing a directory or a selection of files
+and directories creates only one entry in the <guilabel>Recent</guilabel>
+section and on the <guisubmenu>Play Recent</guisubmenu> menu.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Meta information cache size limit</guilabel></term>
+
+<listitem><para>This option gives the maximum number of multimedia items for
+which &kplayer; should store the <link linkend="howto-properties">file
+properties</link>. These items include local files, remote
+<acronym>URL</acronym>s, <acronym>CD</acronym> tracks, <acronym>DVD</acronym>
+titles and tuner device channels. &kplayer; remembers the properties of each
+of those items, and when the total number of items exceeds this setting, it will
+start discarding the properties of the items that have not been played for the
+longest time.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Allow duplicate entries on playlists</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will let you add items
+with identical <acronym>URL</acronym>s to the playlist. When the option is
+turned off and you add new entries to a playlist, &kplayer; will remove any
+existing entries that have the same <acronym>URL</acronym> as one of the new
+entries from the same playlist folder. Also if some of the new entries have
+identical <acronym>URL</acronym>s, it will add only one for each
+<acronym>URL</acronym>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show messages if a file fails to play</guilabel></term>
+
+<listitem><para>This option tells &kplayer; whether to automatically show the
+<link linkend="parts-message-log">message log</link> if &kplayer; encounters an
+error when trying to play a file. If this option is enabled, &kplayer; will show
+the log and scroll to the last messages from the first file with an error, so
+you can see what the error was. If the option is disabled, &kplayer; will
+instead display the word <guilabel>Error</guilabel> in the left portion of the
+<link linkend="parts-status-bar">status bar</link>, and then you can
+<mousebutton>left</mousebutton> click it to show the message
+log.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-controls">
+<title><guilabel>Controls</guilabel> section</title>
+
+<para>This section contains advanced options that control how your choices
+made using various &kplayer; controls are applied and stored. For more
+information on applying options to individual files see the File Properties
+section of this manual.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-controls.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Remember for current file any changes made with
+Shift</guilabel></term>
+
+<listitem><para>If this option is selected, when you adjust one of the
+settings listed below while holding the &Shift; key down, &kplayer; will
+apply the change only to the current file, store it in the file properties,
+and revert to the setting prior to the change before loading another file.
+You will be able to see and modify the stored setting in the File Properties
+dialog. The next time the file is played, the setting stored in its
+properties will again take effect until another file is loaded.</para>
+
+<para>If you make the change without pressing the &Shift; key, and the
+corresponding option below is not selected, the new setting will apply to the
+current file and all files played after it until you change the setting
+again.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Always remember the following settings for each
+file</guilabel></term>
+
+<listitem><para>The following options let you choose what settings &kplayer;
+will automatically remember in the file properties for each individual file.
+By default it stores the video aspect ratio, subtitle delay and audio delay
+separately for each file, and resets the delays for each new file, while other
+settings are preserved when loading new files. Normally you should leave the
+options below at their defaults. Settings for which the corresponding options
+below are not selected can still be easily stored for each file by holding down
+the &Shift; key while changing them, as long as the <guilabel>Remember for
+current file any changes made with Shift</guilabel> option is
+selected.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Display size</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember in the file properties for the currently loaded file the video
+display size you choose by resizing the main KPlayer window or the video
+area. As mentioned above, if this option is not selected, you can still
+make &kplayer; remember the display size by holding down the &Shift; key,
+but for that to work in this case it is important that you start holding
+the &Shift; key before resizing.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Display aspect</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember in the file properties for the currently loaded file the video
+aspect you choose by using commands on <guimenu>View</guimenu>
+menu.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Full screen</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember in the file properties for the currently loaded file the full
+screen option you choose on the <guimenu>View</guimenu>
+menu.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximized</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember the maximized window state in the file properties for the currently
+loaded file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maintain aspect</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember the maintain aspect setting in the file properties for the currently
+loaded file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Volume</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember volume adjustments in the file properties for the currently loaded
+file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Audio delay</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember the audio delay setting in the file properties for the currently
+loaded file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Contrast</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember contrast adjustments in the file properties for the currently
+loaded file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Brightness</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember brightness adjustments in the file properties for the currently
+loaded file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Hue</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember hue adjustments in the file properties for the currently loaded
+file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Saturation</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember saturation adjustments in the file properties for the currently
+loaded file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Subtitle position</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember the subtitle vertical position in the file properties for the
+currently loaded file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Subtitle delay</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember the subtitle delay setting in the file properties for the currently
+loaded file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Frame drop</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will automatically
+remember the frame drop setting in the file properties for the currently
+loaded file.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-progress">
+<title><guilabel>Progress</guilabel> subsection</title>
+
+<para>This section contains options that affect the progress slider control
+and the seeking function.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-progress.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Normal seek amount</guilabel></term>
+
+<listitem><para>This option tells &kplayer; how far to seek (move the
+current playback position) forward or backward when using
+<guimenuitem>Forward</guimenuitem> and <guimenuitem>Backward</guimenuitem>
+commands on <guimenu>Player</guimenu> menu, either in seconds or in
+percents of the time length of the file if it is known.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Fast seek amount</guilabel></term>
+
+<listitem><para>This option tells &kplayer; how far to seek (move the
+current playback position) forward or backward when using
+<guimenuitem>Fast Forward</guimenuitem> and <guimenuitem>Fast
+Backward</guimenuitem> commands on <guimenu>Player</guimenu> menu, either
+in seconds or in percents of the time length of the file if it is
+known.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Distance between slider marks</guilabel></term>
+
+<listitem><para>This option gives the distance between tick marks on the
+progress slider, in percents of the slider length.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-volume">
+<title><guilabel>Volume</guilabel> subsection</title>
+
+<para>This section contains options that affect the volume slider
+control.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-volume.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Minimum</guilabel></term>
+
+<listitem><para>This option gives the lower limit on the sound volume
+setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximum</guilabel></term>
+
+<listitem><para>This option gives the upper limit on the sound volume
+setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Distance between slider marks</guilabel></term>
+
+<listitem><para>This option gives the distance between tick marks on the
+volume slider, in percents of the slider length.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Adjustment amount</guilabel></term>
+
+<listitem><para>This option tells &kplayer; by how much to adjust the
+sound volume when using the <guimenuitem>Increase Volume</guimenuitem>
+and <guimenuitem>Decrease Volume</guimenuitem> commands on the
+<guisubmenu>Audio</guisubmenu> submenu of the <guimenu>Player</guimenu>
+menu or the corresponding keyboard shortcuts.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Reset</guilabel></term>
+
+<listitem><para>This option lets you reset the sound volume to a specific
+setting every time before loading a new file or when starting
+&kplayer;.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-contrast">
+<title><guilabel>Contrast</guilabel> subsection</title>
+
+<para>This section contains options that affect the contrast slider
+control.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-contrast.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Minimum</guilabel></term>
+
+<listitem><para>This option gives the lower limit on the video contrast
+setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximum</guilabel></term>
+
+<listitem><para>This option gives the upper limit on the video contrast
+setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Distance between slider marks</guilabel></term>
+
+<listitem><para>This option gives the distance between tick marks on the
+contrast slider, in percents of the slider length.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Adjustment amount</guilabel></term>
+
+<listitem><para>This option tells &kplayer; by how much to adjust the
+video contrast when using the <guimenuitem>Increase Contrast</guimenuitem>
+and <guimenuitem>Decrease Contrast</guimenuitem> commands on the
+<guisubmenu>Video</guisubmenu> submenu of the <guimenu>Player</guimenu>
+menu or the corresponding keyboard shortcuts.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Reset</guilabel></term>
+
+<listitem><para>This option lets you reset the video contrast to a specific
+setting every time before loading a new file or when starting
+&kplayer;.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-brightness">
+<title><guilabel>Brightness</guilabel> subsection</title>
+
+<para>This section contains options that affect the brightness slider
+control.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-brightness.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Minimum</guilabel></term>
+
+<listitem><para>This option gives the lower limit on the video brightness
+setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximum</guilabel></term>
+
+<listitem><para>This option gives the upper limit on the video brightness
+setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Distance between slider marks</guilabel></term>
+
+<listitem><para>This option gives the distance between tick marks on the
+brightness slider, in percents of the slider length.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Adjustment amount</guilabel></term>
+
+<listitem><para>This option tells &kplayer; by how much to adjust the
+video brightness when using the <guimenuitem>Increase Brightness</guimenuitem>
+and <guimenuitem>Decrease Brightness</guimenuitem> commands on the
+<guisubmenu>Video</guisubmenu> submenu of the <guimenu>Player</guimenu>
+menu or the corresponding keyboard shortcuts.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Reset</guilabel></term>
+
+<listitem><para>This option lets you reset the video brightness to a specific
+setting every time before loading a new file or when starting
+&kplayer;.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-hue">
+<title><guilabel>Hue</guilabel> subsection</title>
+
+<para>This section contains options that affect the hue slider
+control.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-hue.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Minimum</guilabel></term>
+
+<listitem><para>This option gives the lower limit on the video hue
+setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximum</guilabel></term>
+
+<listitem><para>This option gives the upper limit on the video hue
+setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Distance between slider marks</guilabel></term>
+
+<listitem><para>This option gives the distance between tick marks on the
+hue slider, in percents of the slider length.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Adjustment amount</guilabel></term>
+
+<listitem><para>This option tells &kplayer; by how much to adjust the
+video hue when using the <guimenuitem>Increase Hue</guimenuitem>
+and <guimenuitem>Decrease Hue</guimenuitem> commands on the
+<guisubmenu>Video</guisubmenu> submenu of the <guimenu>Player</guimenu>
+menu or the corresponding keyboard shortcuts.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Reset</guilabel></term>
+
+<listitem><para>This option lets you reset the video hue to a specific
+setting every time before loading a new file or when starting
+&kplayer;.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-saturation">
+<title><guilabel>Saturation</guilabel> subsection</title>
+
+<para>This section contains options that affect the saturation slider
+control.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-saturation.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Minimum</guilabel></term>
+
+<listitem><para>This option gives the lower limit on the video saturation
+setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximum</guilabel></term>
+
+<listitem><para>This option gives the upper limit on the video saturation
+setting.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Distance between slider marks</guilabel></term>
+
+<listitem><para>This option gives the distance between tick marks on the
+saturation slider, in percents of the slider length.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Adjustment amount</guilabel></term>
+
+<listitem><para>This option tells &kplayer; by how much to adjust the
+video saturation when using the <guimenuitem>Increase Saturation</guimenuitem>
+and <guimenuitem>Decrease Saturation</guimenuitem> commands on the
+<guisubmenu>Video</guisubmenu> submenu of the <guimenu>Player</guimenu>
+menu or the corresponding keyboard shortcuts.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Reset</guilabel></term>
+
+<listitem><para>This option lets you reset the video saturation to a specific
+setting every time before loading a new file or when starting
+&kplayer;.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-sliders">
+<title><guilabel>Sliders</guilabel> subsection</title>
+
+<para>This section contains miscellaneous options that affect all slider
+controls in &kplayer;.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-sliders.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Minimum slider length</guilabel></term>
+
+<listitem><para>This option gives the minimum length of a slider control.
+It affects all sliders embedded in toolbars.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Preferred slider length</guilabel></term>
+
+<listitem><para>This option gives the preferred length of a slider control.
+It affects both popup sliders and sliders embedded in toolbars.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show tick marks on sliders</guilabel></term>
+
+<listitem><para>If this option is selected, &kplayer; will put tick marks on
+each slider on the <link linkend="toolbars">toolbars</link>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Distance between slider marks</guilabel></term>
+
+<listitem><para>This option gives the distance between tick marks on a slider,
+in percents of the slider length.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-video">
+<title><guilabel>Video</guilabel> section</title>
+
+<para>This section contains options that control video output.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-video.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Driver</guilabel></term>
+
+<listitem><para>This option lists available video outputs and lets you
+choose the one to use for playing video.</para>
+
+<para>Recommended choice depends on the video card you have. If you have a
+Matrox card, try XMGA, for other cards either XVidix (if supported) or XVideo
+provide the best quality. With NVidia drivers you can also try XVMC output.
+If after trying hard you cannot make any of these work, you can use X11
+output as the last resort. Video outputs that open a separate window instead
+of using &kplayer; video area are not recommended.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Device</guilabel></term>
+
+<listitem><para>This option specifies the video device to use for the selected
+video output. Leave it blank to use the default device.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Codec</guilabel></term>
+
+<listitem><para>This option lists the available video codecs and lets you
+choose the one to be used for decoding video. <guilabel>Auto</guilabel> is the
+recommended choice, it lets &mplayer; decide which codec to use automatically.
+If you need to tell &mplayer; to use a particular codec for a particular file
+or stream, set this option in the File Properties.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Scaler</guilabel></term>
+
+<listitem><para>This option specifies the video scaler to be used when doing
+software scaling. Software scaling consumes considerable amount of system
+resources, so unless you have plenty of them and software scaling gives you
+better image quality, you should choose a video output above that uses
+hardware scaling.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Enable double buffering</guilabel></term>
+
+<listitem><para>This option lets you choose whether double buffering should
+be used for video output. This option is recommended, it gives smoother
+display in many cases.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Enable direct rendering</guilabel></term>
+
+<listitem><para>This option lets you choose whether direct rendering should
+be used for video output. This option may give performance improvement, but
+may also cause video display problems, for example when used along with
+double buffering option or when playing with subtitles.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-audio">
+<title><guilabel>Audio</guilabel> section</title>
+
+<para>This section contains options that control audio output.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-audio.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Output driver</guilabel></term>
+
+<listitem><para>This option lists available audio outputs and lets you
+choose the one to use for playing sound.</para>
+
+<para>Recommended choice is <acronym>ALSA</acronym>, or <acronym>OSS</acronym>
+as the last resort if you cannot use <acronym>ALSA</acronym>.
+<acronym>ARTS</acronym>, <acronym>ESD</acronym> and <acronym>SDL</acronym> are
+not recommended. The <guilabel>auto</guilabel> option will let &mplayer; choose
+an audio output according to its own configuration.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Output device</guilabel></term>
+
+<listitem><para>This option specifies the audio device to use for the selected
+audio output. Leave it blank to use the default device.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Control volume independently of other programs</guilabel></term>
+
+<listitem><para>This option tells &mplayer; to use software volume control,
+which does not affect global volume settings on your system, but may result
+in some distortion of the sound.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximum volume</guilabel></term>
+
+<listitem><para>When the software volume option above is turned on, this option
+gives the maximum volume level in percent of the normal level.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Mixer device</guilabel></term>
+
+<listitem><para>When <acronym>ALSA</acronym> or <acronym>OSS</acronym> audio
+output is selected, and the software volume option above is turned off, this
+option specifies the mixer device that should be used to control the sound
+volume. Leave it blank to use the default device.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Mixer channel</guilabel></term>
+
+<listitem><para>When <acronym>ALSA</acronym> or <acronym>OSS</acronym> audio
+output is selected, and the software volume option above is turned off, this
+option specifies the mixer channel that should be used to control the sound
+volume. Leave it blank to use the default channel, normally
+<acronym>PCM</acronym>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Codec</guilabel></term>
+
+<listitem><para>This option lists the available audio codecs and lets you
+choose the one to be used for decoding audio. <guilabel>Auto</guilabel> is the
+recommended choice, it lets &mplayer; decide which codec to use automatically.
+If you need to tell &mplayer; to use a particular codec for a particular file
+or stream, set this option in the File Properties.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Delay adjustment amount</guilabel></term>
+
+<listitem><para>This option tells &kplayer; by how much to adjust the
+audio delay when using the <guimenuitem>Increase Delay</guimenuitem>
+and <guimenuitem>Decrease Delay</guimenuitem> commands on the
+<guisubmenu>Audio</guisubmenu> submenu of the <guimenu>Player</guimenu>
+menu or the corresponding keyboard shortcuts.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-subtitles">
+<title><guilabel>Subtitles</guilabel> section</title>
+
+<para>This section contains options that control subtitle display.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-subtitles.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Font name</guilabel></term>
+
+<listitem><para>This option lets you choose the name of the font that &mplayer;
+should use to display subtitles.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Bold</guilabel></term>
+
+<listitem><para>This option tells &mplayer; to use a bold font to display
+subtitles.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Italic</guilabel></term>
+
+<listitem><para>This option tells &mplayer; to use an italic font to display
+subtitles.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Text size</guilabel></term>
+
+<listitem><para>This option specifies the text size that &mplayer; should use
+to display subtitles. If the <guilabel>Auto scale</guilabel> option below is
+selected, this option gives the scaling factor, otherwise it gives the font
+size in points.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Auto scale</guilabel></term>
+
+<listitem><para>This option indicates whether &mplayer; should scale the font
+according to the size of the video or always use the same font
+size.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Outline</guilabel></term>
+
+<listitem><para>This option specifies the width of the black outline for the
+subtitle font.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Width</guilabel></term>
+
+<listitem><para>This option gives the width of the area for subtitle text in
+percent of the width of the video area.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Position adjustment amount</guilabel></term>
+
+<listitem><para>This option tells &kplayer; how far to move the subtitles, in
+percents of the video height, when using the <guimenuitem>Move Up</guimenuitem>
+and <guimenuitem>Move Down</guimenuitem> commands on the
+<guisubmenu>Subtitles</guisubmenu> submenu of the <guimenu>Player</guimenu>
+menu or the corresponding keyboard shortcuts.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Delay adjustment amount</guilabel></term>
+
+<listitem><para>This option tells &kplayer; by how much to adjust the
+subtitle delay when using the <guimenuitem>Increase Delay</guimenuitem>
+and <guimenuitem>Decrease Delay</guimenuitem> commands on the
+<guisubmenu>Subtitles</guisubmenu> submenu of the <guimenu>Player</guimenu>
+menu or the corresponding keyboard shortcuts.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Encoding</guilabel></term>
+
+<listitem><para>This option specifies the encoding of text in subtitle files.
+For individual subtitle files that use a different encoding you can override
+this setting in the <link linkend="properties-subtitles"><guilabel>File
+Properties</guilabel></link> of the corresponding video file.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Use embedded fonts when available</guilabel></term>
+
+<listitem><para>This option tells &mplayer; to use the embedded fonts to display
+subtitles if a video file contains embedded fonts. For example, the Matroska
+file format allows embedding of fonts.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Display closed caption subtitles</guilabel></term>
+
+<listitem><para>This options tells &mplayer; to display closed caption subtitles
+if the video has them. Closed caption subtitles are found on some
+<acronym>DVD</acronym>s.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Auto expand video area to aspect ratio</guilabel></term>
+
+<listitem><para>This option tells &kplayer; to expand the video area to fit
+the aspect ratio you choose and display subtitles in the black bands below or
+above the video. It is recommended that you choose the aspect ratio to match
+the aspect ratio of your monitor, normally
+<guilabel>4:3</guilabel>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Autoload subtitles</guilabel></term>
+
+<listitem><para>This option tells &kplayer; to automatically load
+subtitle files that have the extensions given in the field below. &kplayer; will
+look for subtitle files in the directory where the video file is, by looking for
+files that have one of the extensions given by the next field and contain the
+name of the video file in their name. Autoloading only works in directories
+mounted on your file system.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Extensions</guilabel></term>
+
+<listitem><para>This option lists the extensions of subtitle files that
+&kplayer; should automatically load and display in the video area. The
+extensions can be separated by commas, semicolons, colons, periods or
+spaces.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-advanced">
+<title><guilabel>Advanced</guilabel> section</title>
+
+<para>This section contains various options that affect advanced command
+line parameters passed to &mplayer;, as well as interaction with &kde;
+I/O Slaves.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="settings-advanced.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Executable path</guilabel></term>
+
+<listitem><para>This option tells &kplayer; where to find the &mplayer;
+executable. It is either an absolute path or a name to look for in the
+current environment path.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Additional command line arguments</guilabel></term>
+
+<listitem><para>This option gives additional options that will be passed
+to &mplayer; on the command line. See the <ulink url="man:/mplayer">&mplayer;
+manpage</ulink> for a complete list of possible options. You can also set this
+option for an individual file or <acronym>URL</acronym> in the
+<link linkend="properties-advanced"><guilabel>File
+Properties</guilabel></link>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Preferred demuxer</guilabel></term>
+
+<listitem><para>This option lists the available demultiplexers and lets you
+choose the one to be used for decoding files and streams.
+<guilabel>Auto</guilabel> is the recommended choice, it lets &mplayer; decide
+which demuxer to use automatically. If you need to tell &mplayer; to use a
+particular demuxer for a particular file or stream, set this option in the
+<link linkend="properties-advanced"><guilabel>File
+Properties</guilabel></link>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Frame drop</guilabel></term>
+
+<listitem><para>If your system is too slow to play a file, &mplayer; can
+drop some frames so playback does not slow down. The <guilabel>none</guilabel>
+option disables frame dropping, <guilabel>soft</guilabel> drops less frames, and
+<guilabel>hard</guilabel> drops more frames and may sometimes break decoding.
+You can also set this option for an individual file or <acronym>URL</acronym> in
+the <link linkend="properties-advanced"><guilabel>File
+Properties</guilabel></link>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Cache</guilabel></term>
+
+<listitem><para>This option lets you choose whether to use cache and set its
+size. The <guilabel>auto</guilabel> option lets &mplayer; choose an optimal
+cache size automatically, <guilabel>none</guilabel> tells &mplayer; to use no
+cache, and <guilabel>set size</guilabel> lets you set a specific size. You can
+also set this option for an individual file or <acronym>URL</acronym> in the
+<link linkend="properties-advanced"><guilabel>File
+Properties</guilabel></link>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Build new index</guilabel></term>
+
+<listitem><para>This option lets you choose whether to build a new index for
+seeking. The <guilabel>yes</guilabel> option builds an index if the file does
+not have it, <guilabel>no</guilabel> tells &mplayer; not to build an index, and
+<guilabel>force</guilabel> tells it to always build an index. You can also
+choose this option for an individual file or <acronym>URL</acronym> in the
+<link linkend="properties-advanced"><guilabel>File
+Properties</guilabel></link>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Use temporary file for playing from KIOSlave</guilabel></term>
+
+<listitem><para>This option lets you choose whether to use a temporary file
+for playing from &kde; I/O Slaves. This option has no effect for URLs passed
+directly to &mplayer;. You can also choose it for individual file or URL in
+File Properties.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Use KIOSlave for</guilabel> <guilabel>HTTP</guilabel></term>
+
+<listitem><para>This option lets you choose whether to use a &kde; I/O Slave
+to play HTTP URLs. You can also choose this option for individual file or
+stream in File Properties.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Use KIOSlave for</guilabel> <guilabel>FTP</guilabel></term>
+
+<listitem><para>This option lets you choose whether to use a &kde; I/O Slave
+to play FTP URLs. You can also choose this option for individual file or
+stream in File Properties.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Use KIOSlave for</guilabel> <guilabel>SMB</guilabel></term>
+
+<listitem><para>This option lets you choose whether to use a &kde; I/O Slave
+to play Samba URLs. You can also choose this option for individual file or
+stream in File Properties.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+</chapter>

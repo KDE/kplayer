@@ -1,0 +1,62 @@
+<sect1 id="howto-full-screen">
+<title>Full screen and maximized window</title>
+
+<sect2 id="howto-full-screen-mode">
+<title>Full screen mode</title>
+
+<para>In the full screen mode the &kplayer; window has no border and no
+<link linkend="parts-title-bar">title bar</link>. By default it will also hide
+all other windows so the <link linkend="parts-video-area">video area</link> will
+cover your entire screen. If you have any &kde; panels, they will also be hidden
+until you return to the normal mode.</para>
+
+<para>To watch a movie in full screen in &kplayer; select <guimenuitem>Full
+Screen</guimenuitem> from the <guimenu>View</guimenu> menu or just hit <keycombo
+action="simul">&Ctrl;<keycap>F</keycap></keycombo>. To go back to normal display
+hit <keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo> again or
+<mousebutton>right</mousebutton> click to open the
+<link linkend="popup-main">popup menu</link> and unselect the <guimenuitem>Full
+Screen</guimenuitem> option. Double clicking the video area also switches
+between full screen and normal size. Pressing &Esc; will stop playback and also
+return to normal display.</para>
+
+<para>The <guisubmenu>Settings</guisubmenu> submenu of the
+<link linkend="popup-main"><mousebutton>right</mousebutton> click menu</link>
+lets you show the <link linkend="parts-menu-bar">menu bar</link>,
+<link linkend="parts-toolbar-main">toolbars</link>,
+<link linkend="parts-library">multimedia library</link>,
+<link linkend="parts-message-log">message log</link> and
+<link linkend="parts-status-bar">status bar</link> in full screen mode.
+&kplayer; will remember your choices and show the same user interface next time
+you go to full screen mode.</para>
+
+</sect2>
+
+<sect2 id="howto-maximized-window">
+<title>Maximized window</title>
+
+<para>A maximized window covers the entire screen area not used by &kde; panels,
+and has a title and borders, as well as all the same user interface as a normal
+window. &kplayer; will not try to resize a maximized window automatically. To
+maximize the &kplayer; window <mousebutton>left</mousebutton> click the
+<guibutton>Maximize</guibutton> button on the right side of the
+<link linkend="parts-title-bar">title bar</link> or right click the middle
+portion of the title bar to get a <link linkend="popup-title-bar">popup
+menu</link> and select the <guimenuitem>Maximize</guimenuitem> command from it.
+To go back to normal window size, click the <guibutton>Restore</guibutton>
+button or select the <guimenuitem>Maximize</guimenuitem> command again.</para>
+
+</sect2>
+
+<sect2 id="howto-full-screen-mouse-wheel">
+<title>Mouse wheel</title>
+
+<para>When the &kplayer; window is full screen or maximized, and the mouse
+pointer is in the video area, rolling the mouse wheel will seek, or move the
+playback point, forward when rolling the wheel up (away from you) or backward
+when rolling it down (towards you). If you hold down the &Ctrl; key on the
+keyboard, seeking will be faster.</para>
+
+</sect2>
+
+</sect1>

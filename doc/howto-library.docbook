@@ -1,0 +1,382 @@
+<sect1 id="howto-library">
+<title>Multimedia library</title>
+
+<sect2 id="howto-library-overview">
+<title>Overview</title>
+
+<para>The
+<link linkend="parts-library"><interface>multimedia library</interface></link>
+is the central place for accessing, storing and organizing all your multimedia
+in &kplayer;. When you first install and run the program, the library is
+initially not shown. Use one of the following ways to show it:</para>
+
+<itemizedlist>
+
+<listitem><para>Select <menuchoice><guimenu>Settings</guimenu><guimenuitem>Show
+Library</guimenuitem></menuchoice> or press
+<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>.</para></listitem>
+
+<listitem><para>Select any of the available choices from the
+<menuchoice><guimenu>Library</guimenu><guisubmenu>Go</guisubmenu></menuchoice>
+submenu.</para></listitem>
+
+<listitem><para><mousebutton>Right</mousebutton> click the playlist drop down
+box on the <link linkend="toolbar-playlist">playlist toolbar</link> and select
+the <guimenuitem>Edit</guimenuitem> command from the
+<link linkend="popup-playlist">popup menu</link>.</para></listitem>
+
+</itemizedlist>
+
+<para>The library consists of several sections that have different purpose.
+You can see and open the sections in the <interface>tree view</interface>
+on the left side of the library window.</para>
+
+<itemizedlist>
+
+<listitem><para><link linkend="howto-library-now-playing"><guilabel>Now
+Playing</guilabel></link> section contains the current playlist, including all
+of its subfolders.</para></listitem>
+
+<listitem><para><link linkend="howto-library-recent"><guilabel>Recent</guilabel></link>
+section contains the most recently played items and playlists.</para></listitem>
+
+<listitem><para><link linkend="howto-library-playlists"><guilabel>Playlists</guilabel></link>
+section stores the playlists that you create and allows you to manage them.</para></listitem>
+
+<listitem><para><link linkend="howto-library-collection"><guilabel>Collection</guilabel></link>
+section contains the multimedia collection and allows you to manage it.</para></listitem>
+
+<listitem><para><link linkend="howto-library-devices"><guilabel>Devices</guilabel></link>
+section contains multimedia devices that are present on your system and the
+multimedia available on them.</para></listitem>
+
+<listitem><para><link linkend="howto-library-directories"><guilabel>Root
+Directory</guilabel></link> section allows you to access multimedia stored
+anywhere on your file system.</para></listitem>
+
+<listitem><para><link linkend="howto-library-directories"><guilabel>Home
+Directory</guilabel></link> section allows you to access multimedia stored in
+your home directory and its subdirectories.</para></listitem>
+
+</itemizedlist>
+
+<para>Selecting a folder in the <interface>tree view</interface> opens its
+contents in the <interface>list view</interface> on the right side of the
+library window. The <interface>list view</interface> shows the name of each
+multimedia item along with an icon depicting the kind of the item. Also, many of
+the items can have additional information displayed in separate columns. Most of
+that information is hidden by default, but you can choose the columns that you
+want to show from the <guisubmenu>Columns</guisubmenu> submenu of the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> and the
+<link linkend="popup-library">library popup menu</link>.</para>
+
+<para>Depending on the items present in the currently displayed folder, the
+available columns may include <guilabel>Length</guilabel>,
+<guilabel>Frequency</guilabel>, <guilabel>Type</guilabel>,
+<guilabel>Demuxer</guilabel>, <guilabel>Video size</guilabel>,
+<guilabel>Video codec</guilabel>, <guilabel>Video bit rate</guilabel>,
+<guilabel>Frame rate</guilabel>, <guilabel>Audio codec</guilabel>,
+<guilabel>Audio bit rate</guilabel>, <guilabel>Sample rate</guilabel>,
+<guilabel>Channels</guilabel>, <guilabel>Track</guilabel>,
+<guilabel>Title</guilabel>, <guilabel>Album</guilabel>,
+<guilabel>Artist</guilabel>, <guilabel>Year</guilabel>,
+<guilabel>Genre</guilabel>, <guilabel>Path</guilabel>,
+<guilabel>External subtitles</guilabel> and other information.
+The <link linkend="configuration-list-view">configuration chapter</link> has
+details on how you can customize the <interface>list view</interface>.</para>
+
+<para>You can edit some of the fields, like <guilabel>Name</guilabel>,
+<guilabel>Track</guilabel>, <guilabel>Title</guilabel>,
+<guilabel>Album</guilabel>, <guilabel>Artist</guilabel>,
+<guilabel>Year</guilabel> and <guilabel>Genre</guilabel>, by choosing the name
+of the field from the <guisubmenu>Edit</guisubmenu> submenu of the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<link linkend="popup-library">library popup menu</link>. To edit the
+<guilabel>Name</guilabel> field, choose the <guimenuitem>Rename</guimenuitem>
+command instead or press the <keycap>F2</keycap> key. Type or paste in the new
+value of the field, and then press &Enter; to apply the changes, or &Tab; or
+<keycombo action="simul">&Shift;&Tab;</keycombo> to apply the changes and edit
+the next or the previous field, or <keycap>Down Arrow</keycap> or <keycap>Up
+Arrow</keycap> to apply the changes and edit the same field of the next or
+previous item that can have that field.</para>
+
+</sect2>
+
+<sect2 id="howto-library-playlist-folders">
+<title>Playlist folders</title>
+
+<para>Folders in the <guilabel>Now Playing</guilabel>,
+<guilabel>Recent</guilabel> and <guilabel>Playlists</guilabel> section are known
+as playlist folders. When you open a playlist folder, the <interface>list
+view</interface> lets you expand its subfolders inside the same view, so that
+you have access to the entire contents of the selected folder. When you open a
+folder in another section, the <interface>list view</interface> will show the
+contents of that folder only, including the subfolders, and to access the
+contents of a subfolder, you can execute or <quote>drill down</quote> to the
+subfolder to open it.</para>
+
+<para>The <interface>multimedia library</interface> allows you to create an
+unlimited number of subfolders in a playlist folder or in a folder in the
+<guilabel>Collection</guilabel> section, and the subfolders can be nested to
+an unlimited number of levels.</para>
+
+</sect2>
+
+<sect2 id="howto-library-ordering-sorting">
+<title>Ordering and sorting</title>
+
+<para>You can arrange the contents of playlist folders in any order, by dragging
+items with the &LMB; and dropping them in a new place, or by using the
+<guimenuitem>Move Up</guimenuitem> and <guimenuitem>Move Down</guimenuitem>
+commands from the <link linkend="menu-library"><guimenu>Library</guimenu>
+menu</link> or the <link linkend="popup-library">library popup
+menu</link>.</para>
+
+<para>Folders in other sections do not have this ability, but they let you sort
+their contents by any column, by <mousebutton>left</mousebutton> clicking the
+column header. To sort items in the reverse order, click the column header
+again. If you click the column header in a playlist folder, the folder and any
+expanded subfolders are likewise sorted by that column, while collapsed folders
+retain the custom order of items if they had it.</para>
+
+<para>The sorting column and direction (ascending or descending) is shared by
+all folders in the library, except playlist folders where you put items in a
+custom order as described above. So if you sort files in a directory by their
+time length, and then go to a folder in the <guilabel>Collection</guilabel>
+section for example, its contents will also be sorted by their time
+length.</para>
+
+<para>Subfolders are always listed before other items in folders that are not
+playlist folders, while in playlist folders subfolders are listed after other
+items unless you change the order manually and arrange the contents differently.
+As a result, when you play a playlist, the contents of a playlist folder will
+be played before the contents of its subfolders, again unless you set a custom
+order of items in that playlist folder.</para>
+
+</sect2>
+
+<sect2 id="howto-library-editing">
+<title>Managing multimedia</title>
+
+<para>If you have some multimedia files on your computer, you can put them into
+the <guilabel>Collection</guilabel> and on the <guilabel>Playlists</guilabel>,
+by dragging files or directories from the <guilabel>Home Directory</guilabel> or
+<guilabel>Root Directory</guilabel> section or from &konqueror; File Manager and
+dropping them into the folder of your choice. Or you can select the files and
+directories in the <interface>multimedia library</interface> and use the
+commands on the <guisubmenu>Add to</guisubmenu> submenus of the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> and the
+<link linkend="popup-library">library popup menu</link>.</para>
+
+<para>Another way of adding multimedia to the library is by using the
+<menuchoice><guisubmenu>Add</guisubmenu>
+<guimenuitem>Files...</guimenuitem></menuchoice> command, which uses the
+standard &kde; file dialog, or the
+<menuchoice><guisubmenu>Add</guisubmenu>
+<guimenuitem>URL...</guimenuitem></menuchoice> command, which lets you paste in
+the path to a local file or directory or the <acronym>URL</acronym> of a remote
+file or stream. Both commands are on the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> and the
+<link linkend="popup-library">library popup menu</link>. You can also drag a
+link from &konqueror; Web Browser and drop it into the library.</para>
+
+<para>There are four commands that put multimedia on the current playlist that
+is shown in the <guilabel>Now Playing</guilabel> section of the library and in
+the playlist drop down box on the <link
+linkend="parts-toolbar-playlist">playlist toolbar</link>. Again, all of them are
+on the <link linkend="menu-library"><guimenu>Library</guimenu> menu</link> and
+the <link linkend="popup-library">library popup menu</link>.</para>
+
+<itemizedlist>
+
+<listitem><para><guimenuitem>Play</guimenuitem> command clears the current
+playlist, puts the selected items on it and starts playing
+them.</para></listitem>
+
+<listitem><para><guimenuitem>Play Next</guimenuitem> command clears the current
+playlist, puts the selected items on it, and if &kplayer; is playing something,
+plays the new items after the currently playing item finishes
+playing.</para></listitem>
+
+<listitem><para><guimenuitem>Queue</guimenuitem> command adds the selected items
+to the end of the current playlist.</para></listitem>
+
+<listitem><para><guimenuitem>Queue Next</guimenuitem> command adds the selected
+items to the end of the current playlist, and makes them next items in the
+playing queue. If &kplayer; is playing something, it will play the new items
+after the currently playing item finishes playing, else it will play them when
+you choose <menuchoice><guimenu>Player</guimenu><guimenuitem>Next</guimenuitem>
+</menuchoice> or click the <guibutton>Next</guibutton> on the playlist
+toolbar.</para></listitem>
+
+</itemizedlist>
+
+<para>The <guilabel>Play</guilabel>, <guilabel>Play next</guilabel>,
+<guilabel>Queue</guilabel>, <guilabel>Queue next</guilabel>,
+<guilabel>Add to collection</guilabel>, <guilabel>Add to playlists</guilabel>
+and <guilabel>Add to new playlist</guilabel> commands are also available in
+&konqueror; File Manager. Select the files and directories you want to add to
+the <interface>multimedia library</interface>, <mousebutton>right</mousebutton>
+click to open the popup menu and select an action from the menu or from the
+<guilabel>Actions</guilabel> submenu.</para>
+
+<para>When you drag and drop items and folders within the same section,
+&kplayer; will move them to the new location. If you want to copy them instead,
+hold the &Ctrl; key while dragging and dropping. To move multimedia to another
+section instead of copying it, hold the &Shift; key while dragging and dropping.
+To remove items and folders from the library, select them and choose the
+<guimenuitem>Remove</guimenuitem> command from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<link linkend="popup-library">library popup menu</link> or press the
+<keycap>Delete</keycap> key. This will only work in collection and playlist
+folders, since &kplayer; never deletes multimedia files or directories from your
+file system.</para>
+
+</sect2>
+
+<sect2 id="howto-library-linked-folders">
+<title>Linked folders</title>
+
+<para>Adding a directory to a collection or playlist folder in the
+<interface>multimedia library</interface> creates a subfolder that is linked to
+that directory, so that when you put new multimedia into the directory or any of
+its subdirectories, it will show up in the folder or the corresponding subfolder
+automatically, or if you remove some files from the directory, &kplayer; will
+remove them from the library as well. Similarly, when you put a collection
+folder on a playlist, the new playlist folder is linked to the collection
+folder, and when you play a playlist, the new folders in the <guilabel>Now
+Playing</guilabel> and <guilabel>Recent</guilabel> sections are linked to the
+playlist folder.</para>
+
+<para>For example, if you take a directory full of <acronym>MP3</acronym> files
+and add it to the <guilabel>Collection</guilabel> section of the
+<interface>multimedia library</interface>, then take the collection folder and
+put it on a playlist, then play the playlist, and then go back and put some more
+<acronym>MP3</acronym>s into the directory, &kplayer; will see them and
+automatically add them to the collection, the playlist and the current playlist,
+and play them along with the other <acronym>MP3</acronym>s.</para>
+
+<para>If you play a playlist and then change the order of items in a folder in
+that playlist, the order of items on the current playlist will also change. The
+new order will be reflected in the <guilabel>Now Playing</guilabel> section and
+in the playlist drop down box on the playlist toolbar.</para>
+
+<para>To open the origin folder of a linked folder, select the linked folder in
+the <interface>multimedia library</interface> and choose
+<menuchoice><guisubmenu>Go</guisubmenu><guimenuitem>To
+Origin</guimenuitem></menuchoice> from the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
+<link linkend="popup-library">library popup menu</link>.</para>
+
+<para>When you add more items or remove existing items to a linked folder, it
+will break the link, and the folder will no longer be updated when there are
+changes in the origin folder. The folder icon will change to reflect that. When
+you change the order of items in a folder in the
+<guilabel>Now Playing</guilabel> section that is linked to another folder in
+the <guilabel>Playlists</guilabel> section, the order of items in the two
+folders will be different, but the current playlist will still get updated
+items from the playlist folder.</para>
+
+<para>To copy the folder contents instead of creating a link, hold the &Ctrl;
+key while dragging and dropping the folder into the new location. However, the
+copy process may take a while if the folder contains a lot of multimedia, and of
+course the new folder will not be updated when the original one changes, so
+this is not recommended.</para>
+
+</sect2>
+
+<sect2 id="howto-library-now-playing">
+<title>Now Playing section</title>
+
+<para>This section contains the current playlist as a tree of folders and
+multimedia items in them. Any changes you make here are going to be reflected
+in the playlist drop down box on the <link linkend="toolbar-playlist">playlist
+toolbar</link>, which displays the current playlist as a flat list of
+multimedia items in the actual order they are going to be played or have been
+played.</para>
+
+<para>See the <link linkend="howto-playlist">Playlist micro-HOWTO</link> for
+details about the current playlist in &kplayer;.</para>
+
+</sect2>
+
+<sect2 id="howto-library-recent">
+<title>Recent section</title>
+
+<para>This section contains the recently played multimedia items and playlists.
+If you select several items and tell &kplayer; to play or queue them, they are
+added to this section as one folder. If you only play one item, &kplayer; will
+add it as a single item to this list. The item or folder will also show up on
+the <guisubmenu>Play Recent</guisubmenu> submenu of the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and several
+<mousebutton>right</mousebutton> click <link linkend="popup-menus">popup
+menus</link>.</para>
+
+<para>The <link linkend="configuration-recent">configuration chapter</link>
+describes settings that affect this section.</para>
+
+</sect2>
+
+<sect2 id="howto-library-playlists">
+<title>Playlists section</title>
+
+<para>This is where you create and manage your playlists. The playlists can of
+course have any number of subfolders to any depth. The playlists will show up on
+the <guisubmenu>Play List</guisubmenu> submenu of the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and several
+<link linkend="popup-menus">popup menus</link> and on the
+<guisubmenu>Add to</guisubmenu> submenus of the
+<link linkend="menu-library"><guimenu>Library</guimenu> menu</link> and the
+<link linkend="popup-library">library popup menu</link>.</para>
+
+<para>See the <link linkend="howto-playlist">Playlist micro-HOWTO</link> for
+more information.</para>
+
+</sect2>
+
+<sect2 id="howto-library-collection">
+<title>Collection section</title>
+
+<para>This section is the central place where you can store, access and manage
+your entire multimedia collection, including local files and directories and
+remote <acronym>URL</acronym>s.</para>
+
+</sect2>
+
+<sect2 id="howto-library-devices">
+<title>Devices section</title>
+
+<para>This section shows the disk and tuner devices found on your system and the
+multimedia available on them. &kplayer; automatically finds and adds devices to
+this section, and also automatically detects any disks you insert into your disk
+drives, and displays titles or tracks available on them and channels available
+on the tuner devices. The devices, channels, disks, titles and tracks are also
+available as <link linkend="submenu-device">submenus</link> on the
+<link linkend="menu-file"><guimenu>File</guimenu> menu</link> and several
+<link linkend="popup-menus">popup menus</link> for easy access.</para>
+
+<para>See the <link linkend="howto-devices">Devices micro-HOWTO</link> for a
+detailed description of this &kplayer; feature.</para>
+
+</sect2>
+
+<sect2 id="howto-library-directories">
+<title>Directory sections</title>
+
+<para>These sections let you access multimedia stored on your local file system.
+They only show multimedia files, so if your videos or music don't show up here,
+you need to make sure their media types are set up under either
+<literal>audio</literal> or <literal>video</literal> in the <guilabel>File
+Associations</guilabel> configuration in &kcontrolcenter; or &konqueror;.</para>
+
+<para>&kplayer; never changes or deletes any multimedia files or directories on
+your system, so these sections are mostly useful for finding your multimedia and
+<link linkend="howto-library-editing">putting</link> it in the
+<link linkend="howto-library-collection"><guilabel>Collection</guilabel></link>,
+on <link linkend="howto-library-playlists"><guilabel>Playlists</guilabel></link>
+or on the <link linkend="howto-library-now-playing">current
+playlist</link>.</para>
+
+</sect2>
+
+</sect1>
