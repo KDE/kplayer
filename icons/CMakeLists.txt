@@ -1,8 +1,3 @@
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
-
-########### install files ###############
-
-install( FILES  DESTINATION ${DATA_INSTALL_DIR}/kplayer/icons )
 
 kde4_install_icons(${DATA_INSTALL_DIR}/kplayer/icons)
 
