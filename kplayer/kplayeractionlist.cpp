@@ -52,7 +52,7 @@ void KPlayerActionList::plug (void)
 {
 #ifdef DEBUG_KPLAYER_ACTIONLIST
   kdDebugTime() << "KPlayerActionList::plug\n";
-  kdDebugTime() << " Name   " << name() << "\n";
+  kdDebugTime() << " Name   " << objectName() << "\n";
 #endif
   emit updated (this);
   if ( ! isEmpty() )
@@ -69,7 +69,7 @@ void KPlayerActionList::plug (void)
     {
       QWidget* container = action -> associatedWidgets().value (i);
 #ifdef DEBUG_KPLAYER_ACTIONLIST
-      kdDebugTime() << " Container " << container -> className() << " " << container -> name ("<unnamed>") << "\n";
+      kdDebugTime() << " Container " << container -> metaObject() -> className() << " " << container -> objectName() << "\n";
 #endif
       if ( container -> inherits ("QMenu") )
       {
@@ -91,7 +91,7 @@ void KPlayerActionList::plug (void)
     {
       QWidget* container = action -> associatedWidgets().value (i);
 #ifdef DEBUG_KPLAYER_ACTIONLIST
-      kdDebugTime() << " Container " << container -> className() << " " << container -> name ("<unnamed>") << "\n";
+      kdDebugTime() << " Container " << container -> metaObject() -> className() << " " << container -> objectName() << "\n";
 #endif
       if ( container -> inherits ("QMenu") )
       {
@@ -115,7 +115,7 @@ void KPlayerActionList::unplug (void)
 {
 #ifdef DEBUG_KPLAYER_ACTIONLIST
   kdDebugTime() << "KPlayerActionList::unplug\n";
-  kdDebugTime() << " Name   " << name() << "\n";
+  kdDebugTime() << " Name   " << objectName() << "\n";
 #endif
   if ( ! isEmpty() )
   {
@@ -131,7 +131,7 @@ void KPlayerActionList::unplug (void)
     {
       QWidget* container = action -> associatedWidgets().value (i);
 #ifdef DEBUG_KPLAYER_ACTIONLIST
-      kdDebugTime() << " Container " << container -> className() << " " << container -> name ("<unnamed>") << "\n";
+      kdDebugTime() << " Container " << container -> metaObject() -> className() << " " << container -> objectName() << "\n";
 #endif
       if ( container -> inherits ("QMenu") )
       {
@@ -156,7 +156,7 @@ void KPlayerActionList::unplug (void)
     {
       QWidget* container = action -> associatedWidgets().value (i);
 #ifdef DEBUG_KPLAYER_ACTIONLIST
-      kdDebugTime() << " Container " << container -> className() << " " << container -> name ("<unnamed>") << "\n";
+      kdDebugTime() << " Container " << container -> metaObject() -> className() << " " << container -> objectName() << "\n";
 #endif
       if ( container -> inherits ("QMenu") )
       {
@@ -383,7 +383,7 @@ void KPlayerTrackActionList::addActions (const QMap<int, QString>& ids, int id)
   {
     QString text (languageName (iterator.key(), iterator.value()));
 #ifdef DEBUG_KPLAYER_ACTIONLIST
-    kdDebugTime() << " Stream " << iterator.key() << " " << iterator.data() << " " << text << "\n";
+    kdDebugTime() << " Stream " << iterator.key() << " " << iterator.value() << " " << text << "\n";
 #endif
     KToggleAction* action = new KToggleAction (m_action_group);
     connect (action, SIGNAL (triggered()), SLOT (actionActivated()));

@@ -46,7 +46,7 @@ int KPlayerItemProperties::m_meta_info_timer = 0;
 #ifdef DEBUG
 kdbgstream kdDebugTime (void)
 {
-  return kdbgstream (0, 0) << QTime::currentTime().toString ("hh:mm:ss:zzz ");
+  return qDebug() << QTime::currentTime().toString ("hh:mm:ss:zzz ");
 }
 #endif
 

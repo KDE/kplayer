@@ -160,7 +160,7 @@ void KPlayerNodeActionList::updateActions (void)
 {
 #ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerNodeActionList::updateActions\n";
-  kdDebugTime() << " Name   " << name() << "\n";
+  kdDebugTime() << " Name   " << objectName() << "\n";
 #endif
   QList<QAction*> actlist (actions());
   unplug();
@@ -208,9 +208,9 @@ void KPlayerNodeActionList::actionActivated (void)
 #ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerNodeActionList::actionActivated\n";
   if ( sender() )
-    kdDebugTime() << " Sender " << sender() -> className() << "\n";
+    kdDebugTime() << " Sender " << sender() -> metaObject() -> className() << "\n";
   if ( sender() && sender() -> parent() )
-    kdDebugTime() << " Parent " << sender() -> parent() -> className() << "\n";
+    kdDebugTime() << " Parent " << sender() -> parent() -> metaObject() -> className() << "\n";
 #endif
   if ( sender() && sender() -> parent() && sender() -> parent() -> inherits ("KPlayerNode") )
     emit activated ((KPlayerNode*) sender() -> parent());
@@ -334,9 +334,9 @@ void KPlayerDeviceActionMenu::play (void)
 #ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDeviceActionMenu::play\n";
   if ( sender() )
-    kdDebugTime() << " Sender " << sender() -> className() << "\n";
+    kdDebugTime() << " Sender " << sender() -> metaObject() -> className() << "\n";
   if ( sender() && sender() -> parent() )
-    kdDebugTime() << " Parent " << sender() -> parent() -> className() << " " << sender() -> parent() -> name ("<unnamed>") << "\n";
+    kdDebugTime() << " Parent " << sender() -> parent() -> metaObject() -> className() << " " << sender() -> parent() -> objectName() << "\n";
 #endif
   if ( sender() && sender() -> parent() && sender() -> parent() -> inherits ("KPlayerNode") )
     emit activated ((KPlayerNode*) sender() -> parent());

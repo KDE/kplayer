@@ -19,6 +19,7 @@
 #include <qx11info_x11.h>
 
 #ifdef DEBUG
+#undef Status
 #include <qdatastream.h>
 #include <kdebug.h>
 kdbgstream kdDebugTime (void);

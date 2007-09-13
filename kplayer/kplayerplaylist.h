@@ -128,7 +128,7 @@ public:
 
   /** Returns a pointer to the playlist combobox object. */
   KPlayerPlaylistCombobox* playlist (void)
-    { return (KPlayerPlaylistCombobox*) ((QWidgetAction*) action ("player_list")) -> defaultWidget(); }
+    { return m_playlist; }
 
   /** List of nodes. */
   const KPlayerPlaylistNodeList& nodes (void) const
@@ -270,6 +270,8 @@ protected:
   KActionCollection* m_ac;
   /** Set next node indicator. */
   bool m_set_next;
+  /** Playlist combo box. */
+  KPlayerPlaylistCombobox* m_playlist;
   /** Playlist action list. */
   KPlayerContainerActionList* m_playlists;
   /** Recent action list. */

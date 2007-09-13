@@ -84,9 +84,9 @@ void KPlayerPopupSliderAction::slotActivated (void)
   QWidget* button = defaultWidget();
 #ifdef DEBUG_KPLAYER_SLIDERS
   if ( sender() )
-    kdDebugTime() << "Sender class name: " << sender() -> className() << "\n";
+    kdDebugTime() << "Sender class name: " << sender() -> metaObject() -> className() << "\n";
   if ( defaultWidget() )
-    kdDebugTime() << "Widget class name: " << defaultWidget() -> className() << "\n";
+    kdDebugTime() << "Widget class name: " << defaultWidget() -> metaObject() -> className() << "\n";
 #endif
   /*if ( sender() && sender() -> inherits ("KToolBarButton") )
     button = (QWidget*) sender();
@@ -333,7 +333,7 @@ void KPlayerSlider::mousePressEvent (QMouseEvent* event)
 {
   m_dragging = (event -> buttons() & (Qt::LeftButton | Qt::MidButton)) != 0;
 #ifdef DEBUG_KPLAYER_SLIDERS
-  kdDebugTime() << "Popup slider mouse press " << event -> state() << " -> " << event -> stateAfter() << " -> " << m_dragging << "\n";
+  kdDebugTime() << "Popup slider mouse press " << event -> modifiers() << " -> " << m_dragging << "\n";
 #endif
   QSlider::mousePressEvent (event);
 }
@@ -342,7 +342,7 @@ void KPlayerSlider::mouseReleaseEvent (QMouseEvent* event)
 {
   m_dragging = (event -> buttons() & (Qt::LeftButton | Qt::MidButton)) != 0;
 #ifdef DEBUG_KPLAYER_SLIDERS
-  kdDebugTime() << "Popup slider mouse release " << event -> state() << " -> " << event -> stateAfter() << " -> " << m_dragging << "\n";
+  kdDebugTime() << "Popup slider mouse release " << event -> modifiers() << " -> " << m_dragging << "\n";
 #endif
   QSlider::mouseReleaseEvent (event);
 }
@@ -379,7 +379,7 @@ void KPlayerSlider::wheelEvent (QWheelEvent* event)
 #ifdef DEBUG_KPLAYER_SLIDERS
   kdDebugTime() << "Slider wheel event: delta " << event -> delta() << " offset " << offset << " remainder " << remainder
     << " position " << event -> x() << "x" << event -> y() << " global " << event -> globalX() << "x" << event -> globalY()
-    << " state " << event -> state() << " orientation " << event -> orientation() << " accepted " << event -> isAccepted()
+    << " modifiers " << event -> modifiers() << " orientation " << event -> orientation() << " accepted " << event -> isAccepted()
     << " spontaneous " << event -> spontaneous() << "\n";
 #endif
   if ( offset != 0 )

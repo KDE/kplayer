@@ -95,8 +95,10 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   action -> setStatusTip (i18n("Plays the previous item on the playlist"));
   action -> setWhatsThis (i18n("Previous command starts playing the previous item on the current playlist."));
 
+  m_playlist = new KPlayerPlaylistCombobox;
   QWidgetAction* widget = new QWidgetAction (actionCollection());
-  widget -> setDefaultWidget (new KPlayerPlaylistCombobox);
+  actionCollection() -> addAction ("player_list", widget);
+  widget -> setDefaultWidget (playlist());
   widget -> setText (i18n("Playlist"));
   //widget -> setAutoSized (true);
   //widget -> setShortcutConfigurable (false);
@@ -573,7 +575,7 @@ void KPlayerPlaylist::play (void)
       KUrl url (nextNode() -> metaurl());
 #ifdef DEBUG_KPLAYER_PLAYLIST
       kdDebugTime() << " Meta   " << url.url() << "\n";
-      kdDebugTime() << "        " << url.prettyUrl (0, KUrl::StripFileProtocol) << "\n";
+      kdDebugTime() << "        " << url.pathOrUrl() << "\n";
 #endif
       if ( engine() -> stopped() )
         emit started();

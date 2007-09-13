@@ -492,6 +492,7 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
       || ! args -> isSet ("queue") && ! args -> isSet ("queue-next") && ! args -> isSet ("add-to-new-playlist")
       && ! args -> isSet ("add-to-playlists") && ! args -> isSet ("add-to-collection")) )
     engine() -> clearStoreSections ("kplayer:/nowplaying");
+  KPlayerNode::initialize();
   m_log = new KPlayerLogWindow (actionCollection(), this);
   connect (log(), SIGNAL (windowHidden()), SLOT (logWindowHidden()));
   connect (action ("log_clear"), SIGNAL (activated()), SLOT (fileClearLog()));

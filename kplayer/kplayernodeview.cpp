@@ -138,7 +138,7 @@ void KPlayerPropertiesDevice::typeChanged (int index)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerPropertiesDevice::typeChanged\n";
-  kdDebugTime() << " Type   " << c_type -> text (index) << "\n";
+  kdDebugTime() << " Type   " << c_type -> itemText (index) << "\n";
 #endif
   if ( index == 2 )
   {
@@ -963,7 +963,6 @@ void KPlayerNodeView::startEditing (Q3ListViewItem* item, int column)
   kdDebugTime() << " Before " << before << "\n";
   kdDebugTime() << " After  " << after << "\n";
   kdDebugTime() << " Visible " << visibleWidth() << "\n";
-  kdDebugTime() << " Frame  " << renameLineEdit() -> frame() << "\n";
 #endif
   if ( before + width > visibleWidth() - 50 )
     before = 0;
@@ -3330,7 +3329,6 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
 #endif
   m_ac = ac;
   m_playlist = playlist;
-  KPlayerNode::initialize();
 
   KAction* action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_play", action);

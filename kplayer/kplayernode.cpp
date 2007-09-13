@@ -2638,9 +2638,6 @@ void KPlayerDevicesNode::refreshItem (KFileItem* item)
   kdDebugTime() << " User   " << item -> user() << "\n";
   kdDebugTime() << " Group  " << item -> group() << "\n";
   kdDebugTime() << " Size   " << item -> size() << "\n";
-  kdDebugTime() << " Modification Time " << item -> time (KIO::UDS_MODIFICATION_TIME) << "\n";
-  kdDebugTime() << " Access Time " << item -> time (KIO::UDS_ACCESS_TIME) << "\n";
-  kdDebugTime() << " Creation Time " << item -> time (KIO::UDS_CREATION_TIME) << "\n";
   kdDebugTime() << " Overlays " << item -> overlays() << "\n";
   kdDebugTime() << " Status " << item -> getStatusBarInfo() << "\n";
   kdDebugTime() << " Drops  " << item -> acceptsDrops() << "\n";

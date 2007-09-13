@@ -195,7 +195,7 @@ void KPlayerWidget::wheelEvent (QWheelEvent* event)
 {
 #ifdef DEBUG_KPLAYER_WIDGET
   kdDebugTime() << "Widget wheel event: delta " << event -> delta() << " position " << event -> x() << "x" << event -> y()
-    << " global " << event -> globalX() << "x" << event -> globalY() << " state " << event -> state() << " orientation "
+    << " global " << event -> globalX() << "x" << event -> globalY() << " modifiers " << event -> modifiers() << " orientation "
     << event -> orientation() << " accepted " << event -> isAccepted() << " spontaneous " << event -> spontaneous() << "\n";
 #endif
   QWidget::wheelEvent (event);
@@ -351,7 +351,7 @@ void KPlayerWorkspace::wheelEvent (QWheelEvent* event)
 {
 #ifdef DEBUG_KPLAYER_WORKSPACE
   kdDebugTime() << "Workspace wheel event: delta " << event -> delta() << " position " << event -> x() << "x" << event -> y()
-    << " global " << event -> globalX() << "x" << event -> globalY() << " state " << event -> state() << " orientation "
+    << " global " << event -> globalX() << "x" << event -> globalY() << " modifiers " << event -> modifiers() << " orientation "
     << event -> orientation() << " accepted " << event -> isAccepted() << " spontaneous " << event -> spontaneous() << "\n";
 #endif
   QWidget::wheelEvent (event);

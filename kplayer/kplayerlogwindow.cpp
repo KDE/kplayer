@@ -137,7 +137,8 @@ void KPlayerLogWidget::setError (bool flag)
   {
 #ifdef DEBUG_KPLAYER_LOG
     kdDebugTime() << "Log::stopScrolling\n";
-    kdDebugTime() << "Log " << width() << " " << height() << " " << contentsWidth() << "x" << contentsHeight() << " " << visibleWidth() << "x" << visibleHeight() << " " << contentsX() << ":" << contentsY() << "\n";
+    if ( verticalScrollBar() )
+      kdDebugTime() << "Log " << width() << " " << height() << " " << verticalScrollBar() -> value() << " / " << verticalScrollBar() -> maximum() << "\n";
 #endif
     //scrollToBottom();
     if ( verticalScrollBar() )
@@ -145,7 +146,8 @@ void KPlayerLogWidget::setError (bool flag)
     //scrollBy (0, -1);
     m_location = isVisible() || ! verticalScrollBar() ? 0 : verticalScrollBar() -> value();
 #ifdef DEBUG_KPLAYER_LOG
-    kdDebugTime() << "Log " << width() << " " << height() << " " << contentsWidth() << "x" << contentsHeight() << " " << visibleWidth() << "x" << visibleHeight() << " " << contentsX() << ":" << contentsY() << "\n";
+    if ( verticalScrollBar() )
+      kdDebugTime() << "Log " << width() << " " << height() << " " << verticalScrollBar() -> value() << " / " << verticalScrollBar() -> maximum() << "\n";
 #endif
   }
   m_error = flag;
@@ -156,7 +158,8 @@ void KPlayerLogWidget::showEvent (QShowEvent* event)
   KTextEdit::showEvent (event);
 #ifdef DEBUG_KPLAYER_LOG
   kdDebugTime() << "Log::showEvent\n";
-  kdDebugTime() << "Log " << width() << " " << height() << " " << contentsWidth() << "x" << contentsHeight() << " " << visibleWidth() << "x" << visibleHeight() << " " << contentsX() << ":" << contentsY() << "\n";
+  if ( verticalScrollBar() )
+    kdDebugTime() << "Log " << width() << " " << height() << " " << verticalScrollBar() -> value() << " / " << verticalScrollBar() -> maximum() << "\n";
 #endif
   if ( ! m_error )
   {
@@ -171,7 +174,8 @@ void KPlayerLogWidget::showEvent (QShowEvent* event)
     //setContentsPos (0, m_location);
 #ifdef DEBUG_KPLAYER_LOG
     kdDebugTime() << "Log scrolling to " << m_location << "\n";
-    kdDebugTime() << "Log " << width() << " " << height() << " " << contentsWidth() << "x" << contentsHeight() << " " << visibleWidth() << "x" << visibleHeight() << " " << contentsX() << ":" << contentsY() << "\n";
+    if ( verticalScrollBar() )
+      kdDebugTime() << "Log " << width() << " " << height() << " " << verticalScrollBar() -> value() << " / " << verticalScrollBar() -> maximum() << "\n";
 #endif
     m_location = 0;
   }
@@ -182,12 +186,14 @@ void KPlayerLogWidget::resizeEvent (QResizeEvent* event)
   bool at_bottom = ! verticalScrollBar() || verticalScrollBar() -> value() == verticalScrollBar() -> maximum();
 #ifdef DEBUG_KPLAYER_LOG
   kdDebugTime() << "Log::resizeEvent " << event -> size(). width() << " " << event -> size(). height() << " " << event -> oldSize(). width() << " " << event -> oldSize(). height() << " at_bottom " << at_bottom << "\n";
-  kdDebugTime() << "Log " << width() << " " << height() << " " << contentsWidth() << "x" << contentsHeight() << " " << visibleWidth() << "x" << visibleHeight() << " " << contentsX() << ":" << contentsY() << "\n";
+  if ( verticalScrollBar() )
+    kdDebugTime() << "Log " << width() << " " << height() << " " << verticalScrollBar() -> value() << " / " << verticalScrollBar() -> maximum() << "\n";
 #endif
   KTextEdit::resizeEvent (event);
 #ifdef DEBUG_KPLAYER_LOG
   kdDebugTime() << "                 " << event -> size(). width() << " " << event -> size(). height() << " " << event -> oldSize(). width() << " " << event -> oldSize(). height() << " at_bottom " << at_bottom << "\n";
-  kdDebugTime() << "Log " << width() << " " << height() << " " << contentsWidth() << "x" << contentsHeight() << " " << visibleWidth() << "x" << visibleHeight() << " " << contentsX() << ":" << contentsY() << "\n";
+  if ( verticalScrollBar() )
+    kdDebugTime() << "Log " << width() << " " << height() << " " << verticalScrollBar() -> value() << " / " << verticalScrollBar() -> maximum() << "\n";
 #endif
   if ( at_bottom && verticalScrollBar() && verticalScrollBar() -> value() != verticalScrollBar() -> maximum() )
   {
@@ -195,7 +201,8 @@ void KPlayerLogWidget::resizeEvent (QResizeEvent* event)
     verticalScrollBar() -> setValue (verticalScrollBar() -> maximum());
 #ifdef DEBUG_KPLAYER_LOG
     kdDebugTime() << "Log: scrolling to bottom\n";
-    kdDebugTime() << "Log " << width() << " " << height() << " " << contentsWidth() << "x" << contentsHeight() << " " << visibleWidth() << "x" << visibleHeight() << " " << contentsX() << ":" << contentsY() << "\n";
+    if ( verticalScrollBar() )
+      kdDebugTime() << "Log " << width() << " " << height() << " " << verticalScrollBar() -> value() << " / " << verticalScrollBar() -> maximum() << "\n";
 #endif
   }
 }
