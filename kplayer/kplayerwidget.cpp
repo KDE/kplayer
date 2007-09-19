@@ -15,15 +15,8 @@
 
 #include <kcursor.h>
 #include <klocale.h>
+#include <qevent.h>
 #include <qtimer.h>
-#include <q3whatsthis.h>
-//Added by qt3to4:
-#include <QContextMenuEvent>
-#include <QShowEvent>
-#include <QWheelEvent>
-#include <QResizeEvent>
-#include <QFocusEvent>
-#include <QMouseEvent>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_WIDGET
@@ -69,7 +62,7 @@ KPlayerWidget::KPlayerWidget (QWidget *parent)
   kdDebugTime() << "Creating widget\n";
 #endif
   connect (kPlayerProcess(), SIGNAL (stateChanged (KPlayerProcess::State, KPlayerProcess::State)), SLOT (playerStateChanged (KPlayerProcess::State, KPlayerProcess::State)));
-  Q3WhatsThis::add (this, i18n("Video area is the central part of KPlayer. When playing a file that has video, it will display the video and optionally subtitles. Normally it will be hidden when playing an audio only file."));
+  setWhatsThis (i18n("Video area is the central part of KPlayer. When playing a file that has video, it will display the video and optionally subtitles. Normally it will be hidden when playing an audio only file."));
   setFocusPolicy (Qt::NoFocus);
   //setEnabled (false);
   //setEraseColor (QColor (0, 0, 0));
@@ -245,7 +238,7 @@ KPlayerWorkspace::KPlayerWorkspace (QWidget* parent)
   connect (&m_timer, SIGNAL (timeout()), SLOT (cursorTimeout()));
   connect (kPlayerProcess(), SIGNAL (stateChanged (KPlayerProcess::State, KPlayerProcess::State)), SLOT (playerStateChanged (KPlayerProcess::State, KPlayerProcess::State)));
   connect (kPlayerProcess(), SIGNAL (sizeAvailable()), SLOT (setMouseCursorTracking()));
-  Q3WhatsThis::add (this, i18n("Video area is the central part of KPlayer. When playing a file that has video, it will display the video and optionally subtitles. Normally it will be hidden when playing an audio only file."));
+  setWhatsThis (i18n("Video area is the central part of KPlayer. When playing a file that has video, it will display the video and optionally subtitles. Normally it will be hidden when playing an audio only file."));
   //setEraseColor (QColor (0, 0, 0));
   setMinimumSize (QSize (0, 0));
   setFocusPolicy (Qt::StrongFocus);

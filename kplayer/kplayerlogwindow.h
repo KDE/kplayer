@@ -19,12 +19,6 @@
 #include <kactioncollection.h>
 #include <ktextedit.h>
 #include <qdockwidget.h>
-//Added by qt3to4:
-#include <QResizeEvent>
-#include <Q3PopupMenu>
-#include <QShowEvent>
-#include <QHideEvent>
-#include <QContextMenuEvent>
 
 /**The KPlayer log widget.
   *@author kiriuja
@@ -43,10 +37,10 @@ public:
   void setError (bool);
 
   /** Returns the popup menu. */
-  Q3PopupMenu* popupMenu (void) const
+  QMenu* popupMenu (void) const
     { return m_popup; }
   /** Sets the popup menu. */
-  void setPopupMenu (Q3PopupMenu* menu)
+  void setPopupMenu (QMenu* menu)
     { m_popup = menu; }
 
   /** Returns the action collection. */
@@ -73,7 +67,7 @@ protected:
   /** Action collection. */
   KActionCollection* m_ac;
   /** Popup menu. */
-  Q3PopupMenu* m_popup;
+  QMenu* m_popup;
   /** Error condition flag. */
   bool m_error;
   /** Error location. */
@@ -90,7 +84,7 @@ class KPlayerLogWindow : public QDockWidget
 public: 
   KPlayerLogWindow (KActionCollection* ac, QWidget* parent = 0);
 
-  void initialize (Q3PopupMenu* menu);
+  void initialize (QMenu* menu);
 
   KPlayerLogWidget* logWidget (void)
     { return (KPlayerLogWidget*) widget(); }

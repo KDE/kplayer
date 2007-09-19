@@ -21,18 +21,6 @@
 #include <qdockwidget.h>
 #include <qsplitter.h>
 #include <qvalidator.h>
-//Added by qt3to4:
-#include <QDragLeaveEvent>
-#include <QKeyEvent>
-#include <Q3ValueList>
-#include <QDragEnterEvent>
-#include <QDragMoveEvent>
-#include <QDropEvent>
-#include <QHideEvent>
-#include <Q3PopupMenu>
-#include <QFocusEvent>
-#include <QMouseEvent>
-#include <QEvent>
 
 #include "kplayeractionlist.h"
 #include "kplayernode.h"
@@ -339,7 +327,7 @@ public:
 /** History.
   * @author kiriuja
   */
-typedef Q3ValueList<KPlayerHistoryEntry> KPlayerHistory;
+typedef QList<KPlayerHistoryEntry> KPlayerHistory;
 
 /**History action list.
   *@author kiriuja
@@ -350,17 +338,17 @@ class KPlayerHistoryActionList : public KPlayerActionList
 
 public:
   /** Constructor. */
-  KPlayerHistoryActionList (KPlayerHistory& history, const KPlayerHistory::Iterator& current,
-    const QString& text, const QString& status, const QString& whatsthis, QObject* parent, const QString& name);
+  KPlayerHistoryActionList (KPlayerHistory& history, const QString& text, const QString& status,
+    const QString& whatsthis, QObject* parent, const QString& name);
   /** Destructor. */
   virtual ~KPlayerHistoryActionList();
 
   /** Updates the action list. */
-  void update (void);
+  void update (int current);
 
 signals:
   /** Emitted when the URL is selected. */
-  void activated (const KPlayerHistory::Iterator& iterator);
+  void activated (int index);
 
 protected:
   /** Selects the item with the given index by emitting the activated signal. */
@@ -368,8 +356,8 @@ protected:
 
   /** History. */
   KPlayerHistory& m_history;
-  /** Current history entry. */
-  const KPlayerHistory::Iterator& m_current;
+  /** Index of the bottom entry. */
+  int m_bottom;
 };
 
 /**The node view.
@@ -818,9 +806,6 @@ public:
   /** Returns the history. */
   KPlayerHistory& history (void)
     { return m_history; }
-  /** Returns the current history entry. */
-  const KPlayerHistory::Iterator& currentHistoryEntry (void) const
-    { return m_current; }
 
   /** Adjusts column width. */
   virtual void setOpen (Q3ListViewItem* item, bool open);
@@ -848,7 +833,7 @@ protected slots:
   /** Goes to the next URL in the history. */
   void goForward (void);
   /** Goes to the given URL in the history. */
-  void goToHistory (const KPlayerHistory::Iterator& iterator);
+  void goToHistory (int index);
 
 protected:
   /** Sets up tree view columns. */
@@ -876,8 +861,8 @@ protected:
 
   /** History. */
   KPlayerHistory m_history;
-  /** History iterator. */
-  KPlayerHistory::Iterator m_current;
+  /** Current history entry index. */
+  int m_current;
   /** Navigation indicator. */
   bool m_navigating;
 };
@@ -896,7 +881,7 @@ public:
   virtual ~KPlayerLibrary();
 
   /** Initializes library. */
-  void initialize (Q3PopupMenu* menu);
+  void initialize (QMenu* menu);
   /** Frees up resources. */
   void terminate (void);
 
@@ -908,7 +893,7 @@ public:
     { return m_list; }
 
   /** Returns the popup menu. */
-  Q3PopupMenu* popupMenu (void) const
+  QMenu* popupMenu (void) const
     { return m_popup; }
 
   /** Configuration. */
@@ -983,7 +968,7 @@ protected:
   /** Playlist. */
   KPlayerPlaylist* m_playlist;
   /** Popup menu. */
-  Q3PopupMenu* m_popup;
+  QMenu* m_popup;
   /** Tree view. */
   KPlayerTreeView* m_tree;
   /** List view. */

@@ -22,9 +22,6 @@
 #include "kplayerprocess.h"
 #include "kplayernode.h"
 #include "kplayernodeaction.h"
-//Added by qt3to4:
-#include <QContextMenuEvent>
-#include <Q3PopupMenu>
 
 /**The playlist combobox widget.
   *@author kiriuja
@@ -42,10 +39,10 @@ public:
     { return KPlayerEngine::engine() -> configuration(); }
 
   /** Returns the popup menu. */
-  Q3PopupMenu* popupMenu (void) const
+  QMenu* popupMenu (void) const
     { return m_popup; }
   /** Sets the popup menu. */
-  void setPopupMenu (Q3PopupMenu* menu)
+  void setPopupMenu (QMenu* menu)
     { m_popup = menu; }
 
   /** The size hint. */
@@ -58,7 +55,7 @@ protected:
   virtual void contextMenuEvent (QContextMenuEvent*);
 
   /** Popup menu. */
-  Q3PopupMenu* m_popup;
+  QMenu* m_popup;
 };
 
 /**Playlist class, contains the list of playlist items.
@@ -75,7 +72,7 @@ public:
   virtual ~KPlayerPlaylist();
 
   /** Initializes playlist. */
-  void initialize (Q3PopupMenu* menu);
+  void initialize (QMenu* menu);
   /** Releases referenced nodes. */
   void terminate (void);
 
@@ -148,7 +145,7 @@ public:
 
   /** Returns the next node. */
   KPlayerNode* nextNode (void) const
-    { return m_next.getFirst(); }
+    { return m_next.first(); }
   /** Sets the next nodes. */
   void setNextNodes (const KPlayerNodeList& nodes);
   /** Adds the given nodes to the list of next nodes. */

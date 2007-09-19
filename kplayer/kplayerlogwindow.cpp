@@ -15,15 +15,9 @@
 
 #include <klocale.h>
 #include <qaction.h>
-#define QT3_SUPPORT
-#include <q3popupmenu.h>
-#undef QT3_SUPPORT
+#include <qevent.h>
+#include <qmenu.h>
 #include <qscrollbar.h>
-//Added by qt3to4:
-#include <QResizeEvent>
-#include <QShowEvent>
-#include <QHideEvent>
-#include <QContextMenuEvent>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_LOG
@@ -44,7 +38,7 @@ KPlayerLogWindow::KPlayerLogWindow (KActionCollection* ac, QWidget* parent)
   setWindowTitle (i18n("Messages"));
 }
 
-void KPlayerLogWindow::initialize (Q3PopupMenu* menu)
+void KPlayerLogWindow::initialize (QMenu* menu)
 {
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "Initializing log window\n";
@@ -168,7 +162,6 @@ void KPlayerLogWidget::showEvent (QShowEvent* event)
   }
   else if ( m_location )
   {
-    sync();
     if ( verticalScrollBar() )
       verticalScrollBar() -> setValue (m_location);
     //setContentsPos (0, m_location);

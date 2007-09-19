@@ -79,9 +79,9 @@ public slots:
 
 protected slots:
   /** Processes an amixer output line. */
-  void amixerOutput (KPlayerLineOutputProcess*, char*, int);
+  void amixerOutput (KPlayerLineOutputProcess*, char*);
   /** Finishes refreshing ALSA mixer channel list. */
-  void amixerExited (K3Process*);
+  void amixerFinished (KPlayerLineOutputProcess*);
 
 protected:
   void loadLists (void);
@@ -339,7 +339,7 @@ protected:
   KPlayerSettingsHue* m_hue;
   KPlayerSettingsSaturation* m_saturation;
 
-  QMap<QObject*, QString> m_page_names;
+  QHash<QObject*, QString> m_page_names;
 
 protected slots:
   void apply (void);

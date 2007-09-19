@@ -18,7 +18,7 @@
 
 #include <kdirwatch.h>
 #include <qdir.h>
-#include <q3ptrlist.h>
+#include <qlist.h>
 
 class KPlayerCollectionNode;
 class KPlayerContainerNode;
@@ -96,7 +96,7 @@ protected:
   /** Parent node. */
   KPlayerContainerNode* m_parent;
   /** Parent node iterator. */
-  Q3PtrListIterator<KPlayerNode>* m_iterator;
+  QList<KPlayerNode*>::ConstIterator m_iterator;
   /** Flag stored by start() for next(). */
   bool m_groups;
 

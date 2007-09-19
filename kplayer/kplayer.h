@@ -25,16 +25,6 @@
 #include <kuniqueapplication.h>
 
 #include "kplayerengine.h"
-//Added by qt3to4:
-#include <QContextMenuEvent>
-#include <QMoveEvent>
-#include <QCloseEvent>
-#include <QDropEvent>
-#include <QShowEvent>
-#include <QResizeEvent>
-#include <QFocusEvent>
-#include <QEvent>
-#include <QDragEnterEvent>
 
 class KPlayerActionList;
 class KPlayerLibraryWindow;
@@ -45,7 +35,6 @@ class KPlayerWorkspace;
 class KToggleAction;
 class KUrl;
 class QLabel;
-//class QMenuData;
 
 #define MAIN_TOOLBAR         0
 #define PLAYLIST_TOOLBAR     1
@@ -190,7 +179,7 @@ protected:
   /** Enables or disables submenus of the given menu with the given name. */
   //void enableSubmenu (QMenuData* data, const QString& name, bool enable);
   /** Returns the top level popup menu at the given position. */
-  //Q3PopupMenu* popupMenu (int index);
+  //QMenu* popupMenu (int index);
 
   /** Enables a toolbar.
    * @param index the toolbar number

@@ -19,20 +19,14 @@
 
 #include <fcntl.h>
 #include <klocale.h>
-#include <k3processcontroller.h>
 #include <kstandarddirs.h>
-#include <k3tempfile.h>
 #include <kio/jobuidelegate.h>
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <qregexp.h>
 #include <qsocketnotifier.h>
 #include <qtimer.h>
-//Added by qt3to4:
-#include <Q3CString>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_PROCESS
@@ -71,14 +65,14 @@ static QRegExp re_version ("^MPlayer *0\\.9.* \\(C\\) ");
 static QRegExp re_crash ("^ID_SIGNAL=([0-9]+)$");
 static QRegExp re_paused ("^ID_PAUSED$");
 
-static Q3CString command_quit ("quit\n");
-static Q3CString command_pause ("pause\n");
-static Q3CString command_visibility ("sub_visibility\n");
-static Q3CString command_seek_100 ("seek 100 1\n");
-static Q3CString command_seek_99 ("seek 99 1\n");
-static Q3CString command_seek_95 ("seek 95 1\n");
-static Q3CString command_seek_90 ("seek 90 1\n");
-static Q3CString command_seek_50 ("seek 50 1\n");
+static QByteArray command_quit ("quit\n");
+static QByteArray command_pause ("pause\n");
+static QByteArray command_visibility ("sub_visibility\n");
+static QByteArray command_seek_100 ("seek 100 1\n");
+static QByteArray command_seek_99 ("seek 99 1\n");
+static QByteArray command_seek_95 ("seek 95 1\n");
+static QByteArray command_seek_90 ("seek 90 1\n");
+static QByteArray command_seek_50 ("seek 50 1\n");
 
 KPlayerLineOutputProcess::KPlayerLineOutputProcess (void)
 {
@@ -92,8 +86,10 @@ KPlayerLineOutputProcess::KPlayerLineOutputProcess (void)
 #if 0
   m_merge = false;
 #endif
-  connect (this, SIGNAL (receivedStdout (K3Process*, char*, int)), SLOT (slotReceivedStdout (K3Process*, char*, int)));
-  connect (this, SIGNAL (receivedStderr (K3Process*, char*, int)), SLOT (slotReceivedStderr (K3Process*, char*, int)));
+  connect (this, SIGNAL (readyReadStandardOutput()), SLOT (readStandardOutput()));
+  connect (this, SIGNAL (readyReadStandardError()), SLOT (readStandardError()));
+  connect (this, SIGNAL (finished (int, QProcess::ExitStatus)), SLOT (processHasExited (int, QProcess::ExitStatus)));
+  connect (this, SIGNAL (error (QProcess::ProcessError)), SLOT (processHasErrored (QProcess::ProcessError)));
 }
 
 KPlayerLineOutputProcess::~KPlayerLineOutputProcess()
@@ -101,47 +97,50 @@ KPlayerLineOutputProcess::~KPlayerLineOutputProcess()
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Destroying MPlayer process\n";
 #endif
-  delete [] m_stdout_buffer;
-  delete [] m_stderr_buffer;
+  delete m_stdout_buffer;
+  delete m_stderr_buffer;
 }
 
-void KPlayerLineOutputProcess::processHasExited (int state)
+void KPlayerLineOutputProcess::processHasExited (int exitCode, QProcess::ExitStatus exitStatus)
 {
-  status = state;
-  runs = false;
-  commClose();
   if ( m_stdout_line_length )
-    emit receivedStdoutLine (this, m_stdout_buffer, m_stdout_line_length); // , None
+    emit receivedStdoutLine (this, m_stdout_buffer);
   if ( m_stderr_line_length )
-    emit receivedStderrLine (this, m_stderr_buffer, m_stderr_line_length); // , None
-  if ( run_mode != DontCare )
-    emit processExited (this);
+    emit receivedStderrLine (this, m_stderr_buffer);
+  m_stdout_line_length = m_stderr_line_length = 0;
+  emit processFinished (this);
 }
 
-void KPlayerLineOutputProcess::slotReceivedStdout (K3Process* proc, char* str, int len)
+void KPlayerLineOutputProcess::processHasErrored (QProcess::ProcessError error)
 {
-#ifdef DEBUG_KPLAYER_LINEOUT
-  kdDebugTime() << "StdOut: " << len << " '" << str << "'\n";
-#endif
-  receivedOutput (proc, str, len, m_stdout_buffer, m_stdout_buffer_length, m_stdout_line_length, true);
+  if ( error == QProcess::FailedToStart )
+    emit processFinished (this);
 }
 
-void KPlayerLineOutputProcess::slotReceivedStderr (K3Process* proc, char* str, int len)
+void KPlayerLineOutputProcess::readStandardOutput (void)
+{
+  QByteArray ba (readAllStandardOutput());
+#ifdef DEBUG_KPLAYER_LINEOUT
+  kdDebugTime() << "StdOut: " << ba.length() << " '" << ba.data() << "'\n";
+#endif
+  receivedOutput (ba.data(), ba.length(), m_stdout_buffer, m_stdout_buffer_length, m_stdout_line_length, true);
+}
+
+void KPlayerLineOutputProcess::readStandardError (void)
 {
 #if 0
   if ( m_merge )
     slotReceivedStdout (proc, str, len);
   else
 #endif
-    receivedOutput (proc, str, len, m_stderr_buffer, m_stderr_buffer_length, m_stderr_line_length, false);
+  QByteArray ba (readAllStandardOutput());
+  receivedOutput (ba.data(), ba.length(), m_stderr_buffer, m_stderr_buffer_length, m_stderr_line_length, false);
 }
 
-void KPlayerLineOutputProcess::receivedOutput (K3Process* proc, char* str, int len, char* buf, int blen, int llen, bool bstdout)
+void KPlayerLineOutputProcess::receivedOutput (char* str, int len, char* buf, int blen, int llen, bool bstdout)
 {
   static int avlen = 0;
   static char* av = 0;
-  if ( proc != this )
-    return;
 #ifdef DEBUG_KPLAYER_LINEOUT
   kdDebugTime() << "stdout received length: " << len << "\n";
   kdDebugTime() << llen << "/" << blen << ": " << buf << "\n";
@@ -196,9 +195,9 @@ void KPlayerLineOutputProcess::receivedOutput (K3Process* proc, char* str, int l
       kdDebugTime() << "Sending AV Buffer On Pause: '" << av << "'\n";
 #endif
       if ( bstdout )
-        emit receivedStdoutLine (this, av, strlen (av) - 1);
+        emit receivedStdoutLine (this, av);
       else
-        emit receivedStderrLine (this, av, strlen (av) - 1);
+        emit receivedStderrLine (this, av);
       *av = 0;
     }
     if ( re_a_or_v.indexIn (buf) >= 0 || re_cache_fill.indexIn (buf) >= 0 || re_generating_index.indexIn (buf) >= 0 )
@@ -219,14 +218,9 @@ void KPlayerLineOutputProcess::receivedOutput (K3Process* proc, char* str, int l
 #endif
     }
     else if ( bstdout )
-      emit receivedStdoutLine (this, buf, llen); // , *cr == '\r' ? CR : LF
+      emit receivedStdoutLine (this, buf);
     else
-      emit receivedStderrLine (this, buf, llen); // , *cr == '\r' ? CR : LF
-//  if ( *buf ) // && eol == lf
-//  {
-//    write (STDOUT_FILENO, buf, llen);
-//    write (STDOUT_FILENO, "\n", 1);
-//  }
+      emit receivedStderrLine (this, buf);
 #ifdef DEBUG_KPLAYER_LINEOUT
     kdDebugTime() << "Buffer: '" << buf << "'\n";
 #endif
@@ -244,9 +238,9 @@ void KPlayerLineOutputProcess::receivedOutput (K3Process* proc, char* str, int l
     kdDebugTime() << "Sending AV Buffer: '" << av << "'\n";
 #endif
     if ( bstdout )
-      emit receivedStdoutLine (this, av, strlen (av) - 1);
+      emit receivedStdoutLine (this, av);
     else
-      emit receivedStderrLine (this, av, strlen (av) - 1);
+      emit receivedStderrLine (this, av);
     *av = 0;
   }
 //kdDebugTime() << "normal return\n";
@@ -295,7 +289,6 @@ KPlayerProcess::KPlayerProcess (void)
   m_fifo_timer = 0;
   QString home (QDir::homePath());
   QDir (home).mkdir (".mplayer");
-  m_cache.setAutoDelete (true);
 }
 
 KPlayerProcess::~KPlayerProcess()
@@ -314,7 +307,6 @@ KPlayerProcess::~KPlayerProcess()
   if ( m_temporary_file )
   {
     m_temporary_file -> close();
-    m_temporary_file -> unlink();
     delete m_temporary_file;
   }
   removeDataFifo();
@@ -326,15 +318,13 @@ void KPlayerProcess::transferTemporaryFile (void)
   {
     QFileInfo fi (properties() -> url().fileName());
     QString extension (fi.suffix().toLower());
+    m_temporary_file = new KTemporaryFile;
     if ( ! extension.isEmpty() )
-      extension = "." + extension;
-    m_temporary_file = new K3TempFile (KStandardDirs::locateLocal ("tmp", "kpl"), extension);
+      m_temporary_file -> setSuffix ("." + extension);
+    m_temporary_file -> open();
 #ifdef DEBUG_KPLAYER_PROCESS
     if ( m_temporary_file )
-    {
-      kdDebugTime() << "Temporary file: " << m_temporary_file -> name() << "\n";
-      kdDebugTime() << "Temporary file creation status: " << m_temporary_file -> status() << "\n";
-    }
+      kdDebugTime() << "Temporary file " << m_temporary_file -> handle() << " " << m_temporary_file -> fileName() << "\n";
     kdDebugTime() << "Process: Creating temp job\n";
 #endif
     m_temp_job = KIO::get (properties() -> url(), false, false);
@@ -360,7 +350,6 @@ void KPlayerProcess::load (KUrl)
   if ( m_temporary_file )
   {
     m_temporary_file -> close();
-    m_temporary_file -> unlink();
     delete m_temporary_file;
     m_temporary_file = 0;
   }
@@ -388,21 +377,21 @@ QString KPlayerProcess::positionString (void) const
   return l.isEmpty() ? p : p + " / " + l;
 }
 
-void KPlayerProcess::sendHelperCommand (Q3CString& command)
+void KPlayerProcess::sendHelperCommand (const QByteArray& command)
 {
   if ( ! m_helper )
     return;
-  m_helper -> writeStdin (command, command.length());
+  m_helper -> write (command);
 #ifdef DEBUG_KPLAYER_HELPER
   kdDebugTime() << "helper << " << command;
 #endif
 }
 
-void KPlayerProcess::sendPlayerCommand (Q3CString& command)
+void KPlayerProcess::sendPlayerCommand (const QByteArray& command)
 {
   if ( ! m_player )
     return;
-  m_player -> writeStdin (command, command.length());
+  m_player -> write (command);
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "process << " << command;
 #endif
@@ -441,17 +430,11 @@ void KPlayerProcess::get_info (void)
     *m_helper << "-nocache";
   else if ( properties() -> cache() == 2 )
     *m_helper << "-cache" << QString::number (properties() -> cacheSize());
-  connect (m_helper, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    SLOT (receivedHelperLine (KPlayerLineOutputProcess*, char*, int)));
-  if ( ! run (m_helper) )
-  {
-    delete m_helper;
-    m_helper = 0;
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Could not start helper\n";
-#endif
-    return;
-  }
+  connect (m_helper, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*)),
+    SLOT (receivedHelperLine (KPlayerLineOutputProcess*, char*)));
+  connect (m_helper, SIGNAL (processFinished (KPlayerLineOutputProcess*)),
+    SLOT (helperProcessFinished (KPlayerLineOutputProcess*)));
+  run (m_helper);
 }
 
 void KPlayerProcess::play (void)
@@ -545,11 +528,11 @@ void KPlayerProcess::start (void)
     if ( ! driver.isEmpty() )
       *m_player << "-mixer-channel" << driver;
   }
-  *m_player << "-osdlevel" << Q3CString().setNum (properties() -> osdLevel());
-  *m_player << "-contrast" << Q3CString().setNum (settings() -> contrast());
-  *m_player << "-brightness" << Q3CString().setNum (settings() -> brightness());
-  *m_player << "-hue" << Q3CString().setNum (settings() -> hue());
-  *m_player << "-saturation" << Q3CString().setNum (settings() -> saturation());
+  *m_player << "-osdlevel" << QString::number (properties() -> osdLevel());
+  *m_player << "-contrast" << QString::number (settings() -> contrast());
+  *m_player << "-brightness" << QString::number (settings() -> brightness());
+  *m_player << "-hue" << QString::number (settings() -> hue());
+  *m_player << "-saturation" << QString::number (settings() -> saturation());
   if ( settings() -> frameDrop() == 0 )
     *m_player << "-noframedrop";
   else if ( settings() -> frameDrop() == 1 )
@@ -564,15 +547,15 @@ void KPlayerProcess::start (void)
   else if ( cache == 1 )
     *m_player << "-nocache";
   if ( properties() -> videoScaler() > 0 )
-    *m_player << "-sws" << Q3CString().setNum (properties() -> videoScaler());
+    *m_player << "-sws" << QString::number (properties() -> videoScaler());
   m_audio_delay = settings() -> audioDelay();
   if ( m_audio_delay != 0 )
-    *m_player << "-delay" << Q3CString().setNum (m_audio_delay);
+    *m_player << "-delay" << QString::number (m_audio_delay);
   if ( properties() -> hasVideoID() )
-    *m_player << "-vid" << Q3CString().setNum (properties() -> videoID());
+    *m_player << "-vid" << QString::number (properties() -> videoID());
   m_audio_id = properties() -> audioID();
   if ( m_audio_id > -1 )
-    *m_player << "-aid" << Q3CString().setNum (m_audio_id);
+    *m_player << "-aid" << QString::number (m_audio_id);
   m_subtitles.clear();
   m_vobsub = QString::null;
   m_subtitle_index = properties() -> subtitleIndex();
@@ -606,10 +589,10 @@ void KPlayerProcess::start (void)
   }
   m_subtitle_delay = settings() -> subtitleDelay();
   if ( m_subtitle_delay != 0 )
-    *m_player << "-subdelay" << Q3CString().setNum (m_subtitle_delay);
+    *m_player << "-subdelay" << QString::number (m_subtitle_delay);
   m_subtitle_position = settings() -> subtitlePosition();
   if ( m_subtitle_position != 100 )
-    *m_player << "-subpos" << Q3CString().setNum (m_subtitle_position);
+    *m_player << "-subpos" << QString::number (m_subtitle_position);
   QString font (configuration() -> subtitleFontName());
   if ( configuration() -> subtitleFontBold() )
     font += ":bold";
@@ -652,7 +635,6 @@ void KPlayerProcess::start (void)
     if ( m_temporary_file )
     {
       m_temporary_file -> close();
-      m_temporary_file -> unlink();
       delete m_temporary_file;
       m_temporary_file = 0;
     }
@@ -682,22 +664,14 @@ void KPlayerProcess::start (void)
 #endif
   }
   else
-    m_fifo_name = Q3CString();
-  connect (m_player, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    SLOT (receivedOutputLine (KPlayerLineOutputProcess*, char*, int)));
-  connect (m_player, SIGNAL (receivedStderrLine (KPlayerLineOutputProcess*, char*, int)),
-    SLOT (receivedOutputLine (KPlayerLineOutputProcess*, char*, int)));
-  if ( ! run (m_player) )
-  {
-    delete m_player;
-    m_player = 0;
-    emit messageReceived (i18n("Could not start MPlayer"));
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: Could not start MPlayer\n";
-#endif
-    setState (Idle);
-    return;
-  }
+    m_fifo_name.clear();
+  connect (m_player, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*)),
+    SLOT (receivedOutputLine (KPlayerLineOutputProcess*, char*)));
+  connect (m_player, SIGNAL (receivedStderrLine (KPlayerLineOutputProcess*, char*)),
+    SLOT (receivedOutputLine (KPlayerLineOutputProcess*, char*)));
+  connect (m_player, SIGNAL (processFinished (KPlayerLineOutputProcess*)),
+    SLOT (playerProcessFinished (KPlayerLineOutputProcess*)));
+  run (m_player);
   if ( properties() -> useKioslave() && (! properties() -> useTemporaryFile() || ! m_temporary_file) )
   {
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -738,7 +712,7 @@ void KPlayerProcess::restart (void)
   m_send_seek = true;
 }
 
-bool KPlayerProcess::run (KPlayerLineOutputProcess* player)
+void KPlayerProcess::run (KPlayerLineOutputProcess* player)
 {
   static QRegExp re_space (" +");
 #ifdef DEBUG_KPLAYER_PROCESS
@@ -769,14 +743,13 @@ bool KPlayerProcess::run (KPlayerLineOutputProcess* player)
   else
     *player << "--";
   if ( properties() -> useKioslave() )
-    *player << (properties() -> useTemporaryFile() && m_temporary_file ? QFile::encodeName (m_temporary_file -> name()) : m_fifo_name);
+    *player << (properties() -> useTemporaryFile() && m_temporary_file ? QFile::encodeName (m_temporary_file -> fileName()) : m_fifo_name);
   else
     *player << properties() -> urlString();
-  connect (player, SIGNAL (processExited (K3Process*)), SLOT (playerProcessExited (K3Process*)));
 #if 0
   player -> setMerge (true);
 #endif
-  return player -> start (K3Process::NotifyOnExit, K3Process::All);
+  player -> start();
 }
 
 void KPlayerProcess::pause (void)
@@ -806,39 +779,32 @@ void KPlayerProcess::stop (KPlayerLineOutputProcess** player, bool* quit, bool s
     *quit = true;
     if ( send_quit )
     {
-      if ( (*player) -> isRunning() )
+      if ( (*player) -> state() == KProcess::Running )
       {
 #ifdef DEBUG_KPLAYER_PROCESS
         kdDebugTime() << "Process: MPlayer is running. Waiting...\n";
 #endif
-        K3ProcessController::instance() -> waitForProcessExit (1);
+        (*player) -> waitForFinished (1000);
       }
-      //if ( *player && (*player) -> isRunning() )
-      //  K3ProcessController::instance() -> waitForProcessExit (1);
-      //if ( *player && (*player) -> isRunning() )
-      //  K3ProcessController::instance() -> waitForProcessExit (1);
     }
-    if ( *quit && *player && (*player) -> isRunning() )
+    if ( *quit && *player && (*player) -> state() == KProcess::Running )
     {
 #ifdef DEBUG_KPLAYER_PROCESS
       kdDebugTime() << "Process: Closing MPlayer...\n";
 #endif
-      (*player) -> kill();
-      K3ProcessController::instance() -> waitForProcessExit (1);
-      if ( *quit && *player && (*player) -> isRunning() )
+      (*player) -> terminate();
+      (*player) -> waitForFinished (1000);
+      if ( *quit && *player && (*player) -> state() == KProcess::Running )
       {
 #ifdef DEBUG_KPLAYER_PROCESS
         kdDebugTime() << "Process: Killing MPlayer...\n";
 #endif
-        (*player) -> kill (SIGKILL);
-        K3ProcessController::instance() -> waitForProcessExit (1);
-        if ( *quit && *player && (*player) -> isRunning() )
-        {
+        (*player) -> kill();
+        (*player) -> waitForFinished (1000);
 #ifdef DEBUG_KPLAYER_PROCESS
+        if ( *quit && *player && (*player) -> state() == KProcess::Running )
           kdDebugTime() << "Process: Could not shut down MPlayer\n";
 #endif
-          (*player) -> detach();
-        }
       }
     }
     if ( *quit && *player )
@@ -862,7 +828,6 @@ void KPlayerProcess::stop (void)
     if ( m_temporary_file )
     {
       m_temporary_file -> close();
-      m_temporary_file -> unlink();
       delete m_temporary_file;
       m_temporary_file = 0;
     }
@@ -889,7 +854,6 @@ void KPlayerProcess::kill (void)
     if ( m_temporary_file )
     {
       m_temporary_file -> close();
-      m_temporary_file -> unlink();
       delete m_temporary_file;
       m_temporary_file = 0;
     }
@@ -933,17 +897,17 @@ void KPlayerProcess::absoluteSeek (int seconds)
     else
       seconds --;
   }
-  Q3CString s ("seek ");
+  QByteArray s ("seek ");
   // broken codec workaround
   if ( properties() -> length() >= MIN_VIDEO_LENGTH
     && re_mpeg12.indexIn (properties() -> videoCodecString()) >= 0
     && properties() -> deviceOption().isEmpty() )
   {
     seconds = limit (int (float (seconds) / properties() -> length() * 100 + 0.5), 0, 100);
-    s += Q3CString().setNum (seconds) + " 1\n";
+    s += QByteArray::number (seconds) + " 1\n";
   }
   else
-    s += Q3CString().setNum (seconds) + " 2\n";
+    s += QByteArray::number (seconds) + " 2\n";
   sendPlayerCommand (s);
   m_seek = true;
   m_seek_origin = position();
@@ -957,22 +921,17 @@ void KPlayerProcess::relativeSeek (int seconds)
 {
   if ( ! m_player || m_quit || seconds == 0 )
     return;
-  Q3CString s ("seek ");
+  QByteArray s ("seek ");
   // broken codec workaround
   if ( (seconds > 4 || seconds < -4) && properties() -> length() >= MIN_VIDEO_LENGTH
     && re_mpeg12.indexIn (properties() -> videoCodecString()) >= 0
     && properties() -> deviceOption().isEmpty() )
   {
-    //seconds = limit (int ((m_position + seconds) / properties() -> length() * 100 + 0.5), 0, 100);
-    //s += QCString().setNum (seconds) + " 1\n";
-    //if ( m_send_seek )
-    //  m_absolute_seek += seconds;
-    //else
     absoluteSeek (int (m_position + seconds + 0.5));
     return;
   }
   else
-    s += Q3CString().setNum (seconds) + "\n";
+    s += QByteArray::number (seconds) + "\n";
   sendPlayerCommand (s);
   m_seek = true;
 }
@@ -987,9 +946,7 @@ void KPlayerProcess::volume (int volume)
     return;
   }
   volume = limit (volume, 0, 100);
-  Q3CString s ("volume ");
-  s += Q3CString().setNum (volume) + " 1\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("volume " + QByteArray::number (volume) + " 1\n");
   m_send_volume = false;
 }
 
@@ -1002,9 +959,7 @@ void KPlayerProcess::frameDrop (int frame_drop)
     m_send_frame_drop = true;
     return;
   }
-  Q3CString s ("frame_drop ");
-  s += Q3CString().setNum (frame_drop) + "\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("frame_drop " + QByteArray::number (frame_drop) + "\n");
   m_send_frame_drop = false;
 }
 
@@ -1018,9 +973,7 @@ void KPlayerProcess::contrast (int contrast)
     return;
   }
   contrast = limit (contrast, -100, 100);
-  Q3CString s ("contrast ");
-  s += Q3CString().setNum (contrast) + " 1\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("contrast " + QByteArray::number (contrast) + " 1\n");
   m_send_contrast = false;
 }
 
@@ -1034,9 +987,7 @@ void KPlayerProcess::brightness (int brightness)
     return;
   }
   brightness = limit (brightness, -100, 100);
-  Q3CString s ("brightness ");
-  s += Q3CString().setNum (brightness) + " 1\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("brightness " + QByteArray::number (brightness) + " 1\n");
   m_send_brightness = false;
 }
 
@@ -1050,9 +1001,7 @@ void KPlayerProcess::hue (int hue)
     return;
   }
   hue = limit (hue, -100, 100);
-  Q3CString s ("hue ");
-  s += Q3CString().setNum (hue) + " 1\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("hue " + QByteArray::number (hue) + " 1\n");
   m_send_hue = false;
 }
 
@@ -1066,9 +1015,7 @@ void KPlayerProcess::saturation (int saturation)
     return;
   }
   saturation = limit (saturation, -100, 100);
-  Q3CString s ("saturation ");
-  s += Q3CString().setNum (saturation) + " 1\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("saturation " + QByteArray::number (saturation) + " 1\n");
   m_send_saturation = false;
 }
 
@@ -1089,9 +1036,7 @@ void KPlayerProcess::subtitleMove (int position, bool absolute)
   position += m_send_subtitle_position;
   if ( position == 0 )
     return;
-  Q3CString s ("sub_pos ");
-  s += Q3CString().setNum (position) + "\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("sub_pos " + QByteArray::number (position) + "\n");
   m_send_subtitle_position = 0;
 }
 
@@ -1112,9 +1057,7 @@ void KPlayerProcess::subtitleDelay (float delay, bool absolute)
   delay += m_send_subtitle_delay;
   if ( delay < 0.001 && delay > - 0.001 )
     return;
-  Q3CString s ("sub_delay ");
-  s += Q3CString().setNum (- delay) + "\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("sub_delay " + QByteArray::number (- delay) + "\n");
   m_send_subtitle_delay = 0;
 }
 
@@ -1127,9 +1070,7 @@ void KPlayerProcess::subtitleIndex (int index)
     m_send_subtitle_index = index;
     return;
   }
-  Q3CString s ("sub_select ");
-  s += Q3CString().setNum (index) + "\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("sub_select " + QByteArray::number (index) + "\n");
   m_subtitle_index = index;
   m_send_subtitle_index = -2;
   if ( index == -1 == m_subtitle_visibility )
@@ -1182,9 +1123,7 @@ void KPlayerProcess::subtitles (void)
     m_send_subtitle_load = true;
     return;
   }
-  Q3CString s ("sub_load ");
-  s += '"' + subtitle.toUtf8() + "\"\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("sub_load \"" + subtitle.toUtf8() + "\"\n");
   m_send_subtitle_load = false;
 }
 
@@ -1205,9 +1144,7 @@ void KPlayerProcess::audioDelay (float delay, bool absolute)
   delay += m_send_audio_delay;
   if ( delay < 0.001 && delay > - 0.001 )
     return;
-  Q3CString s ("audio_delay ");
-  s += Q3CString().setNum (- delay) + "\n";
-  sendPlayerCommand (s);
+  sendPlayerCommand ("audio_delay " + QByteArray::number (- delay) + "\n");
   m_send_audio_delay = 0;
 }
 
@@ -1225,9 +1162,7 @@ void KPlayerProcess::audioID (int id)
     QRegExp demuxers (configuration() -> switchAudioDemuxers());
     if ( demuxers.indexIn (properties() -> demuxerString()) >= 0 )
     {
-      Q3CString s ("switch_audio ");
-      s += Q3CString().setNum (id) + "\n";
-      sendPlayerCommand (s);
+      sendPlayerCommand ("switch_audio " + QByteArray::number (id) + "\n");
       m_audio_id = id;
     }
     else
@@ -1247,36 +1182,36 @@ void KPlayerProcess::transferData (KIO::Job* job, const QByteArray& data)
 #ifdef DEBUG_KPLAYER_KIOSLAVE
       kdDebugTime() << "Process: Cache: Creating new chunk, size " << data.size() << "\n";
 #endif
-      m_cache.append (new QByteArray (data.constData(), data.size()));
+      m_cache.append (QByteArray (data.constData(), data.size()));
     }
     else
     {
-      QByteArray* array = m_cache.last();
-      int size = array -> size();
-      array -> resize (size + data.size());
+      QByteArray& array = m_cache.last();
+      int size = array.size();
+      array.resize (size + data.size());
 #ifdef DEBUG_KPLAYER_KIOSLAVE
-      if ( array -> size() != size + data.size() )
-        kdDebugTime() << "Process: Cache: Size mismatch: " << size << " + " << data.size() << " = " << array -> size() << "\n";
+      if ( array.size() != size + data.size() )
+        kdDebugTime() << "Process: Cache: Size mismatch: " << size << " + " << data.size() << " = " << array.size() << "\n";
       else
-        kdDebugTime() << "Process: Cache: Appended to chunk " << m_cache.count() << " size " << size << " + " << data.size() << " = " << array -> size() << "\n";
+        kdDebugTime() << "Process: Cache: Appended to chunk " << m_cache.count() << " size " << size << " + " << data.size() << " = " << array.size() << "\n";
 #endif
-      memcpy (array -> data() + size, data.data(), data.size());
+      memcpy (array.data() + size, data.data(), data.size());
     }
-    if ( m_cache.count() > 1 && ! m_slave_job -> isSuspended() && m_cache.last() -> size() >= m_cache_size )
+    if ( m_cache.count() > 1 && ! m_slave_job -> isSuspended() && m_cache.last().size() >= m_cache_size )
     {
 #ifdef DEBUG_KPLAYER_PROCESS
       kdDebugTime() << "Process: Suspending transfer job\n";
 #endif
       m_slave_job -> suspend();
     }
-    if ( m_cache.count() == 1 && (! m_first_chunk || m_cache.first() -> size() >= m_cache_size) )
+    if ( m_cache.count() == 1 && (! m_first_chunk || m_cache.first().size() >= m_cache_size) )
     {
       if ( m_first_chunk && ! m_quit )
         emit progressChanged (100, CacheFill);
       sendFifoData();
     }
     else if ( m_first_chunk && ! m_quit )
-      emit progressChanged (limit (int ((m_cache.first() -> size() * 100 + m_cache_size / 2) / m_cache_size), 0, 100), CacheFill);
+      emit progressChanged (limit (int ((m_cache.first().size() * 100 + m_cache_size / 2) / m_cache_size), 0, 100), CacheFill);
   }
   else
   {
@@ -1296,7 +1231,7 @@ void KPlayerProcess::transferTempData (KIO::Job* job, const QByteArray& data)
 #ifdef DEBUG_KPLAYER_KIOSLAVE
     int rv =
 #endif
-    m_temporary_file -> file() -> write (data);
+    m_temporary_file -> write (data);
 #ifdef DEBUG_KPLAYER_KIOSLAVE
     kdDebugTime() << "Process: Write call returned " << rv << "\n";
 #endif
@@ -1371,7 +1306,7 @@ void KPlayerProcess::transferDone (KIO::Job* job)
       emit errorDetected();
       error_page = (error_page || m_first_chunk) && ! m_quit;
     }
-    else if ( m_cache.count() == 1 && m_first_chunk && m_cache.first() -> size() < m_cache_size && ! m_quit )
+    else if ( m_cache.count() == 1 && m_first_chunk && m_cache.first().size() < m_cache_size && ! m_quit )
       sendFifoData();
     m_cache_size = 0;
     m_first_chunk = false;
@@ -1435,7 +1370,6 @@ void KPlayerProcess::transferTempDone (KIO::Job* job)
       if ( m_temporary_file )
       {
         m_temporary_file -> close();
-        m_temporary_file -> unlink();
         delete m_temporary_file;
         m_temporary_file = 0;
       }
@@ -1448,7 +1382,6 @@ void KPlayerProcess::transferTempDone (KIO::Job* job)
       if ( m_temporary_file )
       {
         m_temporary_file -> close();
-        m_temporary_file -> unlink();
         delete m_temporary_file;
         m_temporary_file = 0;
       }
@@ -1540,19 +1473,19 @@ void KPlayerProcess::sendFifoData (void)
   }
   if ( m_fifo_handle >= 0 )
   {
-    QByteArray* array = m_cache.first();
-    if ( array && array -> size() > m_fifo_offset )
+    QByteArray& array = m_cache.first();
+    if ( ! m_cache.isEmpty() && array.size() > m_fifo_offset )
     {
 #ifdef DEBUG_KPLAYER_KIOSLAVE
-      kdDebugTime() << "Process: Cache: Writing " << array -> size() << " - " << m_fifo_offset << " bytes to fifo\n";
+      kdDebugTime() << "Process: Cache: Writing " << array.size() << " - " << m_fifo_offset << " bytes to fifo\n";
 #endif
-      int rv = ::write (m_fifo_handle, array -> data() + m_fifo_offset, array -> size() - m_fifo_offset);
+      int rv = ::write (m_fifo_handle, array.data() + m_fifo_offset, array.size() - m_fifo_offset);
       if ( rv > 0 )
       {
 #ifdef DEBUG_KPLAYER_DUMP
         if ( ! s_dump.isOpen() )
           s_dump.open (QIODevice::WriteOnly);
-        s_dump.writeBlock (array -> data() + m_fifo_offset, rv);
+        s_dump.writeBlock (array.data() + m_fifo_offset, rv);
 #endif
         m_fifo_offset += rv;
       }
@@ -1572,13 +1505,13 @@ void KPlayerProcess::playerDataWritten (int fd)
 #ifdef DEBUG_KPLAYER_KIOSLAVE
     kdDebugTime() << "Process: Cache: Data written\n";
 #endif
-    QByteArray* array = m_cache.first();
-    if ( array && array -> size() <= m_fifo_offset )
+    QByteArray& array = m_cache.first();
+    if ( ! m_cache.isEmpty() && array.size() <= m_fifo_offset )
     {
 #ifdef DEBUG_KPLAYER_KIOSLAVE
       kdDebugTime() << "Process: Cache: Wrote " << array -> size() << " byte chunk, offset " << m_fifo_offset << "\n";
 #endif
-      m_cache.remove();
+      m_cache.removeFirst();
       m_fifo_offset = 0;
       m_fifo_notifier -> setEnabled (false);
       if ( m_slave_job && m_slave_job -> isSuspended() )
@@ -1600,78 +1533,91 @@ void KPlayerProcess::playerDataWritten (int fd)
 #endif
 }
 
-void KPlayerProcess::playerProcessExited (K3Process *proc)
+void KPlayerProcess::playerProcessFinished (KPlayerLineOutputProcess* proc)
 {
-  if ( proc == m_player )
-  {
-#ifdef DEBUG_KPLAYER_PROCESS
-    kdDebugTime() << "Process: MPlayer process exited\n";
-#endif
-    delete m_player;
-    m_player = 0;
-    if ( m_success && ! m_seek && m_position > 0 && m_position > properties() -> length() / 40 )
-    {
-      properties() -> setLength (m_max_position);
-      m_info_available = true;
-      emit infoAvailable();
-      properties() -> commit();
-    }
-    m_cache.clear();
-    if ( m_slave_job )
-      m_slave_job -> kill (KJob::EmitResult);
-    removeDataFifo();
-    m_fifo_name = Q3CString();
-    if ( ! m_quit )
-      setState (Idle);
-  }
-  else if ( proc == m_helper )
-  {
-#ifdef DEBUG_KPLAYER_HELPER
-    kdDebugTime() << "MPlayer helper process exited\n";
-#endif
-    delete m_helper;
-    m_helper = 0;
-    if ( m_helper_seek < 500 && m_helper_position >= MIN_VIDEO_LENGTH
-        && m_helper_position > properties() -> length() / 40 )
-      properties() -> setLength (m_helper_position);
-    m_info_available = true;
-    if ( ! m_kill )
-      emit infoAvailable();
-    if ( ! m_size_sent && ! m_kill && m_helper_seek > 0 )
-    {
-      emit sizeAvailable();
-      m_size_sent = true;
-    }
-    if ( ! m_kill && properties() -> url().isValid() )
-      properties() -> commit();
-    /*if ( m_delayed_play && ! m_player )
-    {
-#ifdef DEBUG_KPLAYER_PROCESS
-      kdDebugTime() << "Process: Delayed play...\n";
-#endif
-      play();
-    }*/
-  }
-  else
+  if ( proc != m_player )
   {
     delete proc;
 #ifdef DEBUG_KPLAYER_PROCESS
     kdDebugTime() << "Process: Stray MPlayer process exited\n";
 #endif
+    return;
   }
+  if ( m_player -> error() == QProcess::FailedToStart )
+  {
+    emit messageReceived (i18n("Could not start MPlayer"));
+#ifdef DEBUG_KPLAYER_PROCESS
+    kdDebugTime() << "Process: Could not start MPlayer\n";
+#endif
+  }
+#ifdef DEBUG_KPLAYER_PROCESS
+  else
+    kdDebugTime() << "Process: MPlayer process exited\n";
+#endif
+  delete m_player;
+  m_player = 0;
+  if ( m_success && ! m_seek && m_position > 0 && m_position > properties() -> length() / 40 )
+  {
+    properties() -> setLength (m_max_position);
+    m_info_available = true;
+    emit infoAvailable();
+    properties() -> commit();
+  }
+  m_cache.clear();
+  if ( m_slave_job )
+    m_slave_job -> kill (KJob::EmitResult);
+  removeDataFifo();
+  m_fifo_name.clear();
+  if ( ! m_quit )
+    setState (Idle);
 }
 
-void KPlayerProcess::receivedOutputLine (KPlayerLineOutputProcess* proc, char* str, int len)
+void KPlayerProcess::helperProcessFinished (KPlayerLineOutputProcess* proc)
+{
+  if ( proc != m_helper )
+  {
+    delete proc;
+#ifdef DEBUG_KPLAYER_PROCESS
+    kdDebugTime() << "Process: Stray MPlayer helper process finished\n";
+#endif
+    return;
+  }
+#ifdef DEBUG_KPLAYER_PROCESS
+  if ( m_helper -> error() == QProcess::FailedToStart )
+    kdDebugTime() << "Process: Could not start helper\n";
+  else
+    kdDebugTime() << "MPlayer helper process finished\n";
+#endif
+  delete m_helper;
+  m_helper = 0;
+  if ( m_helper_seek < 500 && m_helper_position >= MIN_VIDEO_LENGTH
+      && m_helper_position > properties() -> length() / 40 )
+    properties() -> setLength (m_helper_position);
+  m_info_available = true;
+  if ( ! m_kill )
+    emit infoAvailable();
+  if ( ! m_size_sent && ! m_kill && m_helper_seek > 0 )
+  {
+    emit sizeAvailable();
+    m_size_sent = true;
+  }
+  if ( ! m_kill && properties() -> url().isValid() )
+    properties() -> commit();
+  /*if ( m_delayed_play && ! m_player )
+  {
+#ifdef DEBUG_KPLAYER_PROCESS
+    kdDebugTime() << "Process: Delayed play...\n";
+#endif
+    play();
+  }*/
+}
+
+void KPlayerProcess::receivedOutputLine (KPlayerLineOutputProcess* proc, char* str)
 {
   if ( proc != m_player )
   {
-    char buf [1025];
-    if ( len > 1024 )
-      len = 1024;
-    memcpy (buf, str, len);
-    buf [len] = 0;
-    if ( re_exiting.indexIn (buf) < 0 )
-      proc -> writeStdin (command_quit, command_quit.length());
+    if ( re_exiting.indexIn (str) < 0 )
+      proc -> write (command_quit);
     return;
   }
   static float prev_position = -1;
@@ -1811,9 +1757,7 @@ void KPlayerProcess::receivedOutputLine (KPlayerLineOutputProcess* proc, char* s
 #ifdef DEBUG_KPLAYER_PROCESS
       kdDebugTime() << "Process: Sending audio delay\n";
 #endif
-      Q3CString s ("audio_delay ");
-      s += Q3CString().setNum (- m_send_audio_delay) + "\n";
-      sendPlayerCommand (s);
+      sendPlayerCommand ("audio_delay " + QByteArray::number (- m_send_audio_delay) + "\n");
       m_send_audio_delay = 0;
     }
     if ( (m_send_subtitle_delay >= 0.001 || m_send_subtitle_delay <= - 0.001) && ! m_sent )
@@ -1821,9 +1765,7 @@ void KPlayerProcess::receivedOutputLine (KPlayerLineOutputProcess* proc, char* s
 #ifdef DEBUG_KPLAYER_PROCESS
       kdDebugTime() << "Process: Sending subtitle delay\n";
 #endif
-      Q3CString s ("sub_delay ");
-      s += Q3CString().setNum (- m_send_subtitle_delay) + "\n";
-      sendPlayerCommand (s);
+      sendPlayerCommand ("sub_delay " + QByteArray::number (- m_send_subtitle_delay) + "\n");
       m_send_subtitle_delay = 0;
     }
     if ( m_send_subtitle_position && ! m_sent )
@@ -1831,9 +1773,7 @@ void KPlayerProcess::receivedOutputLine (KPlayerLineOutputProcess* proc, char* s
 #ifdef DEBUG_KPLAYER_PROCESS
       kdDebugTime() << "Process: Sending subtitle position\n";
 #endif
-      Q3CString s ("sub_pos ");
-      s += Q3CString().setNum (m_send_subtitle_position) + "\n";
-      sendPlayerCommand (s);
+      sendPlayerCommand ("sub_pos " + QByteArray::number (m_send_subtitle_position) + "\n");
       m_send_subtitle_position = 0;
     }
     if ( m_send_volume && ! m_sent )
@@ -1965,17 +1905,12 @@ void KPlayerProcess::receivedOutputLine (KPlayerLineOutputProcess* proc, char* s
   }
 }
 
-void KPlayerProcess::receivedHelperLine (KPlayerLineOutputProcess* proc, char* str, int len)
+void KPlayerProcess::receivedHelperLine (KPlayerLineOutputProcess* proc, char* str)
 {
   if ( proc != m_helper )
   {
-    char buf [1025];
-    if ( len > 1024 )
-      len = 1024;
-    memcpy (buf, str, len);
-    buf [len] = 0;
-    if ( re_exiting.indexIn (buf) < 0 )
-      proc -> writeStdin (command_quit, command_quit.length());
+    if ( re_exiting.indexIn (str) < 0 )
+      proc -> write (command_quit);
     return;
   }
   bool sent = false;

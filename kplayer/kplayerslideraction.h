@@ -17,12 +17,8 @@
 #define KPLAYERSLIDERACTION_H
 
 #include <kaction.h>
-#include <q3hbox.h>
+#include <qframe.h>
 #include <qslider.h>
-//Added by qt3to4:
-#include <QWheelEvent>
-#include <QMouseEvent>
-#include <QKeyEvent>
 
 /**KPlayer's slider widget. Works around the Qt upside-down slider bug.
   *@author kiriuja
@@ -99,14 +95,13 @@ protected:
 /**KPlayer popup frame.
   *@author kiriuja
   */
-class KPlayerPopupFrame : public Q3HBox
+class KPlayerPopupFrame : public QFrame
 {
   Q_OBJECT
 
 public:
   /** The KPlayerPopupFrame constructor. Parameters are passed on to QHBox. */
-  KPlayerPopupFrame (QWidget* parent = 0, const char* name = 0)
-    : Q3HBox (parent, name, Qt::Popup) { }
+  KPlayerPopupFrame (QWidget* parent = 0);
   /** The KPlayerPopupFrame destructor. Does nothing. */
   virtual ~KPlayerPopupFrame();
 

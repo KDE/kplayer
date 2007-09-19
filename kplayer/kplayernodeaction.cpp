@@ -168,10 +168,10 @@ void KPlayerNodeActionList::updateActions (void)
   KPlayerNodeListByName nodes ((const KPlayerNodeListByName&) node() -> nodes());
   if ( ! node() -> customOrder() )
     nodes.sort();
-  KPlayerNodeListIterator iterator (nodes);
-  KPlayerNode* node;
-  while ( (node = iterator.current()) && count < maximumSize() )
+  KPlayerNodeList::ConstIterator iterator (nodes.constBegin());
+  while ( iterator != nodes.constEnd() && count < maximumSize() )
   {
+    KPlayerNode* node = *iterator;
     if ( canInclude (node) )
     {
 #ifdef DEBUG_KPLAYER_NODEACTION
@@ -351,9 +351,10 @@ void KPlayerDeviceActionMenu::updateActions (void)
   m_actions.clear();
   for ( QList<QAction*>::ConstIterator actlit (actlist.constBegin()); actlit != actlist.constEnd(); ++ actlit )
     removeAction (*actlit);
-  KPlayerNodeListIterator iterator (device() -> nodes());
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (device() -> nodes().begin());
+  while ( iterator != device() -> nodes().end() )
   {
+    KPlayerNode* node = *iterator;
 #ifdef DEBUG_KPLAYER_NODEACTION
     kdDebugTime() << " Track  " << node -> url().url() << "\n";
 #endif

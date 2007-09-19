@@ -19,9 +19,6 @@
 #include <kcursor.h>
 #include <kedittoolbar.h>
 #include <qaction.h>
-#define QT3_SUPPORT
-#include <q3popupmenu.h>
-#undef QT3_SUPPORT
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kshortcutsdialog.h>
@@ -32,27 +29,11 @@
 #include <kurl.h>
 #include <kwindowsystem.h>
 #include <kxmlguifactory.h>
-#include <k3urldrag.h>
 #include <qdatetime.h>
+#include <qevent.h>
 #include <qeventloop.h>
 #include <qlabel.h>
 #include <qobject.h>
-#include <q3dockarea.h>
-#include <q3whatsthis.h>
-//Added by qt3to4:
-#include <QMoveEvent>
-#include <QResizeEvent>
-#include <QContextMenuEvent>
-#include <QWheelEvent>
-#include <QFocusEvent>
-#include <QMouseEvent>
-#include <QCloseEvent>
-#include <QShowEvent>
-#include <QDragEnterEvent>
-#include <QDragResponseEvent>
-#include <QKeyEvent>
-#include <QEvent>
-#include <QDropEvent>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_WINDOW
@@ -558,9 +539,9 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
   setCentralWidget (kPlayerWorkspace());
   initStatusBar();
   initActions();
-  log() -> initialize ((Q3PopupMenu*) factory() -> container ("log_popup", this));
-  playlist() -> initialize ((Q3PopupMenu*) factory() -> container ("playlist_popup", this));
-  library() -> library() -> initialize ((Q3PopupMenu*) factory() -> container ("library_popup", this));
+  log() -> initialize ((QMenu*) factory() -> container ("log_popup", this));
+  playlist() -> initialize ((QMenu*) factory() -> container ("playlist_popup", this));
+  library() -> library() -> initialize ((QMenu*) factory() -> container ("library_popup", this));
   uint i;
   //for ( i = 0; i < menuBar() -> count(); i ++ )
   //  connect (popupMenu (i), SIGNAL (aboutToHide()), SLOT (clearStatusMessage()));
@@ -573,15 +554,15 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
   toolbar -> setAllowedAreas (Qt::TopToolBarArea | Qt::BottomToolBarArea);
   library() -> setAllowedAreas (Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
   log() -> setAllowedAreas (Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
-  Q3WhatsThis::add (menuBar(), i18n("Menu bar contains names of drop-down menus. Left click a name to alternately show and hide that menu, or use Alt + the underlined letter in the name as a hot key, for example Alt+F to show the File menu."));
-  Q3WhatsThis::add (statusBar(), i18n("Status bar shows general information about the player status and progress."));
-  Q3WhatsThis::add (library(), i18n("Multimedia library is a window where that lets you organize your files, streams, devices, manage your playlists, and choose items for playing. It shows various information about your media files and allows you to search and group them and change their properties."));
-  Q3WhatsThis::add (log(), i18n("Message log is a window where KPlayer shows messages it receives from MPlayer. KPlayer can show it automatically when it detects an MPlayer error if that option is selected in KPlayer settings."));
+  menuBar() -> setWhatsThis (i18n("Menu bar contains names of drop-down menus. Left click a name to alternately show and hide that menu, or use Alt + the underlined letter in the name as a hot key, for example Alt+F to show the File menu."));
+  statusBar() -> setWhatsThis (i18n("Status bar shows general information about the player status and progress."));
+  library() -> setWhatsThis (i18n("Multimedia library is a window where that lets you organize your files, streams, devices, manage your playlists, and choose items for playing. It shows various information about your media files and allows you to search and group them and change their properties."));
+  log() -> setWhatsThis (i18n("Message log is a window where KPlayer shows messages it receives from MPlayer. KPlayer can show it automatically when it detects an MPlayer error if that option is selected in KPlayer settings."));
   for ( i = 0; i < KPLAYER_TOOLBARS; i ++ )
   {
     toolbar = toolBar (m_toolbar[i].name);
     toolbar -> setWindowTitle (captions[i]);
-    Q3WhatsThis::add (toolbar, whatsthis[i]);
+    toolbar -> setWhatsThis (whatsthis[i]);
     //kdDebugTime() << "Orientation " << sliderAction (m_toolbar[i].action) -> slider() -> orientation() << "\n";
     if ( i >= FIRST_SLIDER_TOOLBAR )
       ((KPlayerSliderAction*) action (actions [i - FIRST_SLIDER_TOOLBAR])) -> slider() -> setOrientation (toolbar -> orientation());
@@ -794,12 +775,12 @@ void KPlayerWindow::initStatusBar (void)
   if ( m_status_label )
   {
     connect (m_status_label, SIGNAL (itemPressed (int)), this, SLOT (statusPressed()));
-    Q3WhatsThis::add (m_status_label, i18n("Status area of the status bar tells you if there have been playback errors."));
+    m_status_label -> setWhatsThis (i18n("Status area of the status bar tells you if there have been playback errors."));
   }
   if ( m_state_label )
-    Q3WhatsThis::add (m_state_label, i18n("State area of the status bar displays the current player state."));
+    m_state_label -> setWhatsThis (i18n("State area of the status bar displays the current player state."));
   if ( m_progress_label )
-    Q3WhatsThis::add (m_progress_label, i18n("Progress area of the status bar shows playback progress and the total length if known."));
+    m_progress_label -> setWhatsThis (i18n("Progress area of the status bar shows playback progress and the total length if known."));
 }
 
 void KPlayerWindow::refreshSettings (void)
@@ -1060,7 +1041,7 @@ void KPlayerWindow::enableVideoActions (void)
 }
 
 /*
-Q3PopupMenu* KPlayerWindow::popupMenu (int index)
+QMenu* KPlayerWindow::popupMenu (int index)
 {
   QMenuData* data = menuBar();
   if ( ! data )
@@ -1109,7 +1090,7 @@ void KPlayerWindow::enableSubmenu (QMenuData* data, const QString& name, bool en
       QMenuItem* item = data -> findItem (id);
       if ( item )
       {
-        Q3PopupMenu* popup = item -> popup();
+        QMenu* popup = item -> popup();
         if ( popup )
         {
           if ( popup -> name() == name )
@@ -1130,10 +1111,10 @@ void KPlayerWindow::enableSubmenu (const QString& name, bool enable)
 #endif
   /*
   enableSubmenu (menuBar(), name, enable);
-  Q3PopupMenu* popup = (Q3PopupMenu*) factory() -> container ("player_popup", this);
+  QMenu* popup = (QMenu*) factory() -> container ("player_popup", this);
   if ( popup )
     enableSubmenu (popup, name, enable);
-  popup = (Q3PopupMenu*) factory() -> container ("library_popup", this);
+  popup = (QMenu*) factory() -> container ("library_popup", this);
   if ( popup )
     enableSubmenu (popup, name, enable);
   */
@@ -1160,7 +1141,7 @@ void KPlayerWindow::dragEnterEvent (QDragEnterEvent *event)
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Drag enter event\n";
 #endif
-  event -> setAccepted (K3URLDrag::canDecode (event));
+  event -> setAccepted (KUrl::List::canDecode (event -> mimeData()));
 }
 
 void KPlayerWindow::dropEvent (QDropEvent* event)
@@ -1168,10 +1149,9 @@ void KPlayerWindow::dropEvent (QDropEvent* event)
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Drop event\n";
 #endif
-  KUrl::List urls;
-  if ( ! K3URLDrag::decode (event, urls) )
-    return;
-  playlist() -> playUrls (urls);
+  KUrl::List urls = KUrl::List::fromMimeData (event -> mimeData());
+  if ( ! urls.isEmpty() )
+    playlist() -> playUrls (urls);
 }
 
 bool KPlayerWindow::isFullScreen (void) const
@@ -1281,7 +1261,7 @@ void KPlayerWindow::contextMenu (const QPoint& global_position)
   dumpObject (this, 0);
   dumpObject (actionCollection(), 0);
 #endif
-  Q3PopupMenu* popup = (Q3PopupMenu*) factory() -> container ("player_popup", this);
+  QMenu* popup = (QMenu*) factory() -> container ("player_popup", this);
   if ( popup )
     popup -> popup (global_position);
 }
@@ -1714,9 +1694,9 @@ void KPlayerWindow::setStatusMessage (const QString& text)
     clearStatusMessage();
     return;
   }
-  Q3PopupMenu* popup = (Q3PopupMenu*) factory() -> container ("player_popup", this);
+  QMenu* popup = (QMenu*) factory() -> container ("player_popup", this);
   if ( ! popup || ! popup -> isVisible() )
-    popup = (Q3PopupMenu*) factory() -> container ("library_popup", this);
+    popup = (QMenu*) factory() -> container ("library_popup", this);
   if ( ! popup || ! popup -> isVisible() )
     for ( uint i = 0; i < menuBar() -> count(); i ++ )
       if ( (popup = popupMenu (i)) && popup -> isVisible() )
@@ -2038,8 +2018,8 @@ void KPlayerWindow::initialSize (void)
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "             " << log() -> isHidden() << " " << log() -> place() << " " << library() -> isHidden() << " " << library() -> place() << "\n";
 #endif
-  if ( library() -> isVisible() // && library() -> place() == Q3DockWindow::InDock
-      || log() -> isVisible() /* && log() -> place() == Q3DockWindow::InDock */ )
+  if ( library() -> isVisible() // && library() -> place() == QDockWindow::InDock
+      || log() -> isVisible() /* && log() -> place() == QDockWindow::InDock */ )
     size.setWidth (kPlayerWorkspace() -> width());
   settings() -> setDisplaySize (size);
 }

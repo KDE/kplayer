@@ -33,7 +33,7 @@ KPlayerSource::KPlayerSource (KPlayerContainerNode* parent)
   kdDebugTime() << "Creating source\n";
 #endif
   m_parent = parent;
-  m_iterator = 0;
+  m_iterator = parent -> nodes().end();
 }
 
 KPlayerSource::~KPlayerSource()
@@ -41,7 +41,6 @@ KPlayerSource::~KPlayerSource()
 #ifdef DEBUG_KPLAYER_SOURCE
   kdDebugTime() << "Destroying source\n";
 #endif
-  delete m_iterator;
 }
 
 void KPlayerSource::connectOrigin (void)
@@ -66,9 +65,10 @@ void KPlayerSource::connectNodes (KPlayerContainerNode* node)
     SLOT (added (KPlayerContainerNode*, const KPlayerNodeList&, KPlayerNode*)));
   connect (node, SIGNAL (nodesRemoved (KPlayerContainerNode*, const KPlayerNodeList&)),
     SLOT (removed (KPlayerContainerNode*, const KPlayerNodeList&)));
-  KPlayerNodeListIterator iterator (node -> nodes());
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (node -> nodes().begin());
+  while ( iterator != node -> nodes().end() )
   {
+    KPlayerNode* node = *iterator;
     if ( node -> isContainer() )
       connectNodes ((KPlayerContainerNode*) node);
     ++ iterator;
@@ -83,12 +83,11 @@ void KPlayerSource::start (bool groups)
   kdDebugTime() << " Groups " << groups << "\n";
 #endif
   m_groups = groups;
-  delete m_iterator;
   if ( parent() -> populated() || groups && parent() -> groupsPopulated() )
-    m_iterator = new KPlayerNodeListIterator (parent() -> nodes());
+    m_iterator = parent() -> nodes().begin();
   else
   {
-    m_iterator = 0;
+    m_iterator = parent() -> nodes().end();
     enumStart (groups);
   }
 }
@@ -98,9 +97,9 @@ bool KPlayerSource::next (bool& group, QString& id)
 #ifdef DEBUG_KPLAYER_SOURCE
   kdDebugTime() << "KPlayerSource::next\n";
 #endif
-  if ( ! m_iterator )
+  if ( m_iterator == parent() -> nodes().end() )
     return enumNext (group, id);
-  while ( KPlayerNode* node = m_iterator -> current() )
+  while ( KPlayerNode* node = *m_iterator )
   {
     group = node -> isContainer();
     id = node -> id();
@@ -108,12 +107,11 @@ bool KPlayerSource::next (bool& group, QString& id)
     kdDebugTime() << " Group  " << group << "\n";
     kdDebugTime() << " ID     " << id << "\n";
 #endif
-    ++ *m_iterator;
+    ++ m_iterator;
     if ( group || ! m_groups )
       return true;
   }
-  delete m_iterator;
-  m_iterator = 0;
+  m_iterator = parent() -> nodes().end();
   return false;
 }
 
@@ -182,9 +180,10 @@ void KPlayerSource::removed (KPlayerContainerNode*, const KPlayerNodeList& nodes
   kdDebugTime() << "KPlayerSource::removed\n";
 #endif
   KPlayerNodeList list;
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( ! find (parent() -> origin(), node -> id()) )
       list.append (node);
     ++ iterator;
@@ -200,9 +199,10 @@ bool KPlayerSource::find (KPlayerContainerNode* node, const QString& id)
 #endif
   if ( node -> nodeById (id) )
     return true;
-  KPlayerNodeListIterator iterator (node -> nodes());
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (node -> nodes().begin());
+  while ( iterator != node -> nodes().end() )
   {
+    KPlayerNode* node = *iterator;
     if ( ! node -> isContainer() )
       break;
     if ( find ((KPlayerContainerNode*) node, id) )
@@ -801,9 +801,10 @@ void KPlayerOriginSource::removed (KPlayerContainerNode*, const KPlayerNodeList&
   kdDebugTime() << "KPlayerOriginSource::removed\n";
 #endif
   QStringList ids;
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
     QString id (node -> id());
     if ( ! node -> isContainer() && parent() -> isGroup() && ! parent() -> origin() -> isGroup() )
       id = parent() -> origin() -> metaurl (id).url();
@@ -910,9 +911,10 @@ void KPlayerKeySource::added (const KPlayerNodeList& nodes)
   KPlayerNodeList list, groups;
   groups.setAutoDelete (true);
   KPlayerNodeMap map;
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( match (node -> url().url()) )
     {
       list.append (node);
@@ -940,9 +942,10 @@ void KPlayerKeySource::added (const KPlayerNodeList& nodes)
 
 void KPlayerKeySource::brand (const KPlayerNodeList& nodes)
 {
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( node -> isContainer() )
       brand (((KPlayerContainerNode*) node) -> nodes());
     else
@@ -964,9 +967,10 @@ void KPlayerKeySource::remove (const KPlayerNodeList& nodes)
   kdDebugTime() << "KPlayerKeySource::remove\n";
 #endif
   KPlayerNodeList list;
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( node -> isContainer() )
     {
       KPlayerContainerNode* container = (KPlayerContainerNode*) node;
@@ -1094,9 +1098,10 @@ void KPlayerSearchSource::added (KPlayerContainerNode*, const KPlayerNodeList& n
   kdDebugTime() << "KPlayerSearchSource::added\n";
 #endif
   KPlayerNodeList list;
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( ! node -> isContainer() && match (node -> url().url()) )
       list.append (node);
     ++ iterator;
@@ -1199,9 +1204,10 @@ void KPlayerGroupSource::added (KPlayerContainerNode*, const KPlayerNodeList& no
     KPlayerNodeList groups;
     groups.setAutoDelete (true);
     KPlayerNodeMap map;
-    KPlayerNodeListIterator iterator (nodes);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (nodes.begin());
+    while ( iterator != nodes.end() )
     {
+      KPlayerNode* node = *iterator;
       QString value (node -> meta (parent() -> groupingKey()));
       if ( ! map.contains (value) && ! parent() -> nodeById (value) )
       {

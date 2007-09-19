@@ -18,15 +18,11 @@
 #include <klocale.h>
 #include <krandomsequence.h>
 #include <kurl.h>
-#include <q3dockarea.h>
 #include <qaction.h>
+#include <qevent.h>
 #include <qfileinfo.h>
-#define QT3_SUPPORT
-#include <q3popupmenu.h>
-#undef QT3_SUPPORT
+#include <qmenu.h>
 #include <qtooltip.h>
-//Added by qt3to4:
-#include <QContextMenuEvent>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_PLAYLIST
@@ -173,7 +169,7 @@ KPlayerPlaylist::~KPlayerPlaylist()
 #endif
 }
 
-void KPlayerPlaylist::initialize (Q3PopupMenu* menu)
+void KPlayerPlaylist::initialize (QMenu* menu)
 {
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "Initializing playlist\n";
@@ -248,9 +244,10 @@ void KPlayerPlaylist::append (const KPlayerNodeList& nodes)
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "KPlayerPlaylist::append\n";
 #endif
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
 #ifdef DEBUG_KPLAYER_PLAYLIST
     kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
@@ -276,9 +273,10 @@ int KPlayerPlaylist::insert (const KPlayerNodeList& nodes, int index)
   kdDebugTime() << "KPlayerPlaylist::insert\n";
   kdDebugTime() << " Index  " << index << "\n";
 #endif
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
 #ifdef DEBUG_KPLAYER_PLAYLIST
     kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
@@ -307,22 +305,25 @@ void KPlayerPlaylist::update (void)
   kdDebugTime() << "Updating the playlist\n";
 #endif
   KPlayerNode* current = currentNode();
-  KPlayerNode* node = m_nodes.first();
-  while ( node )
+  int index = 0;
+  KPlayerNodeList::ConstIterator iterator (nodes().begin());
+  while ( iterator != nodes().end() )
   {
+    KPlayerNode* node = *iterator;
 #ifdef DEBUG_KPLAYER_PLAYLIST
     kdDebugTime() << " Name   " << node -> name() << "\n";
 #endif
-    if ( nodes().at() < playlist() -> count() )
-      playlist() -> setItemText (nodes().at(), node -> name());
+    if ( index < playlist() -> count() )
+      playlist() -> setItemText (index, node -> name());
     else
       playlist() -> addItem (node -> name());
-    node = m_nodes.next();
+    ++ iterator;
+    ++ index;
   }
   setCurrentNode (current);
 }
 
-void KPlayerPlaylist::added (KPlayerContainerNode* parent, const KPlayerNodeList& nodes, KPlayerNode* after)
+void KPlayerPlaylist::added (KPlayerContainerNode* parent, const KPlayerNodeList& list, KPlayerNode* after)
 {
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "KPlayerPlaylist::added\n";
@@ -330,39 +331,41 @@ void KPlayerPlaylist::added (KPlayerContainerNode* parent, const KPlayerNodeList
   if ( after )
     kdDebugTime() << " After  " << after -> url().url() << "\n";
 #endif
-  KPlayerPlaylistNodeList previous (m_nodes);
+  KPlayerPlaylistNodeList previous (nodes());
   if ( configuration() -> shuffle() )
   {
-    after = m_nodes.getLast();
-    insert (nodes, count());
+    after = nodes().last();
+    insert (list, count());
     randomize (after);
   }
   else
   {
-    append (nodes);
+    append (list);
 #ifdef DEBUG_KPLAYER_PLAYLIST
     kdDebugTime() << "Sorting playlist nodes\n";
 #endif
     m_nodes.sort();
 #ifdef DEBUG_KPLAYER_PLAYLIST
-    KPlayerNodeListIterator iterator (m_nodes);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (nodes().begin());
+    while ( iterator != nodes().end() )
     {
-      kdDebugTime() << " Node   " << node -> url().url() << "\n";
+      kdDebugTime() << " Node   " << (*iterator) -> url().url() << "\n";
       ++ iterator;
     }
 #endif
     update();
   }
-  if ( m_next.findRef (parent) >= 0 )
+  int index = m_next.indexOf (parent);
+  if ( index >= 0 )
   {
-    KPlayerNodeListIterator iterator (m_nodes);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (nodes().begin());
+    while ( iterator != nodes().end() )
     {
-      if ( previous.findRef (node) >= 0 )
-        previous.remove();
+      KPlayerNode* node = *iterator;
+      if ( previous.indexOf (node) >= 0 )
+        previous.removeAll (node);
       else
-        m_next.insert (m_next.at() + 1, node);
+        m_next.insert (index + 1, node);
       ++ iterator;
     }
   }
@@ -370,38 +373,37 @@ void KPlayerPlaylist::added (KPlayerContainerNode* parent, const KPlayerNodeList
   updateActions();
 }
 
-void KPlayerPlaylist::removed (KPlayerContainerNode*, const KPlayerNodeList& nodes)
+void KPlayerPlaylist::removed (KPlayerContainerNode*, const KPlayerNodeList& list)
 {
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "KPlayerPlaylist::removed\n";
 #endif
   KPlayerNode* next = currentNode();
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (list.begin());
+  while ( iterator != list.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( node -> isContainer() )
       detach ((KPlayerContainerNode*) node);
-    if ( m_nodes.findRef (node) >= 0 )
+    int index = nodes().indexOf (node);
+    if ( index >= 0 )
     {
-      bool last = node == m_nodes.getLast();
 #ifdef DEBUG_KPLAYER_PLAYLIST
       kdDebugTime() << " URL    " << node -> url() << "\n";
-      kdDebugTime() << " Last   " << last << "\n";
 #endif
-      playlist() -> removeItem (m_nodes.at());
-      m_nodes.remove();
+      playlist() -> removeItem (index);
+      m_nodes.removeAt (index);
       if ( node == next )
       {
         m_current = 0;
-        next = last ? 0 : m_nodes.current();
-        last = next == m_nodes.getLast();
+        next = index < nodes().count() ? nodes().at (index) : 0;
 #ifdef DEBUG_KPLAYER_PLAYLIST
         kdDebugTime() << " Removed current node\n";
         if ( next )
           kdDebugTime() << " Next   " << next -> url() << "\n";
 #endif
       }
-      m_next.removeRef (node);
+      m_next.removeAll (node);
     }
     ++ iterator;
   }
@@ -422,12 +424,13 @@ void KPlayerPlaylist::updated (KPlayerContainerNode*, KPlayerNode* node)
   kdDebugTime() << "KPlayerPlaylist::updated\n";
   kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
-  if ( m_nodes.findRef (node) >= 0 )
+  int index = nodes().indexOf (node);
+  if ( index >= 0 )
     if ( node -> isContainer() && node -> ready() )
     {
-      playlist() -> removeItem (nodes().at());
-      m_nodes.remove();
-      m_next.removeRef (node);
+      playlist() -> removeItem (index);
+      m_nodes.removeAt (index);
+      m_next.removeAll (node);
       if ( m_play_requested )
         play();
     }
@@ -436,7 +439,7 @@ void KPlayerPlaylist::updated (KPlayerContainerNode*, KPlayerNode* node)
 #ifdef DEBUG_KPLAYER_PLAYLIST
       kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
-      playlist() -> setItemText (nodes().at(), node -> name());
+      playlist() -> setItemText (index, node -> name());
     }
   setCurrentNode (currentNode());
 }
@@ -606,7 +609,7 @@ void KPlayerPlaylist::play (const KPlayerNodeList& list)
 void KPlayerPlaylist::playNext (const KPlayerNodeList& list)
 {
   if ( ! list.isEmpty() )
-    if ( list.getFirst() -> topLevelNode() == nowplaying() )
+    if ( list.first() -> topLevelNode() == nowplaying() )
       setNextNodes (list);
     else
     {
@@ -618,7 +621,7 @@ void KPlayerPlaylist::playNext (const KPlayerNodeList& list)
 
 void KPlayerPlaylist::queue (const KPlayerNodeList& list)
 {
-  if ( ! list.isEmpty() && list.getFirst() -> topLevelNode() != nowplaying() )
+  if ( ! list.isEmpty() && list.first() -> topLevelNode() != nowplaying() )
   {
     nowplaying() -> append (list);
     recent() -> addRecent (list);
@@ -629,7 +632,7 @@ void KPlayerPlaylist::queue (const KPlayerNodeList& list)
 void KPlayerPlaylist::queueNext (const KPlayerNodeList& list)
 {
   if ( ! list.isEmpty() )
-    if ( list.getFirst() -> topLevelNode() == nowplaying() )
+    if ( list.first() -> topLevelNode() == nowplaying() )
       setNextNodes (list);
     else
     {
@@ -637,10 +640,10 @@ void KPlayerPlaylist::queueNext (const KPlayerNodeList& list)
       nowplaying() -> append (list);
       recent() -> addRecent (list);
       setNextNodes (nodes());
-      KPlayerNodeListIterator iterator (previous);
-      while ( KPlayerNode* node = iterator.current() )
+      KPlayerNodeList::ConstIterator iterator (previous.constBegin());
+      while ( iterator != previous.constEnd() )
       {
-        m_next.removeRef (node);
+        m_next.removeAll (*iterator);
         ++ iterator;
       }
       setCurrentNode (currentNode());
@@ -661,12 +664,13 @@ void KPlayerPlaylist::next (void)
     return;
   if ( ! nextNode() )
   {
-    if ( currentNode() && m_nodes.findRef (currentNode()) >= 0 && m_nodes.next() )
-      m_next.append (nodes().current());
+    int index;
+    if ( currentNode() && (index = nodes().indexOf (currentNode())) >= 0 && ++ index < nodes().count() )
+      m_next.append (nodes().at (index));
     else
     {
       randomize();
-      m_next.append (nodes().getFirst());
+      m_next.append (nodes().first());
     }
   }
 #ifdef DEBUG_KPLAYER_PLAYLIST
@@ -688,12 +692,13 @@ void KPlayerPlaylist::previous (void)
   if ( isEmpty() )
     return;
   m_next.clear();
-  if ( currentNode() && m_nodes.findRef (currentNode()) >= 0 && m_nodes.prev() )
-    m_next.append (nodes().current());
+  int index;
+  if ( currentNode() && (index = nodes().indexOf (currentNode())) >= 0 && -- index >= 0 )
+    m_next.append (nodes().at (index));
   else
   {
     randomize();
-    m_next.append (nodes().getLast());
+    m_next.append (nodes().last());
   }
 #ifdef DEBUG_KPLAYER_PLAYLIST
   if ( nextNode() )
@@ -727,10 +732,10 @@ void KPlayerPlaylist::shuffle (void)
     update();
   }
   KPlayerNode* node = currentNode();
-  if ( ! node || m_nodes.findRef (node) < 0 )
+  if ( ! node || nodes().indexOf (node) < 0 )
     node = nextNode();
-  if ( ! node || m_nodes.findRef (node) < 0 )
-    node = nodes().getFirst();
+  if ( ! node || nodes().indexOf (node) < 0 )
+    node = nodes().first();
   setCurrentNode (node);
 }
 
@@ -811,7 +816,7 @@ void KPlayerPlaylist::playerStateChanged (KPlayerProcess::State state, KPlayerPr
 #endif
   if ( state != KPlayerProcess::Idle || previous == state )
     return;
-  if ( ! engine() -> stopped() && (nextNode() || currentNode() != nodes().getLast() || configuration() -> loop()) )
+  if ( ! engine() -> stopped() && (nextNode() || currentNode() != nodes().last() || configuration() -> loop()) )
     next();
   else
   {
@@ -838,29 +843,33 @@ void KPlayerPlaylist::randomize (KPlayerNode* after)
   if ( after )
     kdDebugTime() << " After  " << after -> url().url() << "\n";
 #endif
-  if ( after && m_nodes.findRef (after) < 0 )
+  int index = nodes().indexOf (after);
+  if ( after && index < 0 )
     after = 0;
   if ( after )
-    m_nodes.next();
+    index ++;
   else
-    m_nodes.first();
+    index = 0;
   KPlayerNodeList list;
-  while ( nodes().current() && nodes().current() != after )
+  while ( index < nodes().count() && nodes().at (index) != after )
   {
-    playlist() -> removeItem (nodes().at());
-    list.append (m_nodes.take());
+    playlist() -> removeItem (index);
+    list.append (m_nodes.takeAt (index));
   }
   int offset = count();
-  if ( list.first() )
+  if ( ! list.isEmpty() )
   {
-    m_nodes.append (list.take());
-    playlist() -> insertItem (nodes().at(), nodes().current() -> name());
+    KPlayerNode* node = list.takeFirst();
+    m_nodes.append (node);
+    playlist() -> addItem (node -> name());
   }
   KRandomSequence rs;
-  while ( list.first() )
+  while ( ! list.isEmpty() )
   {
-    m_nodes.insert (rs.getLong (count() - offset + 1) + offset, list.take());
-    playlist() -> insertItem (nodes().at(), nodes().current() -> name());
+    KPlayerNode* node = list.takeFirst();
+    int index = rs.getLong (count() - offset + 1) + offset;
+    m_nodes.insert (index, node);
+    playlist() -> insertItem (index, node -> name());
   }
   setCurrentNode (currentNode());
 }
@@ -874,25 +883,29 @@ void KPlayerPlaylist::setCurrentNode (KPlayerNode* node)
 #endif
   if ( playlist() -> currentIndex() >= 0 && playlist() -> currentIndex() < int (nodes().count()) )
     playlist() -> setItemText (playlist() -> currentIndex(), m_nodes.at (playlist() -> currentIndex()) -> name());
-  if ( node && m_nodes.findRef (node) >= 0 )
+  int index;
+  if ( node && (index = nodes().indexOf (node)) >= 0 )
   {
     m_current = node;
 #ifdef DEBUG_KPLAYER_PLAYLIST
-    kdDebugTime() << " Index  " << nodes().at() << "\n";
+    kdDebugTime() << " Index  " << index << "\n";
 #endif
-    playlist() -> setCurrentIndex (nodes().at());
-    playlist() -> setItemText (nodes().at(), node -> media() -> currentName());
+    playlist() -> setCurrentIndex (index);
+    playlist() -> setItemText (index, node -> media() -> currentName());
   }
   else
   {
     m_current = 0;
-    if ( nextNode() && m_nodes.findRef (nextNode()) >= 0 || m_nodes.first() )
+    if ( ! nodes().isEmpty() )
     {
+      index = nextNode() ? nodes().indexOf (nextNode()) : 0;
+      if ( index < 0 )
+        index = 0;
 #ifdef DEBUG_KPLAYER_PLAYLIST
-      kdDebugTime() << " Index  " << nodes().at() << "\n";
+      kdDebugTime() << " Index  " << index << "\n";
 #endif
-      playlist() -> setCurrentIndex (nodes().at());
-      playlist() -> setItemText (nodes().at(), nodes().current() -> media() -> currentName());
+      playlist() -> setCurrentIndex (index);
+      playlist() -> setItemText (index, nodes().at (index) -> media() -> currentName());
     }
   }
 }
@@ -905,14 +918,15 @@ void KPlayerPlaylist::setNextNodes (const KPlayerNodeList& nodes)
   enableNextPrevious();
 }
 
-void KPlayerPlaylist::addNextNodes (const KPlayerNodeList& nodes)
+void KPlayerPlaylist::addNextNodes (const KPlayerNodeList& list)
 {
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (list.begin());
+  while ( iterator != list.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( node -> isContainer() && node -> ready() )
       addNextNodes (((KPlayerContainerNode*) node) -> nodes());
-    else if ( m_nodes.findRef (node) >= 0 )
+    else if ( nodes().indexOf (node) >= 0 )
       m_next.append (node);
     ++ iterator;
   }

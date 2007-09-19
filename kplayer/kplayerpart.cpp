@@ -18,9 +18,7 @@
 #include <kxmlguifactory.h>
 #include <kparts/genericfactory.h>
 #include <qaction.h>
-#define QT3_SUPPORT
-#include <q3popupmenu.h>
-#undef QT3_SUPPORT
+#include <qmenu.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_KPART
@@ -71,20 +69,20 @@ KPlayerPart::KPlayerPart (QWidget* wparent, QObject* parent, const QStringList&)
   //m_extension = new KPlayerBrowserExtension (this);
   kdDebugTime() << "KPlayerPart: creating popup menu\n";
 #endif
-  m_popup_menu = new Q3PopupMenu (wparent);
+  m_popup_menu = new QMenu (wparent);
   m_popup_menu -> addAction (action ("player_launch"));
-  m_popup_menu -> insertSeparator();
+  m_popup_menu -> addSeparator();
   m_popup_menu -> addAction (action ("player_play"));
   m_popup_menu -> addAction (action ("player_pause"));
   m_popup_menu -> addAction (action ("player_stop"));
-  m_popup_menu -> insertSeparator();
+  m_popup_menu -> addSeparator();
   m_popup_menu -> addAction (action ("view_maintain_aspect"));
-  m_popup_menu -> insertSeparator();
+  m_popup_menu -> addSeparator();
   m_popup_menu -> addAction (action ("file_properties"));
   //if ( KGlobalSettings::insertTearOffHandle() )
   //  m_popup_menu -> insertTearOffHandle();
 #ifdef DEBUG_KPLAYER_KPART
-  kdDebugTime() << "KPlayerPart: created popup menu with " << m_popup_menu -> count() << "items\n";
+  kdDebugTime() << "KPlayerPart: created popup menu with " << m_popup_menu -> actions().count() << "items\n";
 #endif
 /*readOptions();
   KToolBar* toolbar = toolBar (PROGRESS_TOOLBAR);
@@ -282,10 +280,9 @@ void KPlayerPart::enablePlayerActions (void)
 void KPlayerPart::launchKPlayer (void)
 {
   kPlayerEngine() -> stop();
-  K3Process process;
+  KProcess process;
   process << "kplayer" << KPlayerEngine::engine() -> properties() -> url().url();
-  process.start (K3Process::DontCare);
-  process.detach();
+  process.startDetached();
 }
 
 void KPlayerPart::widgetContextMenu (const QPoint& global_position)
@@ -293,9 +290,9 @@ void KPlayerPart::widgetContextMenu (const QPoint& global_position)
 #ifdef DEBUG_KPLAYER_KPART
   kdDebugTime() << "KPlayerPart context menu\n";
 #endif
-  Q3PopupMenu* popup = 0;
+  QMenu* popup = 0;
   if ( factory() )
-    popup = (Q3PopupMenu*) factory() -> container ("player_popup", this);
+    popup = (QMenu*) factory() -> container ("player_popup", this);
   if ( ! popup )
     popup = m_popup_menu;
   if ( popup )

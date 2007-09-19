@@ -18,17 +18,14 @@
 
 #include "kplayerproperties.h"
 #include "kplayersource.h"
-//Added by qt3to4:
-#include <Q3ValueList>
-#include <Q3PtrList>
 
+#include <qmap.h>
+
+class KPlayerContainerNode;
 class KPlayerMediaNode;
+class KPlayerNode;
 class KPlayerRootNode;
-
-/**Node list iterator.
-  * @author kiriuja
-  */
-typedef Q3PtrListIterator<KPlayerNode> KPlayerNodeListIterator;
+class KProcess;
 
 /**Node map by ID.
   * @author kiriuja
@@ -43,7 +40,7 @@ typedef QMap<QString, KPlayerContainerNode*> KPlayerContainerNodeMap;
 /**Node list.
   *@author kiriuja
   */
-class KPlayerNodeList : public Q3PtrList<KPlayerNode>
+class KPlayerNodeList : public QList<KPlayerNode*>
 {
 public:
   /** Constructor. */
@@ -51,8 +48,8 @@ public:
   /** Destructor. */
   virtual ~KPlayerNodeList();
 
-  /** Compares the two given nodes. */
-  virtual int compareItems (Q3PtrCollection::Item item1, Q3PtrCollection::Item item2);
+  /** Sorts the node list by name. */
+  virtual void sort (void);
 
   /** Releases all nodes on the list. */
   void releaseAll (void) const;
@@ -72,8 +69,8 @@ public:
   /** Destructor. */
   virtual ~KPlayerNodeListByName();
 
-  /** Compares the two given nodes. */
-  virtual int compareItems (Q3PtrCollection::Item item1, Q3PtrCollection::Item item2);
+  /** Sorts the node list by name. */
+  virtual void sort (void);
 };
 
 /**Playlist node list.
@@ -87,8 +84,8 @@ public:
   /** Destructor. */
   virtual ~KPlayerPlaylistNodeList();
 
-  /** Compares the two given nodes. */
-  virtual int compareItems (Q3PtrCollection::Item item1, Q3PtrCollection::Item item2);
+  /** Sorts the node list by name. */
+  virtual void sort (void);
 };
 
 /**Node in the hierarchy.
@@ -457,7 +454,7 @@ public:
   bool groupsFirst (void) const;
 
   /** Compares the given nodes by their position in the list of nodes. */
-  int compareByPosition (const KPlayerNode* node1, const KPlayerNode* node2);
+  int compareByPosition (KPlayerNode* node1, KPlayerNode* node2);
 
   /** Returns whether there are child nodes. */
   bool hasNodes (void) const
@@ -1241,14 +1238,14 @@ protected slots:
   void statResult (KIO::Job* job);
 
   /** Processes an MPlayer output line. */
-  void receivedOutput (KPlayerLineOutputProcess*, char*, int);
+  void receivedOutput (KPlayerLineOutputProcess*, char*);
   /** Finishes refreshing lists. */
-  void processExited (K3Process*);
+  void processFinished (KPlayerLineOutputProcess*);
 
   /** Processes an MPlayer output line. */
-  void receivedCddbOutput (KPlayerLineOutputProcess*, char*, int);
+  void receivedCddbOutput (KPlayerLineOutputProcess*, char*);
   /** Deletes the process. */
-  void cddbProcessExited (K3Process*);
+  void cddbProcessFinished (KPlayerLineOutputProcess*);
 
 protected:
   /** Initializes the node media. */
@@ -1279,7 +1276,7 @@ protected:
   /** Disk properties. */
   KPlayerDiskProperties* m_disk;
   /** Track lengths. */
-  Q3ValueList<float> m_track_lengths;
+  QList<float> m_track_lengths;
   /** URL currently being autodetected. */
   QString m_url;
   /** Audio CD disk ID. */

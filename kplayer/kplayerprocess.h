@@ -18,23 +18,21 @@
 
 #include <kio/jobclasses.h>
 #include <kio/job.h>
-#include <k3process.h>
+#include <kprocess.h>
+#include <ktemporaryfile.h>
 #include <kurl.h>
 #include <qfile.h>
 #include <qobject.h>
-#include <q3ptrlist.h>
-//Added by qt3to4:
-#include <Q3CString>
+#include <qsocketnotifier.h>
 
 class KPlayerConfiguration;
 class KPlayerTrackProperties;
 class KPlayerSettings;
-class K3TempFile;
 
-/**K3Process extension, handles line output.
+/**KProcess extension, handles line output.
   *@author kiriuja
   */
-class KPlayerLineOutputProcess : public K3Process
+class KPlayerLineOutputProcess : public KProcess
 {
   Q_OBJECT
 
@@ -58,46 +56,40 @@ public:
 #endif
 
 protected slots:
-  /** Handles the process stdout output. Emits the receivedStdoutLine signal.
-    */
-  void slotReceivedStdout (K3Process*, char*, int);
-  /** Handles the process stderr output. Emits the receivedStderrLine signal.
-    */
-  void slotReceivedStderr (K3Process*, char*, int);
-  /** Reimplemented from K3Process. Emits receivedStd*Line signals
-      if the respective buffers are not empty. */
-  virtual void processHasExited (int);
+  /** Handles the process stdout output. Emits the receivedStdoutLine signal. */
+  void readStandardOutput (void);
+  /** Handles the process stderr output. Emits the receivedStderrLine signal. */
+  void readStandardError (void);
+  /** Emits receivedStd*Line signals if the respective buffers are not empty, then emits processFinished. */
+  void processHasExited (int exitCode, QProcess::ExitStatus exitStatus);
+  /** Emits processFinished if the process fails to start. */
+  void processHasErrored (QProcess::ProcessError error);
 
 signals:
   /** Emitted when a CR and/or LF terminated line is received on stdout
       or the process finishes and the stdout buffer is not empty. */
-  void receivedStdoutLine (KPlayerLineOutputProcess*, char*, int);
+  void receivedStdoutLine (KPlayerLineOutputProcess*, char*);
   /** Emitted when a CR and/or LF terminated line is received on stderr
       or the process finishes and the stderr buffer is not empty. */
-  void receivedStderrLine (KPlayerLineOutputProcess*, char*, int);
+  void receivedStderrLine (KPlayerLineOutputProcess*, char*);
+  /** Emitted when the process has finished, after emitting any remaining output. */
+  void processFinished (KPlayerLineOutputProcess* process);
 
 protected:
-  /** Handles the process output, splits it into lines and emits the appropriate signals.
-   */
-  void receivedOutput (K3Process* proc, char* str, int len, char* buf, int blen, int llen, bool bstdout);
+  /** Handles the process output, splits it into lines and emits the appropriate signals. */
+  void receivedOutput (char* str, int len, char* buf, int blen, int llen, bool bstdout);
 
-  /** Current stdout line or part thereof.
-    */
+  /** Current stdout line or part thereof. */
   char* m_stdout_buffer;
-  /** Current stdout buffer length.
-    */
+  /** Current stdout buffer length. */
   int m_stdout_buffer_length;
-  /** Current stdout line length.
-    */
+  /** Current stdout line length. */
   int m_stdout_line_length;
-  /** Current stderr line or part thereof.
-    */
+  /** Current stderr line or part thereof. */
   char* m_stderr_buffer;
-  /** Current stderr buffer length.
-    */
+  /** Current stderr buffer length. */
   int m_stderr_buffer_length;
-  /** Current stderr line length.
-    */
+  /** Current stderr line length. */
   int m_stderr_line_length;
 #if 0
   /** Specifies whether stdout and stderr output are handled separately or merged.
@@ -234,9 +226,9 @@ protected:
   KPlayerConfiguration* configuration (void) const;
 
   /** Sends the given command to the MPlayer process. */
-  void sendPlayerCommand (Q3CString&);
+  void sendPlayerCommand (const QByteArray& command);
   /** Sends the given command to the MPlayer helper process. */
-  void sendHelperCommand (Q3CString&);
+  void sendHelperCommand (const QByteArray& command);
   /** Closes and unlinks the named pipe. */
   void removeDataFifo (void);
 
@@ -255,7 +247,7 @@ protected:
   bool m_09_version;
 
   /** Prepares and runs the given process. */
-  bool run (KPlayerLineOutputProcess* player);
+  void run (KPlayerLineOutputProcess* player);
   /** Stops the given process. */
   void stop (KPlayerLineOutputProcess** player, bool* quit, bool send_quit = false);
   /** Sets the process state and emits the stateChanged signal. */
@@ -264,7 +256,7 @@ protected:
   void transferTemporaryFile (void);
 
   /** Name of named pipe used to send data to MPlayer. */
-  Q3CString m_fifo_name;
+  QByteArray m_fifo_name;
   /** Handle of named pipe used to send data to MPlayer. */
   int m_fifo_handle;
   /** Offset of data to send. */
@@ -279,9 +271,9 @@ protected:
   /** Temporary file transfer job. */
   KIO::TransferJob* m_temp_job;
   /** Cached transfer data. */
-  Q3PtrList<QByteArray> m_cache;
+  QList<QByteArray> m_cache;
   /** Temporary file from KIOSlave. */
-  K3TempFile* m_temporary_file;
+  KTemporaryFile* m_temporary_file;
 
   /** Current subtitle position. */
   int m_subtitle_position;
@@ -316,13 +308,13 @@ protected:
 
 protected slots:
   /** Receives notification when the mplayer process exits. */
-  void playerProcessExited (K3Process*);
+  void playerProcessFinished (KPlayerLineOutputProcess* process);
+  /** Receives notification when the mplayer helper process exits. */
+  void helperProcessFinished (KPlayerLineOutputProcess* process);
   /** Receives notification when mplayer sends something to stdout. */
-  void receivedOutputLine (KPlayerLineOutputProcess*, char*, int);
+  void receivedOutputLine (KPlayerLineOutputProcess*, char*);
   /** Receives notification when the mplayer helper process sends something to stdout. */
-  void receivedHelperLine (KPlayerLineOutputProcess*, char*, int);
-  /** Receives notification when mplayer sends something to stderr. */
-//void receivedStderrLine (KPlayerLineOutputProcess*, char*, int);
+  void receivedHelperLine (KPlayerLineOutputProcess*, char*);
   /** Receives notification when the data has been written to the fifo. */
   void playerDataWritten (int);
   /** Transfers data from a KIOSlave to an MPlayer process. */

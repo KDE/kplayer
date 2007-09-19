@@ -17,27 +17,12 @@
 #include <kinputdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <k3urldrag.h>
 #include <qaction.h>
 #include <qcursor.h>
+#include <qevent.h>
 #include <q3header.h>
 #include <qlabel.h>
-#define QT3_SUPPORT
-#include <q3popupmenu.h>
-#undef QT3_SUPPORT
-//Added by qt3to4:
-#include <QMoveEvent>
-#include <QResizeEvent>
-#include <QFocusEvent>
-#include <QDragLeaveEvent>
-#include <QMouseEvent>
-#include <Q3ValueList>
-#include <QDragEnterEvent>
-#include <QKeyEvent>
-#include <QEvent>
-#include <QHideEvent>
-#include <QDropEvent>
-#include <QDragMoveEvent>
+#include <qmenu.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_NODEVIEW
@@ -473,10 +458,10 @@ void KPlayerListViewFolderItem::added (const KPlayerNodeList& nodes, KPlayerNode
   {
     int count = childCount();
     KPlayerListViewItem* item = after == node() ? 0 : itemForNode (after);
-    KPlayerNodeListIterator iterator (nodes);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (nodes.begin());
+    while ( iterator != nodes.end() )
     {
-      item = createChild (item, node);
+      item = createChild (item, *iterator);
       if ( item )
       {
         item -> initialize();
@@ -507,10 +492,10 @@ void KPlayerListViewFolderItem::removed (const KPlayerNodeList& nodes)
 #endif
   if ( isOpen() )
   {
-    KPlayerNodeListIterator iterator (nodes);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (nodes.begin());
+    while ( iterator != nodes.end() )
     {
-      KPlayerListViewItem* item = itemForNode (node);
+      KPlayerListViewItem* item = itemForNode (*iterator);
       if ( item )
       {
         nodeView() -> keepUpCurrentItem (this, item);
@@ -616,9 +601,9 @@ KPlayerTreeViewFolderItem::~KPlayerTreeViewFolderItem()
 #endif
 }
 
-KPlayerHistoryActionList::KPlayerHistoryActionList (KPlayerHistory& history, const KPlayerHistory::Iterator& current,
-  const QString& text, const QString& status, const QString& whatsthis, QObject* parent, const QString& name)
-  : KPlayerActionList (text, status, whatsthis, parent, name), m_history (history), m_current (current)
+KPlayerHistoryActionList::KPlayerHistoryActionList (KPlayerHistory& history, const QString& text,
+  const QString& status, const QString& whatsthis, QObject* parent, const QString& name)
+  : KPlayerActionList (text, status, whatsthis, parent, name), m_history (history)
 {
 #ifdef DEBUG_KPLAYER_ACTIONLIST
   kdDebugTime() << "Creating history action list\n";
@@ -632,13 +617,14 @@ KPlayerHistoryActionList::~KPlayerHistoryActionList()
 #endif
 }
 
-void KPlayerHistoryActionList::update (void)
+void KPlayerHistoryActionList::update (int current)
 {
 #ifdef DEBUG_KPLAYER_ACTIONLIST
   kdDebugTime() << "KPlayerHistoryActionList::update\n";
 #endif
   unplug();
-  if ( m_history.count() > 1 )
+  m_bottom = m_history.count();
+  if ( m_bottom > 1 )
   {
     uint limit = KPlayerEngine::engine() -> configuration() -> recentMenuSize();
     uint halflimit = limit / 2;
@@ -647,12 +633,13 @@ void KPlayerHistoryActionList::update (void)
     do
     {
       -- iterator;
+      -- m_bottom;
       if ( actions().count() == limit )
         m_actions.removeFirst();
       KToggleAction* action = new KToggleAction (this);
       connect (action, SIGNAL (triggered()), SLOT (actionActivated()));
       action -> setText ((*iterator).m_name);
-      if ( iterator == m_current )
+      if ( m_bottom == current )
       {
         action -> setChecked (true);
         ++ count;
@@ -673,18 +660,7 @@ void KPlayerHistoryActionList::actionActivated (QAction*, int index)
   kdDebugTime() << "KPlayerHistoryActionList::actionActivated\n";
   kdDebugTime() << " Index  " << index << "\n";
 #endif
-  if ( ! m_history.isEmpty() )
-  {
-    KPlayerHistory::Iterator iterator (m_history.end());
-    do
-    {
-      -- iterator;
-      -- index;
-    }
-    while ( iterator != m_history.begin() && index >= 0 );
-    if ( index < 0 )
-      emit activated (iterator);
-  }
+  emit activated (m_bottom + actions().count() - index - 1);
 }
 
 KPlayerNodeView::KPlayerNodeView (QWidget* parent)
@@ -848,10 +824,10 @@ void KPlayerNodeView::added (KPlayerContainerNode* parent, const KPlayerNodeList
   {
     int count = childCount();
     KPlayerListViewItem* item = after == parent ? 0 : itemForNode (after);
-    KPlayerNodeListIterator iterator (nodes);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (nodes.begin());
+    while ( iterator != nodes.end() )
     {
-      item = createChild (item, node);
+      item = createChild (item, *iterator);
       if ( item )
       {
         item -> initialize();
@@ -889,10 +865,10 @@ void KPlayerNodeView::removed (KPlayerContainerNode* parent, const KPlayerNodeLi
 #endif
   if ( ! parent || parent == rootNode() )
   {
-    KPlayerNodeListIterator iterator (nodes);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (nodes.begin());
+    while ( iterator != nodes.end() )
     {
-      KPlayerListViewItem* item = itemForNode (node);
+      KPlayerListViewItem* item = itemForNode (*iterator);
       if ( item )
         item -> terminate();
       ++ iterator;
@@ -1332,10 +1308,9 @@ bool KPlayerNodeView::acceptDrag (QDropEvent* event) const
   if ( after )
     kdDebugTime() << " After  " << after -> text (0) << "\n";
 #endif
-  KUrl::List urls;
-  bool urldrag = K3URLDrag::canDecode (event);
-  if ( urldrag && K3URLDrag::decode (event, urls)
-    || event -> source() == viewport() || event -> source() == sibling() -> viewport() )
+  KUrl::List urls = KUrl::List::fromMimeData (event -> mimeData());
+  bool urldrag = ! urls.isEmpty();
+  if ( urldrag || event -> source() == viewport() || event -> source() == sibling() -> viewport() )
   {
     KPlayerContainerNode* target = parent ? ((KPlayerListViewGroupItem*) parent) -> node() : rootNode();
     const KPlayerNodeView* view = event -> source() == viewport() ? this : sibling();
@@ -1353,7 +1328,7 @@ bool KPlayerNodeView::acceptDrag (QDropEvent* event) const
         that -> cleanDropVisualizer();
       that -> setDropHighlighter (after == 0);
       that -> setDropVisualizer (after != 0);
-      KPlayerNode* node = nodes.getFirst();
+      KPlayerNode* node = nodes.first();
       bool control = kPlayerSettings() -> control();
       bool shift = kPlayerSettings() -> shift();
       bool canlink = target -> canLink (nodes);
@@ -1480,9 +1455,9 @@ void KPlayerNodeView::contentsDropEvent (QDropEvent* event)
     if ( after )
       kdDebugTime() << " After  " << after -> text (0) << "\n";
 #endif
-    KUrl::List urls;
+    KUrl::List urls = KUrl::List::fromMimeData (event -> mimeData());
+    bool urldrag = ! urls.isEmpty();
     bool own = event -> source() == viewport();
-    bool urldrag = K3URLDrag::canDecode (event) && K3URLDrag::decode (event, urls);
     KPlayerContainerNode* target = parent ? ((KPlayerListViewGroupItem*) parent) -> node() : rootNode();
     const KPlayerNodeView* view = own ? this : sibling();
     if ( urldrag && m_drag_node_list.isEmpty() )
@@ -1886,7 +1861,7 @@ KPlayerContainerNode* KPlayerNodeView::addToNewPlaylist (const KPlayerNodeList& 
     if ( container )
     {
       KPlayerContainerNode* node = list.count() == 1
-        && list.getFirst() -> isContainer() ? (KPlayerContainerNode*) list.getFirst() : 0;
+        && list.first() -> isContainer() ? (KPlayerContainerNode*) list.first() : 0;
       if ( node )
         node -> populate();
       const KPlayerNodeList& nodes = node ? node -> nodes() : list;
@@ -1925,7 +1900,7 @@ void KPlayerNodeView::addToPlaylists (void)
 #endif
   KPlayerNodeList list (getSelectedNodes());
   if ( ! list.isEmpty() )
-    if ( list.count() == 1 && list.getFirst() == playlist() -> nowplaying() )
+    if ( list.count() == 1 && list.first() == playlist() -> nowplaying() )
       playlist() -> addToPlaylists();
     else
       playlistActionList() -> node() -> append (list);
@@ -1939,7 +1914,7 @@ void KPlayerNodeView::addToPlaylist (KPlayerNode* node)
 #endif
   KPlayerNodeList list (getSelectedNodes());
   KPlayerContainerNode* container = list.count() == 1
-    && list.getFirst() -> isContainer() ? (KPlayerContainerNode*) list.getFirst() : 0;
+    && list.first() -> isContainer() ? (KPlayerContainerNode*) list.first() : 0;
   if ( container )
     container -> populate();
   const KPlayerNodeList& nodes = container ? container -> nodes() : list;
@@ -1975,7 +1950,7 @@ void KPlayerNodeView::addToCollection (void)
 #endif
   KPlayerNodeList list (getSelectedNodes());
   if ( ! list.isEmpty() )
-    if ( list.count() == 1 && list.getFirst() == playlist() -> nowplaying() )
+    if ( list.count() == 1 && list.first() == playlist() -> nowplaying() )
       playlist() -> addToCollection();
     else
       KPlayerNode::root() -> getNodeByUrl (KUrl ("kplayer:/collection")) -> add (list);
@@ -2911,7 +2886,7 @@ KPlayerTreeView::KPlayerTreeView (QWidget* parent)
   kdDebugTime() << "Creating tree view\n";
 #endif
   m_navigating = false;
-  m_current = m_history.begin();
+  m_current = 0;
 }
 
 KPlayerTreeView::~KPlayerTreeView()
@@ -3031,13 +3006,13 @@ void KPlayerTreeView::goBack (void)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerTreeView::goBack\n";
 #endif
-  if ( m_current != m_history.end() )
-    listView() -> saveHistoryEntry (*m_current);
+  if ( m_current < m_history.count() )
+    listView() -> saveHistoryEntry (m_history [m_current]);
   KPlayerContainerNode* node = 0;
-  while ( ! node && m_current != m_history.begin() )
+  while ( ! node && m_current > 0 )
   {
     -- m_current;
-    node = KPlayerNode::root() -> getNodeByUrl ((*m_current).m_url);
+    node = KPlayerNode::root() -> getNodeByUrl (m_history.at (m_current).m_url);
     if ( node )
     {
       m_navigating = true;
@@ -3046,13 +3021,13 @@ void KPlayerTreeView::goBack (void)
     }
     else
     {
-      m_current = m_history.remove (m_current);
-      historyActionList() -> update();
+      m_history.removeAt (m_current);
+      historyActionList() -> update (m_current);
     }
   }
 #ifdef DEBUG_KPLAYER_NODEVIEW
-  if ( m_current != m_history.end() )
-    kdDebugTime() << "Current URL " << (*m_current).m_url.url() << "\n";
+  if ( m_current < m_history.count() )
+    kdDebugTime() << "Current URL " << m_history.at (m_current).m_url.url() << "\n";
 #endif
 }
 
@@ -3061,15 +3036,15 @@ void KPlayerTreeView::goForward (void)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerTreeView::goForward\n";
 #endif
-  if ( m_current != m_history.end() )
-    listView() -> saveHistoryEntry (*m_current);
+  if ( m_current < m_history.count() )
+    listView() -> saveHistoryEntry (m_history [m_current]);
   KPlayerContainerNode* node = 0;
-  while ( ! node && m_current != m_history.end() )
+  while ( ! node && m_current < m_history.count() )
   {
     ++ m_current;
-    if ( m_current != m_history.end() )
+    if ( m_current < m_history.count() )
     {
-      node = KPlayerNode::root() -> getNodeByUrl ((*m_current).m_url);
+      node = KPlayerNode::root() -> getNodeByUrl (m_history.at (m_current).m_url);
       if ( node )
       {
         m_navigating = true;
@@ -3078,44 +3053,45 @@ void KPlayerTreeView::goForward (void)
       }
       else
       {
-        m_current = m_history.remove (m_current);
-        historyActionList() -> update();
+        m_history.removeAt (m_current);
+        historyActionList() -> update (m_current);
       }
     }
   }
 #ifdef DEBUG_KPLAYER_NODEVIEW
-  if ( m_current != m_history.end() )
-    kdDebugTime() << "Current URL " << (*m_current).m_url.url() << "\n";
+  if ( m_current < m_history.count() )
+    kdDebugTime() << "Current URL " << m_history.at (m_current).m_url.url() << "\n";
 #endif
 }
 
-void KPlayerTreeView::goToHistory (const KPlayerHistory::Iterator& iterator)
+void KPlayerTreeView::goToHistory (int index)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerTreeView::goToHistory\n";
-  kdDebugTime() << " URL    " << (*iterator).m_url.url() << "\n";
+  kdDebugTime() << " Index  " << index << "\n";
+  kdDebugTime() << " URL    " << m_history.at (index).m_url.url() << "\n";
 #endif
-  if ( m_current != m_history.end() )
-    listView() -> saveHistoryEntry (*m_current);
-  if ( iterator != m_current )
+  if ( m_current < m_history.count() )
+    listView() -> saveHistoryEntry (m_history [m_current]);
+  if ( index != m_current )
   {
-    KPlayerContainerNode* node = KPlayerNode::root() -> getNodeByUrl ((*iterator).m_url);
+    KPlayerContainerNode* node = KPlayerNode::root() -> getNodeByUrl (m_history.at (index).m_url);
     if ( node )
     {
-      m_current = iterator;
+      m_current = index;
       m_navigating = true;
       setActiveNode (node);
       m_navigating = false;
     }
     else
     {
-      m_history.remove (iterator);
-      historyActionList() -> update();
+      m_history.removeAt (index);
+      historyActionList() -> update (m_current);
     }
   }
 #ifdef DEBUG_KPLAYER_NODEVIEW
-  if ( m_current != m_history.end() )
-    kdDebugTime() << "Current URL " << (*m_current).m_url.url() << "\n";
+  if ( m_current < m_history.count() )
+    kdDebugTime() << "Current URL " << m_history.at (m_current).m_url.url() << "\n";
 #endif
 }
 
@@ -3188,16 +3164,11 @@ void KPlayerTreeView::updateNavigationActions (void)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Updating tree navigation actions\n";
 #endif
-  bool notempty = m_current != m_history.end();
-  action ("library_go_back") -> setEnabled (m_current != m_history.begin());
-  if ( notempty )
-    ++ m_current;
-  action ("library_go_forward") -> setEnabled (m_current != m_history.end());
-  if ( notempty )
-    -- m_current;
+  action ("library_go_back") -> setEnabled (m_current > 0);
+  action ("library_go_forward") -> setEnabled (m_current < m_history.count() - 1);
 #ifdef DEBUG_KPLAYER_NODEVIEW
-  if ( m_current != m_history.end() )
-    kdDebugTime() << "Current URL " << (*m_current).m_url.url() << "\n";
+  if ( m_current < m_history.count() )
+    kdDebugTime() << "Current URL " << m_history.at (m_current).m_url.url() << "\n";
 #endif
   KPlayerContainerNode* parent = currentNode() -> parent();
   action ("library_go_up") -> setEnabled (parent && parent -> parent());
@@ -3264,32 +3235,32 @@ void KPlayerTreeView::activeItemChanged (void)
 #endif
   if ( m_popup_menu_shown )
     return;
-  if ( ! m_navigating && m_current != m_history.end() )
-    listView() -> saveHistoryEntry (*m_current);
+  if ( ! m_navigating && m_current < m_history.count() )
+    listView() -> saveHistoryEntry (m_history [m_current]);
   if ( currentItem() && activeNode() != currentNode() )
   {
     listView() -> setRootNode (activeNode());
     if ( m_navigating )
     {
-      if ( m_current != m_history.end() )
-        listView() -> loadHistoryEntry (*m_current);
+      if ( m_current < m_history.count() )
+        listView() -> loadHistoryEntry (m_history.at (m_current));
     }
     else
     {
-      if ( m_current != m_history.end() )
+      if ( m_current < m_history.count() )
         ++ m_current;
-      while ( m_current != m_history.end() )
-        m_current = m_history.remove (m_current);
+      while ( m_current < m_history.count() )
+        m_history.removeAt (m_current);
       KPlayerHistoryEntry entry;
       entry.m_url = activeNode() -> url();
       entry.m_name = activeNode() -> name();
       m_history.append (entry);
       -- m_current;
 #ifdef DEBUG_KPLAYER_NODEVIEW
-      kdDebugTime() << "Current URL " << (*m_current).m_url.url() << "\n";
+      kdDebugTime() << "Current URL " << m_history.at (m_current).m_url.url() << "\n";
 #endif
     }
-    historyActionList() -> update();
+    historyActionList() -> update (m_current);
   }
 }
 
@@ -3493,7 +3464,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   int width = config() -> readNumEntry ("Tree View Width");
   if ( width )
   {
-    Q3ValueList<int> sizes;
+    QList<int> sizes;
     sizes.append (width);
     setSizes (sizes);
   }
@@ -3505,11 +3476,9 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   m_edit = new KPlayerSimpleActionList (listView() -> editableAttributes(), "%1", i18n("Starts edit mode for %1 field"),
     i18n("Edit %1 starts edit mode for this field of the current item."), this, "library_edit");
 
-  m_history_list = new KPlayerHistoryActionList (treeView() -> history(), treeView() -> currentHistoryEntry(),
-    "%1", i18n("Opens %1 in the library window"),
+  m_history_list = new KPlayerHistoryActionList (treeView() -> history(), "%1", i18n("Opens %1 in the library window"),
     i18n("Go to %1 command opens the corresponding folder in the library window."), this, "library_history");
-  connect (historyActionList(), SIGNAL(activated(const KPlayerHistory::Iterator&)), treeView(),
-    SLOT(goToHistory(const KPlayerHistory::Iterator&)));
+  connect (historyActionList(), SIGNAL (activated (int)), treeView(), SLOT (goToHistory (int)));
 
   m_last_view = m_tree;
 }
@@ -3521,7 +3490,7 @@ KPlayerLibrary::~KPlayerLibrary()
 #endif
 }
 
-void KPlayerLibrary::initialize (Q3PopupMenu* menu)
+void KPlayerLibrary::initialize (QMenu* menu)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerLibrary::initialize\n";

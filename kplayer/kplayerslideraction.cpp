@@ -18,13 +18,9 @@
 #include <qdesktopwidget.h>
 
 #include <qcursor.h>
+#include <qevent.h>
+#include <qlayout.h>
 #include <qtooltip.h>
-#include <q3whatsthis.h>
-//Added by qt3to4:
-#include <QWheelEvent>
-#include <Q3Frame>
-#include <QMouseEvent>
-#include <QKeyEvent>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SLIDERS
@@ -35,6 +31,15 @@
 #include "kplayerslideraction.moc"
 #include "kplayerengine.h"
 #include "kplayersettings.h"
+
+KPlayerPopupFrame::KPlayerPopupFrame (QWidget* parent)
+  : QFrame (parent, Qt::Popup)
+{
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "KPlayerPopupFrame created\n";
+#endif
+  setLayout (new QHBoxLayout);
+}
 
 KPlayerPopupFrame::~KPlayerPopupFrame()
 {
@@ -63,7 +68,8 @@ KPlayerPopupSliderAction::KPlayerPopupSliderAction (QObject* parent)
   m_frame -> setFrameStyle (QFrame::StyledPanel);
   m_frame -> setFrameShadow (QFrame::Raised);
   m_frame -> setLineWidth (2);
-  m_slider = new KPlayerSlider (Qt::Vertical, m_frame);
+  m_slider = new KPlayerSlider (Qt::Vertical);
+  m_frame -> layout() -> addWidget (m_slider);
   m_frame -> resize (36, m_slider -> sizeHint().height() + 4);
   m_slider -> setGeometry (m_frame -> contentsRect());
 #ifdef DEBUG_KPLAYER_SLIDERS
@@ -135,8 +141,8 @@ void KPlayerPopupSliderAction::slotActivated (void)
 #ifdef DEBUG_KPLAYER_SLIDERS
   kdDebugTime() << "Point: " << point.x() << "x" << point.y() << "\n";
 #endif
-  Q3WhatsThis::add (m_frame, whatsThis());
-  Q3WhatsThis::add (m_slider, whatsThis());
+  m_frame -> setWhatsThis (whatsThis());
+  m_slider -> setWhatsThis (whatsThis());
   m_frame -> move (point);
   m_frame -> show();
   m_slider -> setFocus();

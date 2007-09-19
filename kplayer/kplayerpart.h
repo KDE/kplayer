@@ -24,13 +24,10 @@
 #include <kparts/browserextension.h>
 
 #include "kplayerprocess.h"
-//Added by qt3to4:
-#include <Q3PopupMenu>
 
 class KPlayerPart;
 class KPlayerPopupSliderAction;
 class KPlayerSliderAction;
-class Q3PopupMenu;
 
 #define PROGRESS_TOOLBAR    1
 #define VOLUME_TOOLBAR      2
@@ -112,7 +109,7 @@ protected:
   /** The browser extension. */
   //KPlayerBrowserExtension* m_extension;
 
-  Q3PopupMenu* m_popup_menu;
+  QMenu* m_popup_menu;
 
   // Following should really be private
 //QStringList m_toolbar_names;

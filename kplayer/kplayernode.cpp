@@ -17,6 +17,7 @@
 #include <klocale.h>
 #include <kcodecs.h>
 #include <kio/netaccess.h>
+#include <kprocess.h>
 #include <qregexp.h>
 
 #ifdef DEBUG
@@ -139,7 +140,7 @@ bool KPlayerNode::canRename (void) const
 int KPlayerNode::compare (KPlayerNode* node) const
 {
   if ( parent() -> customOrder() )
-    return parent() -> compareByPosition (this, node);
+    return parent() -> compareByPosition ((KPlayerNode*) this, node);
   if ( isContainer() != node -> isContainer() )
     return isContainer() == parent() -> groupsFirst() ? -1 : 1;
   int result = media() -> compare (node -> media(), sortKey());
@@ -150,7 +151,7 @@ int KPlayerNode::compare (KPlayerNode* node) const
 
 int KPlayerNode::compareByName (KPlayerNode* node) const
 {
-  return parent() -> customOrder() ? parent() -> compareByPosition (this, node)
+  return parent() -> customOrder() ? parent() -> compareByPosition ((KPlayerNode*) this, node)
     : compareStrings (name(), node -> name());
 }
 
@@ -207,10 +208,9 @@ KPlayerMediaNode* KPlayerNode::previousMediaNode (void)
 #endif
   for ( KPlayerNode* node = this; node -> parent(); node = node -> parent() )
   {
-    KPlayerNodeList nodes (node -> parent() -> nodes());
-    nodes.findRef (node);
-    if ( nodes.prev() )
-      return nodes.current() -> lastMediaNode();
+    int index = node -> parent() -> nodes().indexOf (node);
+    if ( index > 0 )
+      return node -> parent() -> nodes().at (index - 1) -> lastMediaNode();
   }
   return 0;
 }
@@ -467,9 +467,10 @@ bool KPlayerContainerNode::canCopy (const KPlayerNodeList& nodes) const
 #endif
   if ( ! canAddLeaves() )
     return false;
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( node -> isContainer() )
     {
       const KPlayerContainerNode* parent = this;
@@ -491,9 +492,10 @@ bool KPlayerContainerNode::canLink (const KPlayerNodeList& nodes) const
   kdDebugTime() << "KPlayerContainerNode::canLink\n";
   kdDebugTime() << " Target " << url().url() << "\n";
 #endif
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( node -> isContainer() && canLink ((KPlayerContainerNode*) node) )
       return true;
     ++ iterator;
@@ -617,11 +619,12 @@ void KPlayerContainerNode::move (const KPlayerNodeList& nodes, KPlayerNode* afte
     kdDebugTime() << " After  " << after -> url().url() << "\n";
 #endif
   populate();
-  KPlayerContainerNode* parent = nodes.getFirst() -> parent();
+  KPlayerContainerNode* parent = nodes.first() -> parent();
   KPlayerNodeList list;
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes.begin());
+  while ( iterator != nodes.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( parent != node -> parent() )
     {
       if ( parent == this )
@@ -669,10 +672,11 @@ KPlayerContainerNode* KPlayerContainerNode::createBranch (const QString&, KPlaye
 
 void KPlayerContainerNode::insert (KPlayerNode* node, KPlayerNode* after)
 {
+  int index;
   if ( after == this )
     m_nodes.prepend (node);
-  else if ( after && m_nodes.findRef (after) >= 0 )
-    m_nodes.insert (nodes().at() + 1, node);
+  else if ( after && (index = nodes().indexOf (after)) >= 0 )
+    m_nodes.insert (index + 1, node);
   else
   {
     m_nodes.append (node);
@@ -773,7 +777,7 @@ void KPlayerContainerNode::doPopulate (void)
       if ( iterator != map.end() )
       {
         node = *iterator;
-        previous.removeRef (node);
+        previous.removeAll (node);
         iterator = map.end();
         map.remove (id);
       }
@@ -797,10 +801,10 @@ void KPlayerContainerNode::doPopulate (void)
 #ifdef DEBUG_KPLAYER_NODE
     kdDebugTime() << " Remaining " << previous.count() << "\n";
 #endif
-    KPlayerNodeListIterator iterator (previous);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (previous.begin());
+    while ( iterator != previous.end() )
     {
-      append (node);
+      append (*iterator);
       ++ iterator;
     }
   }
@@ -824,9 +828,10 @@ void KPlayerContainerNode::populateGroups (void)
 #endif
       if ( origin() )
         origin() -> populateGroups();
-      KPlayerNodeListIterator iterator (nodes());
-      while ( KPlayerNode* node = iterator.current() )
+      KPlayerNodeList::ConstIterator iterator (nodes().begin());
+      while ( iterator != nodes().end() )
       {
+	KPlayerNode* node = *iterator;
         if ( node -> isContainer() )
           node -> reference();
         ++ iterator;
@@ -859,7 +864,7 @@ void KPlayerContainerNode::doPopulateGroups (void)
     KPlayerNode* node = iterator == map.end() ? 0 : *iterator;
     if ( node )
     {
-      previous.removeRef (node);
+      previous.removeAll (node);
       map.remove (id);
       append (node);
     }
@@ -873,10 +878,10 @@ void KPlayerContainerNode::doPopulateGroups (void)
 #ifdef DEBUG_KPLAYER_NODE
     kdDebugTime() << " Remaining " << previous.count() << "\n";
 #endif
-    KPlayerNodeListIterator iterator (previous);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (previous.begin());
+    while ( iterator != previous.end() )
     {
-      append (node);
+      append (*iterator);
       ++ iterator;
     }
   }
@@ -891,9 +896,12 @@ void KPlayerContainerNode::populateAll (void)
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
   populate();
-  for ( KPlayerNode* node = m_nodes.first(); node; node = m_nodes.next() )
+  for ( KPlayerNodeList::ConstIterator iterator = nodes().begin(); iterator != nodes().end(); ++ iterator )
+  {
+    KPlayerNode* node = *iterator;
     if ( node -> isContainer() )
       ((KPlayerContainerNode*) node) -> populateAll();
+  }
 }
 
 void KPlayerContainerNode::vacate (void)
@@ -909,9 +917,9 @@ void KPlayerContainerNode::vacate (void)
     kdDebugTime() << "Vacating node\n";
     kdDebugTime() << " ID     " << url() << "\n";
 #endif
-    KPlayerNodeList nodes (m_nodes);
-    for ( KPlayerNode* node = nodes.first(); node; node = nodes.next() )
-      node -> release();
+    KPlayerNodeList list (nodes());
+    for ( KPlayerNodeList::ConstIterator iterator = list.constBegin(); iterator != list.constEnd(); ++ iterator )
+      (*iterator) -> release();
     if ( origin() )
       origin() -> vacate();
     m_attribute_counts.clear();
@@ -933,10 +941,13 @@ void KPlayerContainerNode::vacateGroups (void)
     kdDebugTime() << "Vacating groups\n";
     kdDebugTime() << " URL    " << url() << "\n";
 #endif
-    KPlayerNodeList nodes (m_nodes);
-    for ( KPlayerNode* node = nodes.first(); node; node = nodes.next() )
+    KPlayerNodeList list (nodes());
+    for ( KPlayerNodeList::ConstIterator iterator = list.constBegin(); iterator != list.constEnd(); ++ iterator )
+    {
+      KPlayerNode* node = *iterator;
       if ( node -> isContainer() )
         node -> release();
+    }
     if ( origin() )
       origin() -> vacateGroups();
   }
@@ -950,9 +961,12 @@ void KPlayerContainerNode::vacateAll (void)
   kdDebugTime() << "KPlayerContainerNode::vacateAll\n";
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
-  for ( KPlayerNode* node = m_nodes.first(); node; node = m_nodes.next() )
+  for ( KPlayerNodeList::ConstIterator iterator = nodes().begin(); iterator != nodes().end(); ++ iterator )
+  {
+    KPlayerNode* node = *iterator;
     if ( node -> isContainer() )
       ((KPlayerContainerNode*) node) -> vacateAll();
+  }
   vacate();
 }
 
@@ -1031,7 +1045,8 @@ KPlayerContainerNode* KPlayerContainerNode::getNodeByPath (const QString& path)
 
 KPlayerNode* KPlayerContainerNode::nextNode (KPlayerNode* node)
 {
-  return m_nodes.findRef (node) >= 0 ? m_nodes.next() : 0;
+  int index = nodes().indexOf (node);
+  return index >= 0 ? nodes().at (index + 1) : 0;
 }
 
 KPlayerMediaNode* KPlayerContainerNode::lastMediaNode (void)
@@ -1040,19 +1055,22 @@ KPlayerMediaNode* KPlayerContainerNode::lastMediaNode (void)
   kdDebugTime() << "KPlayerContainerNode::lastMediaNode\n";
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
-  KPlayerNodeListIterator iterator (m_nodes);
-  iterator.toLast();
-  while ( KPlayerNode* node = iterator.current() )
+  if ( ! nodes().isEmpty() )
   {
-    KPlayerMediaNode* medianode = node -> lastMediaNode();
-    if ( medianode )
+    KPlayerNodeList::ConstIterator iterator (nodes().end());
+    do
     {
+      -- iterator;
+      KPlayerMediaNode* medianode = (*iterator) -> lastMediaNode();
+      if ( medianode )
+      {
 #ifdef DEBUG_KPLAYER_NODE
-      kdDebugTime() << " Found  " << medianode -> url().url() << "\n";
+        kdDebugTime() << " Found  " << medianode -> url().url() << "\n";
 #endif
-      return medianode;
+        return medianode;
+      }
     }
-    -- iterator;
+    while ( iterator != nodes().begin() );
   }
   return previousMediaNode();
 }
@@ -1104,10 +1122,10 @@ bool KPlayerContainerNode::acceptsDuplicates (void) const
   return false;
 }
 
-int KPlayerContainerNode::compareByPosition (const KPlayerNode* node1, const KPlayerNode* node2)
+int KPlayerContainerNode::compareByPosition (KPlayerNode* node1, KPlayerNode* node2)
 {
-  int i1 = m_nodes.findRef (node1);
-  int i2 = m_nodes.findRef (node2);
+  int i1 = nodes().indexOf (node1);
+  int i2 = nodes().indexOf (node2);
   return i1 == i2 ? 0 : i1 < i2 ? -1 : 1;
 }
 
@@ -1225,7 +1243,7 @@ void KPlayerContainerNode::added (KPlayerContainerNode* node, bool link)
   node -> vacate();
 }
 
-KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& nodes, bool link, KPlayerNode* after)
+KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& list, bool link, KPlayerNode* after)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerContainerNode::added " << (link ? "link" : "copy") << " nodes\n";
@@ -1244,12 +1262,13 @@ KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& nodes, bool lin
     m_nodes.sort();
     setCustomOrder (true);
   }
-  KPlayerNodeList list;
+  KPlayerNodeList save;
   KPlayerPropertyCounts counts;
   KPlayerNode* saveAfter = after;
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (list.begin());
+  while ( iterator != list.end() )
   {
+    KPlayerNode* node = *iterator;
     QString id (node -> suggestId());
     KPlayerNode* subnode = nodeById (id);
     if ( subnode && acceptsDuplicates() )
@@ -1276,7 +1295,7 @@ KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& nodes, bool lin
     {
       if ( after || customOrder() )
       {
-        m_nodes.removeRef (subnode);
+        m_nodes.removeAll (subnode);
         insert (subnode, after);
       }
       if ( subnode -> isContainer() && node -> isContainer() )
@@ -1306,7 +1325,7 @@ KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& nodes, bool lin
       if ( subnode )
       {
         subnode -> countAttributes (counts);
-        list.append (subnode);
+        save.append (subnode);
       }
     }
     if ( after )
@@ -1316,9 +1335,10 @@ KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& nodes, bool lin
   if ( origin() && customOrder() && ! media() -> customOrder() )
   {
     m_nodes.clear();
-    KPlayerNodeListIterator originit (origin() -> nodes());
-    while ( KPlayerNode* originnode = originit.current() )
+    KPlayerNodeList::ConstIterator originit (origin() -> nodes().begin());
+    while ( originit != origin() -> nodes().end() )
     {
+      KPlayerNode* originnode = *originit;
       KPlayerNode* node = nodeById (originnode -> id());
       if ( node )
         m_nodes.append (node);
@@ -1334,13 +1354,13 @@ KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& nodes, bool lin
     m_attribute_counts.add (counts);
     emitAttributesUpdated (counts, KPlayerPropertyCounts());
   }
-  emitAdded (list, saveAfter);
+  emitAdded (save, saveAfter);
   source() -> save();
   vacate();
-  return after && m_nodes.findRef (after) >= 0 ? after : 0;
+  return after && nodes().indexOf (after) >= 0 ? after : 0;
 }
 
-KPlayerNode* KPlayerContainerNode::moved (const KPlayerNodeList& nodes, KPlayerNode* after)
+KPlayerNode* KPlayerContainerNode::moved (const KPlayerNodeList& list, KPlayerNode* after)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerContainerNode::moved\n";
@@ -1359,12 +1379,13 @@ KPlayerNode* KPlayerContainerNode::moved (const KPlayerNodeList& nodes, KPlayerN
     setCustomOrder (true);
   }
   KPlayerNode* saveAfter = after;
-  KPlayerNodeListIterator iterator (nodes);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (list.begin());
+  while ( iterator != list.end() )
   {
+    KPlayerNode* node = *iterator;
     if ( after || customOrder() )
     {
-      m_nodes.removeRef (node);
+      m_nodes.removeAll (node);
       insert (node, after);
     }
     if ( after )
@@ -1372,10 +1393,9 @@ KPlayerNode* KPlayerContainerNode::moved (const KPlayerNodeList& nodes, KPlayerN
     ++ iterator;
   }
   source() -> save();
-  KPlayerNodeList list;
-  emitAdded (list, saveAfter);
+  emitAdded (KPlayerNodeList(), saveAfter);
   vacate();
-  return after && m_nodes.findRef (after) >= 0 ? after : 0;
+  return after && nodes().indexOf (after) >= 0 ? after : 0;
 }
 
 KPlayerNode* KPlayerContainerNode::lastNode (void)
@@ -1390,7 +1410,7 @@ KPlayerNode* KPlayerContainerNode::lastNode (void)
     m_nodes.sort();
     setCustomOrder (true);
   }
-  return nodes().getLast();
+  return nodes().last();
 }
 
 bool KPlayerContainerNode::remove (KPlayerNode* node)
@@ -1399,7 +1419,7 @@ bool KPlayerContainerNode::remove (KPlayerNode* node)
   kdDebugTime() << "KPlayerContainerNode::remove\n";
   kdDebugTime() << " URL    " << node -> url() << "\n";
 #endif
-  bool found = m_nodes.removeRef (node);
+  bool found = m_nodes.removeAll (node);
   if ( found )
     m_node_map.remove (node -> id());
   return found;
@@ -1468,9 +1488,10 @@ void KPlayerContainerNode::removed (const KPlayerNodeList& nodes)
   if ( ! nodes.isEmpty() )
   {
     populate();
-    KPlayerNodeListIterator iterator (list);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (list.begin());
+    while ( iterator != list.end() )
     {
+      KPlayerNode* node = *iterator;
       if ( node -> isContainer() )
         ((KPlayerContainerNode*) node) -> removed();
       node -> countAttributes (counts);
@@ -1494,9 +1515,10 @@ void KPlayerContainerNode::save (void)
   {
     populate();
     QStringList children;
-    KPlayerNodeListIterator iterator (nodes());
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (nodes().begin());
+    while ( iterator != nodes().end() )
     {
+      KPlayerNode* node = *iterator;
 #ifdef DEBUG_KPLAYER_NODE
       kdDebugTime() << " Child  " << node -> url() << "\n";
 #endif
@@ -1526,7 +1548,6 @@ void KPlayerContainerNode::applyCustomOrder (void)
   kdDebugTime() << "KPlayerContainerNode::applyCustomOrder\n";
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
-  KPlayerNode* node;
   KPlayerNodeList list (m_nodes);
   m_nodes.clear();
   const QStringList& children (media() -> children());
@@ -1534,18 +1555,20 @@ void KPlayerContainerNode::applyCustomOrder (void)
   while ( iterator != children.end() )
   {
     QString id (*iterator);
-    for ( node = list.first(); node; node = list.next() )
-      if ( node -> id() == id )
-        break;
-    if ( node )
+    for ( KPlayerNodeList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++ it )
     {
-      list.remove();
-      m_nodes.append (node);
+      KPlayerNode* node = *it;
+      if ( node -> id() == id )
+      {
+        list.removeAll (node);
+        m_nodes.append (node);
+        break;
+      }
     }
     ++ iterator;
   }
-  for ( node = list.first(); node; node = list.next() )
-    m_nodes.append (node);
+  for ( KPlayerNodeList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++ it )
+    m_nodes.append (*it);
 }
 
 void KPlayerContainerNode::detach (void)
@@ -1554,9 +1577,9 @@ void KPlayerContainerNode::detach (void)
   kdDebugTime() << "Detaching subnodes\n";
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
-  KPlayerNodeList nodes (m_nodes);
-  for ( KPlayerNode* node = nodes.first(); node; node = nodes.next() )
-    node -> detach();
+  KPlayerNodeList list (nodes());
+  for ( KPlayerNodeList::ConstIterator iterator = list.constBegin(); iterator != list.constEnd(); ++ iterator )
+    (*iterator) -> detach();
   emitDetached();
   KPlayerNode::detach();
 }
@@ -1568,9 +1591,10 @@ void KPlayerContainerNode::detachOrigin (void)
 #endif
   populate();
   releaseOrigin();
-  KPlayerNodeListIterator iterator (nodes());
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (nodes().begin());
+  while ( iterator != nodes().end() )
   {
+    KPlayerNode* node = *iterator;
     if ( node -> isContainer() )
     {
       KPlayerContainerNode* container = (KPlayerContainerNode*) node;
@@ -1887,9 +1911,9 @@ void KPlayerCollectionNode::group (const QString& key)
   if ( groupingKey() == key || key.isNull() && parent() && isParentGrouped() )
     return;
   media() -> setGroupingKey (key);
-  KPlayerNodeList nodes (m_nodes);
-  for ( KPlayerNode* node = nodes.first(); node; node = nodes.next() )
-    node -> detach();
+  KPlayerNodeList list (nodes());
+  for ( KPlayerNodeList::ConstIterator iterator = list.constBegin(); iterator != list.constEnd(); ++ iterator )
+    (*iterator) -> detach();
   emitRemoved (nodes());
   m_nodes.clear();
   m_node_map.clear();
@@ -2065,9 +2089,10 @@ void KPlayerPlaylistNode::configurationUpdated (void)
     {
       KPlayerNodeMap map;
       KPlayerNodeList list;
-      KPlayerNodeListIterator iterator (nodes());
-      while ( KPlayerNode* node = iterator.current() )
+      KPlayerNodeList::ConstIterator iterator (nodes().begin());
+      while ( iterator != nodes().end() )
       {
+	KPlayerNode* node = *iterator;
         QString id (node -> id().section ('#', 0, 0));
         KPlayerNodeMap::ConstIterator iterator = map.find (id);
         if ( iterator == map.end() )
@@ -2276,10 +2301,10 @@ void KPlayerRecentsNode::addRecent (const KPlayerNodeList& list)
   {
     populate();
     bool just_move = true;
-    KPlayerNodeListIterator iterator (list);
-    while ( KPlayerNode* node = iterator.current() )
+    KPlayerNodeList::ConstIterator iterator (list.begin());
+    while ( iterator != list.end() )
     {
-      if ( node -> parent() != this )
+      if ( (*iterator) -> parent() != this )
       {
         just_move = false;
         break;
@@ -2290,12 +2315,13 @@ void KPlayerRecentsNode::addRecent (const KPlayerNodeList& list)
       move (list, this);
     else if ( list.count() == 1 )
     {
-      KPlayerNode* listnode = list.getFirst();
+      KPlayerNode* listnode = list.first();
       bool container = listnode -> isContainer();
       KPlayerNodeList previous;
-      KPlayerNodeListIterator iterator (nodes());
-      while ( KPlayerNode* node = iterator.current() )
+      KPlayerNodeList::ConstIterator iterator (nodes().begin());
+      while ( iterator != nodes().end() )
       {
+	KPlayerNode* node = *iterator;
         if ( container && node -> isContainer() && ((KPlayerContainerNode*) node) -> origin() == listnode
             || ! container && ! node -> isContainer() && node -> media() == listnode -> media() )
           previous.append (node);
@@ -2306,15 +2332,15 @@ void KPlayerRecentsNode::addRecent (const KPlayerNodeList& list)
       prepend (list);
       if ( container && ! listnode -> hasProperties() )
       {
-        KPlayerNode* firstnode = nodes().getFirst();
+        KPlayerNode* firstnode = nodes().first();
         firstnode -> media() -> setName (i18n("%1 in %2").arg (listnode -> name(), listnode -> parent() -> name()));
         firstnode -> media() -> commit();
       }
     }
     else
     {
-      QString name (list.count() == 2 ? i18n("%1 and %2").arg (list.getFirst() -> name(), list.getLast() -> name())
-        : i18n("%1 and %2 more").arg (list.getFirst() -> name(), QString::number (list.count() - 1)));
+      QString name (list.count() == 2 ? i18n("%1 and %2").arg (list.first() -> name(), list.last() -> name())
+        : i18n("%1 and %2 more").arg (list.first() -> name(), QString::number (list.count() - 1)));
       QString id (name);
       for ( int i = 0; nodeById (id); i ++ )
         id = name + QString::number (i);
@@ -2341,15 +2367,8 @@ void KPlayerRecentsNode::configurationUpdated (void)
   populate();
   if ( int (nodes().count()) > limit )
   {
-    limit = nodes().count() - limit;
-    m_nodes.last();
-    KPlayerNodeList list;
-    for ( int i = 0; i < limit; i ++ )
-    {
-      list.append (m_nodes.current());
-      m_nodes.prev();
-    }
-    remove (list);
+    QList<KPlayerNode*> list (nodes().mid (limit));
+    remove ((const KPlayerNodeList&) list);
   }
   vacate();
 }
@@ -2729,10 +2748,10 @@ void KPlayerDevicesNode::removed (const KPlayerNodeList& nodes)
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDevicesNode::removed\n";
 #endif
-  KPlayerNodeListIterator nlit (nodes);
-  while ( KPlayerNode* node = nlit.current() )
+  KPlayerNodeList::ConstIterator nlit (nodes.begin());
+  while ( nlit != nodes.end() )
   {
-    QString id (node -> id());
+    QString id ((*nlit) -> id());
     m_devices.removeAll (id);
     m_type_map.remove (id);
     m_disk_types.remove (id);
@@ -3122,13 +3141,14 @@ void KPlayerDiskNode::autodetect (void)
     *process << "vcd://1" << "vcd://2";
   else
     *process << m_url;
-  connect (process, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    SLOT (receivedOutput (KPlayerLineOutputProcess*, char*, int)));
-  connect (process, SIGNAL (processExited (K3Process*)), SLOT (processExited (K3Process*)));
-  process -> start (K3Process::NotifyOnExit, K3Process::All);
+  connect (process, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*)),
+    SLOT (receivedOutput (KPlayerLineOutputProcess*, char*)));
+  connect (process, SIGNAL (processFinished (KPlayerLineOutputProcess*)),
+    SLOT (processFinished (KPlayerLineOutputProcess*)));
+  process -> start();
 }
 
-void KPlayerDiskNode::receivedOutput (KPlayerLineOutputProcess*, char* str, int)
+void KPlayerDiskNode::receivedOutput (KPlayerLineOutputProcess*, char* str)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << " <<<<<< " << str << "\n";
@@ -3156,10 +3176,10 @@ void KPlayerDiskNode::receivedOutput (KPlayerLineOutputProcess*, char* str, int)
   }
 }
 
-void KPlayerDiskNode::processExited (K3Process* process)
+void KPlayerDiskNode::processFinished (KPlayerLineOutputProcess* process)
 {
 #ifdef DEBUG_KPLAYER_NODE
-  kdDebugTime() << "KPlayerDiskNode::processExited\n";
+  kdDebugTime() << "KPlayerDiskNode::processFinished\n";
 #endif
   delete process;
   if ( ready() )
@@ -3177,10 +3197,11 @@ void KPlayerDiskNode::processExited (K3Process* process)
     KPlayerLineOutputProcess* process = new KPlayerLineOutputProcess;
     *process << media() -> executablePath() << "-cdrom-device" << id() << "-v"
       << "-identify" << "-ao" << "null" << "-vo" << "null" << "-frames" << "0" << "cddb://";
-    connect (process, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-      SLOT (receivedCddbOutput (KPlayerLineOutputProcess*, char*, int)));
-    connect (process, SIGNAL (processExited (K3Process*)), SLOT (cddbProcessExited (K3Process*)));
-    process -> start (K3Process::NotifyOnExit, K3Process::All);
+    connect (process, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*)),
+      SLOT (receivedCddbOutput (KPlayerLineOutputProcess*, char*)));
+    connect (process, SIGNAL (processFinished (KPlayerLineOutputProcess*)),
+      SLOT (cddbProcessFinished (KPlayerLineOutputProcess*)));
+    process -> start();
     return;
   }
   if ( m_autodetected || m_url == "cdda://" && ! m_fast_autodetect )
@@ -3287,7 +3308,7 @@ void KPlayerDiskNode::statResult (KIO::Job* job)
     autodetect();
 }
 
-void KPlayerDiskNode::receivedCddbOutput (KPlayerLineOutputProcess*, char* str, int)
+void KPlayerDiskNode::receivedCddbOutput (KPlayerLineOutputProcess*, char* str)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << " <<<<<< " << str << "\n";
@@ -3350,7 +3371,7 @@ void KPlayerDiskNode::receivedCddbOutput (KPlayerLineOutputProcess*, char* str, 
   }
 }
 
-void KPlayerDiskNode::cddbProcessExited (K3Process* process)
+void KPlayerDiskNode::cddbProcessFinished (KPlayerLineOutputProcess* process)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDiskNode::cddbProcessExited\n";
@@ -3456,9 +3477,17 @@ KPlayerNodeList::~KPlayerNodeList()
 {
 }
 
-int KPlayerNodeList::compareItems (Q3PtrCollection::Item item1, Q3PtrCollection::Item item2)
+bool compareNodes (KPlayerNode* left, KPlayerNode* right)
 {
-  return ((KPlayerNode*) item1) -> compare ((KPlayerNode*) item2);
+  return left -> compare (right) < 0;
+}
+
+void KPlayerNodeList::sort (void)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerNodeList::sort\n";
+#endif
+  //qSort (begin(), end(), compareNodes);
 }
 
 void KPlayerNodeList::releaseAll (void) const
@@ -3466,10 +3495,10 @@ void KPlayerNodeList::releaseAll (void) const
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerNodeList::releaseAll\n";
 #endif
-  KPlayerNodeListIterator iterator (*this);
-  while ( KPlayerNode* node = iterator.current() )
+  KPlayerNodeList::ConstIterator iterator (begin());
+  while ( iterator != end() )
   {
-    node -> release();
+    (*iterator) -> release();
     ++ iterator;
   }
 }
@@ -3544,33 +3573,47 @@ KPlayerNodeListByName::~KPlayerNodeListByName()
 {
 }
 
-int KPlayerNodeListByName::compareItems (Q3PtrCollection::Item item1, Q3PtrCollection::Item item2)
+bool compareNodesByName (KPlayerNode* left, KPlayerNode* right)
 {
-  return ((KPlayerNode*) item1) -> compareByName ((KPlayerNode*) item2);
+  return left -> compareByName (right) < 0;
+}
+
+void KPlayerNodeListByName::sort (void)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerNodeListByName::sort\n";
+#endif
+  //qSort (begin(), end(), compareNodesByName);
 }
 
 KPlayerPlaylistNodeList::~KPlayerPlaylistNodeList()
 {
 }
 
-int KPlayerPlaylistNodeList::compareItems (Q3PtrCollection::Item item1, Q3PtrCollection::Item item2)
+bool compareNodesByPosition (KPlayerNode* left, KPlayerNode* right)
 {
-  KPlayerNode* node1 = (KPlayerNode*) item1;
-  KPlayerNode* node2 = (KPlayerNode*) item2;
-  while ( node1 -> parent() )
+  while ( left -> parent() )
   {
-    KPlayerNode* node = node2;
+    KPlayerNode* node = right;
     while ( node -> parent() )
     {
-      if ( node1 == node -> parent() )
-        return -1;
-      if ( node == node1 -> parent() )
-        return 1;
-      if ( node1 -> parent() == node -> parent() )
-        return node1 -> compare (node);
+      if ( left == node -> parent() )
+        return true;
+      if ( node == left -> parent() )
+        return false;
+      if ( left -> parent() == node -> parent() )
+        return left -> compare (node) < 0;
       node = node -> parent();
     }
-    node1 = node1 -> parent();
+    left = left -> parent();
   }
-  return 0;
+  return false;
+}
+
+void KPlayerPlaylistNodeList::sort (void)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerPlaylistNodeList::sort\n";
+#endif
+  //qSort (begin(), end(), compareNodesByPosition);
 }

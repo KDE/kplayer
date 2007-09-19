@@ -651,7 +651,7 @@ protected:
 
   KPlayerMediaProperties* m_properties;
 
-  QMap<QObject*, QString> m_page_names;
+  QHash<QObject*, QString> m_page_names;
 
 protected slots:
   void apply (void);

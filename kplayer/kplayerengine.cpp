@@ -22,14 +22,8 @@
 #include <kurlrequesterdialog.h>
 #include <qaction.h>
 #include <qdatetime.h>
-#define QT3_SUPPORT
-#include <q3popupmenu.h>
-#undef QT3_SUPPORT
+#include <qevent.h>
 #include <qregexp.h>
-//Added by qt3to4:
-#include <QMouseEvent>
-#include <QEvent>
-#include <Q3CString>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_ENGINE
@@ -2211,13 +2205,14 @@ void KPlayerEngine::getLists (QString path)
   KPlayerLineOutputProcess* player = new KPlayerLineOutputProcess;
   *player << path << "-identify" << "-ac" << "help" << "-ao" << "help"
     << "-vc" << "help" << "-vo" << "help" << "-demuxer" << "help";
-  connect (player, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    SLOT (receivedOutput (KPlayerLineOutputProcess*, char*, int)));
-  connect (player, SIGNAL (processExited (K3Process*)), SLOT (processExited (K3Process*)));
-  player -> start (K3Process::NotifyOnExit, K3Process::All);
+  connect (player, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*)),
+    SLOT (receivedOutput (KPlayerLineOutputProcess*, char*)));
+  connect (player, SIGNAL (processFinished (KPlayerLineOutputProcess*)),
+    SLOT (processFinished (KPlayerLineOutputProcess*)));
+  player -> start();
 }
 
-void KPlayerEngine::receivedOutput (KPlayerLineOutputProcess*, char* str, int)
+void KPlayerEngine::receivedOutput (KPlayerLineOutputProcess*, char* str)
 {
   if ( strcmp (str, "ID_VIDEO_OUTPUTS") == 0 )
   {
@@ -2338,7 +2333,7 @@ void KPlayerEngine::receivedOutput (KPlayerLineOutputProcess*, char* str, int)
   }
 }
 
-void KPlayerEngine::processExited (K3Process* proc)
+void KPlayerEngine::processFinished (KPlayerLineOutputProcess* proc)
 {
   delete proc;
   m_audio_codecs.sort();
@@ -2483,13 +2478,15 @@ void KPlayerEngine::runAmixer (const QString& command, const QString& parameter)
     kdDebugTime() << " Volume " << parameter << "\n";
 #endif
   }
-  connect (amixer, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    SLOT (amixerOutput (KPlayerLineOutputProcess*, char*, int)));
-  connect (amixer, SIGNAL (processExited (K3Process*)), SLOT (amixerExited (K3Process*)));
-  m_amixer_running = amixer -> start (K3Process::NotifyOnExit, K3Process::All);
+  connect (amixer, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*)),
+    SLOT (amixerOutput (KPlayerLineOutputProcess*, char*)));
+  connect (amixer, SIGNAL (processFinished (KPlayerLineOutputProcess*)),
+    SLOT (amixerFinished (KPlayerLineOutputProcess*)));
+  amixer -> start();
+  m_amixer_running = true;
 }
 
-void KPlayerEngine::amixerOutput (KPlayerLineOutputProcess*, char* str, int)
+void KPlayerEngine::amixerOutput (KPlayerLineOutputProcess*, char* str)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << " amixer: " << str << "\n";
@@ -2515,7 +2512,7 @@ void KPlayerEngine::amixerOutput (KPlayerLineOutputProcess*, char* str, int)
   }
 }
 
-void KPlayerEngine::amixerExited (K3Process* proc)
+void KPlayerEngine::amixerFinished (KPlayerLineOutputProcess* proc)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "KPlayerEngine::amixerExited\n";

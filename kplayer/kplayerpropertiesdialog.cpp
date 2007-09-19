@@ -136,7 +136,7 @@ void KPlayerPropertiesDialog::setup (const KUrl& url)
   KConfig* config = kPlayerConfig();
   config -> setGroup ("Dialog Options");
   QString name (config -> readEntry ("Properties Dialog Page"));
-  for ( QMap<QObject*, QString>::ConstIterator it (m_page_names.constBegin()); it != m_page_names.constEnd(); ++ it )
+  for ( QHash<QObject*, QString>::ConstIterator it (m_page_names.constBegin()); it != m_page_names.constEnd(); ++ it )
     if ( it.value() == name )
       setCurrentPage ((KPageWidgetItem*) it.key());
 /*int x = config -> readNumEntry ("Properties Dialog Left", -1);

@@ -496,14 +496,14 @@ signals:
 
 protected slots:
   /** Processes an MPlayer output line. */
-  void receivedOutput (KPlayerLineOutputProcess*, char*, int);
+  void receivedOutput (KPlayerLineOutputProcess*, char*);
   /** Finishes refreshing lists. */
-  void processExited (K3Process*);
+  void processFinished (KPlayerLineOutputProcess*);
 
   /** Processes an amixer output line. */
-  void amixerOutput (KPlayerLineOutputProcess*, char*, int);
+  void amixerOutput (KPlayerLineOutputProcess*, char*);
   /** Finishes refreshing ALSA volume. */
-  void amixerExited (K3Process*);
+  void amixerFinished (KPlayerLineOutputProcess*);
 };
 
 inline KPlayerEngine* kPlayerEngine (void)

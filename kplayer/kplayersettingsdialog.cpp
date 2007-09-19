@@ -23,11 +23,6 @@
 #include <qpushbutton.h>
 #include <qregexp.h>
 #include <qslider.h>
-//Added by qt3to4:
-#include <Q3ValueList>
-#include <Q3Frame>
-#include <math.h>
-#include <stdlib.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SETTINGS_DIALOG
@@ -134,7 +129,7 @@ KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
   KConfig* config = kPlayerConfig();
   config -> setGroup ("Dialog Options");
   QString name (config -> readEntry ("Settings Dialog Page"));
-  for ( QMap<QObject*, QString>::ConstIterator it (m_page_names.constBegin()); it != m_page_names.constEnd(); ++ it )
+  for ( QHash<QObject*, QString>::ConstIterator it (m_page_names.constBegin()); it != m_page_names.constEnd(); ++ it )
     if ( it.value() == name )
       setCurrentPage ((KPageWidgetItem*) it.key());
 /*int x = config -> readNumEntry ("Settings Dialog Left", -1);
@@ -510,13 +505,15 @@ void KPlayerSettingsAudio::runAmixer (void)
   *amixer << "scontents";
   connect (amixer, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
     SLOT (amixerOutput (KPlayerLineOutputProcess*, char*, int)));
-  connect (amixer, SIGNAL (processExited (K3Process*)), SLOT (amixerExited (K3Process*)));
-  m_amixer_running = amixer -> start (K3Process::NotifyOnExit, K3Process::All);
+  connect (amixer, SIGNAL (processFinished (KPlayerLineOutputProcess*)),
+    SLOT (amixerFinished (KPlayerLineOutputProcess*)));
+  amixer -> start();
+  m_amixer_running = true;
   if ( ! m_amixer_running )
     defaultAlsaChannels();
 }
 
-void KPlayerSettingsAudio::amixerOutput (KPlayerLineOutputProcess*, char* str, int)
+void KPlayerSettingsAudio::amixerOutput (KPlayerLineOutputProcess*, char* str)
 {
   static QString control;
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
@@ -542,7 +539,7 @@ void KPlayerSettingsAudio::amixerOutput (KPlayerLineOutputProcess*, char* str, i
   }
 }
 
-void KPlayerSettingsAudio::amixerExited (K3Process* proc)
+void KPlayerSettingsAudio::amixerFinished (KPlayerLineOutputProcess* proc)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
   kdDebugTime() << "KPlayerSettingsAudio::amixerExited\n";
@@ -781,8 +778,8 @@ void fillEncodingCombobox (QComboBox* combobox);
 
 void KPlayerSettingsSubtitles::loadLists (void)
 {
-  Q3ValueList<int> sizes (QFontDatabase::standardSizes());
-  Q3ValueList<int>::ConstIterator it (sizes.begin());
+  QList<int> sizes (QFontDatabase::standardSizes());
+  QList<int>::ConstIterator it (sizes.begin());
   for ( int i = 1; i < *it; ++ i )
     c_text_size -> addItem (QString::number (i));
   while ( it != sizes.end() )
