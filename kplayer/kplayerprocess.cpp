@@ -101,7 +101,7 @@ KPlayerLineOutputProcess::~KPlayerLineOutputProcess()
   delete m_stderr_buffer;
 }
 
-void KPlayerLineOutputProcess::processHasExited (int exitCode, QProcess::ExitStatus exitStatus)
+void KPlayerLineOutputProcess::processHasExited (int, QProcess::ExitStatus)
 {
   if ( m_stdout_line_length )
     emit receivedStdoutLine (this, m_stdout_buffer);

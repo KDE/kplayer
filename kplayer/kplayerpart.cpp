@@ -13,10 +13,13 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include <kaboutdata.h>
 #include <kapplication.h>
+#include <klocalizedstring.h>
+#include <kpluginfactory.h>
+#include <kpluginloader.h>
 #include <ktoolbar.h>
 #include <kxmlguifactory.h>
-#include <kparts/genericfactory.h>
 #include <qaction.h>
 #include <qmenu.h>
 
@@ -33,8 +36,8 @@
 static const KLocalizedString description = ki18n("KPlayerPart, an embeddable KDE media player");
 static const KLocalizedString license = ki18n("This program is distributed under the terms of the GPL version 3 or later.");
 
-typedef KParts::GenericFactory<KPlayerPart> KPlayerPartFactory;
-K_EXPORT_COMPONENT_FACTORY (libkplayerpart, KPlayerPartFactory)
+K_PLUGIN_FACTORY (KPlayerPartFactory, registerPlugin<KPlayerPart>();)
+K_EXPORT_PLUGIN (KPlayerPartFactory ("kplayerpart"))
 
 /*KPlayerBrowserExtension::KPlayerBrowserExtension (KPlayerPart* parent)
   : KParts::BrowserExtension (parent, "KPlayerBrowserExtension")
@@ -45,7 +48,7 @@ KPlayerBrowserExtension::~KPlayerBrowserExtension()
 {
 }*/
 
-KPlayerPart::KPlayerPart (QWidget* wparent, QObject* parent, const QStringList&)
+KPlayerPart::KPlayerPart (QWidget* wparent, QObject* parent, const QVariantList&)
   : KParts::ReadOnlyPart (parent)
 {
 #ifdef DEBUG_KPLAYER_KPART

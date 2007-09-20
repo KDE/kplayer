@@ -126,18 +126,17 @@ KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
   addSubPage (controls, item);
   m_page_names.insert (item, "sliders");
   setHelp ("settings");
-  KConfig* config = kPlayerConfig();
-  config -> setGroup ("Dialog Options");
-  QString name (config -> readEntry ("Settings Dialog Page"));
+  KConfigGroup group (kPlayerConfig() -> group ("Dialog Options"));
+  QString name (group.readEntry ("Settings Dialog Page"));
   for ( QHash<QObject*, QString>::ConstIterator it (m_page_names.constBegin()); it != m_page_names.constEnd(); ++ it )
     if ( it.value() == name )
       setCurrentPage ((KPageWidgetItem*) it.key());
-/*int x = config -> readNumEntry ("Settings Dialog Left", -1);
-  int y = config -> readNumEntry ("Settings Dialog Top", -1);*/
-  int w = config -> readNumEntry ("Settings Dialog Width");
-  int h = config -> readNumEntry ("Settings Dialog Height");
-//QSize size (config -> readNumEntry ("Settings Dialog Width"),
-//  config -> readNumEntry ("Settings Dialog Height"));
+/*int x = group.readEntry ("Settings Dialog Left", -1);
+  int y = group.readEntry ("Settings Dialog Top", -1);*/
+  int w = group.readEntry ("Settings Dialog Width", 0);
+  int h = group.readEntry ("Settings Dialog Height", 0);
+//QSize size (group.readEntry ("Settings Dialog Width", 0),
+//  group.readEntry ("Settings Dialog Height", 0));
 //QSize hint = minimumSizeHint();
 //if ( size.width() < hint.width() || size.height() < hint.height() )
 //  size = sizeHint();
@@ -164,26 +163,25 @@ KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
 KPlayerSettingsDialog::~KPlayerSettingsDialog (void)
 {
   kPlayerEngine() -> getLists();
-  KConfig* config = kPlayerConfig();
-  config -> setGroup ("Dialog Options");
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
   kdDebugTime() << "KPlayerSettingsDialog " << x() << "x" << y() << " " << width() << "x" << height() << " Hint " << sizeHint().width() << "x" << sizeHint().height() << "\n";
 #endif
+  KConfigGroup group (kPlayerConfig() -> group ("Dialog Options"));
 /*if ( size() == sizeHint() )
   {
-    config -> deleteEntry ("Settings Dialog Width");
-    config -> deleteEntry ("Settings Dialog Height");
+    group.deleteEntry ("Settings Dialog Width");
+    group.deleteEntry ("Settings Dialog Height");
   }
   else
   {*/
-/*config -> writeEntry ("Settings Dialog Left", frameGeometry().x());
-  config -> writeEntry ("Settings Dialog Top", frameGeometry().y());*/
-  config -> writeEntry ("Settings Dialog Width", width());
-  config -> writeEntry ("Settings Dialog Height", height());
+/*group.writeEntry ("Settings Dialog Left", frameGeometry().x());
+  group.writeEntry ("Settings Dialog Top", frameGeometry().y());*/
+  group.writeEntry ("Settings Dialog Width", width());
+  group.writeEntry ("Settings Dialog Height", height());
   if ( m_page_names.contains (currentPage()) )
-    config -> writeEntry ("Settings Dialog Page", m_page_names [currentPage()]);
+    group.writeEntry ("Settings Dialog Page", m_page_names [currentPage()]);
   else
-    config -> deleteEntry ("Settings Dialog Page");
+    group.deleteEntry ("Settings Dialog Page");
 }
 
 /*void KPlayerSettingsDialog::moveEvent (QMoveEvent* event)
@@ -196,10 +194,9 @@ KPlayerSettingsDialog::~KPlayerSettingsDialog (void)
   if ( m_initial_move )
     return;
   m_initial_move = true;
-  KConfig* config = kPlayerConfig();
-  config -> setGroup ("Dialog Options");
-  int x = config -> readNumEntry ("Settings Dialog Left", -1);
-  int y = config -> readNumEntry ("Settings Dialog Top", -1);
+  KConfigGroup group (kPlayerConfig() -> group ("Dialog Options"));
+  int x = group.readEntry ("Settings Dialog Left", -1);
+  int y = group.readEntry ("Settings Dialog Top", -1);
   if ( x >= 0 && y >= 0 )
   {
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG

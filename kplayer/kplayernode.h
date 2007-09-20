@@ -1284,7 +1284,7 @@ protected:
   /** Audio CD disk ID for matching against the one above. */
   QString m_cddb_id;
   /** Number of detected tracks. */
-  uint m_detected_tracks;
+  int m_detected_tracks;
   /** Indicates autodetection success. */
   bool m_autodetected;
   /** Artist. */

@@ -626,9 +626,9 @@ void KPlayerHistoryActionList::update (int current)
   m_bottom = m_history.count();
   if ( m_bottom > 1 )
   {
-    uint limit = KPlayerEngine::engine() -> configuration() -> recentMenuSize();
-    uint halflimit = limit / 2;
-    uint count = 0;
+    int limit = KPlayerEngine::engine() -> configuration() -> recentMenuSize();
+    int halflimit = limit / 2;
+    int count = 0;
     KPlayerHistory::ConstIterator iterator (m_history.end());
     do
     {
@@ -2146,15 +2146,15 @@ KPlayerListView::KPlayerListView (QWidget* parent)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Creating list view\n";
 #endif
-  config() -> setGroup ("Multimedia Library");
-  m_attribute_order = config() -> hasKey ("Column Order") ? config() -> readListEntry ("Column Order")
+  KConfigGroup group (config() -> group ("Multimedia Library"));
+  m_attribute_order = group.hasKey ("Column Order") ? group.readEntry ("Column Order", QStringList())
     : KPlayerMedia::defaultOrder();
   QStringList::ConstIterator iterator (attributeOrder().begin());
   while ( iterator != attributeOrder().end() )
   {
     const QString& name (*iterator);
-    if ( ! name.isEmpty() && config() -> hasKey ("Show Column " + name) )
-      KPlayerMedia::info (name) -> setShow (config() -> readBoolEntry ("Show Column " + name));
+    if ( ! name.isEmpty() && group.hasKey ("Show Column " + name) )
+      KPlayerMedia::info (name) -> setShow (group.readEntry ("Show Column " + name, false));
     ++ iterator;
   }
 }
@@ -2185,20 +2185,20 @@ void KPlayerListView::terminate (void)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Terminating list view\n";
 #endif
-  config() -> setGroup ("Multimedia Library");
+  KConfigGroup group (config() -> group ("Multimedia Library"));
   if ( attributeOrder() == KPlayerMedia::defaultOrder() )
-    config() -> deleteEntry ("Column Order");
+    group.deleteEntry ("Column Order");
   else
-    config() -> writeEntry ("Column Order", attributeOrder());
+    group.writeEntry ("Column Order", attributeOrder());
   KPlayerPropertyInfoMap::ConstIterator iterator (KPlayerMedia::info().begin());
   while ( iterator != KPlayerMedia::info().end() )
   {
     const QString& name (iterator.key());
     KPlayerPropertyInfo* info = iterator.value();
     if ( info -> show() == info -> showByDefault() )
-      config() -> deleteEntry ("Show Column " + name);
+      group.deleteEntry ("Show Column " + name);
     else
-      config() -> writeEntry ("Show Column " + name, info -> show());
+      group.writeEntry ("Show Column " + name, info -> show());
     ++ iterator;
   }
   KPlayerNodeView::terminate();
@@ -2575,9 +2575,9 @@ void KPlayerListView::setSorting (int column, bool ascending)
     if ( index >= 0 )
     {
       const QString& name (attributeNames() [index]);
-      config() -> setGroup ("Multimedia Library");
-      config() -> writeEntry ("Sort Column", name);
-      config() -> writeEntry ("Sort Ascending", ascending);
+      KConfigGroup group (config() -> group ("Multimedia Library"));
+      group.writeEntry ("Sort Column", name);
+      group.writeEntry ("Sort Ascending", ascending);
       KPlayerNode::setSorting (name, ascending);
       rootNode() -> setCustomOrder (false);
       for ( Q3ListViewItem* item = firstChild(); item; item = item -> nextSibling() )
@@ -2629,8 +2629,8 @@ void KPlayerListView::loadColumnWidth (int index)
 #endif
   int column = header() -> mapToSection (index);
   const QString& name (attributeNames() [index]);
-  config() -> setGroup ("Multimedia Library");
-  int width = config() -> readNumEntry ("Column " + name + " Width");
+  KConfigGroup group (config() -> group ("Multimedia Library"));
+  int width = group.readEntry ("Column " + name + " Width", 0);
   if ( width <= 0 && index == 0 )
     width = 200;
 #ifdef DEBUG_KPLAYER_NODEVIEW
@@ -2711,10 +2711,10 @@ void KPlayerListView::loadColumnWidths (void)
     ++ index;
   }
   //adjustLastColumn();
-  config() -> setGroup ("Multimedia Library");
-  QString name (config() -> readEntry ("Sort Column"));
+  KConfigGroup group (config() -> group ("Multimedia Library"));
+  QString name (group.readEntry ("Sort Column"));
   index = attributeNames().indexOf (name);
-  bool ascending = config() -> readBoolEntry ("Sort Ascending", true);
+  bool ascending = group.readEntry ("Sort Ascending", true);
   if ( index < 0 )
   {
     index = 0;
@@ -2730,7 +2730,7 @@ void KPlayerListView::saveColumnWidths (void)
   kdDebugTime() << "KPlayerListView::saveColumnWidths\n";
 #endif
   int index = 0;
-  config() -> setGroup ("Multimedia Library");
+  KConfigGroup group (config() -> group ("Multimedia Library"));
   QStringList::ConstIterator iterator (attributeNames().begin());
   //while ( (index < columns() - 1 || ! header() -> isStretchEnabled (index)) && iterator != attributeNames().end() )
   while ( index < columns() && iterator != attributeNames().end() )
@@ -2742,7 +2742,7 @@ void KPlayerListView::saveColumnWidths (void)
       << " stretch " << header() -> isStretchEnabled (index) << " width <- " << width << "\n";
 #endif
     if ( width > 0 )
-      config() -> writeEntry ("Column " + *iterator + " Width", width);
+      group.writeEntry ("Column " + *iterator + " Width", width);
     ++ iterator;
     ++ index;
   }
@@ -3460,8 +3460,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   //setResizeMode (treeView(), QSplitter::KeepSize);
   m_list = new KPlayerListView (this);
 
-  config() -> setGroup ("Multimedia Library");
-  int width = config() -> readNumEntry ("Tree View Width");
+  int width = config() -> group ("Multimedia Library").readEntry ("Tree View Width", 0);
   if ( width )
   {
     QList<int> sizes;
@@ -3508,8 +3507,7 @@ void KPlayerLibrary::terminate (void)
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerLibrary::terminate\n";
 #endif
-  config() -> setGroup ("Multimedia Library");
-  config() -> writeEntry ("Tree View Width", sizes().first());
+  config() -> group ("Multimedia Library").writeEntry ("Tree View Width", sizes().first());
   playlistActionList() -> terminate();
   goToActionList() -> terminate();
   listView() -> terminate();

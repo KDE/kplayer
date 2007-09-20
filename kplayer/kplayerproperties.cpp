@@ -35,6 +35,7 @@
 
 const KUrl KPlayerProperties::nullUrl;
 const QSize KPlayerProperties::nullSize;
+const QString KPlayerProperties::nullString;
 const QStringList KPlayerProperties::nullStringList;
 const QMap<int, QString> KPlayerProperties::nullIntegerStringMap;
 KPlayerPropertyInfoMap KPlayerProperties::m_info;
@@ -143,7 +144,7 @@ KPlayerPropertyInfo::~KPlayerPropertyInfo()
 
 bool KPlayerPropertyInfo::exists (KPlayerProperties* properties, const QString& name) const
 {
-  return properties -> config() -> hasKey (name);
+  return properties -> configGroup().hasKey (name);
 }
 
 KPlayerBooleanPropertyInfo::KPlayerBooleanPropertyInfo (void)
@@ -475,11 +476,11 @@ int KPlayerProperty::compare (KPlayerProperty*) const
   return 0;
 }
 
-void KPlayerProperty::read (KConfig*, const QString&)
+void KPlayerProperty::read (KConfigGroup&, const QString&)
 {
 }
 
-void KPlayerProperty::save (KConfig*, const QString&) const
+void KPlayerProperty::save (KConfigGroup&, const QString&) const
 {
 }
 
@@ -502,14 +503,14 @@ int KPlayerBooleanProperty::compare (KPlayerProperty* property) const
   return value() == ((KPlayerBooleanProperty*) property) -> value() ? 0 : value() ? 1 : -1;
 }
 
-void KPlayerBooleanProperty::read (KConfig* config, const QString& name)
+void KPlayerBooleanProperty::read (KConfigGroup& config, const QString& name)
 {
-  setValue (config -> readBoolEntry (name, value()));
+  setValue (config.readEntry (name, value()));
 }
 
-void KPlayerBooleanProperty::save (KConfig* config, const QString& name) const
+void KPlayerBooleanProperty::save (KConfigGroup& config, const QString& name) const
 {
-  config -> writeEntry (name, value());
+  config.writeEntry (name, value());
 }
 
 KPlayerIntegerProperty::~KPlayerIntegerProperty()
@@ -532,14 +533,14 @@ int KPlayerIntegerProperty::compare (KPlayerProperty* property) const
   return value() == property_value ? 0 : value() > property_value ? 1 : -1;
 }
 
-void KPlayerIntegerProperty::read (KConfig* config, const QString& name)
+void KPlayerIntegerProperty::read (KConfigGroup& config, const QString& name)
 {
-  setValue (config -> readNumEntry (name, value()));
+  setValue (config.readEntry (name, value()));
 }
 
-void KPlayerIntegerProperty::save (KConfig* config, const QString& name) const
+void KPlayerIntegerProperty::save (KConfigGroup& config, const QString& name) const
 {
-  config -> writeEntry (name, value());
+  config.writeEntry (name, value());
 }
 
 KPlayerRelativeProperty::~KPlayerRelativeProperty()
@@ -584,18 +585,18 @@ int KPlayerRelativeProperty::compare (KPlayerProperty* property) const
   return result;
 }
 
-void KPlayerRelativeProperty::read (KConfig* config, const QString& name)
+void KPlayerRelativeProperty::read (KConfigGroup& config, const QString& name)
 {
   KPlayerIntegerProperty::read (config, name);
-  setOption (config -> readNumEntry (name + " Option"));
+  setOption (config.readEntry (name + " Option", 0));
 }
 
-void KPlayerRelativeProperty::save (KConfig* config, const QString& name) const
+void KPlayerRelativeProperty::save (KConfigGroup& config, const QString& name) const
 {
   if ( option() )
   {
     KPlayerIntegerProperty::save (config, name);
-    config -> writeEntry (name + " Option", option());
+    config.writeEntry (name + " Option", option());
   }
 }
 
@@ -614,11 +615,11 @@ int KPlayerCacheProperty::compare (KPlayerProperty* property) const
   return value() == property_value || value() < 4 && property_value < 4 ? 0 : value() > property_value ? 1 : -1;
 }
 
-void KPlayerCacheProperty::read (KConfig* config, const QString& name)
+void KPlayerCacheProperty::read (KConfigGroup& config, const QString& name)
 {
   KPlayerIntegerProperty::read (config, name);
   if ( value() == 2 )
-    setValue (config -> readNumEntry (name + " Size", value()));
+    setValue (config.readEntry (name + " Size", value()));
 }
 
 KPlayerFrequencyProperty::~KPlayerFrequencyProperty()
@@ -637,7 +638,7 @@ int KPlayerFrequencyProperty::compare (KPlayerProperty* property) const
   return my_value == property_value ? 0 : my_value > property_value ? 1 : -1;
 }
 
-void KPlayerFrequencyProperty::save (KConfig* config, const QString& name) const
+void KPlayerFrequencyProperty::save (KConfigGroup& config, const QString& name) const
 {
   if ( m_value )
     KPlayerIntegerProperty::save (config, name);
@@ -664,14 +665,14 @@ int KPlayerFloatProperty::compare (KPlayerProperty* property) const
   return value() == property_value ? 0 : value() > property_value ? 1 : -1;
 }
 
-void KPlayerFloatProperty::read (KConfig* config, const QString& name)
+void KPlayerFloatProperty::read (KConfigGroup& config, const QString& name)
 {
-  setValue (config -> readDoubleNumEntry (name, value()));
+  setValue (config.readEntry (name, (double) value()));
 }
 
-void KPlayerFloatProperty::save (KConfig* config, const QString& name) const
+void KPlayerFloatProperty::save (KConfigGroup& config, const QString& name) const
 {
-  config -> writeEntry (name, (double) value());
+  config.writeEntry (name, (double) value());
 }
 
 KPlayerLengthProperty::~KPlayerLengthProperty()
@@ -700,14 +701,14 @@ int KPlayerSizeProperty::compare (KPlayerProperty* property) const
   return area == property_area ? 0 : area > property_area ? 1 : -1;
 }
 
-void KPlayerSizeProperty::read (KConfig* config, const QString& name)
+void KPlayerSizeProperty::read (KConfigGroup& config, const QString& name)
 {
-  setValue (config -> readSizeEntry (name, &m_value));
+  setValue (config.readEntry (name, value()));
 }
 
-void KPlayerSizeProperty::save (KConfig* config, const QString& name) const
+void KPlayerSizeProperty::save (KConfigGroup& config, const QString& name) const
 {
-  config -> writeEntry (name, value());
+  config.writeEntry (name, value());
 }
 
 KPlayerDisplaySizeProperty::~KPlayerDisplaySizeProperty()
@@ -738,17 +739,17 @@ int KPlayerDisplaySizeProperty::compare (KPlayerProperty* property) const
   return option() == property_option ? KPlayerSizeProperty::compare (property) : option() > property_option ? 1 : -1;
 }
 
-void KPlayerDisplaySizeProperty::read (KConfig* config, const QString& name)
+void KPlayerDisplaySizeProperty::read (KConfigGroup& config, const QString& name)
 {
   KPlayerSizeProperty::read (config, name);
-  setOption (config -> readNumEntry (name + " Option", 1));
+  setOption (config.readEntry (name + " Option", 1));
 }
 
-void KPlayerDisplaySizeProperty::save (KConfig* config, const QString& name) const
+void KPlayerDisplaySizeProperty::save (KConfigGroup& config, const QString& name) const
 {
   KPlayerSizeProperty::save (config, name);
   if ( option() != 1 )
-    config -> writeEntry (name + " Option", option());
+    config.writeEntry (name + " Option", option());
 }
 
 KPlayerStringProperty::~KPlayerStringProperty()
@@ -770,15 +771,15 @@ int KPlayerStringProperty::compare (KPlayerProperty* property) const
   return compareStrings (asString(), property -> asString());
 }
 
-void KPlayerStringProperty::read (KConfig* config, const QString& name)
+void KPlayerStringProperty::read (KConfigGroup& config, const QString& name)
 {
-  m_value = config -> readEntry (name, value());
+  m_value = config.readEntry (name, value());
 }
 
-void KPlayerStringProperty::save (KConfig* config, const QString& name) const
+void KPlayerStringProperty::save (KConfigGroup& config, const QString& name) const
 {
   if ( ! value().isEmpty() )
-    config -> writeEntry (name, value());
+    config.writeEntry (name, value());
 }
 
 KPlayerComboStringProperty::~KPlayerComboStringProperty()
@@ -790,17 +791,17 @@ QString KPlayerComboStringProperty::asString (void) const
   return option().isNull() ? value() : option();
 }
 
-void KPlayerComboStringProperty::read (KConfig* config, const QString& name)
+void KPlayerComboStringProperty::read (KConfigGroup& config, const QString& name)
 {
   KPlayerStringProperty::read (config, name);
-  setOption (config -> readEntry (name + " Option", option()));
+  setOption (config.readEntry (name + " Option", option()));
 }
 
-void KPlayerComboStringProperty::save (KConfig* config, const QString& name) const
+void KPlayerComboStringProperty::save (KConfigGroup& config, const QString& name) const
 {
   KPlayerStringProperty::save (config, name);
   if ( ! option().isNull() )
-    config -> writeEntry (name + " Option", option());
+    config.writeEntry (name + " Option", option());
 }
 
 bool KPlayerComboStringProperty::defaults (bool)
@@ -846,7 +847,7 @@ void KPlayerStringHistoryProperty::setValue (const QString& value)
   }
 }
 
-void KPlayerStringHistoryProperty::read (KConfig* config, const QString& name)
+void KPlayerStringHistoryProperty::read (KConfigGroup& config, const QString& name)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerStringHistoryProperty::read\n";
@@ -860,16 +861,16 @@ void KPlayerStringHistoryProperty::read (KConfig* config, const QString& name)
 #endif
   }
   QString history;
-  for ( int i = 0; i < 10 && config -> hasKey (history = name + " " + QString::number (i)); i ++ )
+  for ( int i = 0; i < 10 && config.hasKey (history = name + " " + QString::number (i)); i ++ )
   {
-    m_history << config -> readEntry (history);
+    m_history << config.readEntry (history);
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << " History " << m_history.last() << "\n";
 #endif
   }
 }
 
-void KPlayerStringHistoryProperty::save (KConfig* config, const QString& name) const
+void KPlayerStringHistoryProperty::save (KConfigGroup& config, const QString& name) const
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerStringHistoryProperty::save\n";
@@ -883,7 +884,7 @@ void KPlayerStringHistoryProperty::save (KConfig* config, const QString& name) c
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << " History " << *it << "\n";
 #endif
-    config -> writeEntry (name + " " + QString::number (i), * it ++);
+    config.writeEntry (name + " " + QString::number (i), * it ++);
   }
 }
 */
@@ -897,7 +898,7 @@ QString KPlayerNameProperty::asString (void) const
   return value().isEmpty() ? m_properties -> defaultName() : value();
 }
 
-void KPlayerNameProperty::save (KConfig* config, const QString& name) const
+void KPlayerNameProperty::save (KConfigGroup& config, const QString& name) const
 {
   if ( ! value().isEmpty() && value() != m_properties -> defaultName() )
     KPlayerStringProperty::save (config, name);
@@ -926,17 +927,17 @@ void KPlayerAppendableProperty::setAppendableValue (const QString& value, bool a
   setValue (value);
 }
 
-void KPlayerAppendableProperty::read (KConfig* config, const QString& name)
+void KPlayerAppendableProperty::read (KConfigGroup& config, const QString& name)
 {
   KPlayerStringProperty::read (config, name);
-  setOption (config -> readBoolEntry (name + " Option", false));
+  setOption (config.readEntry (name + " Option", false));
 }
 
-void KPlayerAppendableProperty::save (KConfig* config, const QString& name) const
+void KPlayerAppendableProperty::save (KConfigGroup& config, const QString& name) const
 {
   KPlayerStringProperty::save (config, name);
   if ( option() )
-    config -> writeEntry (name + " Option", option());
+    config.writeEntry (name + " Option", option());
 }
 
 KPlayerStringListProperty::~KPlayerStringListProperty()
@@ -948,34 +949,35 @@ bool KPlayerStringListProperty::defaults (bool)
   return false;
 }
 
-void KPlayerStringListProperty::read (KConfig* config, const QString& name)
+void KPlayerStringListProperty::read (KConfigGroup& config, const QString& name)
 {
-  for ( int i = 0; i < config -> readNumEntry (name); i ++ )
-    m_value.append (config -> readEntry ("Child" + QString::number (i), QString()));
+  int total = config.readEntry (name, 0);
+  for ( int i = 0; i < total; i ++ )
+    m_value.append (config.readEntry ("Child" + QString::number (i), QString()));
 }
 
-void KPlayerStringListProperty::save (KConfig* config, const QString& name) const
+void KPlayerStringListProperty::save (KConfigGroup& config, const QString& name) const
 {
   int i = 0;
   QStringList::ConstIterator iterator (value().begin());
   while ( iterator != value().end() )
   {
-    config -> writeEntry ("Child" + QString::number (i), *iterator);
+    config.writeEntry ("Child" + QString::number (i), *iterator);
     ++ iterator;
     ++ i;
   }
   if ( value().count() )
-    config -> writeEntry (name, value().count());
+    config.writeEntry (name, value().count());
 }
 
 KPlayerIntegerStringMapProperty::~KPlayerIntegerStringMapProperty()
 {
 }
 
-void KPlayerIntegerStringMapProperty::read (KConfig* config, const QString& name)
+void KPlayerIntegerStringMapProperty::read (KConfigGroup& config, const QString& name)
 {
   static QRegExp re_indexvalue ("^(\\d+)=(.*)$");
-  QStringList values (config -> readEntry (name, QString()).split (':'));
+  QStringList values (config.readEntry (name, QString()).split (':'));
   QStringList::ConstIterator iterator (values.begin());
   while ( iterator != values.end() )
   {
@@ -987,7 +989,7 @@ void KPlayerIntegerStringMapProperty::read (KConfig* config, const QString& name
   }
 }
 
-void KPlayerIntegerStringMapProperty::save (KConfig* config, const QString& name) const
+void KPlayerIntegerStringMapProperty::save (KConfigGroup& config, const QString& name) const
 {
   if ( value().count() > 1 || ! value().isEmpty()
     && ! ((KPlayerIntegerStringMapPropertyInfo*) KPlayerProperties::info (name)) -> multipleEntriesRequired() )
@@ -1002,7 +1004,7 @@ void KPlayerIntegerStringMapProperty::save (KConfig* config, const QString& name
       values.append (value);
       ++ iterator;
     }
-    config -> writeEntry (name, values.join (":"));
+    config.writeEntry (name, values.join (":"));
   }
 }
 
@@ -1026,14 +1028,14 @@ KPlayerPersistentUrlProperty::~KPlayerPersistentUrlProperty()
 {
 }
 
-void KPlayerPersistentUrlProperty::read (KConfig* config, const QString& name)
+void KPlayerPersistentUrlProperty::read (KConfigGroup& config, const QString& name)
 {
-  setValue (KUrl::fromPathOrUrl (config -> readEntry (name, value().url())));
+  setValue (config.readEntry (name, value().url()));
 }
 
-void KPlayerPersistentUrlProperty::save (KConfig* config, const QString& name) const
+void KPlayerPersistentUrlProperty::save (KConfigGroup& config, const QString& name) const
 {
-  config -> writeEntry (name, value().url());
+  config.writeEntry (name, value().url());
 }
 
 bool KPlayerPersistentUrlProperty::defaults (bool)
@@ -1117,12 +1119,12 @@ void KPlayerProperties::setup (void)
 
 void KPlayerProperties::setupInfo (void)
 {
-  config() -> setGroup (configGroup());
-  if ( config() -> hasKey ("Subtitle Position") )
+  m_config_group = config() -> group (configGroupName());
+  if ( configGroup().hasKey ("Subtitle Position") )
   {
-    int value = config() -> readNumEntry ("Subtitle Position");
+    int value = configGroup().readEntry ("Subtitle Position", 100);
     if ( value < 0 || value > 100 )
-      config() -> deleteEntry ("Subtitle Position");
+      configGroup().deleteEntry ("Subtitle Position");
   }
 }
 
@@ -1147,16 +1149,15 @@ void KPlayerProperties::load (void)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerProperties::load\n";
-  kdDebugTime() << " Group  " << configGroup() << "\n";
+  kdDebugTime() << " Group  " << configGroupName() << "\n";
 #endif
-  config() -> setGroup (configGroup());
   KPlayerPropertyInfoMap::ConstIterator iterator (m_info.begin());
   while ( iterator != m_info.end() )
   {
     if ( iterator.value() -> exists (this, iterator.key()) )
     {
       KPlayerProperty* property = iterator.value() -> create (this);
-      property -> read (config(), iterator.key());
+      property -> read (configGroup(), iterator.key());
       m_properties.insert (iterator.key(), property);
 #ifdef DEBUG_KPLAYER_PROPERTIES
       kdDebugTime() << " " << iterator.key() << " " << property -> asString() << "\n";
@@ -1164,16 +1165,16 @@ void KPlayerProperties::load (void)
     }
     ++ iterator;
   }
-  if ( config() -> hasKey ("Keys") )
+  if ( configGroup().hasKey ("Keys") )
   {
-    QStringList keys (config() -> readListEntry ("Keys", ';'));
+    QStringList keys (configGroup().readEntry ("Keys", nullStringList, ';'));
     QStringList::ConstIterator keysit (keys.begin());
     while ( keysit != keys.end() )
     {
-      if ( config() -> hasKey (*keysit) )
+      if ( configGroup().hasKey (*keysit) )
       {
         KPlayerProperty* property = m_meta_info.create (this);
-        property -> read (config(), *keysit);
+        property -> read (configGroup(), *keysit);
         m_properties.insert (*keysit, property);
 #ifdef DEBUG_KPLAYER_PROPERTIES
         kdDebugTime() << " " << *keysit << " " << property -> asString() << "\n";
@@ -1184,27 +1185,26 @@ void KPlayerProperties::load (void)
   }
 }
 
-void KPlayerProperties::save (void) const
+void KPlayerProperties::save (void)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerProperties::save\n";
-  kdDebugTime() << " Group  " << configGroup() << "\n";
+  kdDebugTime() << " Group  " << configGroupName() << "\n";
 #endif
-  config() -> deleteGroup (configGroup());
-  config() -> setGroup (configGroup());
+  purge();
   QStringList keys;
   KPlayerPropertyMap::ConstIterator iterator (m_properties.begin());
   while ( iterator != m_properties.end() )
   {
-    iterator.value() -> save (config(), iterator.key());
+    iterator.value() -> save (configGroup(), iterator.key());
     if ( ! m_info.contains (iterator.key()) )
       keys.append (iterator.key());
     ++ iterator;
   }
   if ( ! keys.isEmpty() )
-    config() -> writeEntry ("Keys", keys.join (";"));
-  if ( config() == KPlayerEngine::engine() -> meta() && ! config() -> entryMap (configGroup()).isEmpty() )
-    config() -> writeEntry ("Date", QDateTime::currentDateTime());
+    configGroup().writeEntry ("Keys", keys.join (";"));
+  if ( config() == KPlayerEngine::engine() -> meta() && ! configGroup().entryMap().isEmpty() )
+    configGroup().writeEntry ("Date", QDateTime::currentDateTime());
 }
 
 void KPlayerProperties::commit (void)
@@ -1214,7 +1214,7 @@ void KPlayerProperties::commit (void)
 #endif
   save();
   update();
-  config() -> sync();
+  configGroup().sync();
 }
 
 void KPlayerProperties::update (void)
@@ -1524,7 +1524,7 @@ void KPlayerProperties::setString (const QString& key, const QString& value)
 
 const QString& KPlayerProperties::getStringValue (const QString& key) const
 {
-  return has (key) ? ((KPlayerStringProperty*) m_properties [key]) -> value() : QString();
+  return has (key) ? ((KPlayerStringProperty*) m_properties [key]) -> value() : nullString;
 }
 
 void KPlayerProperties::setComboValue (const QString& key, const QString& value)
@@ -1542,7 +1542,7 @@ bool KPlayerProperties::hasComboValue (const QString& key) const
 
 const QString& KPlayerProperties::getStringOption (const QString& key) const
 {
-  return has (key) ? ((KPlayerComboStringProperty*) m_properties [key]) -> option() : QString();
+  return has (key) ? ((KPlayerComboStringProperty*) m_properties [key]) -> option() : nullString;
 }
 
 void KPlayerProperties::setStringOption (const QString& key, const QString& value)
@@ -2195,7 +2195,7 @@ KConfig* KPlayerConfiguration::config (void) const
   return KPlayerEngine::engine() -> config();
 }
 
-QString KPlayerConfiguration::configGroup (void) const
+QString KPlayerConfiguration::configGroupName (void) const
 {
   return "Player Options";
 }
@@ -2401,7 +2401,7 @@ void KPlayerMedia::setParent (KPlayerMedia* media)
   }
 }
 
-QString KPlayerMedia::configGroup (void) const
+QString KPlayerMedia::configGroupName (void) const
 {
   return url().url();
 }
@@ -2707,32 +2707,28 @@ QString KPlayerGenericProperties::type (const QString& id) const
   KPlayerMediaMap::ConstIterator iterator = m_media_map.find (urls);
   if ( iterator != m_media_map.end() )
     return ((KPlayerMediaProperties*) *iterator) -> type();
-  config() -> setGroup (urls);
-  return config() -> readEntry ("Type", QString());
+  return config() -> group (urls).readEntry ("Type", QString());
 }
 
 float KPlayerGenericProperties::msf (const QString& id) const
 {
   KUrl u (url());
   u.addPath (id);
-  config() -> setGroup (u.url());
-  return config() -> readDoubleNumEntry ("MSF");
+  return config() -> group (u.url()).readEntry ("MSF", 0.0);
 }
 
 bool KPlayerGenericProperties::hidden (const QString& id) const
 {
   KUrl u (url());
   u.addPath (id);
-  config() -> setGroup (u.url());
-  return config() -> readBoolEntry ("Hidden");
+  return config() -> group (u.url()).readEntry ("Hidden", false);
 }
 
 void KPlayerGenericProperties::setHidden (const QString& id, bool hidden)
 {
   KUrl u (url());
   u.addPath (id);
-  config() -> setGroup (u.url());
-  return config() -> writeEntry ("Hidden", hidden);
+  return config() -> group (u.url()).writeEntry ("Hidden", hidden);
 }
 
 QString KPlayerGenericProperties::caption (void) const
@@ -4122,45 +4118,44 @@ void KPlayerItemProperties::setupInfo (void)
   kdDebugTime() << "KPlayerItemProperties::setupInfo\n";
 #endif
   KPlayerTrackProperties::setupInfo();
-  config() -> setGroup (configGroup());
-  if ( config() -> readEntry ("Video Size", QString()) == "0,0" )
+  if ( configGroup().readEntry ("Video Size", QString()) == "0,0" )
   {
-    config() -> deleteEntry ("Video Size");
-    config() -> writeEntry ("Has Video", false);
+    configGroup().deleteEntry ("Video Size");
+    configGroup().writeEntry ("Has Video", false);
   }
-  QString value (config() -> readEntry ("Full Screen", QString()));
+  QString value (configGroup().readEntry ("Full Screen", QString()));
   if ( value == "0" )
-    config() -> writeEntry ("Full Screen", false);
+    configGroup().writeEntry ("Full Screen", false);
   else if ( value == "1" )
-    config() -> writeEntry ("Full Screen", true);
+    configGroup().writeEntry ("Full Screen", true);
   else if ( value == "2" )
   {
-    config() -> deleteEntry ("Full Screen");
-    config() -> writeEntry ("Maximized", true);
+    configGroup().deleteEntry ("Full Screen");
+    configGroup().writeEntry ("Maximized", true);
   }
-  value = config() -> readEntry ("Maintain Aspect", QString());
+  value = configGroup().readEntry ("Maintain Aspect", QString());
   if ( value == "0" )
-    config() -> writeEntry ("Maintain Aspect", true);
+    configGroup().writeEntry ("Maintain Aspect", true);
   else if ( value == "1" )
-    config() -> writeEntry ("Maintain Aspect", false);
-  value = config() -> readEntry ("Autoload Subtitles", QString());
+    configGroup().writeEntry ("Maintain Aspect", false);
+  value = configGroup().readEntry ("Autoload Subtitles", QString());
   if ( value == "0" )
-    config() -> writeEntry ("Autoload Subtitles", true);
+    configGroup().writeEntry ("Autoload Subtitles", true);
   else if ( value == "1" )
-    config() -> writeEntry ("Autoload Subtitles", false);
-  value = config() -> readEntry ("Subtitle Visibility", QString());
+    configGroup().writeEntry ("Autoload Subtitles", false);
+  value = configGroup().readEntry ("Subtitle Visibility", QString());
   if ( value == "0" )
-    config() -> writeEntry ("Subtitle Visibility", true);
+    configGroup().writeEntry ("Subtitle Visibility", true);
   else if ( value == "1" )
-    config() -> writeEntry ("Subtitle Visibility", false);
-  value = config() -> readEntry ("Command Line Option", QString());
+    configGroup().writeEntry ("Subtitle Visibility", false);
+  value = configGroup().readEntry ("Command Line Option", QString());
   if ( value == "1" )
-    config() -> writeEntry ("Command Line Option", true);
-  value = config() -> readEntry ("Playlist", QString());
+    configGroup().writeEntry ("Command Line Option", true);
+  value = configGroup().readEntry ("Playlist", QString());
   if ( value == "1" )
-    config() -> writeEntry ("Playlist", true);
+    configGroup().writeEntry ("Playlist", true);
   else if ( value == "2" )
-    config() -> writeEntry ("Playlist", false);
+    configGroup().writeEntry ("Playlist", false);
   setPath (m_url);
 }
 

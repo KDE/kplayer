@@ -118,9 +118,9 @@ public:
   virtual int compare (KPlayerProperty*) const;
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig* config, const QString& name);
+  virtual void read (KConfigGroup& config, const QString& name);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig* config, const QString& name) const;
+  virtual void save (KConfigGroup& config, const QString& name) const;
 
   /** Resets the value to the default and returns true if the property can be deleted. */
   virtual bool defaults (bool can_reset);
@@ -150,9 +150,9 @@ public:
   virtual int compare (KPlayerProperty*) const;
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
 protected:
   /** Property value. */
@@ -185,9 +185,9 @@ public:
   virtual int compare (KPlayerProperty*) const;
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
 protected:
   /** Property value. */
@@ -230,9 +230,9 @@ public:
   virtual int compare (KPlayerProperty*) const;
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
 protected:
   /** Property option. */
@@ -256,7 +256,7 @@ public:
   virtual int compare (KPlayerProperty*) const;
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
 };
 
 /** The frequency property.
@@ -285,7 +285,7 @@ public:
   virtual int compare (KPlayerProperty*) const;
 
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
   /** Resets the value to the default and returns true if the property can be deleted. */
   virtual bool defaults (bool can_reset);
@@ -319,9 +319,9 @@ public:
   virtual int compare (KPlayerProperty*) const;
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
 protected:
   /** Property value. */
@@ -367,9 +367,9 @@ public:
   virtual int compare (KPlayerProperty*) const;
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
 protected:
   /** Property value. */
@@ -412,9 +412,9 @@ public:
   virtual int compare (KPlayerProperty*) const;
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
 protected:
   /** Property option. */
@@ -447,9 +447,9 @@ public:
   virtual int compare (KPlayerProperty*) const;
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
 protected:
   /** Property value. */
@@ -478,9 +478,9 @@ public:
   virtual QString asString (void) const;
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
   /** Resets the value to the default and returns true if the property can be deleted. */
   virtual bool defaults (bool can_reset);
@@ -525,9 +525,9 @@ public:
     { return m_history; }
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
 protected:
   /** String history. */
@@ -551,7 +551,7 @@ public:
   virtual QString asString (void) const;
 
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig* config, const QString& name) const;
+  virtual void save (KConfigGroup& config, const QString& name) const;
 
   /** Resets the value to the default and returns true if the property can be deleted. */
   virtual bool defaults (bool can_reset);
@@ -585,9 +585,9 @@ public:
     { m_option = option; }
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
 protected:
   /** Property option. */
@@ -616,9 +616,9 @@ public:
     { m_value = value; }
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig* config, const QString& name);
+  virtual void read (KConfigGroup& config, const QString& name);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig* config, const QString& name) const;
+  virtual void save (KConfigGroup& config, const QString& name) const;
 
   /** Resets the value to the default and returns true if the property can be deleted. */
   virtual bool defaults (bool can_reset);
@@ -647,9 +647,9 @@ public:
     { m_value.insert (key, value); }
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig* config, const QString& name);
+  virtual void read (KConfigGroup& config, const QString& name);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig* config, const QString& name) const;
+  virtual void save (KConfigGroup& config, const QString& name) const;
 
 protected:
   /** Property value. */
@@ -696,9 +696,9 @@ public:
   virtual ~KPlayerPersistentUrlProperty();
 
   /** Reads the value from the given config under the given name. */
-  virtual void read (KConfig*, const QString&);
+  virtual void read (KConfigGroup&, const QString&);
   /** Saves the value to the given config under the given name. */
-  virtual void save (KConfig*, const QString&) const;
+  virtual void save (KConfigGroup&, const QString&) const;
 
   /** Resets the value to the default and returns true if the property can be deleted. */
   virtual bool defaults (bool can_reset);
@@ -1225,8 +1225,11 @@ public:
 
   /** Returns the config storage. */
   virtual KConfig* config (void) const = 0;
+  /** Returns the config group name. */
+  virtual QString configGroupName (void) const = 0;
   /** Returns the config group. */
-  virtual QString configGroup (void) const = 0;
+  KConfigGroup& configGroup (void)
+    { return m_config_group; }
 
   // Property access
 
@@ -1285,7 +1288,7 @@ public:
   void reset (const QString& key);
   /** Removes all properties from the store. */
   void purge (void)
-    { config() -> deleteGroup (configGroup()); }
+    { config() -> deleteGroup (configGroupName()); }
 
   /** Compares the properties to the given properties and emits the updated signal. */
   void diff (KPlayerProperties* media);
@@ -1588,6 +1591,8 @@ protected:
   /** Properties that have been removed. */
   KPlayerPropertyCounts m_removed;
 
+  KConfigGroup m_config_group;
+
   /** Information about configuration properties. */
   static KPlayerPropertyInfoMap m_info;
 
@@ -1599,13 +1604,15 @@ protected:
   static const KUrl nullUrl;
   /** Null size. */
   static const QSize nullSize;
+  /** Null string. */
+  static const QString nullString;
   /** Null string list. */
   static const QStringList nullStringList;
   /** Null integer string map. */
   static const QMap<int, QString> nullIntegerStringMap;
 
   void load (void);
-  void save (void) const;
+  void save (void);
   void update (void);
   void cleanup (void);
 
@@ -1633,7 +1640,7 @@ public:
   /** Returns the config storage. */
   virtual KConfig* config (void) const;
   /** Returns the config group. */
-  virtual QString configGroup (void) const;
+  virtual QString configGroupName (void) const;
 
   virtual bool getBoolean (const QString& key) const;
   virtual void setBoolean (const QString& key, bool value);
@@ -2266,7 +2273,7 @@ public:
     { return m_references; }
 
   /** Returns the config group. */
-  virtual QString configGroup (void) const;
+  virtual QString configGroupName (void) const;
 
   virtual bool getBoolean (const QString& key) const;
   virtual void setBoolean (const QString& key, bool value);
@@ -3075,7 +3082,7 @@ public:
   void setSubtitleUrl (const KUrl& url)
     { setUrl ("Subtitle URL", url); }
   void setSubtitleUrl (const QString& url)
-    { setSubtitleUrl (KUrl::fromPathOrUrl (url)); }
+    { setSubtitleUrl (url); }
   bool hasSubtitleUrl (void) const
     { return has ("Subtitle URL"); }
   QString subtitleUrlString (void) const

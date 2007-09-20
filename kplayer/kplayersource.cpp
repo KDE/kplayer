@@ -707,7 +707,7 @@ bool KPlayerDirectorySource::enumNext (bool& group, QString& id)
     group = info -> isDir();
   }
   while ( m_groups && ! group || ! checkFileInfo (*info) );
-  id = info -> fileName(); // group ? : KUrl::fromPathOrUrl (info -> filePath()).url();
+  id = info -> fileName();
 #ifdef DEBUG_KPLAYER_SOURCE
   kdDebugTime() << " Group  " << group << "\n";
   kdDebugTime() << " ID     " << id << "\n";

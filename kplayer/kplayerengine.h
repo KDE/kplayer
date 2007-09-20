@@ -189,14 +189,11 @@ public:
   KConfig* meta (void)
     { return m_meta; }
   /** Returns the meta information storage set to the given group. */
-  KConfig* meta (const QString& group)
-  {
-    meta() -> setGroup (group);
-    return meta();
-  }
+  KConfigGroup meta (const QString& group)
+    { return meta() -> group (group); }
   /** Returns the value of the given key with the given default. */
   QString meta (const QString& group, const QString& key, const QString& value = QString::null)
-    { return meta (group) -> readEntry (key, value); }
+    { return meta (group).readEntry (key, value); }
 
   KActionCollection* actionCollection (void) const
    { return m_ac; }

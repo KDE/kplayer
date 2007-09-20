@@ -1957,10 +1957,8 @@ void KPlayerPlaylistNode::setupSource (void)
   connect (configuration(), SIGNAL (updated()), SLOT (configurationUpdated()));
   if ( ! parent() -> parent() && id() == "playlists" && ! media() -> hasChildren() )
   {
-    QString group ("Playlist Entries");
-    KConfig* meta = KPlayerEngine::engine() -> meta();
-    meta -> setGroup (group);
-    int entries = meta -> readNumEntry ("Entries");
+    KConfigGroup group (KPlayerEngine::engine() -> meta() -> group ("Playlist Entries"));
+    int entries = group.readEntry ("Entries", 0);
     if ( entries )
     {
       KPlayerNode* np = parent() -> nodeById ("nowplaying");
@@ -1971,22 +1969,20 @@ void KPlayerPlaylistNode::setupSource (void)
         children.append (name);
         media() -> setChildren (children);
         media() -> commit();
-        KConfig* config = media() -> config();
         QString urls (url (name).url());
-        config -> setGroup (urls);
+        KConfigGroup config (media() -> config() -> group (urls));
         for ( int i = 0; i < entries; i ++ )
         {
           QString no (QString::number (i));
-          config -> writeEntry ("Child" + no, meta -> readEntry ("Entry " + no, QString()));
+          config.writeEntry ("Child" + no, group.readEntry ("Entry " + no, QString()));
         }
-        config -> writeEntry ("Children", entries);
+        config.writeEntry ("Children", entries);
         np -> media() -> setChildren (children);
         np -> media() -> commit();
-        config -> setGroup (np -> url (name).url());
-        config -> writeEntry ("Origin", urls);
+        media() -> config() -> group (np -> url (name).url()).writeEntry ("Origin", urls);
       }
     }
-    meta -> deleteGroup (group);
+    KPlayerEngine::engine() -> meta() -> deleteGroup ("Playlist Entries");
   }
 }
 
@@ -2158,7 +2154,7 @@ void KPlayerNowPlayingNode::setupOrigin (void)
     if ( disk -> dataDisk() )
       if ( disk -> hasLocalPath() )
       {
-        KPlayerContainerNode* origin = root() -> getNodeByUrl (KUrl::fromPathOrUrl (disk -> localPath()));
+        KPlayerContainerNode* origin = root() -> getNodeByUrl (disk -> localPath());
         if ( origin )
         {
           disconnect (m_origin -> parent(), SIGNAL (nodeUpdated (KPlayerContainerNode*, KPlayerNode*)),
@@ -2198,7 +2194,7 @@ void KPlayerNowPlayingNode::originUpdated (KPlayerContainerNode*, KPlayerNode* n
     if ( disk -> dataDisk() )
       if ( disk -> hasLocalPath() )
       {
-        KPlayerContainerNode* origin = root() -> getNodeByUrl (KUrl::fromPathOrUrl (disk -> localPath()));
+        KPlayerContainerNode* origin = root() -> getNodeByUrl (disk -> localPath());
         if ( origin )
         {
           disconnect (node -> parent(), SIGNAL (nodeUpdated (KPlayerContainerNode*, KPlayerNode*)),
@@ -2271,14 +2267,12 @@ void KPlayerRecentsNode::setupSource (void)
   KPlayerRecentNode::setupSource();
   if ( ! media() -> hasChildren() )
   {
-    QString group ("Recent Files");
-    KConfig* config = KPlayerEngine::engine() -> config();
-    config -> setGroup (group);
+    KConfigGroup group (KPlayerEngine::engine() -> config() -> group ("Recent Files"));
     int limit = configuration() -> recentListSize();
     QStringList children;
     for ( int i = 1; i <= limit; i ++ )
     {
-      QString name (config -> readEntry ("File" + QString::number (i), QString()));
+      QString name (group.readEntry ("File" + QString::number (i), QString()));
       if ( name.isEmpty() )
         break;
       children.append (name);
@@ -2288,7 +2282,7 @@ void KPlayerRecentsNode::setupSource (void)
       media() -> setChildren (children);
       setCustomOrder (true);
     }
-    config -> deleteGroup (group);
+    KPlayerEngine::engine() -> config() -> deleteGroup ("Recent Files");
   }
 }
 
@@ -2659,7 +2653,6 @@ void KPlayerDevicesNode::refreshItem (KFileItem* item)
   kdDebugTime() << " Size   " << item -> size() << "\n";
   kdDebugTime() << " Overlays " << item -> overlays() << "\n";
   kdDebugTime() << " Status " << item -> getStatusBarInfo() << "\n";
-  kdDebugTime() << " Drops  " << item -> acceptsDrops() << "\n";
   kdDebugTime() << " Marked " << item -> isMarked() << "\n";
   kdDebugTime() << " Path   " << path << "\n";
 #endif
@@ -3162,7 +3155,7 @@ void KPlayerDiskNode::receivedOutput (KPlayerLineOutputProcess*, char* str)
     m_autodetected = true;
   else if ( m_track_lengths.count() < m_detected_tracks && re_track_length.indexIn (str) >= 0 )
   {
-    uint track = re_track_length.cap(1).toUInt() - 1;
+    int track = re_track_length.cap(1).toInt() - 1;
     if ( track == m_track_lengths.count() )
     {
       QString length (re_track_length.cap(2));
@@ -3539,7 +3532,7 @@ KPlayerNodeList KPlayerNodeList::fromUrlList (const KUrl::List& urls)
           QString path (item.entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH));
           if ( ! path.isEmpty() )
           {
-            url = KUrl::fromPathOrUrl (path);
+            url = path;
 #ifdef DEBUG_KPLAYER_NODE
             kdDebugTime() << " Local  " << path << "\n";
 #endif

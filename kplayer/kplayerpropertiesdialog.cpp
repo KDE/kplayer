@@ -61,26 +61,25 @@ KPlayerPropertiesDialog::KPlayerPropertiesDialog (void)
 
 KPlayerPropertiesDialog::~KPlayerPropertiesDialog (void)
 {
-  KConfig* config = kPlayerConfig();
-  config -> setGroup ("Dialog Options");
 #ifdef DEBUG_KPLAYER_PROPERTIES_DIALOG
   kdDebugTime() << "KPFP " << x() << "x" << y() << " " << width() << "x" << height() << " Hint " << sizeHint().width() << "x" << sizeHint().height() << "\n";
 #endif
+  KConfigGroup group (kPlayerConfig() -> group ("Dialog Options"));
 /*if ( size() == sizeHint() )
   {
-    config -> deleteEntry ("Properties Dialog Width");
-    config -> deleteEntry ("Properties Dialog Height");
+    group.deleteEntry ("Properties Dialog Width");
+    group.deleteEntry ("Properties Dialog Height");
   }
   else
   {*/
-/*config -> writeEntry ("Properties Dialog Left", x());
-  config -> writeEntry ("Properties Dialog Top", y());*/
-  config -> writeEntry ("Properties Dialog Width", width());
-  config -> writeEntry ("Properties Dialog Height", height());
+/*group.writeEntry ("Properties Dialog Left", x());
+  group.writeEntry ("Properties Dialog Top", y());*/
+  group.writeEntry ("Properties Dialog Width", width());
+  group.writeEntry ("Properties Dialog Height", height());
   if ( m_page_names.contains (currentPage()) )
-    config -> writeEntry ("Properties Dialog Page", m_page_names [currentPage()]);
+    group.writeEntry ("Properties Dialog Page", m_page_names [currentPage()]);
   else
-    config -> deleteEntry ("Properties Dialog Page");
+    group.deleteEntry ("Properties Dialog Page");
   KPlayerMedia::release (properties());
 }
 
@@ -133,18 +132,17 @@ void KPlayerPropertiesDialog::setup (const KUrl& url)
   addPage (item);
   m_page_names.insert (item, "advanced");
   setHelp ("properties");
-  KConfig* config = kPlayerConfig();
-  config -> setGroup ("Dialog Options");
-  QString name (config -> readEntry ("Properties Dialog Page"));
+  KConfigGroup group (kPlayerConfig() -> group ("Dialog Options"));
+  QString name (group.readEntry ("Properties Dialog Page"));
   for ( QHash<QObject*, QString>::ConstIterator it (m_page_names.constBegin()); it != m_page_names.constEnd(); ++ it )
     if ( it.value() == name )
       setCurrentPage ((KPageWidgetItem*) it.key());
-/*int x = config -> readNumEntry ("Properties Dialog Left", -1);
-  int y = config -> readNumEntry ("Properties Dialog Top", -1);*/
-  int w = config -> readNumEntry ("Properties Dialog Width");
-  int h = config -> readNumEntry ("Properties Dialog Height");
-//QSize size (config -> readNumEntry ("Properties Dialog Width"),
-//  config -> readNumEntry ("Properties Dialog Height"));
+/*int x = group.readEntry ("Properties Dialog Left", -1);
+  int y = group.readEntry ("Properties Dialog Top", -1);*/
+  int w = group.readEntry ("Properties Dialog Width", 0);
+  int h = group.readEntry ("Properties Dialog Height", 0);
+//QSize size (group.readEntry ("Properties Dialog Width", 0),
+//  group.readEntry ("Properties Dialog Height", 0));
 //QSize hint = minimumSizeHint();
 //if ( size.width() < hint.width() || size.height() < hint.height() )
 //  size = sizeHint();

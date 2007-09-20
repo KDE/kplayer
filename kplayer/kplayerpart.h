@@ -52,7 +52,7 @@ class KPlayerPart : public KParts::ReadOnlyPart
   Q_OBJECT
 
 public:
-  KPlayerPart (QWidget*, QObject*, const QStringList&);
+  KPlayerPart (QWidget*, QObject*, const QVariantList&);
   virtual ~KPlayerPart();
 
   /** Returns the data for the About dialog. **/

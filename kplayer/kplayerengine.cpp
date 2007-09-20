@@ -412,8 +412,7 @@ KPlayerEngine::~KPlayerEngine()
       int i = 0;
       for ( QStringList::Iterator it = groups.begin(); it != groups.end(); ++ it )
       {
-        meta() -> setGroup (*it);
-        QDateTime dt (meta() -> readDateTimeEntry ("Date"));
+        QDateTime dt (meta() -> group (*it).readEntry ("Date", QDateTime()));
         if ( ! dt.isNull() )
           map.insert (dt.toString (Qt::ISODate) + QString().sprintf ("-%04u", i ++), *it);
       }
@@ -2100,14 +2099,13 @@ void KPlayerEngine::saturationDecrease (void)
 KUrl::List KPlayerEngine::openFiles (const QString& title, QWidget* parent)
 {
   static QString filter = i18n("*|All files\n*.avi *.AVI|AVI files\n*.mpg *.mpeg *.MPG *.MPEG|MPEG files\n*.ogg *.OGG|OGG files\n*.mp3 *.MP3|MP3 files");
-  KConfig* config = kPlayerConfig();
-  config -> setGroup ("Dialog Options");
-  QString dir = config -> readPathEntry ("Open File Directory");
+  KConfigGroup group (kPlayerConfig() -> group ("Dialog Options"));
+  QString dir = group.readPathEntry ("Open File Directory");
 //Saving dialog position did not work: dlg.pos() returns wrong position in Qt 3.1.1
-//int x = config -> readNumEntry ("Open File Left");
-//int y = config -> readNumEntry ("Open File Top");
-  int width = config -> readNumEntry ("Open File Width");
-  int height = config -> readNumEntry ("Open File Height");
+//int x = group.readEntry ("Open File Left", 0);
+//int y = group.readEntry ("Open File Top", 0);
+  int width = group.readEntry ("Open File Width", 0);
+  int height = group.readEntry ("Open File Height", 0);
 #ifdef DEBUG_KPLAYER_ENGINE
 //kdDebugTime() << "Geometry " << x << "x" << y << " " << width << "x" << height << "\n";
 #endif
@@ -2123,11 +2121,11 @@ KUrl::List KPlayerEngine::openFiles (const QString& title, QWidget* parent)
 //kdDebugTime() << "         " << dlg.x() << "x" << dlg.y() << " " << dlg.width() << "x" << dlg.height() << "\n";
 #endif
   dlg.exec();
-  config -> writePathEntry ("Open File Directory", dlg.directory());
-//config -> writeEntry ("Open File Left", dlg.x());
-//config -> writeEntry ("Open File Top", dlg.y());
-  config -> writeEntry ("Open File Width", dlg.width());
-  config -> writeEntry ("Open File Height", dlg.height());
+  group.writePathEntry ("Open File Directory", dlg.directory());
+//group.writeEntry ("Open File Left", dlg.x());
+//group.writeEntry ("Open File Top", dlg.y());
+  group.writeEntry ("Open File Width", dlg.width());
+  group.writeEntry ("Open File Height", dlg.height());
 #ifdef DEBUG_KPLAYER_ENGINE
 //kdDebugTime() << "Geometry " << coord.x() << "x" << coord.y() << " " << dlg.width() << "x" << dlg.height() << "\n";
 #endif
@@ -2137,13 +2135,12 @@ KUrl::List KPlayerEngine::openFiles (const QString& title, QWidget* parent)
 KUrl::List KPlayerEngine::openUrl (const QString& title, QWidget* parent)
 {
   KUrl::List list;
-  KConfig* config = kPlayerConfig();
-  config -> setGroup ("Dialog Options");
-  QString dir = config -> readEntry ("Open URL");
-//int x = config -> readNumEntry ("Open URL Left");
-//int y = config -> readNumEntry ("Open URL Top");
-  int width = config -> readNumEntry ("Open URL Width");
-  int height = config -> readNumEntry ("Open URL Height");
+  KConfigGroup group (kPlayerConfig() -> group ("Dialog Options"));
+  QString dir = group.readEntry ("Open URL");
+//int x = group.readEntry ("Open URL Left", 0);
+//int y = group.readEntry ("Open URL Top", 0);
+  int width = group.readEntry ("Open URL Width", 0);
+  int height = group.readEntry ("Open URL Height", 0);
   KUrlRequesterDialog dlg (dir, parent);
   dlg.setCaption (title);
   if ( width > 0 && height > 0 )
@@ -2157,24 +2154,23 @@ KUrl::List KPlayerEngine::openUrl (const QString& title, QWidget* parent)
     KRecentDocument::add (url);
   }
   if ( dlg.result() == QDialog::Accepted )
-    config -> writeEntry ("Open URL", url.isLocalFile() ? url.path() : url.url());
-//config -> writeEntry ("Open URL Left", dlg.x());
-//config -> writeEntry ("Open URL Top", dlg.y());
-  config -> writeEntry ("Open URL Width", dlg.width());
-  config -> writeEntry ("Open URL Height", dlg.height());
+    group.writeEntry ("Open URL", url.isLocalFile() ? url.path() : url.url());
+//group.writeEntry ("Open URL Left", dlg.x());
+//group.writeEntry ("Open URL Top", dlg.y());
+  group.writeEntry ("Open URL Width", dlg.width());
+  group.writeEntry ("Open URL Height", dlg.height());
   return list;
 }
 
 KUrl::List KPlayerEngine::openSubtitles (QWidget* parent)
 {
   static QString filter = i18n("*|All files\n*.aqt *.AQT *.ass *.ASS *.js *.JS *.jss *.JSS *.rt *.RT *.smi *.SMI *.srt *.SRT *.ssa *.SSA *.sub *.SUB *.txt *.TXT *.utf *.UTF *.idx *.IDX *.ifo *.IFO|All subtitle files\n*.aqt *.AQT|AQT files\n*.ass *.ASS|ASS files\n*.js *.JS|JS files\n*.jss *.JSS|JSS files\n*.rt *.RT|RT files\n*.smi *.SMI|SMI files\n*.srt *.SRT|SRT files\n*.ssa *.SSA|SSA files\n*.sub *.SUB|SUB files\n*.txt *.TXT|TXT files\n*.utf *.UTF *.utf8 *.UTF8 *.utf-8 *.UTF-8|UTF files\n*.idx *.IDX *.ifo *.IFO|VobSub files");
-  KConfig* config = kPlayerConfig();
-  config -> setGroup ("Dialog Options");
-  QString dir = config -> readPathEntry ("Open Subtitle Directory");
-//int x = config -> readNumEntry ("Open Subtitle Left");
-//int y = config -> readNumEntry ("Open Subtitle Top");
-  int width = config -> readNumEntry ("Open Subtitle Width");
-  int height = config -> readNumEntry ("Open Subtitle Height");
+  KConfigGroup group (kPlayerConfig() -> group ("Dialog Options"));
+  QString dir = group.readPathEntry ("Open Subtitle Directory");
+//int x = group.readEntry ("Open Subtitle Left", 0);
+//int y = group.readEntry ("Open Subtitle Top", 0);
+  int width = group.readEntry ("Open Subtitle Width", 0);
+  int height = group.readEntry ("Open Subtitle Height", 0);
   KPlayerFileDialog dlg (dir, filter, parent);
   dlg.setOperationMode (KFileDialog::Opening);
   dlg.setMode (KFile::Files | KFile::ExistingOnly);
@@ -2183,11 +2179,11 @@ KUrl::List KPlayerEngine::openSubtitles (QWidget* parent)
     dlg.resize (width, height);
     //dlg.setGeometry (x, y, width, height);
   dlg.exec();
-  config -> writeEntry ("Open Subtitle Directory", dlg.directory());
-//config -> writeEntry ("Open Subtitle Left", dlg.x());
-//config -> writeEntry ("Open Subtitle Top", dlg.y());
-  config -> writeEntry ("Open Subtitle Width", dlg.width());
-  config -> writeEntry ("Open Subtitle Height", dlg.height());
+  group.writeEntry ("Open Subtitle Directory", dlg.directory());
+//group.writeEntry ("Open Subtitle Left", dlg.x());
+//group.writeEntry ("Open Subtitle Top", dlg.y());
+  group.writeEntry ("Open Subtitle Width", dlg.width());
+  group.writeEntry ("Open Subtitle Height", dlg.height());
   return dlg.selectedUrls();
 }
 
@@ -2417,12 +2413,11 @@ void KPlayerEngine::clearStoreSections (const QString& section)
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Clearing store section " << section << "\n";
 #endif
-  store() -> setGroup (section);
-  int children = store() -> readNumEntry ("Children");
+  KConfigGroup group (store() -> group (section));
+  int children = group.readEntry ("Children", 0);
   for ( int i = 0; i < children; ++ i )
   {
-    store() -> setGroup (section);
-    QString entry (store() -> readEntry ("Child" + QString::number (i), QString()));
+    QString entry (group.readEntry ("Child" + QString::number (i), QString()));
     if ( entry.indexOf ('/') < 0 )
     {
       KUrl url (section);
