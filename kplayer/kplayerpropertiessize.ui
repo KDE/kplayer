@@ -1,554 +1,545 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
-<class>KPlayerPropertiesSizePage</class>
-<widget class="QFrame">
-    <property name="name">
-        <cstring>KPlayerPropertiesSizePage</cstring>
-    </property>
+<ui version="4.0" stdsetdef="1">
+  <class>KPlayerPropertiesSizePage</class>
+  <widget class="QFrame" name="KPlayerPropertiesSizePage">
     <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>640</width>
-            <height>480</height>
-        </rect>
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>640</width>
+        <height>480</height>
+      </rect>
     </property>
     <property name="frameShape">
-        <enum>NoFrame</enum>
+      <enum>NoFrame</enum>
     </property>
     <property name="frameShadow">
-        <enum>Plain</enum>
+      <enum>Plain</enum>
     </property>
     <property name="lineWidth">
-        <number>0</number>
+      <number>0</number>
     </property>
-    <grid>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <widget class="QFrame" row="0" column="0">
-            <property name="name">
-                <cstring>frame1</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>0</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="frameShape">
-                <enum>NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Plain</enum>
-            </property>
-            <vbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QLayoutWidget">
-                    <property name="name">
-                        <cstring>layout1</cstring>
+    <layout class="QGridLayout">
+      <item row="0" column="0">
+        <widget class="QFrame" name="frame1">
+          <property name="sizePolicy">
+            <sizepolicy>
+              <hsizetype>0</hsizetype>
+              <vsizetype>0</vsizetype>
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+            </sizepolicy>
+          </property>
+          <property name="frameShape">
+            <enum>NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+            <enum>Plain</enum>
+          </property>
+          <layout class="QVBoxLayout">
+            <item>
+              <layout class="QGridLayout">
+                <item row="0" column="0">
+                  <widget class="QLabel" name="l_resolution">
+                    <property name="text">
+                      <string>&amp;Resolution</string>
                     </property>
-                    <grid>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QLabel" row="0" column="0">
-                            <property name="name">
-                                <cstring>l_resolution</cstring>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Resolution</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_resolution_width</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Video resolution in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the video resolution in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="0" column="1">
-                            <property name="name">
-                                <cstring>c_resolution_width</cstring>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="readOnly">
-                                <bool>true</bool>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Video resolution in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the video resolution in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="0" column="2">
-                            <property name="name">
-                                <cstring>l_resolution_by</cstring>
-                            </property>
-                            <property name="text">
-                                <string>by</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_resolution_height</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Video resolution in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the video resolution in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="0" column="3">
-                            <property name="name">
-                                <cstring>c_resolution_height</cstring>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="readOnly">
-                                <bool>true</bool>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Video resolution in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the video resolution in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="1" column="0">
-                            <property name="name">
-                                <cstring>l_original_size</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Original si&amp;ze</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_original_width</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Original video size in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the original video size in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="1" column="1">
-                            <property name="name">
-                                <cstring>c_original_width</cstring>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="readOnly">
-                                <bool>true</bool>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Original video size in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the original video size in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="1" column="2">
-                            <property name="name">
-                                <cstring>l_original_by</cstring>
-                            </property>
-                            <property name="text">
-                                <string>by</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_original_height</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Original video size in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the original video size in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="1" column="3">
-                            <property name="name">
-                                <cstring>c_original_height</cstring>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="readOnly">
-                                <bool>true</bool>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Original video size in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the original video size in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="2" column="0">
-                            <property name="name">
-                                <cstring>l_current_size</cstring>
-                            </property>
-                            <property name="text">
-                                <string>C&amp;urrent size</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_current_width</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Current video size in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the current video size in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="2" column="1">
-                            <property name="name">
-                                <cstring>c_current_width</cstring>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="readOnly">
-                                <bool>true</bool>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Current video size in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the current video size in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="2" column="2">
-                            <property name="name">
-                                <cstring>l_current_by</cstring>
-                            </property>
-                            <property name="text">
-                                <string>by</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_current_height</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Current video size in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the current video size in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="2" column="3">
-                            <property name="name">
-                                <cstring>c_current_height</cstring>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="readOnly">
-                                <bool>true</bool>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Current video size in pixels</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Property that shows the current video size in pixels.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="3" column="0">
-                            <property name="name">
-                                <cstring>l_display_size</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Display &amp;size</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_display_size</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Initial video display size or aspect</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QComboBox" row="3" column="1" colspan="3">
-                            <item>
-                                <property name="text">
-                                    <string>auto</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>set size</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>set aspect</string>
-                                </property>
-                            </item>
-                            <property name="name">
-                                <cstring>c_display_size</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Initial video display size or aspect</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="4" column="1">
-                            <property name="name">
-                                <cstring>c_display_width</cstring>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Initial video display size or aspect</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="4" column="2">
-                            <property name="name">
-                                <cstring>l_display_by</cstring>
-                            </property>
-                            <property name="text">
-                                <string>&amp;by</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_display_height</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Initial video display size or aspect</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="4" column="3">
-                            <property name="name">
-                                <cstring>c_display_height</cstring>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Initial video display size or aspect</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="5" column="0">
-                            <property name="name">
-                                <cstring>l_full_screen</cstring>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Full screen</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_full_screen</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Initial full screen window state</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to choose whether to start playing this file in a full screen window. Default does not change the window state for this file. It is easier to set this property by switching to full screen or restoring KPlayer window while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QComboBox" row="5" column="1" colspan="3">
-                            <item>
-                                <property name="text">
-                                    <string>default</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>yes</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>no</string>
-                                </property>
-                            </item>
-                            <property name="name">
-                                <cstring>c_full_screen</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Initial full screen window state</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to choose whether to start playing this file in a full screen window. Default does not change the window state for this file. It is easier to set this property by switching to full screen or restoring KPlayer window while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="6" column="0">
-                            <property name="name">
-                                <cstring>l_maximized</cstring>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Maximized</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_maximized</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Initial maximized window state</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to choose whether to start playing this file in a maximized or normal window. Default does not change the window state for this file. If the full screen option is also set, it will take precedence. It is easier to set this property by maximizing or restoring KPlayer window while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QComboBox" row="6" column="1" colspan="3">
-                            <item>
-                                <property name="text">
-                                    <string>default</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>yes</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>no</string>
-                                </property>
-                            </item>
-                            <property name="name">
-                                <cstring>c_maximized</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Initial maximized window state</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to choose whether to start playing this file in a maximized or normal window. Default does not change the window state for this file. If the full screen option is also set, it will take precedence. It is easier to set this property by maximizing or restoring KPlayer window while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="7" column="0">
-                            <property name="name">
-                                <cstring>l_maintain_aspect</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Mai&amp;ntain aspect</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_maintain_aspect</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Maintain video aspect when resizing window</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to maintain video aspect when resizing KPlayer window. Default leaves the maintain aspect option unchanged for this file. It is easier to set this property by clicking Maintain Aspect button on the main KPlayer toolbar while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                        <widget class="QComboBox" row="7" column="1" colspan="3">
-                            <item>
-                                <property name="text">
-                                    <string>default</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>yes</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>no</string>
-                                </property>
-                            </item>
-                            <property name="name">
-                                <cstring>c_maintain_aspect</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Maintain video aspect when resizing window</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to maintain video aspect when resizing KPlayer window. Default leaves the maintain aspect option unchanged for this file. It is easier to set this property by clicking Maintain Aspect button on the main KPlayer toolbar while holding Shift key down.</string>
-                            </property>
-                        </widget>
-                    </grid>
-                </widget>
-            </vbox>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_resolution_width</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Video resolution in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the video resolution in pixels.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="1">
+                  <widget class="QLineEdit" name="c_resolution_width">
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="readOnly">
+                      <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Video resolution in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the video resolution in pixels.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="2">
+                  <widget class="QLabel" name="l_resolution_by">
+                    <property name="text">
+                      <string>by</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_resolution_height</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Video resolution in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the video resolution in pixels.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="3">
+                  <widget class="QLineEdit" name="c_resolution_height">
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="readOnly">
+                      <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Video resolution in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the video resolution in pixels.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="1" column="0">
+                  <widget class="QLabel" name="l_original_size">
+                    <property name="text">
+                      <string>Original si&amp;ze</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_original_width</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Original video size in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the original video size in pixels.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="1" column="1">
+                  <widget class="QLineEdit" name="c_original_width">
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="readOnly">
+                      <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Original video size in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the original video size in pixels.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="1" column="2">
+                  <widget class="QLabel" name="l_original_by">
+                    <property name="text">
+                      <string>by</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_original_height</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Original video size in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the original video size in pixels.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="1" column="3">
+                  <widget class="QLineEdit" name="c_original_height">
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="readOnly">
+                      <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Original video size in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the original video size in pixels.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="2" column="0">
+                  <widget class="QLabel" name="l_current_size">
+                    <property name="text">
+                      <string>C&amp;urrent size</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_current_width</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Current video size in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the current video size in pixels.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="2" column="1">
+                  <widget class="QLineEdit" name="c_current_width">
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="readOnly">
+                      <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Current video size in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the current video size in pixels.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="2" column="2">
+                  <widget class="QLabel" name="l_current_by">
+                    <property name="text">
+                      <string>by</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_current_height</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Current video size in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the current video size in pixels.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="2" column="3">
+                  <widget class="QLineEdit" name="c_current_height">
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="readOnly">
+                      <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Current video size in pixels</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Property that shows the current video size in pixels.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="3" column="0">
+                  <widget class="QLabel" name="l_display_size">
+                    <property name="text">
+                      <string>Display &amp;size</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_display_size</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Initial video display size or aspect</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="3" column="1" colspan="3">
+                  <widget class="QComboBox" name="c_display_size">
+                    <property name="toolTip" stdset="0">
+                      <string>Initial video display size or aspect</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
+                    </property>
+                    <item>
+                      <property name="text">
+                        <string>auto</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text">
+                        <string>set size</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text">
+                        <string>set aspect</string>
+                      </property>
+                    </item>
+                  </widget>
+                </item>
+                <item row="4" column="1">
+                  <widget class="QLineEdit" name="c_display_width">
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Initial video display size or aspect</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="4" column="2">
+                  <widget class="QLabel" name="l_display_by">
+                    <property name="text">
+                      <string>&amp;by</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_display_height</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Initial video display size or aspect</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="4" column="3">
+                  <widget class="QLineEdit" name="c_display_height">
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Initial video display size or aspect</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="5" column="0">
+                  <widget class="QLabel" name="l_full_screen">
+                    <property name="text">
+                      <string>&amp;Full screen</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_full_screen</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Initial full screen window state</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to choose whether to start playing this file in a full screen window. Default does not change the window state for this file. It is easier to set this property by switching to full screen or restoring KPlayer window while holding Shift key down.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="5" column="1" colspan="3">
+                  <widget class="QComboBox" name="c_full_screen">
+                    <property name="toolTip" stdset="0">
+                      <string>Initial full screen window state</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to choose whether to start playing this file in a full screen window. Default does not change the window state for this file. It is easier to set this property by switching to full screen or restoring KPlayer window while holding Shift key down.</string>
+                    </property>
+                    <item>
+                      <property name="text">
+                        <string>default</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text">
+                        <string>yes</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text">
+                        <string>no</string>
+                      </property>
+                    </item>
+                  </widget>
+                </item>
+                <item row="6" column="0">
+                  <widget class="QLabel" name="l_maximized">
+                    <property name="text">
+                      <string>&amp;Maximized</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_maximized</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Initial maximized window state</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to choose whether to start playing this file in a maximized or normal window. Default does not change the window state for this file. If the full screen option is also set, it will take precedence. It is easier to set this property by maximizing or restoring KPlayer window while holding Shift key down.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="6" column="1" colspan="3">
+                  <widget class="QComboBox" name="c_maximized">
+                    <property name="toolTip" stdset="0">
+                      <string>Initial maximized window state</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to choose whether to start playing this file in a maximized or normal window. Default does not change the window state for this file. If the full screen option is also set, it will take precedence. It is easier to set this property by maximizing or restoring KPlayer window while holding Shift key down.</string>
+                    </property>
+                    <item>
+                      <property name="text">
+                        <string>default</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text">
+                        <string>yes</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text">
+                        <string>no</string>
+                      </property>
+                    </item>
+                  </widget>
+                </item>
+                <item row="7" column="0">
+                  <widget class="QLabel" name="l_maintain_aspect">
+                    <property name="text">
+                      <string>Mai&amp;ntain aspect</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_maintain_aspect</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Maintain video aspect when resizing window</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to maintain video aspect when resizing KPlayer window. Default leaves the maintain aspect option unchanged for this file. It is easier to set this property by clicking Maintain Aspect button on the main KPlayer toolbar while holding Shift key down.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="7" column="1" colspan="3">
+                  <widget class="QComboBox" name="c_maintain_aspect">
+                    <property name="toolTip" stdset="0">
+                      <string>Maintain video aspect when resizing window</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to maintain video aspect when resizing KPlayer window. Default leaves the maintain aspect option unchanged for this file. It is easier to set this property by clicking Maintain Aspect button on the main KPlayer toolbar while holding Shift key down.</string>
+                    </property>
+                    <item>
+                      <property name="text">
+                        <string>default</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text">
+                        <string>yes</string>
+                      </property>
+                    </item>
+                    <item>
+                      <property name="text">
+                        <string>no</string>
+                      </property>
+                    </item>
+                  </widget>
+                </item>
+              </layout>
+            </item>
+          </layout>
         </widget>
-    </grid>
-</widget>
-<connections>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="0"/>
+  <connections>
     <connection>
-        <sender>c_display_size</sender>
-        <signal>activated(int)</signal>
-        <receiver>KPlayerPropertiesSizePage</receiver>
-        <slot>displaySizeChanged(int)</slot>
+      <sender>c_display_size</sender>
+      <signal>activated(int)</signal>
+      <receiver>KPlayerPropertiesSizePage</receiver>
+      <slot>displaySizeChanged(int)</slot>
     </connection>
-</connections>
-<slots>
-    <slot access="protected">displaySizeChanged(int)</slot>
-</slots>
-<layoutdefaults spacing="6" margin="0"/>
-</UI>
+  </connections>
+</ui>

@@ -18,29 +18,29 @@
 
 #include <kpagedialog.h>
 
-#include "kplayersettingsadvanced.h"
-#include "kplayersettingsaudio.h"
-#include "kplayersettingscontrols.h"
-#include "kplayersettingsgeneral.h"
-#include "kplayersettingssliders.h"
-#include "kplayersettingssubtitles.h"
-#include "kplayersettingsvideo.h"
-#include "kplayersettingsprogress.h"
-#include "kplayersettingsvolume.h"
-#include "kplayersettingscontrast.h"
-#include "kplayersettingsbrightness.h"
-#include "kplayersettingshue.h"
-#include "kplayersettingssaturation.h"
+#include "ui_kplayersettingsadvanced.h"
+#include "ui_kplayersettingsaudio.h"
+#include "ui_kplayersettingscontrols.h"
+#include "ui_kplayersettingsgeneral.h"
+#include "ui_kplayersettingssliders.h"
+#include "ui_kplayersettingssubtitles.h"
+#include "ui_kplayersettingsvideo.h"
+#include "ui_kplayersettingsprogress.h"
+#include "ui_kplayersettingsvolume.h"
+#include "ui_kplayersettingscontrast.h"
+#include "ui_kplayersettingsbrightness.h"
+#include "ui_kplayersettingshue.h"
+#include "ui_kplayersettingssaturation.h"
 #include "kplayerproperties.h"
 
 QString listEntry (QComboBox* combo, bool hasDefault = false);
 
-class KPlayerSettingsAdvanced : public KPlayerSettingsAdvancedPage
+class KPlayerSettingsAdvanced : public QFrame, protected Ui_KPlayerSettingsAdvancedPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsAdvanced (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsAdvanced (QWidget* parent = 0);
 
   KPlayerEngine* engine (void)
     { return KPlayerEngine::engine(); }
@@ -54,17 +54,19 @@ public:
 public slots:
   void refresh (void);
 
+protected slots:
+  void cacheChanged (int);
+
 protected:
   void loadLists (void);
-  virtual void cacheChanged (int);
 };
 
-class KPlayerSettingsAudio : public KPlayerSettingsAudioPage
+class KPlayerSettingsAudio : public QFrame, protected Ui_KPlayerSettingsAudioPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsAudio (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsAudio (QWidget* parent = 0);
 
   KPlayerEngine* engine (void)
     { return KPlayerEngine::engine(); }
@@ -83,14 +85,16 @@ protected slots:
   /** Finishes refreshing ALSA mixer channel list. */
   void amixerFinished (KPlayerLineOutputProcess*);
 
+protected slots:
+  void driverChanged (int);
+  void deviceChanged (const QString&);
+  void mixerChanged (const QString&);
+  void softvolChanged (bool);
+
 protected:
   void loadLists (void);
   void runAmixer (void);
   void defaultAlsaChannels (void);
-  virtual void driverChanged (int);
-  virtual void deviceChanged (const QString&);
-  virtual void mixerChanged (const QString&);
-  virtual void softvolChanged (bool);
 
   /** Last selected driver. */
   QString m_driver;
@@ -102,12 +106,12 @@ protected:
   bool m_amixer_running, m_rerun_amixer;
 };
 
-class KPlayerSettingsControls : public KPlayerSettingsControlsPage
+class KPlayerSettingsControls : public QFrame, protected Ui_KPlayerSettingsControlsPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsControls (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsControls (QWidget* parent = 0);
 
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
@@ -115,16 +119,16 @@ public:
   void load (void);
   void save (void);
 
-protected:
-  virtual void rememberSizeChanged (bool);
+protected slots:
+  void rememberSizeChanged (bool);
 };
 
-class KPlayerSettingsSliders : public KPlayerSettingsSlidersPage
+class KPlayerSettingsSliders : public QFrame, protected Ui_KPlayerSettingsSlidersPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsSliders (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsSliders (QWidget* parent = 0);
 
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
@@ -132,16 +136,16 @@ public:
   void load (void);
   void save (void);
 
-protected:
-  virtual void showMarksChanged (bool);
+protected slots:
+  void showMarksChanged (bool);
 };
 
-class KPlayerSettingsGeneral : public KPlayerSettingsGeneralPage
+class KPlayerSettingsGeneral : public QFrame, protected Ui_KPlayerSettingsGeneralPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsGeneral (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsGeneral (QWidget* parent = 0);
 
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
@@ -153,12 +157,12 @@ protected:
   void resizeAutomaticallyChanged (bool);
 };
 
-class KPlayerSettingsSubtitles : public KPlayerSettingsSubtitlesPage
+class KPlayerSettingsSubtitles : public QFrame, protected Ui_KPlayerSettingsSubtitlesPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsSubtitles (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsSubtitles (QWidget* parent = 0);
 
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
@@ -167,25 +171,27 @@ public:
   void load (void);
   void save (void);
 
+protected slots:
+  void widthSliderChanged (int);
+  void widthEditChanged (const QString&);
+  void outlineSliderChanged (int);
+  void outlineEditChanged (const QString&);
+  void autoexpandChanged (bool);
+  void autoloadSubtitlesChanged (bool);
+
 protected:
-  virtual void widthSliderChanged (int);
-  virtual void widthEditChanged (const QString&);
-  virtual void outlineSliderChanged (int);
-  virtual void outlineEditChanged (const QString&);
-  virtual void autoexpandChanged (bool);
-  virtual void autoloadSubtitlesChanged (bool);
   /** Recursion prevention. */
   bool m_recursion;
   /** Leave focus alone. */
   bool m_initialized;
 };
 
-class KPlayerSettingsVideo : public KPlayerSettingsVideoPage
+class KPlayerSettingsVideo : public QFrame, protected Ui_KPlayerSettingsVideoPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsVideo (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsVideo (QWidget* parent = 0);
 
   KPlayerEngine* engine (void)
     { return KPlayerEngine::engine(); }
@@ -198,17 +204,19 @@ public:
 public slots:
   void refresh (void);
 
+protected slots:
+  void driverChanged (int);
+
 protected:
   void loadLists (void);
-  virtual void driverChanged (int);
 };
 
-class KPlayerSettingsProgress : public KPlayerSettingsProgressPage
+class KPlayerSettingsProgress : public QFrame, protected Ui_KPlayerSettingsProgressPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsProgress (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsProgress (QWidget* parent = 0);
 
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
@@ -217,12 +225,12 @@ public:
   void save (void);
 };
 
-class KPlayerSettingsVolume : public KPlayerSettingsVolumePage
+class KPlayerSettingsVolume : public QFrame, protected Ui_KPlayerSettingsVolumePage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsVolume (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsVolume (QWidget* parent = 0);
 
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
@@ -230,16 +238,16 @@ public:
   void load (void);
   void save (void);
 
-protected:
-  virtual void resetChanged (bool);
+protected slots:
+  void resetChanged (bool);
 };
 
-class KPlayerSettingsContrast : public KPlayerSettingsContrastPage
+class KPlayerSettingsContrast : public QFrame, protected Ui_KPlayerSettingsContrastPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsContrast (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsContrast (QWidget* parent = 0);
 
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
@@ -247,16 +255,16 @@ public:
   void load (void);
   void save (void);
 
-protected:
-  virtual void resetChanged (bool);
+protected slots:
+  void resetChanged (bool);
 };
 
-class KPlayerSettingsBrightness : public KPlayerSettingsBrightnessPage
+class KPlayerSettingsBrightness : public QFrame, protected Ui_KPlayerSettingsBrightnessPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsBrightness (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsBrightness (QWidget* parent = 0);
 
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
@@ -264,16 +272,16 @@ public:
   void load (void);
   void save (void);
 
-protected:
-  virtual void resetChanged (bool);
+protected slots:
+  void resetChanged (bool);
 };
 
-class KPlayerSettingsHue : public KPlayerSettingsHuePage
+class KPlayerSettingsHue : public QFrame, protected Ui_KPlayerSettingsHuePage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsHue (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsHue (QWidget* parent = 0);
 
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
@@ -281,16 +289,16 @@ public:
   void load (void);
   void save (void);
 
-protected:
-  virtual void resetChanged (bool);
+protected slots:
+  void resetChanged (bool);
 };
 
-class KPlayerSettingsSaturation : public KPlayerSettingsSaturationPage
+class KPlayerSettingsSaturation : public QFrame, protected Ui_KPlayerSettingsSaturationPage
 {
   Q_OBJECT
 
 public:
-  KPlayerSettingsSaturation (QWidget* parent = 0, const char* name = 0);
+  KPlayerSettingsSaturation (QWidget* parent = 0);
 
   KPlayerConfiguration* configuration (void)
     { return KPlayerEngine::engine() -> configuration(); }
@@ -298,8 +306,8 @@ public:
   void load (void);
   void save (void);
 
-protected:
-  virtual void resetChanged (bool);
+protected slots:
+  void resetChanged (bool);
 };
 
 /** The KPlayer settings dialog.

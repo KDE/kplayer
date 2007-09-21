@@ -24,7 +24,7 @@
 
 #include "kplayeractionlist.h"
 #include "kplayernode.h"
-#include "kplayerpropertiesdevice.h"
+#include "ui_kplayerpropertiesdevice.h"
 
 class KPlayerDeviceDialog;
 class KPlayerContainerActionList;
@@ -56,7 +56,7 @@ protected:
 /** The KPlayer device creation dialog page.
   *@author kiriuja
   */
-class KPlayerPropertiesDevice : public KPlayerPropertiesDevicePage
+class KPlayerPropertiesDevice : public QFrame, public Ui_KPlayerPropertiesDevicePage
 {
   Q_OBJECT
 
@@ -68,17 +68,18 @@ public:
 
   /** Device dialog. */
   KPlayerDeviceDialog* parent (void)
-    { return (KPlayerDeviceDialog*) KPlayerPropertiesDevicePage::parent(); }
+    { return (KPlayerDeviceDialog*) QFrame::parent(); }
 
   /** Adds a new device node. */
   void addDevice (void);
 
-protected:
+protected slots:
   /** Enables or disables the OK button. */
-  virtual void pathChanged (const QString&);
+  void pathChanged (const QString&);
   /** Shows or hides channel list and file options. */
-  virtual void typeChanged (int);
+  void typeChanged (int);
 
+protected:
   /** Devices node. */
   KPlayerContainerNode* m_node;
 };

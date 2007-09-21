@@ -416,8 +416,8 @@ KPlayerPropertiesAdvanced* KPlayerItemPropertiesDialog::createAdvancedPage (void
   }
 }*/
 
-KPlayerPropertiesGeneral::KPlayerPropertiesGeneral (QWidget* parent, const char* name)
-  : KPlayerPropertiesGeneralPage (parent, name)
+KPlayerPropertiesGeneral::KPlayerPropertiesGeneral (QWidget* parent)
+  : QFrame (parent)
 {
 }
 
@@ -432,6 +432,7 @@ void KPlayerPropertiesGeneral::setup (const KUrl& url)
   kdDebugTime() << "KPlayerPropertiesGeneral::setup\n";
 #endif
   setupMedia (url);
+  setupUi (this);
   //setupHistory (c_name, properties() -> nameHistory());
   setupControls();
   load();
@@ -507,8 +508,8 @@ void KPlayerPropertiesGeneral::save (void)
   properties() -> setName (c_name -> text());
 }
 
-KPlayerPropertiesDeviceGeneral::KPlayerPropertiesDeviceGeneral (QWidget* parent, const char* name)
-  : KPlayerPropertiesGeneral (parent, name)
+KPlayerPropertiesDeviceGeneral::KPlayerPropertiesDeviceGeneral (QWidget* parent)
+  : KPlayerPropertiesGeneral (parent)
 {
 }
 
@@ -538,8 +539,8 @@ void KPlayerPropertiesDeviceGeneral::load (void)
   KPlayerPropertiesGeneral::load();
 }
 
-KPlayerPropertiesTVDeviceGeneral::KPlayerPropertiesTVDeviceGeneral (QWidget* parent, const char* name)
-  : KPlayerPropertiesDeviceGeneral (parent, name)
+KPlayerPropertiesTVDeviceGeneral::KPlayerPropertiesTVDeviceGeneral (QWidget* parent)
+  : KPlayerPropertiesDeviceGeneral (parent)
 {
 }
 
@@ -586,8 +587,8 @@ void KPlayerPropertiesTVDeviceGeneral::save (void)
   KPlayerPropertiesDeviceGeneral::save();
 }
 
-KPlayerPropertiesDVBDeviceGeneral::KPlayerPropertiesDVBDeviceGeneral (QWidget* parent, const char* name)
-  : KPlayerPropertiesDeviceGeneral (parent, name)
+KPlayerPropertiesDVBDeviceGeneral::KPlayerPropertiesDVBDeviceGeneral (QWidget* parent)
+  : KPlayerPropertiesDeviceGeneral (parent)
 {
 }
 
@@ -623,8 +624,8 @@ void KPlayerPropertiesDVBDeviceGeneral::save (void)
   KPlayerPropertiesDeviceGeneral::save();
 }
 
-KPlayerPropertiesTrackGeneral::KPlayerPropertiesTrackGeneral (QWidget* parent, const char* name)
-  : KPlayerPropertiesGeneral (parent, name)
+KPlayerPropertiesTrackGeneral::KPlayerPropertiesTrackGeneral (QWidget* parent)
+  : KPlayerPropertiesGeneral (parent)
 {
 }
 
@@ -642,8 +643,8 @@ void KPlayerPropertiesTrackGeneral::load (void)
   KPlayerPropertiesGeneral::load();
 }
 
-KPlayerPropertiesDiskTrackGeneral::KPlayerPropertiesDiskTrackGeneral (QWidget* parent, const char* name)
-  : KPlayerPropertiesTrackGeneral (parent, name)
+KPlayerPropertiesDiskTrackGeneral::KPlayerPropertiesDiskTrackGeneral (QWidget* parent)
+  : KPlayerPropertiesTrackGeneral (parent)
 {
 }
 
@@ -665,8 +666,8 @@ void KPlayerPropertiesDiskTrackGeneral::load (void)
   KPlayerPropertiesTrackGeneral::load();
 }
 
-KPlayerPropertiesChannelGeneral::KPlayerPropertiesChannelGeneral (QWidget* parent, const char* name)
-  : KPlayerPropertiesDiskTrackGeneral (parent, name)
+KPlayerPropertiesChannelGeneral::KPlayerPropertiesChannelGeneral (QWidget* parent)
+  : KPlayerPropertiesDiskTrackGeneral (parent)
 {
 }
 
@@ -695,8 +696,8 @@ void KPlayerPropertiesChannelGeneral::save (void)
   KPlayerPropertiesDiskTrackGeneral::save();
 }
 
-KPlayerPropertiesItemGeneral::KPlayerPropertiesItemGeneral (QWidget* parent, const char* name)
-  : KPlayerPropertiesTrackGeneral (parent, name)
+KPlayerPropertiesItemGeneral::KPlayerPropertiesItemGeneral (QWidget* parent)
+  : KPlayerPropertiesTrackGeneral (parent)
 {
 }
 
@@ -723,8 +724,8 @@ void KPlayerPropertiesItemGeneral::save (void)
   KPlayerPropertiesTrackGeneral::save();
 }
 
-KPlayerPropertiesSize::KPlayerPropertiesSize (QWidget* parent, const char* name)
-  : KPlayerPropertiesSizePage (parent, name)
+KPlayerPropertiesSize::KPlayerPropertiesSize (QWidget* parent)
+  : QFrame (parent)
 {
 }
 
@@ -739,6 +740,7 @@ void KPlayerPropertiesSize::setup (const KUrl& url)
   kdDebugTime() << "KPlayerPropertiesSize::setup\n";
 #endif
   setupMedia (url);
+  setupUi (this);
   setupControls();
   load();
 }
@@ -801,8 +803,8 @@ void KPlayerPropertiesSize::displaySizeChanged (int option)
   }
 }
 
-KPlayerPropertiesDeviceSize::KPlayerPropertiesDeviceSize (QWidget* parent, const char* name)
-  : KPlayerPropertiesSize (parent, name)
+KPlayerPropertiesDeviceSize::KPlayerPropertiesDeviceSize (QWidget* parent)
+  : KPlayerPropertiesSize (parent)
 {
 }
 
@@ -833,8 +835,8 @@ void KPlayerPropertiesDeviceSize::setupControls (void)
   c_current_height -> hide();
 }
 
-KPlayerPropertiesTrackSize::KPlayerPropertiesTrackSize (QWidget* parent, const char* name)
-  : KPlayerPropertiesSize (parent, name)
+KPlayerPropertiesTrackSize::KPlayerPropertiesTrackSize (QWidget* parent)
+  : KPlayerPropertiesSize (parent)
 {
 }
 
@@ -857,8 +859,8 @@ void KPlayerPropertiesTrackSize::load (void)
   KPlayerPropertiesSize::load();
 }
 
-KPlayerPropertiesSubtitles::KPlayerPropertiesSubtitles (QWidget* parent, const char* name)
-  : KPlayerPropertiesSubtitlesPage (parent, name)
+KPlayerPropertiesSubtitles::KPlayerPropertiesSubtitles (QWidget* parent)
+  : QFrame (parent)
 {
 }
 
@@ -873,6 +875,7 @@ void KPlayerPropertiesSubtitles::setup (const KUrl& url)
   kdDebugTime() << "KPlayerPropertiesSubtitles::setup\n";
 #endif
   setupMedia (url);
+  setupUi (this);
   setupControls();
   load();
 }
@@ -966,8 +969,8 @@ void KPlayerPropertiesSubtitles::delayChanged (int option)
   }
 }
 
-KPlayerPropertiesDeviceSubtitles::KPlayerPropertiesDeviceSubtitles (QWidget* parent, const char* name)
-  : KPlayerPropertiesSubtitles (parent, name)
+KPlayerPropertiesDeviceSubtitles::KPlayerPropertiesDeviceSubtitles (QWidget* parent)
+  : KPlayerPropertiesSubtitles (parent)
 {
 }
 
@@ -989,8 +992,8 @@ void KPlayerPropertiesDeviceSubtitles::setupControls (void)
   hideUrl();
 }
 
-KPlayerPropertiesTrackSubtitles::KPlayerPropertiesTrackSubtitles (QWidget* parent, const char* name)
-  : KPlayerPropertiesSubtitles (parent, name)
+KPlayerPropertiesTrackSubtitles::KPlayerPropertiesTrackSubtitles (QWidget* parent)
+  : KPlayerPropertiesSubtitles (parent)
 {
 }
 
@@ -1058,8 +1061,8 @@ void KPlayerPropertiesTrackSubtitles::trackChanged (int option)
   }
 }
 
-KPlayerPropertiesChannelSubtitles::KPlayerPropertiesChannelSubtitles (QWidget* parent, const char* name)
-  : KPlayerPropertiesTrackSubtitles (parent, name)
+KPlayerPropertiesChannelSubtitles::KPlayerPropertiesChannelSubtitles (QWidget* parent)
+  : KPlayerPropertiesTrackSubtitles (parent)
 {
 }
 
@@ -1074,8 +1077,8 @@ void KPlayerPropertiesChannelSubtitles::setupControls (void)
   hideUrl();
 }
 
-KPlayerPropertiesDiskTrackSubtitles::KPlayerPropertiesDiskTrackSubtitles (QWidget* parent, const char* name)
-  : KPlayerPropertiesTrackSubtitles (parent, name)
+KPlayerPropertiesDiskTrackSubtitles::KPlayerPropertiesDiskTrackSubtitles (QWidget* parent)
+  : KPlayerPropertiesTrackSubtitles (parent)
 {
 }
 
@@ -1258,8 +1261,8 @@ void KPlayerPropertiesDiskTrackSubtitles::save (void)
   KPlayerPropertiesTrackSubtitles::save();
 }
 
-KPlayerPropertiesItemSubtitles::KPlayerPropertiesItemSubtitles (QWidget* parent, const char* name)
-  : KPlayerPropertiesDiskTrackSubtitles (parent, name)
+KPlayerPropertiesItemSubtitles::KPlayerPropertiesItemSubtitles (QWidget* parent)
+  : KPlayerPropertiesDiskTrackSubtitles (parent)
 {
 }
 
@@ -1289,8 +1292,8 @@ void KPlayerPropertiesItemSubtitles::save (void)
   KPlayerPropertiesDiskTrackSubtitles::save();
 }
 
-KPlayerPropertiesAudio::KPlayerPropertiesAudio (QWidget* parent, const char* name)
-  : KPlayerPropertiesAudioPage (parent, name)
+KPlayerPropertiesAudio::KPlayerPropertiesAudio (QWidget* parent)
+  : QFrame (parent)
 {
 }
 
@@ -1305,6 +1308,7 @@ void KPlayerPropertiesAudio::setup (const KUrl& url)
   kdDebugTime() << "KPlayerPropertiesAudio::setup\n";
 #endif
   setupMedia (url);
+  setupUi (this);
   if ( engine() -> audioCodecCount() )
   {
     c_codec -> clear();
@@ -1412,8 +1416,8 @@ void KPlayerPropertiesAudio::delayChanged (int option)
   }
 }
 
-KPlayerPropertiesDeviceAudio::KPlayerPropertiesDeviceAudio (QWidget* parent, const char* name)
-  : KPlayerPropertiesAudio (parent, name)
+KPlayerPropertiesDeviceAudio::KPlayerPropertiesDeviceAudio (QWidget* parent)
+  : KPlayerPropertiesAudio (parent)
 {
 }
 
@@ -1436,8 +1440,8 @@ void KPlayerPropertiesDeviceAudio::setupControls (void)
   hideTV();
 }
 
-KPlayerPropertiesTVDeviceAudio::KPlayerPropertiesTVDeviceAudio (QWidget* parent, const char* name)
-  : KPlayerPropertiesDVBDeviceAudio (parent, name)
+KPlayerPropertiesTVDeviceAudio::KPlayerPropertiesTVDeviceAudio (QWidget* parent)
+  : KPlayerPropertiesDVBDeviceAudio (parent)
 {
 }
 
@@ -1476,8 +1480,8 @@ void KPlayerPropertiesTVDeviceAudio::save (void)
   KPlayerPropertiesDVBDeviceAudio::save();
 }
 
-KPlayerPropertiesDVBDeviceAudio::KPlayerPropertiesDVBDeviceAudio (QWidget* parent, const char* name)
-  : KPlayerPropertiesDeviceAudio (parent, name)
+KPlayerPropertiesDVBDeviceAudio::KPlayerPropertiesDVBDeviceAudio (QWidget* parent)
+  : KPlayerPropertiesDeviceAudio (parent)
 {
 }
 
@@ -1527,8 +1531,8 @@ void KPlayerPropertiesDVBDeviceAudio::inputChanged (int option)
   }
 }
 
-KPlayerPropertiesTrackAudio::KPlayerPropertiesTrackAudio (QWidget* parent, const char* name)
-  : KPlayerPropertiesAudio (parent, name)
+KPlayerPropertiesTrackAudio::KPlayerPropertiesTrackAudio (QWidget* parent)
+  : KPlayerPropertiesAudio (parent)
 {
 }
 
@@ -1591,8 +1595,8 @@ void KPlayerPropertiesTrackAudio::trackChanged (int option)
   }
 }
 
-KPlayerPropertiesVideo::KPlayerPropertiesVideo (QWidget* parent, const char* name)
-  : KPlayerPropertiesVideoPage (parent, name)
+KPlayerPropertiesVideo::KPlayerPropertiesVideo (QWidget* parent)
+  : QFrame (parent)
 {
 }
 
@@ -1607,6 +1611,7 @@ void KPlayerPropertiesVideo::setup (const KUrl& url)
   kdDebugTime() << "KPlayerPropertiesVideo::setup\n";
 #endif
   setupMedia (url);
+  setupUi (this);
   if ( engine() -> videoCodecCount() )
   {
     c_codec -> clear();
@@ -1739,8 +1744,8 @@ void KPlayerPropertiesVideo::saturationChanged (int option)
   }
 }
 
-KPlayerPropertiesDeviceVideo::KPlayerPropertiesDeviceVideo (QWidget* parent, const char* name)
-  : KPlayerPropertiesVideo (parent, name)
+KPlayerPropertiesDeviceVideo::KPlayerPropertiesDeviceVideo (QWidget* parent)
+  : KPlayerPropertiesVideo (parent)
 {
 }
 
@@ -1763,8 +1768,8 @@ void KPlayerPropertiesDeviceVideo::setupControls (void)
   hideTV();
 }
 
-KPlayerPropertiesTVDeviceVideo::KPlayerPropertiesTVDeviceVideo (QWidget* parent, const char* name)
-  : KPlayerPropertiesDVBDeviceVideo (parent, name)
+KPlayerPropertiesTVDeviceVideo::KPlayerPropertiesTVDeviceVideo (QWidget* parent)
+  : KPlayerPropertiesDVBDeviceVideo (parent)
 {
 }
 
@@ -1823,8 +1828,8 @@ void KPlayerPropertiesTVDeviceVideo::normChanged (int option)
   }
 }
 
-KPlayerPropertiesDVBDeviceVideo::KPlayerPropertiesDVBDeviceVideo (QWidget* parent, const char* name)
-  : KPlayerPropertiesDeviceVideo (parent, name)
+KPlayerPropertiesDVBDeviceVideo::KPlayerPropertiesDVBDeviceVideo (QWidget* parent)
+  : KPlayerPropertiesDeviceVideo (parent)
 {
 }
 
@@ -1874,8 +1879,8 @@ void KPlayerPropertiesDVBDeviceVideo::inputChanged (int option)
   }
 }
 
-KPlayerPropertiesTrackVideo::KPlayerPropertiesTrackVideo (QWidget* parent, const char* name)
-  : KPlayerPropertiesVideo (parent, name)
+KPlayerPropertiesTrackVideo::KPlayerPropertiesTrackVideo (QWidget* parent)
+  : KPlayerPropertiesVideo (parent)
 {
 }
 
@@ -1938,8 +1943,8 @@ void KPlayerPropertiesTrackVideo::trackChanged (int option)
   }
 }
 
-KPlayerPropertiesAdvanced::KPlayerPropertiesAdvanced (QWidget* parent, const char* name)
-  : KPlayerPropertiesAdvancedPage (parent, name)
+KPlayerPropertiesAdvanced::KPlayerPropertiesAdvanced (QWidget* parent)
+  : QFrame (parent)
 {
 }
 
@@ -1954,6 +1959,7 @@ void KPlayerPropertiesAdvanced::setup (const KUrl& url)
   kdDebugTime() << "KPlayerPropertiesAdvanced::setup\n";
 #endif
   setupMedia (url);
+  setupUi (this);
   if ( engine() -> demuxerCount() )
   {
     c_demuxer -> clear();
@@ -2050,8 +2056,8 @@ void KPlayerPropertiesAdvanced::cacheChanged (int cache)
   }
 }
 
-KPlayerPropertiesDeviceAdvanced::KPlayerPropertiesDeviceAdvanced (QWidget* parent, const char* name)
-  : KPlayerPropertiesAdvanced (parent, name)
+KPlayerPropertiesDeviceAdvanced::KPlayerPropertiesDeviceAdvanced (QWidget* parent)
+  : KPlayerPropertiesAdvanced (parent)
 {
 }
 
@@ -2063,8 +2069,8 @@ void KPlayerPropertiesDeviceAdvanced::setupMedia (const KUrl& url)
   m_properties = KPlayerMedia::deviceProperties (url);
 }
 
-KPlayerPropertiesTVDeviceAdvanced::KPlayerPropertiesTVDeviceAdvanced (QWidget* parent, const char* name)
-  : KPlayerPropertiesDeviceAdvanced (parent, name)
+KPlayerPropertiesTVDeviceAdvanced::KPlayerPropertiesTVDeviceAdvanced (QWidget* parent)
+  : KPlayerPropertiesDeviceAdvanced (parent)
 {
 }
 
@@ -2112,8 +2118,8 @@ void KPlayerPropertiesTVDeviceAdvanced::compressionChanged (bool checked)
     c_decimation -> setFocus();
 }
 
-KPlayerPropertiesTrackAdvanced::KPlayerPropertiesTrackAdvanced (QWidget* parent, const char* name)
-  : KPlayerPropertiesAdvanced (parent, name)
+KPlayerPropertiesTrackAdvanced::KPlayerPropertiesTrackAdvanced (QWidget* parent)
+  : KPlayerPropertiesAdvanced (parent)
 {
 }
 
@@ -2125,8 +2131,8 @@ void KPlayerPropertiesTrackAdvanced::setupMedia (const KUrl& url)
   m_properties = KPlayerMedia::trackProperties (url);
 }
 
-KPlayerPropertiesItemAdvanced::KPlayerPropertiesItemAdvanced (QWidget* parent, const char* name)
-  : KPlayerPropertiesTrackAdvanced (parent, name)
+KPlayerPropertiesItemAdvanced::KPlayerPropertiesItemAdvanced (QWidget* parent)
+  : KPlayerPropertiesTrackAdvanced (parent)
 {
 }
 

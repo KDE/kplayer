@@ -1,423 +1,408 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
-<class>KPlayerSettingsGeneralPage</class>
-<widget class="QFrame">
-    <property name="name">
-        <cstring>KPlayerSettingsGeneralPage</cstring>
-    </property>
+<ui version="4.0" stdsetdef="1">
+  <class>KPlayerSettingsGeneralPage</class>
+  <widget class="QFrame" name="KPlayerSettingsGeneralPage">
     <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>600</width>
-            <height>480</height>
-        </rect>
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>600</width>
+        <height>480</height>
+      </rect>
     </property>
     <property name="frameShape">
-        <enum>NoFrame</enum>
+      <enum>NoFrame</enum>
     </property>
     <property name="frameShadow">
-        <enum>Plain</enum>
+      <enum>Plain</enum>
     </property>
     <property name="lineWidth">
-        <number>0</number>
+      <number>0</number>
     </property>
-    <grid>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <widget class="QFrame" row="0" column="0">
-            <property name="name">
-                <cstring>frame1</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>0</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="frameShape">
-                <enum>NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Plain</enum>
-            </property>
-            <vbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
+    <layout class="QGridLayout">
+      <item row="0" column="0">
+        <widget class="QFrame" name="frame1">
+          <property name="sizePolicy">
+            <sizepolicy>
+              <hsizetype>0</hsizetype>
+              <vsizetype>0</vsizetype>
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+            </sizepolicy>
+          </property>
+          <property name="frameShape">
+            <enum>NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+            <enum>Plain</enum>
+          </property>
+          <layout class="QVBoxLayout">
+            <item>
+              <widget class="QCheckBox" name="c_resize_automatically">
+                <property name="text">
+                  <string>R&amp;esize main window automatically</string>
                 </property>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>c_resize_automatically</cstring>
+                <property name="toolTip" stdset="0">
+                  <string>Resize main window automatically to make video area the correct size</string>
+                </property>
+                <property name="whatsThis" stdset="0">
+                  <string>Option to choose whether to automatically resize main KPlayer window so that the video area is of the desired size.</string>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <layout class="QGridLayout">
+                <item row="0" column="0">
+                  <widget class="QLabel" name="l_minimum_initial_width">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>1</hsizetype>
+                        <vsizetype>5</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
                     </property>
                     <property name="text">
-                        <string>R&amp;esize main window automatically</string>
+                      <string>&amp;Minimum initial video width</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_minimum_initial_width</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
-                        <string>Resize main window automatically to make video area the correct size</string>
+                      <string>Minimum width of the video area when starting to play a new file</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>Option to choose whether to automatically resize main KPlayer window so that the video area is of the desired size.</string>
+                      <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
                     </property>
-                </widget>
-                <widget class="QLayoutWidget">
-                    <property name="name">
-                        <cstring>layout4</cstring>
+                    <property name="wordWrap">
+                      <bool>false</bool>
                     </property>
-                    <grid>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QLabel" row="0" column="0">
-                            <property name="name">
-                                <cstring>l_minimum_initial_width</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>1</hsizetype>
-                                    <vsizetype>5</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Minimum initial video width</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_minimum_initial_width</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Minimum width of the video area when starting to play a new file</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="0" column="1">
-                            <property name="name">
-                                <cstring>c_minimum_initial_width</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string></string>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Minimum width of the video area when starting to play a new file</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="0" column="2">
-                            <property name="name">
-                                <cstring>l_minimum_initial_width_pixels</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>1</hsizetype>
-                                    <vsizetype>5</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="text">
-                                <string>pixels</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Minimum width of the video area when starting to play a new file</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="1" column="0">
-                            <property name="name">
-                                <cstring>l_playlist_menu_size</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>1</hsizetype>
-                                    <vsizetype>5</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="text">
-                                <string>Ma&amp;ximum entries on playlist menus</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_playlist_menu_size</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Maximum number of entries on Play List and Add To Playlist menus</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to specify the maximum number of entries on Play List and Add To Playlist menus.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="1" column="1">
-                            <property name="name">
-                                <cstring>c_playlist_menu_size</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string></string>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Maximum number of entries on Play List and Add To Playlist menus</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to specify the maximum number of entries on Play List and Add To Playlist menus.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="2" column="0">
-                            <property name="name">
-                                <cstring>l_recent_menu_size</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>1</hsizetype>
-                                    <vsizetype>5</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="text">
-                                <string>Maximum entries on &amp;Play Recent menu</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_recent_menu_size</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Maximum number of entries on the Play Recent menu</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to specify the maximum number of entries on the Play Recent menu. If this number is exceeded, the oldest entries will be removed.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="2" column="1">
-                            <property name="name">
-                                <cstring>c_recent_menu_size</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string></string>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Maximum number of entries on the Play Recent menu</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to specify the maximum number of entries on the Play Recent menu. If this number is exceeded, the oldest entries will be removed.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="3" column="0">
-                            <property name="name">
-                                <cstring>l_recent_list_size</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>1</hsizetype>
-                                    <vsizetype>5</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="text">
-                                <string>Maximum &amp;Recent entries in the library</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_recent_list_size</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Maximum number of entries on the Recent list in the multimedia library</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to specify the maximum number of entries on the Recent list in the multimedia library. If this number is exceeded, the oldest entries will be removed.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="3" column="1">
-                            <property name="name">
-                                <cstring>c_recent_list_size</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string></string>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Maximum number of entries on the Recent list in the multimedia library</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option to specify the maximum number of entries on the Recent list in the multimedia library. If this number is exceeded, the oldest entries will be removed.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLabel" row="4" column="0">
-                            <property name="name">
-                                <cstring>l_cache_size_limit</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>1</hsizetype>
-                                    <vsizetype>5</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="text">
-                                <string>Meta information cache size &amp;limit</string>
-                            </property>
-                            <property name="alignment">
-                                <set>AlignVCenter|AlignLeft</set>
-                            </property>
-                            <property name="buddy" stdset="0">
-                                <cstring>c_cache_size_limit</cstring>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Maximum number of entries for which KPlayer remembers properties</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option that shows and allows you to change the maximum number of entries for which KPlayer remembers properties, even if they are no longer on playlist. If the limit is exceeded, the oldest existing entries are removed from cache.</string>
-                            </property>
-                        </widget>
-                        <widget class="QLineEdit" row="4" column="1">
-                            <property name="name">
-                                <cstring>c_cache_size_limit</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>0</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="maximumSize">
-                                <size>
-                                    <width>70</width>
-                                    <height>32767</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string></string>
-                            </property>
-                            <property name="toolTip" stdset="0">
-                                <string>Maximum number of entries for which KPlayer remembers properties</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Option that shows and allows you to change the maximum number of entries for which KPlayer remembers properties, even if they are no longer on playlist. If the limit is exceeded, the oldest existing entries are removed from cache.</string>
-                            </property>
-                        </widget>
-                    </grid>
-                </widget>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>c_allow_duplicate_entries</cstring>
+                  </widget>
+                </item>
+                <item row="0" column="1">
+                  <widget class="QLineEdit" name="c_minimum_initial_width">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
                     </property>
                     <property name="text">
-                        <string>Allo&amp;w duplicate entries on playlists</string>
+                      <string/>
                     </property>
                     <property name="toolTip" stdset="0">
-                        <string>Allow multiple entries with the same URL on playlists</string>
+                      <string>Minimum width of the video area when starting to play a new file</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>Option to choose whether to allow multiple entries having the exact same URL on playlist. Duplicate entries will have the same set of file properties. If this option is not selected, and you put a new entry with the same URL as an existing one on a playlist, the old entry will be removed.</string>
+                      <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
                     </property>
-                </widget>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>c_show_messages_on_error</cstring>
+                  </widget>
+                </item>
+                <item row="0" column="2">
+                  <widget class="QLabel" name="l_minimum_initial_width_pixels">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>1</hsizetype>
+                        <vsizetype>5</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
                     </property>
                     <property name="text">
-                        <string>&amp;Show messages if a file fails to play</string>
+                      <string>pixels</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
                     </property>
                     <property name="toolTip" stdset="0">
-                        <string>Show message log if KPlayer encounters an error when trying to play a file</string>
+                      <string>Minimum width of the video area when starting to play a new file</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>Option to choose whether to show message log if KPlayer encounters an error when trying to play a file, so you can look at the end of the log to see what the error was.</string>
+                      <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
                     </property>
-                </widget>
-            </vbox>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="1" column="0">
+                  <widget class="QLabel" name="l_playlist_menu_size">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>1</hsizetype>
+                        <vsizetype>5</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text">
+                      <string>Ma&amp;ximum entries on playlist menus</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_playlist_menu_size</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Maximum number of entries on Play List and Add To Playlist menus</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to specify the maximum number of entries on Play List and Add To Playlist menus.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="1" column="1">
+                  <widget class="QLineEdit" name="c_playlist_menu_size">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="text">
+                      <string/>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Maximum number of entries on Play List and Add To Playlist menus</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to specify the maximum number of entries on Play List and Add To Playlist menus.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="2" column="0">
+                  <widget class="QLabel" name="l_recent_menu_size">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>1</hsizetype>
+                        <vsizetype>5</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text">
+                      <string>Maximum entries on &amp;Play Recent menu</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_recent_menu_size</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Maximum number of entries on the Play Recent menu</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to specify the maximum number of entries on the Play Recent menu. If this number is exceeded, the oldest entries will be removed.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="2" column="1">
+                  <widget class="QLineEdit" name="c_recent_menu_size">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="text">
+                      <string/>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Maximum number of entries on the Play Recent menu</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to specify the maximum number of entries on the Play Recent menu. If this number is exceeded, the oldest entries will be removed.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="3" column="0">
+                  <widget class="QLabel" name="l_recent_list_size">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>1</hsizetype>
+                        <vsizetype>5</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text">
+                      <string>Maximum &amp;Recent entries in the library</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_recent_list_size</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Maximum number of entries on the Recent list in the multimedia library</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to specify the maximum number of entries on the Recent list in the multimedia library. If this number is exceeded, the oldest entries will be removed.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="3" column="1">
+                  <widget class="QLineEdit" name="c_recent_list_size">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="text">
+                      <string/>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Maximum number of entries on the Recent list in the multimedia library</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option to specify the maximum number of entries on the Recent list in the multimedia library. If this number is exceeded, the oldest entries will be removed.</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="4" column="0">
+                  <widget class="QLabel" name="l_cache_size_limit">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>1</hsizetype>
+                        <vsizetype>5</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="text">
+                      <string>Meta information cache size &amp;limit</string>
+                    </property>
+                    <property name="alignment">
+                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                      <cstring>c_cache_size_limit</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Maximum number of entries for which KPlayer remembers properties</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option that shows and allows you to change the maximum number of entries for which KPlayer remembers properties, even if they are no longer on playlist. If the limit is exceeded, the oldest existing entries are removed from cache.</string>
+                    </property>
+                    <property name="wordWrap">
+                      <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item row="4" column="1">
+                  <widget class="QLineEdit" name="c_cache_size_limit">
+                    <property name="sizePolicy">
+                      <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>70</width>
+                        <height>32767</height>
+                      </size>
+                    </property>
+                    <property name="text">
+                      <string/>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                      <string>Maximum number of entries for which KPlayer remembers properties</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                      <string>Option that shows and allows you to change the maximum number of entries for which KPlayer remembers properties, even if they are no longer on playlist. If the limit is exceeded, the oldest existing entries are removed from cache.</string>
+                    </property>
+                  </widget>
+                </item>
+              </layout>
+            </item>
+            <item>
+              <widget class="QCheckBox" name="c_allow_duplicate_entries">
+                <property name="text">
+                  <string>Allo&amp;w duplicate entries on playlists</string>
+                </property>
+                <property name="toolTip" stdset="0">
+                  <string>Allow multiple entries with the same URL on playlists</string>
+                </property>
+                <property name="whatsThis" stdset="0">
+                  <string>Option to choose whether to allow multiple entries having the exact same URL on playlist. Duplicate entries will have the same set of file properties. If this option is not selected, and you put a new entry with the same URL as an existing one on a playlist, the old entry will be removed.</string>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QCheckBox" name="c_show_messages_on_error">
+                <property name="text">
+                  <string>&amp;Show messages if a file fails to play</string>
+                </property>
+                <property name="toolTip" stdset="0">
+                  <string>Show message log if KPlayer encounters an error when trying to play a file</string>
+                </property>
+                <property name="whatsThis" stdset="0">
+                  <string>Option to choose whether to show message log if KPlayer encounters an error when trying to play a file, so you can look at the end of the log to see what the error was.</string>
+                </property>
+              </widget>
+            </item>
+          </layout>
         </widget>
-    </grid>
-</widget>
-<connections>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="0"/>
+  <connections>
     <connection>
-        <sender>c_resize_automatically</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>KPlayerSettingsGeneralPage</receiver>
-        <slot>resizeAutomaticallyChanged(bool)</slot>
+      <sender>c_resize_automatically</sender>
+      <signal>toggled(bool)</signal>
+      <receiver>KPlayerSettingsGeneralPage</receiver>
+      <slot>resizeAutomaticallyChanged(bool)</slot>
     </connection>
-</connections>
-<slots>
-    <slot access="protected">resizeAutomaticallyChanged(bool)</slot>
-</slots>
-<layoutdefaults spacing="6" margin="0"/>
-</UI>
+  </connections>
+</ui>

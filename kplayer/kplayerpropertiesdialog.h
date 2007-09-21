@@ -18,12 +18,12 @@
 
 #include <kpagedialog.h>
 
-#include "kplayerpropertiesgeneral.h"
-#include "kplayerpropertiessize.h"
-#include "kplayerpropertiessubtitles.h"
-#include "kplayerpropertiesaudio.h"
-#include "kplayerpropertiesvideo.h"
-#include "kplayerpropertiesadvanced.h"
+#include "ui_kplayerpropertiesgeneral.h"
+#include "ui_kplayerpropertiessize.h"
+#include "ui_kplayerpropertiessubtitles.h"
+#include "ui_kplayerpropertiesaudio.h"
+#include "ui_kplayerpropertiesvideo.h"
+#include "ui_kplayerpropertiesadvanced.h"
 #include "kplayerengine.h"
 
 class KPlayerMediaProperties;
@@ -35,12 +35,12 @@ class KPlayerDiskTrackProperties;
 class KPlayerChannelProperties;
 class KPlayerItemProperties;
 
-class KPlayerPropertiesGeneral : public KPlayerPropertiesGeneralPage
+class KPlayerPropertiesGeneral : public QFrame, protected Ui_KPlayerPropertiesGeneralPage
 {
   Q_OBJECT
 
 public:
-  KPlayerPropertiesGeneral (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesGeneral (QWidget* parent = 0);
   virtual ~KPlayerPropertiesGeneral();
 
   void setup (const KUrl&);
@@ -69,7 +69,7 @@ class KPlayerPropertiesDeviceGeneral : public KPlayerPropertiesGeneral
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDeviceGeneral (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDeviceGeneral (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -84,7 +84,7 @@ class KPlayerPropertiesTVDeviceGeneral : public KPlayerPropertiesDeviceGeneral
   Q_OBJECT
 
 public:
-  KPlayerPropertiesTVDeviceGeneral (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesTVDeviceGeneral (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -100,7 +100,7 @@ class KPlayerPropertiesDVBDeviceGeneral : public KPlayerPropertiesDeviceGeneral
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDVBDeviceGeneral (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDVBDeviceGeneral (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -116,7 +116,7 @@ class KPlayerPropertiesTrackGeneral : public KPlayerPropertiesGeneral
   Q_OBJECT
 
 public:
-  KPlayerPropertiesTrackGeneral (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesTrackGeneral (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void load (void);
@@ -130,7 +130,7 @@ class KPlayerPropertiesDiskTrackGeneral : public KPlayerPropertiesTrackGeneral
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDiskTrackGeneral (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDiskTrackGeneral (QWidget* parent = 0);
 
   virtual void setupControls (void);
   virtual void load (void);
@@ -144,7 +144,7 @@ class KPlayerPropertiesChannelGeneral : public KPlayerPropertiesDiskTrackGeneral
   Q_OBJECT
 
 public:
-  KPlayerPropertiesChannelGeneral (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesChannelGeneral (QWidget* parent = 0);
 
   virtual void setupControls (void);
   virtual void load (void);
@@ -159,7 +159,7 @@ class KPlayerPropertiesItemGeneral : public KPlayerPropertiesTrackGeneral
   Q_OBJECT
 
 public:
-  KPlayerPropertiesItemGeneral (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesItemGeneral (QWidget* parent = 0);
 
   virtual void setupControls (void);
   virtual void load (void);
@@ -169,12 +169,12 @@ public:
     { return (KPlayerItemProperties*) KPlayerPropertiesGeneral::properties(); }
 };
 
-class KPlayerPropertiesSize : public KPlayerPropertiesSizePage
+class KPlayerPropertiesSize : public QFrame, protected Ui_KPlayerPropertiesSizePage
 {
   Q_OBJECT
 
 public:
-  KPlayerPropertiesSize (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesSize (QWidget* parent = 0);
   virtual ~KPlayerPropertiesSize();
 
   void setup (const KUrl&);
@@ -186,9 +186,10 @@ public:
   KPlayerMediaProperties* properties (void) const
     { return m_properties; }
 
-protected:
-  virtual void displaySizeChanged (int);
+protected slots:
+  void displaySizeChanged (int);
 
+protected:
   KPlayerMediaProperties* m_properties;
 };
 
@@ -197,7 +198,7 @@ class KPlayerPropertiesDeviceSize : public KPlayerPropertiesSize
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDeviceSize (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDeviceSize (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -211,7 +212,7 @@ class KPlayerPropertiesTrackSize : public KPlayerPropertiesSize
   Q_OBJECT
 
 public:
-  KPlayerPropertiesTrackSize (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesTrackSize (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void load (void);
@@ -220,12 +221,12 @@ public:
     { return (KPlayerTrackProperties*) KPlayerPropertiesSize::properties(); }
 };
 
-class KPlayerPropertiesSubtitles : public KPlayerPropertiesSubtitlesPage
+class KPlayerPropertiesSubtitles : public QFrame, protected Ui_KPlayerPropertiesSubtitlesPage
 {
   Q_OBJECT
 
 public:
-  KPlayerPropertiesSubtitles (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesSubtitles (QWidget* parent = 0);
   virtual ~KPlayerPropertiesSubtitles();
 
   void setup (const KUrl&);
@@ -241,10 +242,11 @@ public:
   KPlayerMediaProperties* properties (void) const
     { return m_properties; }
 
-protected:
-  virtual void positionChanged (int);
-  virtual void delayChanged (int);
+protected slots:
+  void positionChanged (int);
+  void delayChanged (int);
 
+protected:
   KPlayerMediaProperties* m_properties;
 };
 
@@ -253,7 +255,7 @@ class KPlayerPropertiesDeviceSubtitles : public KPlayerPropertiesSubtitles
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDeviceSubtitles (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDeviceSubtitles (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -267,7 +269,7 @@ class KPlayerPropertiesTrackSubtitles : public KPlayerPropertiesSubtitles
   Q_OBJECT
 
 public:
-  KPlayerPropertiesTrackSubtitles (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesTrackSubtitles (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   void addTracks (void);
@@ -277,8 +279,8 @@ public:
   KPlayerTrackProperties* properties (void) const
     { return (KPlayerTrackProperties*) KPlayerPropertiesSubtitles::properties(); }
 
-protected:
-  virtual void trackChanged (int);
+protected slots:
+  void trackChanged (int);
 };
 
 class KPlayerPropertiesChannelSubtitles : public KPlayerPropertiesTrackSubtitles
@@ -286,7 +288,7 @@ class KPlayerPropertiesChannelSubtitles : public KPlayerPropertiesTrackSubtitles
   Q_OBJECT
 
 public:
-  KPlayerPropertiesChannelSubtitles (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesChannelSubtitles (QWidget* parent = 0);
 
   virtual void setupControls (void);
 
@@ -299,7 +301,7 @@ class KPlayerPropertiesDiskTrackSubtitles : public KPlayerPropertiesTrackSubtitl
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDiskTrackSubtitles (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDiskTrackSubtitles (QWidget* parent = 0);
 
   virtual void setupControls (void);
   void setupEncoding (void);
@@ -315,7 +317,7 @@ class KPlayerPropertiesItemSubtitles : public KPlayerPropertiesDiskTrackSubtitle
   Q_OBJECT
 
 public:
-  KPlayerPropertiesItemSubtitles (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesItemSubtitles (QWidget* parent = 0);
 
   virtual void setupControls (void);
   virtual void load (void);
@@ -325,12 +327,12 @@ public:
     { return (KPlayerItemProperties*) KPlayerPropertiesSubtitles::properties(); }
 };
 
-class KPlayerPropertiesAudio : public KPlayerPropertiesAudioPage
+class KPlayerPropertiesAudio : public QFrame, protected Ui_KPlayerPropertiesAudioPage
 {
   Q_OBJECT
 
 public:
-  KPlayerPropertiesAudio (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesAudio (QWidget* parent = 0);
   virtual ~KPlayerPropertiesAudio();
 
   void setup (const KUrl&);
@@ -348,10 +350,11 @@ public:
   KPlayerMediaProperties* properties (void) const
     { return m_properties; }
 
-protected:
-  virtual void volumeChanged (int);
-  virtual void delayChanged (int);
+protected slots:
+  void volumeChanged (int);
+  void delayChanged (int);
 
+protected:
   KPlayerMediaProperties* m_properties;
 };
 
@@ -360,7 +363,7 @@ class KPlayerPropertiesDeviceAudio : public KPlayerPropertiesAudio
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDeviceAudio (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDeviceAudio (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -374,7 +377,7 @@ class KPlayerPropertiesDVBDeviceAudio : public KPlayerPropertiesDeviceAudio
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDVBDeviceAudio (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDVBDeviceAudio (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -384,8 +387,8 @@ public:
   KPlayerDVBProperties* properties (void) const
     { return (KPlayerDVBProperties*) KPlayerPropertiesAudio::properties(); }
 
-protected:
-  virtual void inputChanged (int);
+protected slots:
+  void inputChanged (int);
 };
 
 class KPlayerPropertiesTVDeviceAudio : public KPlayerPropertiesDVBDeviceAudio
@@ -393,7 +396,7 @@ class KPlayerPropertiesTVDeviceAudio : public KPlayerPropertiesDVBDeviceAudio
   Q_OBJECT
 
 public:
-  KPlayerPropertiesTVDeviceAudio (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesTVDeviceAudio (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -409,7 +412,7 @@ class KPlayerPropertiesTrackAudio : public KPlayerPropertiesAudio
   Q_OBJECT
 
 public:
-  KPlayerPropertiesTrackAudio (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesTrackAudio (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -419,16 +422,16 @@ public:
   KPlayerTrackProperties* properties (void) const
     { return (KPlayerTrackProperties*) KPlayerPropertiesAudio::properties(); }
 
-protected:
-  virtual void trackChanged (int);
+protected slots:
+  void trackChanged (int);
 };
 
-class KPlayerPropertiesVideo : public KPlayerPropertiesVideoPage
+class KPlayerPropertiesVideo : public QFrame, protected Ui_KPlayerPropertiesVideoPage
 {
   Q_OBJECT
 
 public:
-  KPlayerPropertiesVideo (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesVideo (QWidget* parent = 0);
   virtual ~KPlayerPropertiesVideo();
 
   void setup (const KUrl&);
@@ -446,12 +449,14 @@ public:
   KPlayerMediaProperties* properties (void) const
     { return m_properties; }
 
+protected slots:
+  void contrastChanged (int);
+  void brightnessChanged (int);
+  void hueChanged (int);
+  void saturationChanged (int);
+
 protected:
   void loadLists (void);
-  virtual void contrastChanged (int);
-  virtual void brightnessChanged (int);
-  virtual void hueChanged (int);
-  virtual void saturationChanged (int);
 
   KPlayerMediaProperties* m_properties;
 };
@@ -461,7 +466,7 @@ class KPlayerPropertiesDeviceVideo : public KPlayerPropertiesVideo
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDeviceVideo (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDeviceVideo (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -475,7 +480,7 @@ class KPlayerPropertiesDVBDeviceVideo : public KPlayerPropertiesDeviceVideo
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDVBDeviceVideo (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDVBDeviceVideo (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -485,8 +490,8 @@ public:
   KPlayerDVBProperties* properties (void) const
     { return (KPlayerDVBProperties*) KPlayerPropertiesVideo::properties(); }
 
-protected:
-  virtual void inputChanged (int);
+protected slots:
+  void inputChanged (int);
 };
 
 class KPlayerPropertiesTVDeviceVideo : public KPlayerPropertiesDVBDeviceVideo
@@ -494,7 +499,7 @@ class KPlayerPropertiesTVDeviceVideo : public KPlayerPropertiesDVBDeviceVideo
   Q_OBJECT
 
 public:
-  KPlayerPropertiesTVDeviceVideo (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesTVDeviceVideo (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -504,8 +509,8 @@ public:
   KPlayerTVProperties* properties (void) const
     { return (KPlayerTVProperties*) KPlayerPropertiesVideo::properties(); }
 
-protected:
-  virtual void normChanged (int);
+protected slots:
+  void normChanged (int);
 };
 
 class KPlayerPropertiesTrackVideo : public KPlayerPropertiesVideo
@@ -513,7 +518,7 @@ class KPlayerPropertiesTrackVideo : public KPlayerPropertiesVideo
   Q_OBJECT
 
 public:
-  KPlayerPropertiesTrackVideo (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesTrackVideo (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -523,16 +528,16 @@ public:
   KPlayerTrackProperties* properties (void) const
     { return (KPlayerTrackProperties*) KPlayerPropertiesVideo::properties(); }
 
-protected:
-  virtual void trackChanged (int);
+protected slots:
+  void trackChanged (int);
 };
 
-class KPlayerPropertiesAdvanced : public KPlayerPropertiesAdvancedPage
+class KPlayerPropertiesAdvanced : public QFrame, protected Ui_KPlayerPropertiesAdvancedPage
 {
   Q_OBJECT
 
 public:
-  KPlayerPropertiesAdvanced (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesAdvanced (QWidget* parent = 0);
   virtual ~KPlayerPropertiesAdvanced();
 
   void setup (const KUrl&);
@@ -548,10 +553,11 @@ public:
   KPlayerMediaProperties* properties (void) const
     { return m_properties; }
 
-protected:
-  virtual void commandLineChanged (int);
-  virtual void cacheChanged (int);
+protected slots:
+  void commandLineChanged (int);
+  void cacheChanged (int);
 
+protected:
   KPlayerMediaProperties* m_properties;
 };
 
@@ -560,7 +566,7 @@ class KPlayerPropertiesDeviceAdvanced : public KPlayerPropertiesAdvanced
   Q_OBJECT
 
 public:
-  KPlayerPropertiesDeviceAdvanced (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesDeviceAdvanced (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
 
@@ -573,7 +579,7 @@ class KPlayerPropertiesTVDeviceAdvanced : public KPlayerPropertiesDeviceAdvanced
   Q_OBJECT
 
 public:
-  KPlayerPropertiesTVDeviceAdvanced (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesTVDeviceAdvanced (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
   virtual void setupControls (void);
@@ -583,8 +589,8 @@ public:
   KPlayerTVProperties* properties (void) const
     { return (KPlayerTVProperties*) KPlayerPropertiesAdvanced::properties(); }
 
-protected:
-  virtual void compressionChanged (bool);
+protected slots:
+  void compressionChanged (bool);
 };
 
 class KPlayerPropertiesTrackAdvanced : public KPlayerPropertiesAdvanced
@@ -592,7 +598,7 @@ class KPlayerPropertiesTrackAdvanced : public KPlayerPropertiesAdvanced
   Q_OBJECT
 
 public:
-  KPlayerPropertiesTrackAdvanced (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesTrackAdvanced (QWidget* parent = 0);
 
   virtual void setupMedia (const KUrl&);
 
@@ -605,7 +611,7 @@ class KPlayerPropertiesItemAdvanced : public KPlayerPropertiesTrackAdvanced
   Q_OBJECT
 
 public:
-  KPlayerPropertiesItemAdvanced (QWidget* parent = 0, const char* name = 0);
+  KPlayerPropertiesItemAdvanced (QWidget* parent = 0);
 
   virtual void setupControls (void);
   virtual void load (void);

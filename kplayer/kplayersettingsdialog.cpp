@@ -293,9 +293,10 @@ void KPlayerSettingsDialog::apply (void)
   setButtonGuiItem (KDialog::Cancel, KStandardGuiItem::close());
 }
 
-KPlayerSettingsAdvanced::KPlayerSettingsAdvanced (QWidget* parent, const char* name)
-  : KPlayerSettingsAdvancedPage (parent, name)
+KPlayerSettingsAdvanced::KPlayerSettingsAdvanced (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   loadLists();
   load();
   QApplication::connect (kPlayerEngine(), SIGNAL (updated()), this, SLOT (refresh()));
@@ -375,10 +376,11 @@ void KPlayerSettingsAdvanced::cacheChanged (int cache)
   }
 }
 
-KPlayerSettingsAudio::KPlayerSettingsAudio (QWidget* parent, const char* name)
-  : KPlayerSettingsAudioPage (parent, name)
+KPlayerSettingsAudio::KPlayerSettingsAudio (QWidget* parent)
+  : QFrame (parent)
 {
   m_amixer_running = false;
+  setupUi (this);
   loadLists();
   load();
   QApplication::connect (kPlayerEngine(), SIGNAL (updated()), this, SLOT (refresh()));
@@ -625,9 +627,10 @@ void KPlayerSettingsAudio::softvolChanged (bool checked)
   m_softvol = checked;
 }
 
-KPlayerSettingsControls::KPlayerSettingsControls (QWidget* parent, const char* name)
-  : KPlayerSettingsControlsPage (parent, name)
+KPlayerSettingsControls::KPlayerSettingsControls (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   load();
 }
 
@@ -676,9 +679,10 @@ void KPlayerSettingsControls::rememberSizeChanged (bool checked)
   c_aspect -> setEnabled (! checked);
 }
 
-KPlayerSettingsGeneral::KPlayerSettingsGeneral (QWidget* parent, const char* name)
-  : KPlayerSettingsGeneralPage (parent, name)
+KPlayerSettingsGeneral::KPlayerSettingsGeneral (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   load();
 }
 
@@ -717,9 +721,10 @@ void KPlayerSettingsGeneral::resizeAutomaticallyChanged (bool resizeAutomaticall
   l_minimum_initial_width -> setEnabled (resizeAutomaticallyChecked);
 }
 
-KPlayerSettingsSliders::KPlayerSettingsSliders (QWidget* parent, const char* name)
-  : KPlayerSettingsSlidersPage (parent, name)
+KPlayerSettingsSliders::KPlayerSettingsSliders (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   load();
 }
 
@@ -762,10 +767,11 @@ void KPlayerSettingsSliders::showMarksChanged (bool showMarksChecked)
   l_slider_marks_percent -> setEnabled (showMarksChecked);
 }
 
-KPlayerSettingsSubtitles::KPlayerSettingsSubtitles (QWidget* parent, const char* name)
-  : KPlayerSettingsSubtitlesPage (parent, name)
+KPlayerSettingsSubtitles::KPlayerSettingsSubtitles (QWidget* parent)
+  : QFrame (parent)
 {
   m_initialized = m_recursion = false;
+  setupUi (this);
   loadLists();
   load();
   m_initialized = true;
@@ -930,9 +936,10 @@ void KPlayerSettingsSubtitles::autoloadSubtitlesChanged (bool autoloadSubtitlesC
   }
 }
 
-KPlayerSettingsVideo::KPlayerSettingsVideo (QWidget* parent, const char* name)
-  : KPlayerSettingsVideoPage (parent, name)
+KPlayerSettingsVideo::KPlayerSettingsVideo (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   loadLists();
   load();
   QApplication::connect (engine(), SIGNAL (updated()), this, SLOT (refresh()));
@@ -1003,9 +1010,10 @@ void KPlayerSettingsVideo::driverChanged (int index)
   c_device -> setEnabled (index > 0);
 }
 
-KPlayerSettingsProgress::KPlayerSettingsProgress (QWidget* parent, const char* name)
-  : KPlayerSettingsProgressPage (parent, name)
+KPlayerSettingsProgress::KPlayerSettingsProgress (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   load();
 }
 
@@ -1025,9 +1033,10 @@ void KPlayerSettingsProgress::save (void)
   configuration() -> setProgressFastSeek (labs (c_progress_fast -> text().toInt()));
 }
 
-KPlayerSettingsVolume::KPlayerSettingsVolume (QWidget* parent, const char* name)
-  : KPlayerSettingsVolumePage (parent, name)
+KPlayerSettingsVolume::KPlayerSettingsVolume (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   load();
 }
 
@@ -1076,9 +1085,10 @@ void KPlayerSettingsVolume::resetChanged (bool resetChecked)
   }
 }
 
-KPlayerSettingsContrast::KPlayerSettingsContrast (QWidget* parent, const char* name)
-  : KPlayerSettingsContrastPage (parent, name)
+KPlayerSettingsContrast::KPlayerSettingsContrast (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   load();
 }
 
@@ -1127,9 +1137,10 @@ void KPlayerSettingsContrast::resetChanged (bool resetChecked)
   }
 }
 
-KPlayerSettingsBrightness::KPlayerSettingsBrightness (QWidget* parent, const char* name)
-  : KPlayerSettingsBrightnessPage (parent, name)
+KPlayerSettingsBrightness::KPlayerSettingsBrightness (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   load();
 }
 
@@ -1178,9 +1189,10 @@ void KPlayerSettingsBrightness::resetChanged (bool resetChecked)
   }
 }
 
-KPlayerSettingsHue::KPlayerSettingsHue (QWidget* parent, const char* name)
-  : KPlayerSettingsHuePage (parent, name)
+KPlayerSettingsHue::KPlayerSettingsHue (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   load();
 }
 
@@ -1229,9 +1241,10 @@ void KPlayerSettingsHue::resetChanged (bool resetChecked)
   }
 }
 
-KPlayerSettingsSaturation::KPlayerSettingsSaturation (QWidget* parent, const char* name)
-  : KPlayerSettingsSaturationPage (parent, name)
+KPlayerSettingsSaturation::KPlayerSettingsSaturation (QWidget* parent)
+  : QFrame (parent)
 {
+  setupUi (this);
   load();
 }
 

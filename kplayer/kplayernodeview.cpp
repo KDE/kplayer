@@ -77,7 +77,7 @@ QValidator::State KPlayerNodeNameValidator::validate (QString& input, int&) cons
 }
 
 KPlayerPropertiesDevice::KPlayerPropertiesDevice (QWidget* parent)
-  : KPlayerPropertiesDevicePage (parent)
+  : QFrame (parent)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Creating device properties page\n";
@@ -85,6 +85,7 @@ KPlayerPropertiesDevice::KPlayerPropertiesDevice (QWidget* parent)
   m_node = KPlayerNode::root() -> getNodeByUrl (KUrl ("kplayer:/devices"));
   m_node -> reference();
   m_node -> populateGroups();
+  setupUi (this);
   QString list (KPlayerTVProperties::channelListFromCountry());
   for ( uint i = 0; i < channellistcount; i ++ )
   {
