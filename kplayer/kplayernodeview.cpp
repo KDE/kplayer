@@ -602,8 +602,8 @@ KPlayerTreeViewFolderItem::~KPlayerTreeViewFolderItem()
 #endif
 }
 
-KPlayerHistoryActionList::KPlayerHistoryActionList (KPlayerHistory& history, const QString& text,
-  const QString& status, const QString& whatsthis, QObject* parent, const QString& name)
+KPlayerHistoryActionList::KPlayerHistoryActionList (KPlayerHistory& history, const KLocalizedString& text,
+  const KLocalizedString& status, const KLocalizedString& whatsthis, QObject* parent, const QString& name)
   : KPlayerActionList (text, status, whatsthis, parent, name), m_history (history)
 {
 #ifdef DEBUG_KPLAYER_ACTIONLIST
@@ -3357,8 +3357,8 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action -> setStatusTip (i18n("Adds selected items to the root playlist"));
   action -> setWhatsThis (i18n("Add to playlists command adds the selected items to the root playlist."));
 
-  m_playlists = new KPlayerContainerActionList ("%1", i18n("Adds selected items to %1 playlist"),
-    i18n("Add to playlist command adds the selected items to the %1 playlist."), this, "library_add_to_playlist");
+  m_playlists = new KPlayerContainerActionList (ki18n("%1"), ki18n("Adds selected items to %1 playlist"),
+    ki18n("Add to playlist command adds the selected items to the %1 playlist."), this, "library_add_to_playlist");
   playlistActionList() -> setMaximumSize (configuration() -> playlistMenuSize());
 
   action = new KAction (actionCollection());
@@ -3407,8 +3407,8 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action -> setShortcut (Qt::Key_Delete);
   action -> setStatusTip (i18n("Removes the selected items from the multimedia library"));
   action -> setWhatsThis (i18n("Remove command removes the selected items from the multimedia library."));
-  m_go_to = new KPlayerContainerActionList ("%1", i18n("Opens %1 in the library window"),
-    i18n("Go to %1 command opens the corresponding folder in the library window."), this, "library_go_to_list");
+  m_go_to = new KPlayerContainerActionList (ki18n("%1"), ki18n("Opens %1 in the library window"),
+    ki18n("Go to %1 command opens the corresponding folder in the library window."), this, "library_go_to_list");
   connect (goToActionList(), SIGNAL(activated(KPlayerNode*)), SLOT(open(KPlayerNode*)));
 
   action = new KAction (actionCollection());
@@ -3470,14 +3470,16 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   }
 
   m_columns = new KPlayerToggleActionList (listView() -> availableAttributes(), listView() -> attributeStates(),
-    i18n("Hide %1"), i18n("Show %1"), i18n("Hides %1 column"), i18n("Shows %1 column"),
-    i18n("Hide %1 command hides the column."), i18n("Show %1 command shows the column."), this, "library_columns");
+    ki18n("Hide %1"), ki18n("Show %1"), ki18n("Hides %1 column"), ki18n("Shows %1 column"),
+    ki18n("Hide %1 command hides the column."), ki18n("Show %1 command shows the column."), this, "library_columns");
 
-  m_edit = new KPlayerSimpleActionList (listView() -> editableAttributes(), "%1", i18n("Starts edit mode for %1 field"),
-    i18n("Edit %1 starts edit mode for this field of the current item."), this, "library_edit");
+  m_edit = new KPlayerSimpleActionList (listView() -> editableAttributes(),
+    ki18n("%1"), ki18n("Starts edit mode for %1 field"),
+    ki18n("Edit %1 starts edit mode for this field of the current item."), this, "library_edit");
 
-  m_history_list = new KPlayerHistoryActionList (treeView() -> history(), "%1", i18n("Opens %1 in the library window"),
-    i18n("Go to %1 command opens the corresponding folder in the library window."), this, "library_history");
+  m_history_list = new KPlayerHistoryActionList (treeView() -> history(),
+    ki18n("%1"), ki18n("Opens %1 in the library window"),
+    ki18n("Go to %1 command opens the corresponding folder in the library window."), this, "library_history");
   connect (historyActionList(), SIGNAL (activated (int)), treeView(), SLOT (goToHistory (int)));
 
   m_last_view = m_tree;

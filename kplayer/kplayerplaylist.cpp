@@ -60,18 +60,18 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   action -> setStatusTip (i18n("Plays a URL"));
   action -> setWhatsThis (i18n("Play URL command displays the standard URL dialog and lets you type or paste in a URL to put on the playlist and start playing. The URL can be a remote network location, a local file path, or a KDE I/O Slave URL."));
 
-  m_playlists = new KPlayerContainerActionList ("%1", i18n("Plays the %1 list"),
-    i18n("Play List %1 starts playing the list."), this, "play_list");
+  m_playlists = new KPlayerContainerActionList (ki18n("%1"), ki18n("Plays the %1 list"),
+    ki18n("Play List %1 starts playing the list."), this, "play_list");
   connect (playlistActionList(), SIGNAL (activated (KPlayerNode*)), SLOT (play (KPlayerNode*)));
 
-  m_recent = new KPlayerNodeActionList ("%1", i18n("Plays %1"),
-    i18n("Play Recent %1 starts playing the recently played item."), this, "file_recent");
+  m_recent = new KPlayerNodeActionList (ki18n("%1"), ki18n("Plays %1"),
+    ki18n("Play Recent %1 starts playing the recently played item."), this, "file_recent");
   connect (recentActionList(), SIGNAL (activated (KPlayerNode*)), SLOT (play (KPlayerNode*)));
 
   refreshSettings();
 
-  m_devices = new KPlayerDevicesActionList ("%1", i18n("Shows commands and options available for %1"),
-    i18n("Submenu that shows commands and options available for %1."), this, "file_devices");
+  m_devices = new KPlayerDevicesActionList (ki18n("%1"), ki18n("Shows commands and options available for %1"),
+    ki18n("Submenu that shows commands and options available for %1."), this, "file_devices");
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("player_next", action);
@@ -144,8 +144,8 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   action -> setStatusTip (i18n("Saves the playlist under a new name"));
   action -> setWhatsThis (i18n("Add to new playlist command prompts for a new playlist name and saves the playlist under the new name."));
 
-  m_playlists_add = new KPlayerContainerActionList ("%1", i18n("Adds playlist items to %1 playlist"),
-    i18n("Add to playlist command adds the playlist items to the %1 playlist."), this, "playlist_add_to_playlist");
+  m_playlists_add = new KPlayerContainerActionList (ki18n("%1"), ki18n("Adds playlist items to %1 playlist"),
+    ki18n("Add to playlist command adds the playlist items to the %1 playlist."), this, "playlist_add_to_playlist");
   playlistAddActionList() -> setMaximumSize (configuration() -> playlistMenuSize());
 
   action = new KAction (actionCollection());

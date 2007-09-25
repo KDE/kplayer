@@ -934,14 +934,14 @@ void KPlayerEngine::setupActions (void)
   action -> setStatusTip (i18n("Increases subtitle delay"));
   action -> setWhatsThis (i18n("Increase Delay command increases the delay of subtitles relative to video."));
 
-  m_video_action_list = new KPlayerTrackActionList (i18n("Track %1"), i18n("Selects %1 video track"),
-    i18n("Video %1 command switches to the selected video track."), this, "video_streams");
+  m_video_action_list = new KPlayerTrackActionList (ki18n("Track %1"), ki18n("Selects %1 video track"),
+    ki18n("Video %1 command switches to the selected video track."), this, "video_streams");
   connect (videoActionList(), SIGNAL (activated (int)), SLOT (videoStream (int)));
-  m_audio_action_list = new KPlayerTrackActionList (i18n("Track %1"), i18n("Selects %1 audio track"),
-    i18n("Audio %1 command switches to the selected audio track."), this, "audio_streams");
+  m_audio_action_list = new KPlayerTrackActionList (ki18n("Track %1"), ki18n("Selects %1 audio track"),
+    ki18n("Audio %1 command switches to the selected audio track."), this, "audio_streams");
   connect (audioActionList(), SIGNAL (activated (int)), SLOT (audioStream (int)));
-  m_subtitle_action_list = new KPlayerSubtitleTrackActionList (i18n("Track %1"), i18n("Selects %1 subtitle track"),
-    i18n("Subtitles %1 command switches to the selected subtitle track."), this, "subtitle_streams");
+  m_subtitle_action_list = new KPlayerSubtitleTrackActionList (ki18n("Track %1"), ki18n("Selects %1 subtitle track"),
+    ki18n("Subtitles %1 command switches to the selected subtitle track."), this, "subtitle_streams");
   connect (subtitleActionList(), SIGNAL (activated (int)), SLOT (subtitleStream (int)));
 
   refreshSettings();

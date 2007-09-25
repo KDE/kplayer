@@ -33,8 +33,6 @@ QString languageName (int id, QString language);
 #include "kplayerpropertiesdialog.moc"
 #include "kplayerproperties.h"
 
-static QString s_default_entry (i18n("%1 (%2)"));
-
 QString listEntry (QComboBox* combo, bool hasDefault = false)
 {
   static QRegExp re_key_value ("^([^:]+): *(.*)$");
@@ -1316,7 +1314,7 @@ void KPlayerPropertiesAudio::setup (const KUrl& url)
     if ( codec.isEmpty() )
       c_codec -> addItem (i18n("default"));
     else
-      c_codec -> addItem (s_default_entry.arg (i18n("default")).arg (codec));
+      c_codec -> addItem (i18n("%1 (%2)", i18n("default"), codec));
     c_codec -> addItem (i18n("auto"));
     for ( int i = 0; i < engine() -> audioCodecCount(); i ++ )
       c_codec -> addItem (engine() -> audioCodecName (i));
@@ -1619,7 +1617,7 @@ void KPlayerPropertiesVideo::setup (const KUrl& url)
     if ( codec.isEmpty() )
       c_codec -> addItem (i18n("default"));
     else
-      c_codec -> addItem (s_default_entry.arg (i18n("default")).arg (codec));
+      c_codec -> addItem (i18n("%1 (%2)", i18n("default"), codec));
     c_codec -> addItem (i18n("auto"));
     for ( int i = 0; i < engine() -> videoCodecCount(); i ++ )
       c_codec -> addItem (engine() -> videoCodecName (i));
@@ -1967,7 +1965,7 @@ void KPlayerPropertiesAdvanced::setup (const KUrl& url)
     if ( demuxer.isEmpty() )
       c_demuxer -> addItem (i18n("default"));
     else
-      c_demuxer -> addItem (s_default_entry.arg (i18n("default")).arg (demuxer));
+      c_demuxer -> addItem (i18n("%1 (%2)", i18n("default"), demuxer));
     c_demuxer -> addItem (i18n("auto"));
     for ( int i = 0; i < engine() -> demuxerCount(); i ++ )
       c_demuxer -> addItem (engine() -> demuxerName (i));

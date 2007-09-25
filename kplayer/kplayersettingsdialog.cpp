@@ -33,8 +33,6 @@
 #include "kplayerengine.h"
 #include "kplayersettings.h"
 
-static QString s_default_entry (i18n("%1 (%2)"));
-
 KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
   : KPageDialog (parent)
 {

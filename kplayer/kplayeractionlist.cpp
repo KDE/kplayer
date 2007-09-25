@@ -28,8 +28,8 @@ kdbgstream kdDebugTime (void);
 #include "kplayeractionlist.moc"
 #include "kplayerproperties.h"
 
-KPlayerActionList::KPlayerActionList (const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name)
+KPlayerActionList::KPlayerActionList (const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name)
   : QObject (parent), m_text (text), m_status (status), m_whatsthis (whatsthis)
 {
 #ifdef DEBUG_KPLAYER_ACTIONLIST
@@ -182,9 +182,9 @@ void KPlayerActionList::unplug (void)
 void KPlayerActionList::updateAction (QAction* action)
 {
   QString text (action -> text());
-  action -> setStatusTip (m_status.arg (text));
-  action -> setWhatsThis (m_whatsthis.arg (text));
-  text = m_text.arg (text);
+  action -> setStatusTip (m_status.subs (text).toString());
+  action -> setWhatsThis (m_whatsthis.subs (text).toString());
+  text = m_text.subs (text).toString();
   text.replace ("&", "&&");
   action -> setText (text);
 }
@@ -222,8 +222,8 @@ void KPlayerActionList::actionActivated (QAction*, int index)
   emit activated (index);
 }
 
-KPlayerSimpleActionList::KPlayerSimpleActionList (const QStringList& names, const QString& text,
-  const QString& status, const QString& whatsthis, QObject* parent, const QString& name)
+KPlayerSimpleActionList::KPlayerSimpleActionList (const QStringList& names, const KLocalizedString& text,
+  const KLocalizedString& status, const KLocalizedString& whatsthis, QObject* parent, const QString& name)
   : KPlayerActionList (text, status, whatsthis, parent, name), m_names (names)
 {
 #ifdef DEBUG_KPLAYER_ACTIONLIST
@@ -264,16 +264,17 @@ void KPlayerSimpleActionList::updateAction (QAction* action)
   QString caption (info -> caption());
   if ( caption.isEmpty() )
     caption = i18n(text.toUtf8());
-  action -> setStatusTip (m_status.arg (caption));
-  action -> setWhatsThis (m_whatsthis.arg (caption));
-  caption = m_text.arg (caption);
+  action -> setStatusTip (m_status.subs (caption).toString());
+  action -> setWhatsThis (m_whatsthis.subs (caption).toString());
+  caption = m_text.subs (caption).toString();
   caption.replace ("&", "&&");
   action -> setText (caption);
 }
 
 KPlayerToggleActionList::KPlayerToggleActionList (const QStringList& names, const QMap<QString, bool>& states,
-  const QString& ontext, const QString& offtext, const QString& onstatus, const QString& offstatus,
-  const QString& onwhatsthis, const QString& offwhatsthis, QObject* parent, const QString& name)
+  const KLocalizedString& ontext, const KLocalizedString& offtext, const KLocalizedString& onstatus,
+  const KLocalizedString& offstatus, const KLocalizedString& onwhatsthis, const KLocalizedString& offwhatsthis,
+  QObject* parent, const QString& name)
   : KPlayerSimpleActionList (names, offtext, offstatus, offwhatsthis, parent, name),
     m_states (states), m_on_text (ontext), m_on_status (onstatus), m_on_whatsthis (onwhatsthis)
 {
@@ -297,9 +298,9 @@ void KPlayerToggleActionList::updateAction (QAction* action)
   if ( caption.isEmpty() )
     caption = i18n(text.toUtf8());
   bool on = m_states [text];
-  action -> setStatusTip ((on ? m_on_status : m_status).arg (caption));
-  action -> setWhatsThis ((on ? m_on_whatsthis : m_whatsthis).arg (caption));
-  caption = (on ? m_on_text : m_text).arg (caption);
+  action -> setStatusTip ((on ? m_on_status : m_status).subs (caption).toString());
+  action -> setWhatsThis ((on ? m_on_whatsthis : m_whatsthis).subs (caption).toString());
+  caption = (on ? m_on_text : m_text).subs (caption).toString();
   caption.replace ("&", "&&");
   action -> setText (caption);
 }
@@ -322,7 +323,7 @@ QString languageName (int id, QString language)
   static const QString other ("|alb|sq|arg|an|arm|hy|baq|eu|bul|bg|bur|my|cze|cs|chi|zh|cor|kw|wel|cy|ger|de|dut|nl|gre|el|per|fa|ful|ff|geo|ka|gla|gd|gle|ga|her|hz|scr|hr|ibo|ig|ice|is|jpn|ja|kau|kr|kaz|kk|kin|rw|kir|ky|kom|kv|kon|kg|kua|kj|ltz|lb|mac|mk|mao|mi|may|ms|nbl|nr|ndo|ng|por|pt|roh|rm|rum|ro|scc|sr|slo|sk|spa|es|srd|sc|swe|sv|tah|ty|tib|bo|wln|wa");
   static QRegExp re_lang_code ("^([^\\[]+)\\[([^\\]]+)\\]");
   if ( language.length() < 2 )
-    return i18n("Track %1").arg (id);
+    return i18n("Track %1", id);
   QString name;
   if ( re_lang_code.indexIn (language) >= 0 )
   {
@@ -357,8 +358,8 @@ QString languageName (int id, QString language)
   return locname;
 }
 
-KPlayerTrackActionList::KPlayerTrackActionList (const QString& text, const QString& status,
-  const QString& whatsthis, QObject* parent, const QString& name)
+KPlayerTrackActionList::KPlayerTrackActionList (const KLocalizedString& text, const KLocalizedString& status,
+  const KLocalizedString& whatsthis, QObject* parent, const QString& name)
   : KPlayerActionList (text, status, whatsthis, parent, name)
 {
 #ifdef DEBUG_KPLAYER_ACTIONLIST
@@ -413,8 +414,8 @@ void KPlayerTrackActionList::actionActivated (QAction* action, int index)
   KPlayerActionList::actionActivated (action, ((KToggleAction*) action) -> isChecked() ? index : -1);
 }
 
-KPlayerSubtitleTrackActionList::KPlayerSubtitleTrackActionList (const QString& text, const QString& status,
-  const QString& whatsthis, QObject* parent, const QString& name)
+KPlayerSubtitleTrackActionList::KPlayerSubtitleTrackActionList (const KLocalizedString& text,
+  const KLocalizedString& status, const KLocalizedString& whatsthis, QObject* parent, const QString& name)
   : KPlayerTrackActionList (text, status, whatsthis, parent, name)
 {
 #ifdef DEBUG_KPLAYER_ACTIONLIST

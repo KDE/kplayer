@@ -730,7 +730,8 @@ void KPlayerDisplaySizeProperty::setValue (const QSize& value, int option)
 
 QString KPlayerDisplaySizeProperty::asString (void) const
 {
-  return QString (option() == 1 ? i18n("size %1") : i18n("aspect %1")).arg (KPlayerSizeProperty::asString());
+  QString s (KPlayerSizeProperty::asString());
+  return QString (option() == 1 ? i18n("size %1", s) : i18n("aspect %1", s));
 }
 
 int KPlayerDisplaySizeProperty::compare (KPlayerProperty* property) const
@@ -3886,8 +3887,8 @@ void KPlayerDiskTrackProperties::setupInfo (void)
   kdDebugTime() << "KPlayerDiskTrackProperties::setupInfo\n";
 #endif
   KPlayerTrackProperties::setupInfo();
-  setDefaultName ((parent() -> type() == "DVD" ? i18n("Title %1")
-    : i18n("Track %1")).arg (url().fileName().rightJustified (parent() -> digits(), '0')));
+  QString name (url().fileName().rightJustified (parent() -> digits(), '0'));
+  setDefaultName ((parent() -> type() == "DVD" ? i18n("Title %1", name) : i18n("Track %1", name)));
 }
 
 QString KPlayerDiskTrackProperties::icon (void) const
@@ -3971,7 +3972,7 @@ void KPlayerTVChannelProperties::setupInfo (void)
 #endif
   KPlayerChannelProperties::setupInfo();
   QString id (url().fileName());
-  setDefaultName (i18n("Channel %1").arg (re_channel.indexIn (id) < 0 ? id : re_channel.cap(1)
+  setDefaultName (i18n("Channel %1", re_channel.indexIn (id) < 0 ? id : re_channel.cap(1)
     + QString::number (re_channel.cap(2).toInt()).rightJustified (re_channel.cap(1).isEmpty() ? parent() -> digits()
     : re_channel.cap(1) == "H" && re_channel.cap(2).length() == 1 ? 1 : 2, '0') + re_channel.cap(3)));
   setDefaultFrequency (parent() -> channelFrequency (id));

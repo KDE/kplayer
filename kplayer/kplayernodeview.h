@@ -339,8 +339,8 @@ class KPlayerHistoryActionList : public KPlayerActionList
 
 public:
   /** Constructor. */
-  KPlayerHistoryActionList (KPlayerHistory& history, const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name);
+  KPlayerHistoryActionList (KPlayerHistory& history, const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name);
   /** Destructor. */
   virtual ~KPlayerHistoryActionList();
 

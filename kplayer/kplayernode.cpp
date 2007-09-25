@@ -2327,14 +2327,14 @@ void KPlayerRecentsNode::addRecent (const KPlayerNodeList& list)
       if ( container && ! listnode -> hasProperties() )
       {
         KPlayerNode* firstnode = nodes().first();
-        firstnode -> media() -> setName (i18n("%1 in %2").arg (listnode -> name(), listnode -> parent() -> name()));
+        firstnode -> media() -> setName (i18n("%1 in %2", listnode -> name(), listnode -> parent() -> name()));
         firstnode -> media() -> commit();
       }
     }
     else
     {
-      QString name (list.count() == 2 ? i18n("%1 and %2").arg (list.first() -> name(), list.last() -> name())
-        : i18n("%1 and %2 more").arg (list.first() -> name(), QString::number (list.count() - 1)));
+      QString name (list.count() == 2 ? i18n("%1 and %2", list.first() -> name(), list.last() -> name())
+        : i18n("%1 and %2 more", list.first() -> name(), QString::number (list.count() - 1)));
       QString id (name);
       for ( int i = 0; nodeById (id); i ++ )
         id = name + QString::number (i);
@@ -2849,7 +2849,7 @@ void KPlayerDiskNode::setDiskType (const QString& type)
   kdDebugTime() << " Type   " << type << "\n";
 #endif
   disk() -> setType (type);
-  disk() -> setDefaultName (i18n("%1 in %2").arg (i18n(type.toUtf8()), device() -> name()));
+  disk() -> setDefaultName (i18n("%1 in %2", i18n(type.toUtf8()), device() -> name()));
 }
 
 bool KPlayerDiskNode::diskDevice (void)
@@ -2910,7 +2910,7 @@ void KPlayerDiskNode::diskDetected (const QString& diskid)
   connect (media(), SIGNAL (updated()), SLOT (updated()));
   const QString& type (parent() -> diskType (id()));
   if ( type.isNull() )
-    disk() -> setDefaultName (i18n("Disk in %2").arg (device() -> name()));
+    disk() -> setDefaultName (i18n("Disk in %1", device() -> name()));
   else
     setDiskType (type);
   if ( previous != device() && previous -> url().url().indexOf ('/', 15) >= 0

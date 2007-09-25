@@ -1596,9 +1596,6 @@ void KPlayerWindow::playerStateChanged (KPlayerProcess::State state, KPlayerProc
 
 void KPlayerWindow::playerProgressChanged (float progress, KPlayerProcess::ProgressType type)
 {
-  static const QString cacheFillMessage (i18n("Cache fill: %1%"));
-  static const QString indexGenerationMessage (i18n("Generating index: %1%"));
-  static const QString fileTransferMessage (i18n("Transferring file: %1%"));
   if ( ! m_progress_label )
     return;
   if ( type == KPlayerProcess::Position )
@@ -1609,9 +1606,9 @@ void KPlayerWindow::playerProgressChanged (float progress, KPlayerProcess::Progr
 #ifdef DEBUG_KPLAYER_WINDOW
     kdDebugTime() << "Progress " << type << " " << progress << " " << value << "\n";
 #endif
-    m_progress_label -> setText ((type == KPlayerProcess::CacheFill ? cacheFillMessage
-      : type == KPlayerProcess::IndexGeneration ? indexGenerationMessage
-      : fileTransferMessage).arg (value));
+    m_progress_label -> setText ((type == KPlayerProcess::CacheFill ? i18n("Cache fill: %1%", value)
+      : type == KPlayerProcess::IndexGeneration ? i18n("Generating index: %1%", value)
+      : i18n("Transferring file: %1%", value)));
   }
 }
 

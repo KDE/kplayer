@@ -23,8 +23,8 @@
 #include "kplayernodeaction.moc"
 #include "kplayernode.h"
 
-KPlayerNodeActionList::KPlayerNodeActionList (const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name)
+KPlayerNodeActionList::KPlayerNodeActionList (const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name)
   : KPlayerActionList (text, status, whatsthis, parent, name)
 {
 #ifdef DEBUG_KPLAYER_NODEACTION
@@ -145,7 +145,7 @@ QAction* KPlayerNodeActionList::createAction (KPlayerNode* node)
   kdDebugTime() << " Name   " << name << "\n";
 #endif
   QAction* action = new KAction (node);
-  action -> setText (m_text.arg (name));
+  action -> setText (m_text.subs (name).toString());
   connect (action, SIGNAL (triggered()), SLOT (actionActivated()));
   updateAction (action);
   return action;
@@ -216,8 +216,8 @@ void KPlayerNodeActionList::actionActivated (void)
     emit activated ((KPlayerNode*) sender() -> parent());
 }
 
-KPlayerContainerActionList::KPlayerContainerActionList (const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name)
+KPlayerContainerActionList::KPlayerContainerActionList (const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name)
   : KPlayerNodeActionList (text, status, whatsthis, parent, name)
 {
 #ifdef DEBUG_KPLAYER_NODEACTION
@@ -253,8 +253,8 @@ bool KPlayerContainerActionList::canInclude (KPlayerNode* node) const
   return node -> isContainer();
 }
 
-KPlayerDevicesActionList::KPlayerDevicesActionList (const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name)
+KPlayerDevicesActionList::KPlayerDevicesActionList (const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name)
   : KPlayerContainerActionList (text, status, whatsthis, parent, name)
 {
 #ifdef DEBUG_KPLAYER_NODEACTION
@@ -371,7 +371,7 @@ void KPlayerDeviceActionMenu::updateActions (void)
     if ( ! action )
     {
       action = new KAction (node);
-      action -> setText (i18n("Play %1").arg (node -> name()));
+      action -> setText (i18n("Play %1", node -> name()));
       connect (action, SIGNAL (triggered()), SLOT (play()));
     }
     m_actions.append (action);
@@ -415,7 +415,7 @@ void KPlayerDeviceActionMenu::updated (KPlayerContainerNode*, KPlayerNode* node)
     QAction* action = *actit;
     if ( action -> parent() == node )
     {
-      QString name (i18n("Play %1").arg (node -> name()));
+      QString name (i18n("Play %1", node -> name()));
       name.replace ("&", "&&");
       if ( action -> text() != name )
         action -> setText (name);
@@ -471,7 +471,7 @@ void KPlayerDiskActionMenu::setText (const QString& text)
 #endif
   KPlayerDeviceActionMenu::setText (text);
   bool use_name = device() -> disk() && device() -> name() != device() -> disk() -> defaultName();
-  m_play_action -> setText (use_name ? i18n("&Play %1").arg (text) : i18n("&Play Disk"));
+  m_play_action -> setText (use_name ? i18n("&Play %1", text) : i18n("&Play Disk"));
   if ( ! m_populated && ! device() -> dataDisk() && (device() -> populated()
     || device() -> disk() && device() -> parent() -> complete()) )
   {

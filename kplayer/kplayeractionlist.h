@@ -16,6 +16,7 @@
 #ifndef KPLAYERACTIONLIST_H
 #define KPLAYERACTIONLIST_H
 
+#include <klocalizedstring.h>
 #include <qobject.h>
 #include <qlist.h>
 
@@ -30,8 +31,8 @@ class KPlayerActionList : public QObject
 
 public:
   /** Constructor. */
-  KPlayerActionList (const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name);
+  KPlayerActionList (const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name);
   /** Destructor. */
   virtual ~KPlayerActionList();
 
@@ -68,11 +69,11 @@ protected:
   virtual void actionActivated (QAction* action, int index);
 
   /** Action text template. */
-  QString m_text;
+  KLocalizedString m_text;
   /** Action status text template. */
-  QString m_status;
+  KLocalizedString m_status;
   /** Action whats this text template. */
-  QString m_whatsthis;
+  KLocalizedString m_whatsthis;
   /** Action list. */
   QList<QAction*> m_actions;
 };
@@ -86,8 +87,8 @@ class KPlayerSimpleActionList : public KPlayerActionList
 
 public:
   /** Constructor. */
-  KPlayerSimpleActionList (const QStringList& names, const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name);
+  KPlayerSimpleActionList (const QStringList& names, const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name);
   /** Destructor. */
   virtual ~KPlayerSimpleActionList();
 
@@ -111,9 +112,9 @@ class KPlayerToggleActionList : public KPlayerSimpleActionList
 
 public:
   /** Constructor. */
-  KPlayerToggleActionList (const QStringList& names, const QMap<QString, bool>& states,
-    const QString& ontext, const QString& offtext, const QString& onstatus, const QString& offstatus,
-    const QString& onwhatsthis, const QString& offwhatsthis, QObject* parent, const QString& name);
+  KPlayerToggleActionList (const QStringList& names, const QMap<QString, bool>& states, const KLocalizedString& ontext,
+    const KLocalizedString& offtext, const KLocalizedString& onstatus, const KLocalizedString& offstatus,
+    const KLocalizedString& onwhatsthis, const KLocalizedString& offwhatsthis, QObject* parent, const QString& name);
   /** Destructor. */
   virtual ~KPlayerToggleActionList();
 
@@ -126,11 +127,11 @@ protected:
   /** Action states. */
   const QMap<QString, bool>& m_states;
   /** Action on text template. */
-  QString m_on_text;
+  KLocalizedString m_on_text;
   /** Action on status text template. */
-  QString m_on_status;
+  KLocalizedString m_on_status;
   /** Action on whats this text template. */
-  QString m_on_whatsthis;
+  KLocalizedString m_on_whatsthis;
 };
 
 /**Track action list.
@@ -142,8 +143,8 @@ class KPlayerTrackActionList : public KPlayerActionList
 
 public:
   /** Constructor. */
-  KPlayerTrackActionList (const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name);
+  KPlayerTrackActionList (const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name);
   /** Destructor. */
   virtual ~KPlayerTrackActionList();
 
@@ -170,8 +171,8 @@ class KPlayerSubtitleTrackActionList : public KPlayerTrackActionList
 
 public:
   /** Constructor. */
-  KPlayerSubtitleTrackActionList (const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name);
+  KPlayerSubtitleTrackActionList (const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name);
   /** Destructor. */
   virtual ~KPlayerSubtitleTrackActionList();
 

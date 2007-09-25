@@ -35,8 +35,8 @@ class KPlayerNodeActionList : public KPlayerActionList
 
 public:
   /** Constructor. */
-  KPlayerNodeActionList (const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name);
+  KPlayerNodeActionList (const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name);
   /** Destructor. */
   virtual ~KPlayerNodeActionList();
 
@@ -100,8 +100,8 @@ class KPlayerContainerActionList : public KPlayerNodeActionList
 
 public:
   /** Constructor. */
-  KPlayerContainerActionList (const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name);
+  KPlayerContainerActionList (const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name);
   /** Destructor. */
   virtual ~KPlayerContainerActionList();
 
@@ -123,8 +123,8 @@ class KPlayerDevicesActionList : public KPlayerContainerActionList
 
 public:
   /** Constructor. */
-  KPlayerDevicesActionList (const QString& text, const QString& status,
-    const QString& whatsthis, QObject* parent, const QString& name);
+  KPlayerDevicesActionList (const KLocalizedString& text, const KLocalizedString& status,
+    const KLocalizedString& whatsthis, QObject* parent, const QString& name);
   /** Destructor. */
   virtual ~KPlayerDevicesActionList();
 
