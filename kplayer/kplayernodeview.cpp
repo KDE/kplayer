@@ -3256,7 +3256,6 @@ void KPlayerTreeView::activeItemChanged (void)
       entry.m_url = activeNode() -> url();
       entry.m_name = activeNode() -> name();
       m_history.append (entry);
-      -- m_current;
 #ifdef DEBUG_KPLAYER_NODEVIEW
       kdDebugTime() << "Current URL " << m_history.at (m_current).m_url.url() << "\n";
 #endif

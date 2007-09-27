@@ -99,6 +99,8 @@ protected:
   QList<KPlayerNode*>::ConstIterator m_iterator;
   /** Flag stored by start() for next(). */
   bool m_groups;
+  /** Flag indicating iteration over parent nodes. */
+  bool m_iterating;
 
 signals:
   /** Emitted when nodes have been added. */

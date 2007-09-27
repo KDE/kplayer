@@ -33,7 +33,7 @@ KPlayerSource::KPlayerSource (KPlayerContainerNode* parent)
   kdDebugTime() << "Creating source\n";
 #endif
   m_parent = parent;
-  m_iterator = parent -> nodes().end();
+  m_iterating = false;
 }
 
 KPlayerSource::~KPlayerSource()
@@ -83,13 +83,11 @@ void KPlayerSource::start (bool groups)
   kdDebugTime() << " Groups " << groups << "\n";
 #endif
   m_groups = groups;
-  if ( parent() -> populated() || groups && parent() -> groupsPopulated() )
+  m_iterating = parent() -> populated() || groups && parent() -> groupsPopulated();
+  if ( m_iterating )
     m_iterator = parent() -> nodes().begin();
   else
-  {
-    m_iterator = parent() -> nodes().end();
     enumStart (groups);
-  }
 }
 
 bool KPlayerSource::next (bool& group, QString& id)
@@ -97,10 +95,11 @@ bool KPlayerSource::next (bool& group, QString& id)
 #ifdef DEBUG_KPLAYER_SOURCE
   kdDebugTime() << "KPlayerSource::next\n";
 #endif
-  if ( m_iterator == parent() -> nodes().end() )
+  if ( ! m_iterating )
     return enumNext (group, id);
-  while ( KPlayerNode* node = *m_iterator )
+  while ( m_iterator != parent() -> nodes().end() )
   {
+    KPlayerNode* node = *m_iterator;
     group = node -> isContainer();
     id = node -> id();
 #ifdef DEBUG_KPLAYER_SOURCE
@@ -111,7 +110,7 @@ bool KPlayerSource::next (bool& group, QString& id)
     if ( group || ! m_groups )
       return true;
   }
-  m_iterator = parent() -> nodes().end();
+  m_iterating = false;
   return false;
 }
 

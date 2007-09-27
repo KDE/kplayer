@@ -2577,13 +2577,13 @@ void KPlayerDevicesNode::update (QStringList& current, QStringList& previous)
   kdDebugTime() << " Devices " << m_devices.count() << "\n";
 #endif
   m_name_map.clear();
-  addToNameMap (maps[0], i18n("CD Device"), i18n("CD Device %1"));
-  addToNameMap (maps[1], i18n("DVD Device"), i18n("DVD Device %1"));
-  addToNameMap (maps[2], i18n("TV Device"), i18n("TV Device %1"));
-  addToNameMap (maps[3], i18n("DVB Device"), i18n("DVB Device %1"));
+  addToNameMap (maps[0], i18n("CD Device"), ki18n("CD Device %1"));
+  addToNameMap (maps[1], i18n("DVD Device"), ki18n("DVD Device %1"));
+  addToNameMap (maps[2], i18n("TV Device"), ki18n("TV Device %1"));
+  addToNameMap (maps[3], i18n("DVB Device"), ki18n("DVB Device %1"));
 }
 
-void KPlayerDevicesNode::addToNameMap (QMap<QString, int>& map, const QString& device, const QString& deviceno)
+void KPlayerDevicesNode::addToNameMap (QMap<QString, int>& map, const QString& device, const KLocalizedString& deviceno)
 {
   if ( map.count() == 1 )
     m_name_map.insert (map.begin().key(), device);
@@ -2599,7 +2599,7 @@ void KPlayerDevicesNode::addToNameMap (QMap<QString, int>& map, const QString& d
       {
         if ( imit.value() == index )
         {
-          m_name_map.insert (imit.key(), deviceno.arg (index));
+          m_name_map.insert (imit.key(), deviceno.subs (index).toString());
           map.remove (imit.key());
           found = true;
           break;
@@ -2616,7 +2616,7 @@ void KPlayerDevicesNode::addToNameMap (QMap<QString, int>& map, const QString& d
       QMap<QString, int>::ConstIterator imit (map.begin());
       while ( imit != map.end() )
       {
-        m_name_map.insert (imit.key(), deviceno.arg (index));
+        m_name_map.insert (imit.key(), deviceno.subs (index).toString());
         ++ index;
         ++ imit;
       }

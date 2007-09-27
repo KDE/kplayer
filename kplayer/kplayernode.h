@@ -54,6 +54,14 @@ public:
   /** Releases all nodes on the list. */
   void releaseAll (void) const;
 
+  /** Returns the first node or zero. */
+  KPlayerNode* first (void) const
+    { return isEmpty() ? 0 : QList<KPlayerNode*>::first(); }
+
+  /** Returns the last node or zero. */
+  KPlayerNode* last (void) const
+    { return isEmpty() ? 0 : QList<KPlayerNode*>::last(); }
+
   /** Creates a node list from the given URL list. */
   static KPlayerNodeList fromUrlList (const KUrl::List& urls);
 };
@@ -1106,7 +1114,7 @@ protected:
   /** Updates the list of devices. */
   void update (QStringList& current, QStringList& previous);
   /** Adds device names based on the given numeric map. */
-  void addToNameMap (QMap<QString, int>& map, const QString& device, const QString& deviceno);
+  void addToNameMap (QMap<QString, int>& map, const QString& device, const KLocalizedString& deviceno);
 
   /** Device paths. */
   QStringList m_devices;
