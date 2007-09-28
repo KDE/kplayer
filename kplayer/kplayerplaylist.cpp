@@ -389,7 +389,7 @@ void KPlayerPlaylist::removed (KPlayerContainerNode*, const KPlayerNodeList& lis
     if ( index >= 0 )
     {
 #ifdef DEBUG_KPLAYER_PLAYLIST
-      kdDebugTime() << " URL    " << node -> url() << "\n";
+      kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
       playlist() -> removeItem (index);
       m_nodes.removeAt (index);
@@ -400,7 +400,7 @@ void KPlayerPlaylist::removed (KPlayerContainerNode*, const KPlayerNodeList& lis
 #ifdef DEBUG_KPLAYER_PLAYLIST
         kdDebugTime() << " Removed current node\n";
         if ( next )
-          kdDebugTime() << " Next   " << next -> url() << "\n";
+          kdDebugTime() << " Next   " << next -> url().url() << "\n";
 #endif
       }
       m_next.removeAll (node);
@@ -411,7 +411,7 @@ void KPlayerPlaylist::removed (KPlayerContainerNode*, const KPlayerNodeList& lis
   {
     m_next.append (next);
 #ifdef DEBUG_KPLAYER_PLAYLIST
-    kdDebugTime() << " Next   " << nextNode() -> url() << "\n";
+    kdDebugTime() << " Next   " << nextNode() -> url().url() << "\n";
 #endif
   }
   setCurrentNode (currentNode());

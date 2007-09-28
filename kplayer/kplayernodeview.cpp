@@ -221,7 +221,7 @@ KPlayerListViewItem* KPlayerListViewItem::itemForNode (KPlayerNode* node)
   if ( ! node )
     return 0;
 #ifdef DEBUG_KPLAYER_NODEVIEW
-  kdDebugTime() << " URL    " << node -> url() << "\n";
+  kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
   KPlayerListViewItem* item = (KPlayerListViewItem*) firstChild();
   while ( item )
@@ -286,7 +286,7 @@ void KPlayerListViewItem::terminate (void)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Terminating item\n";
-  kdDebugTime() << " URL    " << node() -> url() << "\n";
+  kdDebugTime() << " URL    " << node() -> url().url() << "\n";
 #endif
   nodeView() -> itemTerminating (this);
   delete this;
@@ -362,7 +362,7 @@ void KPlayerListViewFolderItem::disconnectNode (void)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Disconnecting list view folder item node\n";
-  kdDebugTime() << " URL    " << node() -> url() << "\n";
+  kdDebugTime() << " URL    " << node() -> url().url() << "\n";
 #endif
   disconnectNodeCommon();
   QObject::disconnect (node(), SIGNAL (attributesUpdated (const KPlayerPropertyCounts&, const KPlayerPropertyCounts&)),
@@ -521,7 +521,7 @@ void KPlayerListViewFolderItem::terminate (void)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Terminating folder item\n";
-  kdDebugTime() << " URL    " << node() -> url() << "\n";
+  kdDebugTime() << " URL    " << node() -> url().url() << "\n";
 #endif
   disconnectNode();
   if ( isOpen() )
@@ -557,7 +557,7 @@ void KPlayerTreeViewFolderItem::disconnectNode (void)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Disconnecting tree view folder item node\n";
-  kdDebugTime() << " URL    " << node() -> url() << "\n";
+  kdDebugTime() << " URL    " << node() -> url().url() << "\n";
 #endif
   disconnectNodeCommon();
 }
@@ -793,7 +793,7 @@ KPlayerListViewItem* KPlayerNodeView::itemForNode (KPlayerNode* node, bool open)
   if ( ! node )
     return 0;
 #ifdef DEBUG_KPLAYER_NODEVIEW
-  kdDebugTime() << " URL    " << node -> url() << "\n";
+  kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
   KPlayerListViewItem* item;
   if ( ! node -> parent() || rootNode() == node -> parent() )
@@ -2034,7 +2034,7 @@ void KPlayerNodeView::moveUp (KPlayerContainerNode* parent, KPlayerListViewItem*
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerNodeView::moveUp\n";
-  kdDebugTime() << " URL    " << parent -> url() << "\n";
+  kdDebugTime() << " URL    " << parent -> url().url() << "\n";
 #endif
   KPlayerNodeList list;
   KPlayerNode *after = parent, *previous = 0;
@@ -2083,7 +2083,7 @@ void KPlayerNodeView::moveDown (KPlayerContainerNode* parent, KPlayerListViewIte
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerNodeView::moveDown\n";
-  kdDebugTime() << " URL    " << parent -> url() << "\n";
+  kdDebugTime() << " URL    " << parent -> url().url() << "\n";
 #endif
   KPlayerNodeList list;
   while ( item )
@@ -2116,7 +2116,7 @@ void KPlayerNodeView::remove (KPlayerContainerNode* parent, KPlayerListViewItem*
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerNodeView::remove\n";
-  kdDebugTime() << " URL    " << parent -> url() << "\n";
+  kdDebugTime() << " URL    " << parent -> url().url() << "\n";
 #endif
   KPlayerNodeList list;
   while ( item )
@@ -2244,7 +2244,7 @@ void KPlayerListView::disconnectNode (void)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Disonnecting list view node\n";
-  kdDebugTime() << " URL    " << rootNode() -> url() << "\n";
+  kdDebugTime() << " URL    " << rootNode() -> url().url() << "\n";
 #endif
   saveColumnWidths();
   disconnectNodeCommon();
@@ -2950,7 +2950,7 @@ void KPlayerTreeView::disconnectNode (void)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "Disonnecting tree view node\n";
-  kdDebugTime() << " URL    " << rootNode() -> url() << "\n";
+  kdDebugTime() << " URL    " << rootNode() -> url().url() << "\n";
 #endif
   disconnectNodeCommon();
 }

@@ -173,7 +173,7 @@ void KPlayerNode::release (void)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "Releasing node\n";
-  kdDebugTime() << " URL    " << url() << "\n";
+  kdDebugTime() << " URL    " << url().url() << "\n";
   kdDebugTime() << " References " << (m_references - 1) << "\n";
 #endif
   if ( -- m_references )
@@ -194,7 +194,7 @@ void KPlayerNode::detach (void)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "Detaching node\n";
-  kdDebugTime() << " ID     " << url() << "\n";
+  kdDebugTime() << " ID     " << url().url() << "\n";
 #endif
   if ( parent() )
     parent() -> release (this);
@@ -507,7 +507,7 @@ bool KPlayerContainerNode::canLink (KPlayerContainerNode* node) const
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerContainerNode::canLink\n";
-  kdDebugTime() << " Node   " << node -> url() << "\n";
+  kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
   return false;
 }
@@ -526,7 +526,7 @@ void KPlayerContainerNode::release (KPlayerNode* node)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "Releasing child node\n";
-  kdDebugTime() << " URL    " << node -> url() << "\n";
+  kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
   if ( remove (node) )
   {
@@ -909,13 +909,13 @@ void KPlayerContainerNode::vacate (void)
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerContainerNode::vacate\n";
   kdDebugTime() << " Count  " << m_populate_nodes << "\n";
-  kdDebugTime() << " ID     " << url() << "\n";
+  kdDebugTime() << " ID     " << url().url() << "\n";
 #endif
   if ( m_populate_nodes == 1 )
   {
 #ifdef DEBUG_KPLAYER_NODE
     kdDebugTime() << "Vacating node\n";
-    kdDebugTime() << " ID     " << url() << "\n";
+    kdDebugTime() << " ID     " << url().url() << "\n";
 #endif
     KPlayerNodeList list (nodes());
     for ( KPlayerNodeList::ConstIterator iterator = list.constBegin(); iterator != list.constEnd(); ++ iterator )
@@ -933,13 +933,13 @@ void KPlayerContainerNode::vacateGroups (void)
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerContainerNode::vacateGroups\n";
   kdDebugTime() << " Count  " << m_populate_groups << "\n";
-  kdDebugTime() << " ID     " << url() << "\n";
+  kdDebugTime() << " ID     " << url().url() << "\n";
 #endif
   if ( m_populate_groups == 1 )
   {
 #ifdef DEBUG_KPLAYER_NODE
     kdDebugTime() << "Vacating groups\n";
-    kdDebugTime() << " URL    " << url() << "\n";
+    kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
     KPlayerNodeList list (nodes());
     for ( KPlayerNodeList::ConstIterator iterator = list.constBegin(); iterator != list.constEnd(); ++ iterator )
@@ -1417,7 +1417,7 @@ bool KPlayerContainerNode::remove (KPlayerNode* node)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerContainerNode::remove\n";
-  kdDebugTime() << " URL    " << node -> url() << "\n";
+  kdDebugTime() << " URL    " << node -> url().url() << "\n";
 #endif
   bool found = m_nodes.removeAll (node);
   if ( found )
@@ -1509,7 +1509,7 @@ void KPlayerContainerNode::save (void)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerContainerNode::save\n";
-  kdDebugTime() << " URL    " << url() << "\n";
+  kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
   if ( ! origin() || media() -> customOrder() )
   {
@@ -1520,7 +1520,7 @@ void KPlayerContainerNode::save (void)
     {
       KPlayerNode* node = *iterator;
 #ifdef DEBUG_KPLAYER_NODE
-      kdDebugTime() << " Child  " << node -> url() << "\n";
+      kdDebugTime() << " Child  " << node -> url().url() << "\n";
 #endif
       children.append (node -> id());
       ++ iterator;
@@ -1882,7 +1882,7 @@ bool KPlayerCollectionNode::canLink (KPlayerContainerNode* node) const
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerCollectionNode::canLink\n";
-  kdDebugTime() << " Node   " << node -> url() << "\n";
+  kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
   return node -> isDirectory();
 }
@@ -1991,7 +1991,7 @@ void KPlayerPlaylistNode::setupOrigin (void)
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerPlaylistNode::setupOrigin\n";
   if ( origin() )
-    kdDebugTime() << " Origin " << origin() -> url() << "\n";
+    kdDebugTime() << " Origin " << origin() -> url().url() << "\n";
 #endif
   KPlayerGroupNode::setupOrigin();
   if ( origin() && origin() -> hasProperties() )
@@ -2052,7 +2052,7 @@ bool KPlayerPlaylistNode::canLink (KPlayerContainerNode* node) const
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerPlaylistNode::canLink\n";
-  kdDebugTime() << " Node   " << node -> url() << "\n";
+  kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
   return node -> isCollection() || node -> isDirectory();
 }
@@ -2119,7 +2119,7 @@ bool KPlayerNowPlayingNode::canLink (KPlayerContainerNode* node) const
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerNowPlayingNode::canLink\n";
-  kdDebugTime() << " Node   " << node -> url() << "\n";
+  kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
   return node -> isCollection() || node -> isDirectory() || node -> hasProperties()
     || node -> isPlaylist() && ! node -> isRecent() && ! node -> isNowPlaying();
@@ -2145,7 +2145,7 @@ void KPlayerNowPlayingNode::setupOrigin (void)
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerNowPlayingNode::setupOrigin\n";
   if ( origin() )
-    kdDebugTime() << " Origin " << origin() -> url() << "\n";
+    kdDebugTime() << " Origin " << origin() -> url().url() << "\n";
 #endif
   KPlayerPlaylistNode::setupOrigin();
   if ( origin() && origin() -> hasProperties() && ((KPlayerDeviceNode*) origin()) -> diskDevice() )
@@ -2235,7 +2235,7 @@ bool KPlayerRecentNode::canLink (KPlayerContainerNode* node) const
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerRecentNode::canLink\n";
-  kdDebugTime() << " Node   " << node -> url() << "\n";
+  kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
   return node -> isCollection() || node -> isDirectory() || node -> hasProperties()
     || node -> isPlaylist() && ! node -> isRecent() && ! node -> isNowPlaying();
@@ -2473,7 +2473,7 @@ void KPlayerDevicesNode::update (QStringList& current, QStringList& previous)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDevicesNode::update\n";
-  kdDebugTime() << " URL    " << url() << "\n";
+  kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
   const char* paths[] = { "/dev", "/dev", "/dev", "/dev/dvb" };
   const char* globs[] = { "cdr*", "dvd*", "video*", "adapter*" };
@@ -2638,7 +2638,7 @@ void KPlayerDevicesNode::refreshItem (KFileItem* item)
   QString path ("/dev" + item -> url().path());
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDevicesNode::refreshItem\n";
-  kdDebugTime() << " Item   " << item -> url() << "\n";
+  kdDebugTime() << " Item   " << item -> url().url() << "\n";
   kdDebugTime() << " Type   " << item -> mimetype() << "\n";
   kdDebugTime() << " Text   " << item -> text() << "\n";
   kdDebugTime() << " Name   " << item -> name() << "\n";
@@ -2651,7 +2651,6 @@ void KPlayerDevicesNode::refreshItem (KFileItem* item)
   kdDebugTime() << " User   " << item -> user() << "\n";
   kdDebugTime() << " Group  " << item -> group() << "\n";
   kdDebugTime() << " Size   " << item -> size() << "\n";
-  kdDebugTime() << " Overlays " << item -> overlays() << "\n";
   kdDebugTime() << " Status " << item -> getStatusBarInfo() << "\n";
   kdDebugTime() << " Marked " << item -> isMarked() << "\n";
   kdDebugTime() << " Path   " << path << "\n";
@@ -2721,7 +2720,7 @@ void KPlayerDevicesNode::removed (KFileItem* item)
   QString path ("/dev" + item -> url().path());
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDevicesNode::removed\n";
-  kdDebugTime() << " Item   " << item -> url() << "\n";
+  kdDebugTime() << " Item   " << item -> url().url() << "\n";
   kdDebugTime() << " Type   " << item -> mimetype() << "\n";
   kdDebugTime() << " Text   " << item -> text() << "\n";
   kdDebugTime() << " Name   " << item -> name() << "\n";
@@ -2873,7 +2872,7 @@ bool KPlayerDiskNode::accessDisk (void)
 {
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDiskNode::accessDisk\n";
-  kdDebugTime() << " URL    " << url() << "\n";
+  kdDebugTime() << " URL    " << url().url() << "\n";
   kdDebugTime() << " Path   " << id() << "\n";
 #endif
   QFile file (id());

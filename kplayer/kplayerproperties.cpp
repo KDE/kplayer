@@ -45,9 +45,10 @@ KPlayerMediaMap KPlayerMedia::m_media_map;
 int KPlayerItemProperties::m_meta_info_timer = 0;
 
 #ifdef DEBUG
-kdbgstream kdDebugTime (void)
+QTextStream& kdDebugTime (void)
 {
-  return qDebug() << QTime::currentTime().toString ("hh:mm:ss:zzz ");
+  static QTextStream debugstream (stderr);
+  return debugstream << QTime::currentTime().toString ("hh:mm:ss:zzz ");
 }
 #endif
 
@@ -3098,7 +3099,7 @@ QStringList KPlayerTVProperties::channels (void)
 {
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerTVProperties::channels\n";
-  kdDebugTime() << " URL    " << url() << "\n";
+  kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
   m_frequencies.clear();
   QString id;
@@ -3203,7 +3204,7 @@ QStringList KPlayerDVBProperties::channels (void)
   static QRegExp re_channel ("^([^#:][^:]*):(\\d+):");
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerDVBProperties::channels\n";
-  kdDebugTime() << " URL    " << url() << "\n";
+  kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
   m_names.clear();
   m_frequencies.clear();

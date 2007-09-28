@@ -19,8 +19,6 @@
 #include <qregexp.h>
 
 #ifdef DEBUG
-#include <kdebug.h>
-kdbgstream kdDebugTime (void);
 #define DEBUG_KPLAYER_ACTIONLIST
 #endif
 
