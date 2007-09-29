@@ -6,7 +6,7 @@ set(CMAKE_CXX_FLAGS_PROFILE "-DDEBUG ${CMAKE_CXX_FLAGS_PROFILE}")
 
 set(kplayer_common_SRCS x11.cpp)
 
-kde4_add_ui3_files(kplayer_common_SRCS 
+kde4_add_ui_files(kplayer_common_SRCS 
    kplayerpropertiesdevice.ui 
    kplayerpropertiesgeneral.ui
    kplayerpropertiessize.ui
@@ -27,7 +27,7 @@ set(kplayer_common_SRCS ${kplayer_common_SRCS}
 
 set(kplayer_SRCS ${kplayer_common_SRCS})
 
-kde4_add_ui3_files(kplayer_SRCS 
+kde4_add_ui_files(kplayer_SRCS 
    kplayersettingssubtitles.ui 
    kplayersettingsbrightness.ui 
    kplayersettingsvolume.ui 
