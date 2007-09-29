@@ -3497,7 +3497,7 @@ protected:
 };
 
 #ifdef DEBUG
-kdbgstream kdDebugTime (void);
+QTextStream& kdDebugTime (void);
 #endif
 
 #endif
