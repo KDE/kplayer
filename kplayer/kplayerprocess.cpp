@@ -454,12 +454,12 @@ QString resourcePath (const QString& filename)
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Looking for " << filename << "\n";
 #endif
-  QString path (KGlobal::dirs() -> findResource ("appdata", filename));
+  QString path (KStandardDirs::locate ("appdata", filename));
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << " appdata '" << path << "'\n";
 #endif
   if ( path.isEmpty() )
-    path = KGlobal::dirs() -> findResource ("data", "kplayer/" + filename);
+    path = KStandardDirs::locate ("data", "kplayer/" + filename);
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << " found '" << path << "'\n";
 #endif

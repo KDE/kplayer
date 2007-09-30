@@ -20,7 +20,6 @@
 
 #ifdef DEBUG
 #undef Status
-#include <qdatastream.h>
 #include <kdebug.h>
 kdbgstream kdDebugTime (void);
 #define DEBUG_KPLAYER_GRAB

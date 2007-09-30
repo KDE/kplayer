@@ -260,7 +260,7 @@ void KPlayerListViewItem::update (void)
     QString text (node() -> media() -> asString (*iterator));
     setText (nodeView() -> header() -> mapToSection (i), text);
 #ifdef DEBUG_KPLAYER_NODEVIEW
-    kdDebugTime() << " " << *iterator << " " << text << "\n";
+    kdDebugTime() << " " << (*iterator).toLatin1().data() << " " << text << "\n";
 #endif
   }
 }
@@ -1976,7 +1976,7 @@ void KPlayerNodeView::editName (void)
 void KPlayerNodeView::edited (Q3ListViewItem* item, const QString& value, int column)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
-  kdDebugTime() << "KPlayerNodeView::edited column " << column << " to '" << value << "'\n";
+  kdDebugTime() << "KPlayerNodeView::edited column " << column << " to " << value << "\n";
 #endif
   int index = header() -> mapToIndex (column);
   if ( index >= 0 && index < attributeCount() )

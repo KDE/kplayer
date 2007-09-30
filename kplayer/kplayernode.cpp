@@ -999,7 +999,7 @@ void KPlayerContainerNode::refreshNodes (void)
 KPlayerNode* KPlayerContainerNode::nodeById (const QString& id) const
 {
 #ifdef DEBUG_KPLAYER_NODE
-  kdDebugTime() << "KPlayerContainerNode::nodeById '" << id << "'\n";
+  kdDebugTime() << "KPlayerContainerNode::nodeById " << id << "\n";
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
   KPlayerNodeMap::ConstIterator iterator = m_node_map.find (id);
@@ -1257,7 +1257,7 @@ KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& list, bool link
   else if ( after && ! customOrder() )
   {
 #ifdef DEBUG_KPLAYER_NODE
-    kdDebugTime() << " Key    '" << sortKey() << "'\n";
+    kdDebugTime() << " Key    " << sortKey() << "\n";
 #endif
     m_nodes.sort();
     setCustomOrder (true);
@@ -1373,7 +1373,7 @@ KPlayerNode* KPlayerContainerNode::moved (const KPlayerNodeList& list, KPlayerNo
   else if ( after )
   {
 #ifdef DEBUG_KPLAYER_NODE
-    kdDebugTime() << " Key    '" << sortKey() << "'\n";
+    kdDebugTime() << " Key    " << sortKey() << "\n";
 #endif
     m_nodes.sort();
     setCustomOrder (true);
@@ -1905,7 +1905,7 @@ void KPlayerCollectionNode::group (const QString& key)
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "Group nodes\n";
   if ( ! key.isNull() )
-    kdDebugTime() << " Key    '" << key << "'\n";
+    kdDebugTime() << " Key    " << key << "\n";
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
   if ( groupingKey() == key || key.isNull() && parent() && isParentGrouped() )

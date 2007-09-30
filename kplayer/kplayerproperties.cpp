@@ -45,10 +45,9 @@ KPlayerMediaMap KPlayerMedia::m_media_map;
 int KPlayerItemProperties::m_meta_info_timer = 0;
 
 #ifdef DEBUG
-QTextStream& kdDebugTime (void)
+kdbgstream kdDebugTime (void)
 {
-  static QTextStream debugstream (stderr);
-  return debugstream << QTime::currentTime().toString ("hh:mm:ss:zzz ");
+  return kDebug().nospace() << QTime::currentTime().toString ("hh:mm:ss:zzz ").toLatin1().data();
 }
 #endif
 
@@ -823,7 +822,7 @@ QString KPlayerTranslatedStringProperty::asString (void) const
   if ( value() == "video/avi" || value() == "video/x-msvideo" )
     return i18n("AVI Video");
   KMimeType::Ptr mimetype (KMimeType::mimeType (value()));
-  if ( mimetype -> name() == "application/octet-stream" || mimetype -> comment().isEmpty() )
+  if ( mimetype.isNull() || mimetype -> name() == "application/octet-stream" || mimetype -> comment().isEmpty() )
     return value();
   return mimetype -> comment();
 }
@@ -1064,7 +1063,7 @@ void KPlayerPropertyCounts::add (const KPlayerPropertyCounts& counts)
     else
       *it += iterator.value();
 #ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << " " << iterator.key() << " + " << iterator.value() << " = " << count (iterator.key()) << "\n";
+    kdDebugTime() << " " << iterator.key().toLatin1().data() << " + " << iterator.value() << " = " << count (iterator.key()) << "\n";
 #endif
   }
 }
@@ -1082,7 +1081,7 @@ void KPlayerPropertyCounts::subtract (const KPlayerPropertyCounts& counts)
     else if ( value > 0 )
       remove (iterator.key());
 #ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << " " << iterator.key() << " - " << iterator.value() << " = " << count (iterator.key()) << "\n";
+    kdDebugTime() << " " << iterator.key().toLatin1().data() << " - " << iterator.value() << " = " << count (iterator.key()) << "\n";
 #endif
   }
 }
@@ -1162,7 +1161,7 @@ void KPlayerProperties::load (void)
       property -> read (configGroup(), iterator.key());
       m_properties.insert (iterator.key(), property);
 #ifdef DEBUG_KPLAYER_PROPERTIES
-      kdDebugTime() << " " << iterator.key() << " " << property -> asString() << "\n";
+      kdDebugTime() << " " << iterator.key().toLatin1().data() << " " << property -> asString().toLatin1().data() << "\n";
 #endif
     }
     ++ iterator;
@@ -1179,7 +1178,7 @@ void KPlayerProperties::load (void)
         property -> read (configGroup(), *keysit);
         m_properties.insert (*keysit, property);
 #ifdef DEBUG_KPLAYER_PROPERTIES
-        kdDebugTime() << " " << *keysit << " " << property -> asString() << "\n";
+        kdDebugTime() << " " << *keysit << " " << property -> asString().toLatin1().data() << "\n";
 #endif
       }
       ++ keysit;
@@ -1698,7 +1697,7 @@ void KPlayerProperties::count (KPlayerPropertyCounts& counts) const
     else
       ++ *it;
 #ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << " " << iterator.key() << " ++ = " << *it << "\n";
+    kdDebugTime() << " " << iterator.key().toLatin1().data() << " ++ = " << *it << "\n";
 #endif
   }
 }
@@ -3680,14 +3679,14 @@ void KPlayerTrackProperties::extractMeta (const QString& str, bool update)
   {
     setName (re_name_sc.cap(1).simplified());
 #ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << "Process: Name '" << name() << "'\n";
+    kdDebugTime() << "Process: Name " << name() << "\n";
 #endif
   }
   else if ( update && re_icyinfo.indexIn (str) >= 0 )
   {
     setTemporaryName (re_icyinfo.cap(1).simplified());
 #ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << "Process: ICY Info '" << temporaryName() << "'\n";
+    kdDebugTime() << "Process: ICY Info " << temporaryName() << "\n";
 #endif
     commit();
   }
@@ -3799,8 +3798,8 @@ void KPlayerTrackProperties::showSubtitleUrl (const KUrl& url)
   if ( url != subtitleUrl() )
   {
 #ifdef DEBUG_KPLAYER_PROPERTIES
-    kdDebugTime() << " Subtitle '" << url.url() << "'\n";
-    kdDebugTime() << "          '" << url.pathOrUrl() << "'\n";
+    kdDebugTime() << " Subtitle " << url.url() << "\n";
+    kdDebugTime() << "          " << url.pathOrUrl() << "\n";
 #endif
     setSubtitleUrl (url);
     resetSubtitleID();
