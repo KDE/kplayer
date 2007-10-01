@@ -253,7 +253,7 @@ void KPlayerListViewItem::update (void)
   kdDebugTime() << "KPlayerListViewItem::update\n";
   kdDebugTime() << " URL    " << node() -> url().url() << "\n";
 #endif
-  setPixmap (0, DesktopIcon (icon(), K3Icon::SizeSmall));
+  setPixmap (0, DesktopIcon (icon(), KIconLoader::SizeSmall));
   QStringList::ConstIterator iterator (nodeView() -> attributeNames().begin());
   for ( int i = 0; iterator != nodeView() -> attributeNames().end(); ++ iterator, ++ i )
   {
@@ -424,7 +424,7 @@ void KPlayerListViewFolderItem::setOpen (bool open)
   KPlayerListViewGroupItem::setOpen (open);
   if ( change )
   {
-    setPixmap (0, DesktopIcon (icon(), K3Icon::SizeSmall));
+    setPixmap (0, DesktopIcon (icon(), KIconLoader::SizeSmall));
     if ( open )
       added (node() -> nodes());
     updateColumns();
