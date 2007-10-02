@@ -263,7 +263,7 @@ QString KPlayerSettings::currentSubtitles (void) const
     if ( subtitles().indexOf (subtitle) != -1 )
       return subtitle;
   }
-  return subtitles().first();
+  return subtitles().isEmpty() ? QString() : subtitles().first();
 }
 
 QString KPlayerSettings::currentSubtitlePath (void) const

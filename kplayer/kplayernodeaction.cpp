@@ -162,7 +162,6 @@ void KPlayerNodeActionList::updateActions (void)
   kdDebugTime() << "KPlayerNodeActionList::updateActions\n";
   kdDebugTime() << " Name   " << objectName() << "\n";
 #endif
-  QList<QAction*> actlist (actions());
   unplug();
   int count = 0;
   KPlayerNodeListByName nodes ((const KPlayerNodeListByName&) node() -> nodes());
@@ -177,30 +176,15 @@ void KPlayerNodeActionList::updateActions (void)
 #ifdef DEBUG_KPLAYER_NODEACTION
       kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
-      QAction* action = 0;
-      for ( QList<QAction*>::ConstIterator actit (actlist.constBegin()); actit != actlist.constEnd(); ++ actit )
-      {
-	action = *actit;
-        if ( action -> parent() == node )
-        {
-          actlist.removeAll (action);
-          break;
-        }
-      }
-      if ( ! action )
-        action = createAction (node);
-      m_actions.append (action);
+      m_actions.append (createAction (node));
       ++ count;
     }
     ++ iterator;
   }
 #ifdef DEBUG_KPLAYER_NODEACTION
-  kdDebugTime() << " Current " << actions().count() << "\n";
-  kdDebugTime() << " Removed " << actlist.count() << "\n";
+  kdDebugTime() << " Count  " << actions().count() << "\n";
 #endif
   plug();
-  for ( QList<QAction*>::ConstIterator iterator (actlist.constBegin()); iterator != actlist.constEnd(); ++ iterator )
-    delete *iterator;
 }
 
 void KPlayerNodeActionList::actionActivated (void)
@@ -347,10 +331,12 @@ void KPlayerDeviceActionMenu::updateActions (void)
 #ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDeviceActionMenu::updateActions\n";
 #endif
-  QList<QAction*> actlist (actions());
+  for ( QList<QAction*>::ConstIterator iterator (actions().begin()); iterator != actions().end(); ++ iterator )
+  {
+    removeAction (*iterator);
+    delete *iterator;
+  }
   m_actions.clear();
-  for ( QList<QAction*>::ConstIterator actlit (actlist.constBegin()); actlit != actlist.constEnd(); ++ actlit )
-    removeAction (*actlit);
   KPlayerNodeList::ConstIterator iterator (device() -> nodes().begin());
   while ( iterator != device() -> nodes().end() )
   {
@@ -358,33 +344,17 @@ void KPlayerDeviceActionMenu::updateActions (void)
 #ifdef DEBUG_KPLAYER_NODEACTION
     kdDebugTime() << " Track  " << node -> url().url() << "\n";
 #endif
-    QAction* action = 0;
-    for ( QList<QAction*>::ConstIterator actit (actlist.constBegin()); actit != actlist.constEnd(); ++ actit )
-    {
-      action = *actit;
-      if ( action -> parent() == node )
-      {
-        actlist.removeAll (action);
-        break;
-      }
-    }
-    if ( ! action )
-    {
-      action = new KAction (node);
-      action -> setText (i18n("Play %1", node -> name()));
-      connect (action, SIGNAL (triggered()), SLOT (play()));
-    }
+    QAction* action = new KAction (node);
+    action -> setText (i18n("Play %1", node -> name()));
+    connect (action, SIGNAL (triggered()), SLOT (play()));
     m_actions.append (action);
     ++ iterator;
   }
   for ( QList<QAction*>::ConstIterator actmit (actions().begin()); actmit != actions().end(); ++ actmit )
     addAction (*actmit);
 #ifdef DEBUG_KPLAYER_NODEACTION
-  kdDebugTime() << " Current " << actions().count() << "\n";
-  kdDebugTime() << " Removed " << actlist.count() << "\n";
+  kdDebugTime() << " Count  " << actions().count() << "\n";
 #endif
-  for ( QList<QAction*>::ConstIterator iterator (actlist.constBegin()); iterator != actlist.constEnd(); ++ iterator )
-    delete *iterator;
 }
 
 void KPlayerDeviceActionMenu::added (KPlayerContainerNode*, const KPlayerNodeList&, KPlayerNode*)
