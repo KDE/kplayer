@@ -2711,8 +2711,11 @@ void KPlayerDevicesNode::refresh (const KFileItemList& items)
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDevicesNode::refresh\n";
 #endif
-  for ( KFileItemList::ConstIterator iterator (items.begin()); iterator != items.end(); ++ iterator )
-    refreshItem (*iterator);
+   KFileItem item;
+   for (int i = 0; i < items.size(); ++i){
+    item = items.at(i);
+    refreshItem(&item);
+   }
 }
 
 void KPlayerDevicesNode::removed (KFileItem* item)
