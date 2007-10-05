@@ -3001,7 +3001,7 @@ void KPlayerDiskNode::getLocalPath (void)
   if ( hasLocalPath() || ! dataDisk() || ! ready() )
     return;
   m_url = "list://";
-  KIO::ListJob* job = KIO::listDir ("media:/" + url().fileName(), false, false);
+  KIO::ListJob* job = KIO::listDir ("media:/" + url().fileName(), KIO::HideProgressInfo, false);
   connect (job, SIGNAL(result(KIO::Job*)), SLOT(listResult(KIO::Job*)));
 }
 
@@ -3016,13 +3016,13 @@ void KPlayerDiskNode::listResult (KIO::Job* job)
     kdDebugTime() << " Error  " << job -> error() << " " << job -> errorString() << "\n";
 #endif
     m_url = "mount://";
-    KIO::SimpleJob* job = KIO::mount (true, 0, id(), QString::null, false);
+    KIO::SimpleJob* job = KIO::mount (true, 0, id(), QString::null, KIO::HideProgressInfo);
     connect (job, SIGNAL(result(KIO::Job*)), SLOT(mountResult(KIO::Job*)));
   }
   else
   {
     m_url = "path://";
-    KIO::StatJob* job = KIO::stat ("media:/" + url().fileName(), false);
+    KIO::StatJob* job = KIO::stat ("media:/" + url().fileName(), KIO::HideProgressInfo);
     connect (job, SIGNAL(result(KIO::Job*)), SLOT(pathResult(KIO::Job*)));
   }
 }
@@ -3035,7 +3035,7 @@ void KPlayerDiskNode::mountResult (KIO::Job* job)
     kdDebugTime() << " Error  " << job -> error() << " " << job -> errorString() << "\n";
 #endif
   m_url = "path://";
-  job = KIO::stat ("media:/" + url().fileName(), false);
+  job = KIO::stat ("media:/" + url().fileName(), KIO::HideProgressInfo);
   connect (job, SIGNAL(result(KIO::Job*)), SLOT(pathResult(KIO::Job*)));
 }
 
@@ -3114,7 +3114,7 @@ void KPlayerDiskNode::autodetect (void)
     || m_fast_autodetect && disk() -> type().startsWith ("Data ") && m_url != "data://" )
   {
     m_url = "data://";
-    KIO::StatJob* job = KIO::stat ("media:/" + url().fileName(), false);
+    KIO::StatJob* job = KIO::stat ("media:/" + url().fileName(), KIO::HideProgressInfo);
     connect (job, SIGNAL(result(KIO::Job*)), SLOT(statResult(KIO::Job*)));
     return;
   }

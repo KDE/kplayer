@@ -327,7 +327,7 @@ void KPlayerProcess::transferTemporaryFile (void)
       kdDebugTime() << "Temporary file " << m_temporary_file -> handle() << " " << m_temporary_file -> fileName() << "\n";
     kdDebugTime() << "Process: Creating temp job\n";
 #endif
-    m_temp_job = KIO::get (properties() -> url(), false, false);
+    m_temp_job = KIO::get (properties() -> url(), KIO::NoReload, KIO::HideProgressInfo);
     m_temp_job -> ui() -> setWindow (kPlayerWorkspace());
     m_temp_job -> addMetaData ("PropagateHttpHeader", "true");
     connect (m_temp_job, SIGNAL (data (KIO::Job*, const QByteArray&)), SLOT (transferTempData (KIO::Job*, const QByteArray&)));
@@ -678,7 +678,7 @@ void KPlayerProcess::start (void)
     kdDebugTime() << "Process: Will send get_time_length for '" << properties() -> url().url() << "'\n";
     kdDebugTime() << "Process: Creating slave job\n";
 #endif
-    m_slave_job = KIO::get (properties() -> url(), false, false);
+    m_slave_job = KIO::get (properties() -> url(), KIO::NoReload, KIO::HideProgressInfo);
     m_slave_job -> ui() -> setWindow (kPlayerWorkspace());
     m_slave_job -> addMetaData ("PropagateHttpHeader", "true");
     connect (m_slave_job, SIGNAL (data (KIO::Job*, const QByteArray&)), SLOT (transferData (KIO::Job*, const QByteArray&)));
