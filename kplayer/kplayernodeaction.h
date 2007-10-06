@@ -20,6 +20,7 @@
 
 #include "kplayeractionlist.h"
 
+class KUrl;
 class KPlayerNode;
 class KPlayerContainerNode;
 class KPlayerDeviceNode;
