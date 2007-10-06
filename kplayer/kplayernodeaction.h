@@ -17,7 +17,6 @@
 #define KPLAYERNODEACTION_H
 
 #include <kactionmenu.h>
-#include <kurl.h>
 
 #include "kplayeractionlist.h"
 
