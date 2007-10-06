@@ -3629,6 +3629,9 @@ KPlayerLibraryWindow::KPlayerLibraryWindow (KActionCollection* ac, KPlayerPlayli
   //setCloseMode (QDockWidget::Always);
   //setNewLine (true);
   setWindowTitle (i18n("Multimedia Library"));
+  setAllowedAreas (Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
+  setFeatures (DockWidgetClosable | DockWidgetMovable | DockWidgetFloatable | DockWidgetVerticalTitleBar);
+  setWhatsThis (i18n("Multimedia library is a window where that lets you organize your files, streams, devices, manage your playlists, and choose items for playing. It shows various information about your media files and allows you to search and group them and change their properties."));
 }
 
 void KPlayerLibraryWindow::setFocus (void)

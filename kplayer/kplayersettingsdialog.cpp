@@ -36,6 +36,7 @@
 KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
   : KPageDialog (parent)
 {
+  m_advanced = 0;
   setFaceType (KPageDialog::Tree);
   setCaption (i18n("KPlayer Preferences"));
   setButtons (KDialog::Help | KDialog::Default | KDialog::Ok | KDialog::Apply | KDialog::Cancel);
@@ -262,7 +263,8 @@ void KPlayerSettingsDialog::pageAboutToShow (KPageWidgetItem* current, KPageWidg
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
   kdDebugTime() << "KPlayerSettingsDialog::pageAboutToShow\n";
 #endif
-  m_advanced -> refreshLists();
+  if ( m_advanced )
+    m_advanced -> refreshLists();
   setHelp (m_page_names.contains (current) ? "settings-" + m_page_names [current] : "settings");
 }
 
@@ -500,8 +502,8 @@ void KPlayerSettingsAudio::runAmixer (void)
 #endif
   }
   *amixer << "scontents";
-  connect (amixer, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*, int)),
-    SLOT (amixerOutput (KPlayerLineOutputProcess*, char*, int)));
+  connect (amixer, SIGNAL (receivedStdoutLine (KPlayerLineOutputProcess*, char*)),
+    SLOT (amixerOutput (KPlayerLineOutputProcess*, char*)));
   connect (amixer, SIGNAL (processFinished (KPlayerLineOutputProcess*)),
     SLOT (amixerFinished (KPlayerLineOutputProcess*)));
   amixer -> start();

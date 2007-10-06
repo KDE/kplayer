@@ -87,6 +87,9 @@ public:
   QWidget* hiddenWidget (void) const
     { return m_hidden_widget; }
 
+  /** Returns the size hint for the workspace. */
+  virtual QSize sizeHint (void) const;
+
   /** Resizes the widget to the given size. */
   void setDisplaySize (QSize);
 

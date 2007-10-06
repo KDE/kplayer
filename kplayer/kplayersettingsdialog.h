@@ -85,7 +85,6 @@ protected slots:
   /** Finishes refreshing ALSA mixer channel list. */
   void amixerFinished (KPlayerLineOutputProcess*);
 
-protected slots:
   void driverChanged (int);
   void deviceChanged (const QString&);
   void mixerChanged (const QString&);
@@ -153,7 +152,7 @@ public:
   void load (void);
   void save (void);
 
-protected:
+protected slots:
   void resizeAutomaticallyChanged (bool);
 };
 

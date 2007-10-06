@@ -250,7 +250,7 @@ public slots:
   /** Syncronizes full screen and maximized settings. */
   void syncronize (bool);
   /** Zooms the video to the correct size. */
-  //void zoom (void);
+  void zoom (void);
   /** Sets the correct display size. */
   void correctSize (void);
   /** Adjusts the initial display size. */
@@ -260,7 +260,7 @@ public slots:
   void enableSubmenu (const QString& name, bool enable);
 
   /** Shows the message log if there have been errors. */
-  void statusPressed (void);
+  void showErrors (const QString&);
 
   /** Resets the player status. */
   void playlistStarted (void);

@@ -86,6 +86,7 @@ KPlayerLineOutputProcess::KPlayerLineOutputProcess (void)
 #if 0
   m_merge = false;
 #endif
+  setOutputChannelMode (KProcess::SeparateChannels);
   connect (this, SIGNAL (readyReadStandardOutput()), SLOT (readStandardOutput()));
   connect (this, SIGNAL (readyReadStandardError()), SLOT (readStandardError()));
   connect (this, SIGNAL (finished (int, QProcess::ExitStatus)), SLOT (processHasExited (int, QProcess::ExitStatus)));

@@ -63,6 +63,7 @@ KPlayerWidget::KPlayerWidget (QWidget *parent)
 #endif
   connect (kPlayerProcess(), SIGNAL (stateChanged (KPlayerProcess::State, KPlayerProcess::State)), SLOT (playerStateChanged (KPlayerProcess::State, KPlayerProcess::State)));
   setWhatsThis (i18n("Video area is the central part of KPlayer. When playing a file that has video, it will display the video and optionally subtitles. Normally it will be hidden when playing an audio only file."));
+  //setAttribute (Qt::WA_OpaquePaintEvent);
   setFocusPolicy (Qt::NoFocus);
   //setEnabled (false);
   //setEraseColor (QColor (0, 0, 0));
@@ -240,6 +241,8 @@ KPlayerWorkspace::KPlayerWorkspace (QWidget* parent)
   connect (kPlayerProcess(), SIGNAL (sizeAvailable()), SLOT (setMouseCursorTracking()));
   setWhatsThis (i18n("Video area is the central part of KPlayer. When playing a file that has video, it will display the video and optionally subtitles. Normally it will be hidden when playing an audio only file."));
   //setEraseColor (QColor (0, 0, 0));
+  setPalette (Qt::black);
+  setAutoFillBackground (true);
   setMinimumSize (QSize (0, 0));
   setFocusPolicy (Qt::StrongFocus);
   QWidget* proxy = new QWidget (parent);
@@ -423,4 +426,9 @@ void KPlayerWorkspace::setMouseCursorTracking (void)
 void KPlayerWorkspace::playerStateChanged (KPlayerProcess::State, KPlayerProcess::State)
 {
   setMouseCursorTracking();
+}
+
+QSize KPlayerWorkspace::sizeHint (void) const
+{
+  return kPlayerSettings() -> displaySize();
 }

@@ -37,7 +37,7 @@
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_WINDOW
-//#define DEBUG_KPLAYER_RESIZING
+#define DEBUG_KPLAYER_RESIZING
 //#define DEBUG_KPLAYER_SIZING_HACKS
 //#define DEBUG_KPLAYER_NOTIFY_KEY
 //#define DEBUG_KPLAYER_NOTIFY_MOUSE
@@ -116,7 +116,8 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
         QKeyEvent* kevent = (QKeyEvent*) event;
 #ifdef DEBUG_KPLAYER_NOTIFY_KEY
         kdDebugTime() << "KPlayerApplication::notify: event type ShortcutOverride"
-          << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
+          << " spontaneous " << event -> spontaneous() << " receiver "
+          << (object ? object -> metaObject() -> className() : "<none>")
           << " key " << kevent -> key() << " text " << kevent -> text()
           << " count " << kevent -> count() << " state " << kevent -> modifiers()
           << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
@@ -136,7 +137,8 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
           kPlayerSettings() -> setShift (kevent -> modifiers() & Qt::ShiftModifier);
         }*/
         kdDebugTime() << "KPlayerApplication::notify: event type " << event -> type()
-          << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
+          << " spontaneous " << event -> spontaneous() << " receiver "
+          << (object ? object -> metaObject() -> className() : "<none>")
           << " key " << kevent -> key() << " text " << kevent -> text()
           << " count " << kevent -> count() << " state " << kevent -> modifiers()
           << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
@@ -150,7 +152,8 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
         //kPlayerSettings() -> setShift (kevent -> modifiers() & Qt::ShiftModifier);
 #ifdef DEBUG_KPLAYER_NOTIFY_KEY
         kdDebugTime() << "KPlayerApplication::notify: event type Shortcut"
-          << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
+          << " spontaneous " << event -> spontaneous() << " receiver "
+          << (object ? object -> metaObject() -> className() : "<none>")
           << " key " << kevent -> key() << " text " << kevent -> text()
           << " count " << kevent -> count() << " state " << kevent -> modifiers()
           << " accepted " << kevent -> isAccepted() << " overridden " << overridden << " autorepeat " << kevent -> isAutoRepeat()
@@ -242,7 +245,8 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
             keyevent.ignore();
 #ifdef DEBUG_KPLAYER_NOTIFY_KEY
           kdDebugTime() << "KPlayerApplication::notify: passing keyboard event " << keyevent.type()
-            << " spontaneous " << keyevent.spontaneous() << " receiver " << (object ? object -> className() : "<none>")
+            << " spontaneous " << keyevent.spontaneous() << " receiver "
+            << (object ? object -> metaObject() -> className() : "<none>")
             << " key " << keyevent.key() << " text " << keyevent.text()
             << " count " << keyevent.count() << " state " << keyevent.modifiers()
             << " accepted " << keyevent.isAccepted() << " autorepeat " << keyevent.isAutoRepeat()
@@ -259,7 +263,8 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
       kPlayerSettings() -> setShift (((QMouseEvent*) event) -> modifiers() & Qt::ShiftModifier);
 #ifdef DEBUG_KPLAYER_NOTIFY_MOUSE
       kdDebugTime() << "KPlayerApplication::notify: event type " << event -> type()
-        << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
+        << " spontaneous " << event -> spontaneous() << " receiver "
+        << (object ? object -> metaObject() -> className() : "<none>")
         << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
 #endif
       break;
@@ -285,7 +290,8 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
         kPlayerSettings() -> setShift (mevent -> modifiers() & Qt::ShiftModifier);
 #ifdef DEBUG_KPLAYER_NOTIFY_MOUSE
         kdDebugTime() << "KPlayerApplication::notify: event type " << event -> type()
-          << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
+          << " spontaneous " << event -> spontaneous() << " receiver "
+          << (object ? object -> metaObject() -> className() : "<none>")
           << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
 #endif
       }
@@ -295,7 +301,8 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
       kPlayerSettings() -> setShift (((QWheelEvent*) event) -> modifiers() & Qt::ShiftModifier);
 #ifdef DEBUG_KPLAYER_NOTIFY_WHEEL
       kdDebugTime() << "KPlayerApplication::notify: event type " << event -> type()
-        << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
+        << " spontaneous " << event -> spontaneous() << " receiver "
+        << (object ? object -> metaObject() -> className() : "<none>")
         << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
 #endif
       break;
@@ -304,7 +311,8 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
       //kPlayerSettings() -> setControl (((QContextMenuEvent*) event) -> modifiers() & Qt::ControlModifier);
       //kPlayerSettings() -> setShift (((QContextMenuEvent*) event) -> modifiers() & Qt::ShiftModifier);
       kdDebugTime() << "KPlayerApplication::notify: event type " << event -> type()
-        << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
+        << " spontaneous " << event -> spontaneous() << " receiver "
+        << (object ? object -> metaObject() -> className() : "<none>")
         << " control " << kPlayerSettings() -> control() << " shift " << kPlayerSettings() -> shift() << "\n";
       break;
 #endif
@@ -315,7 +323,8 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
       {
         QDropEvent* devent = (QDropEvent*) event;
         kdDebugTime() << "KPlayerApplication::notify: event type " << event -> type()
-          << " spontaneous " << event -> spontaneous() << " receiver " << (object ? object -> className() : "<none>")
+          << " spontaneous " << event -> spontaneous() << " receiver "
+          << (object ? object -> metaObject() -> className() : "<none>")
           << " accepted " << devent -> isAccepted() << " action " << devent -> action()
           << " accepted " << devent -> isActionAccepted() << "\n";
       }
@@ -324,12 +333,12 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
 #ifdef DEBUG_KPLAYER_NOTIFY_DRAG
     case QEvent::DragResponse:
       kdDebugTime() << "KPlayerApplication::notify: event type DragResponse spontaneous " << event -> spontaneous()
-        << " receiver " << (object ? object -> className() : "<none>")
+        << " receiver " << (object ? object -> metaObject() -> className() : "<none>")
         << " accepted " << ((QDragResponseEvent*) event) -> dragAccepted() << "\n";
       break;
     case QEvent::DragLeave:
       kdDebugTime() << "KPlayerApplication::notify: event type DragLeave spontaneous " << event -> spontaneous()
-        << " receiver " << (object ? object -> className() : "<none>") << "\n";
+        << " receiver " << (object ? object -> metaObject() -> className() : "<none>") << "\n";
       break;
 #endif
 #ifdef DEBUG_KPLAYER_NOTIFY_RESIZE
@@ -367,7 +376,7 @@ void dumpObject (const QObject* object, int indent, int depth = 20)
   if ( object -> inherits ("QWidget") )
   {
     QWidget* widget = (QWidget*) object;
-    kdDebugTime() << spaces << object -> className() << " " << object -> name ("<unnamed>") <<
+    kdDebugTime() << spaces << object -> metaObject() -> className() << " " << object -> objectName() <<
       " " << widget -> winId() <<
       " " << widget -> minimumSize().width() << "x" << widget -> minimumSize().height() <<
       " " << widget -> minimumSizeHint().width() << "x" << widget -> minimumSizeHint().height() <<
@@ -380,20 +389,19 @@ void dumpObject (const QObject* object, int indent, int depth = 20)
   else if ( object -> inherits ("QLayout") )
   {
     QLayout* layout = (QLayout*) object;
-    kdDebugTime() << spaces << object -> className() << " " << object -> name ("<unnamed>") <<
+    kdDebugTime() << spaces << object -> metaObject() -> className() << " " << object -> objectName() <<
       " " << layout -> minimumSize().width() << "x" << layout -> minimumSize().height() <<
       " " << layout -> sizeHint().width() << "x" << layout -> sizeHint().height() <<
       " " << layout -> geometry().width() << "x" << layout -> geometry().height() <<
       " " << layout -> margin() << "+" << layout -> spacing() <<
-      " " << layout -> alignment() << " " << layout -> expanding() <<
+      " " << layout -> alignment() << " " << layout -> expandingDirections() <<
       " " << layout -> hasHeightForWidth() << " " << layout -> heightForWidth (1) << "\n";
   }
   else
-    kdDebugTime() << spaces << object -> className() << " " << object -> name ("<unnamed>") << "\n";
+    kdDebugTime() << spaces << object -> metaObject() -> className() << " " << object -> objectName() << "\n";
   indent ++;
-  QObjectList* objectlist = (QObjectList*) object -> children();
-  if ( objectlist && depth -- > 0 )
-    for ( object = objectlist -> first(); object; object = objectlist -> next() )
+  if ( depth -- > 0 )
+    foreach ( object, object -> children() )
       if ( object )
         dumpObject (object, indent, depth);
 }
@@ -476,7 +484,7 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
   KPlayerNode::initialize();
   m_log = new KPlayerLogWindow (actionCollection(), this);
   connect (log(), SIGNAL (windowHidden()), SLOT (logWindowHidden()));
-  connect (action ("log_clear"), SIGNAL (activated()), SLOT (fileClearLog()));
+  connect (action ("log_clear"), SIGNAL (triggered()), SLOT (fileClearLog()));
   m_playlist = new KPlayerPlaylist (actionCollection(), this);
   m_library = new KPlayerLibraryWindow (actionCollection(), playlist(), this);
   connect (library(), SIGNAL (windowHidden()), SLOT (libraryHidden()));
@@ -547,17 +555,10 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
   //  connect (popupMenu (i), SIGNAL (aboutToHide()), SLOT (clearStatusMessage()));
   for ( i = 0; i < KPLAYER_TOOLBARS; i ++ )
     m_toolbar[i] = toolbars[i];
-  setAutoSaveSettings ("MainWindow", false);
-  resetAutoSaveSettings();  // saveWindowSize = false;
-  readOptions();
   KToolBar* toolbar = toolBar (m_toolbar[PLAYLIST_TOOLBAR].name);
   toolbar -> setAllowedAreas (Qt::TopToolBarArea | Qt::BottomToolBarArea);
-  library() -> setAllowedAreas (Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
-  log() -> setAllowedAreas (Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
   menuBar() -> setWhatsThis (i18n("Menu bar contains names of drop-down menus. Left click a name to alternately show and hide that menu, or use Alt + the underlined letter in the name as a hot key, for example Alt+F to show the File menu."));
   statusBar() -> setWhatsThis (i18n("Status bar shows general information about the player status and progress."));
-  library() -> setWhatsThis (i18n("Multimedia library is a window where that lets you organize your files, streams, devices, manage your playlists, and choose items for playing. It shows various information about your media files and allows you to search and group them and change their properties."));
-  log() -> setWhatsThis (i18n("Message log is a window where KPlayer shows messages it receives from MPlayer. KPlayer can show it automatically when it detects an MPlayer error if that option is selected in KPlayer settings."));
   for ( i = 0; i < KPLAYER_TOOLBARS; i ++ )
   {
     toolbar = toolBar (m_toolbar[i].name);
@@ -567,6 +568,11 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
     if ( i >= FIRST_SLIDER_TOOLBAR )
       ((KPlayerSliderAction*) action (actions [i - FIRST_SLIDER_TOOLBAR])) -> slider() -> setOrientation (toolbar -> orientation());
   }
+  addDockWidget (Qt::BottomDockWidgetArea, library());
+  addDockWidget (Qt::BottomDockWidgetArea, log());
+  //setAutoSaveSettings ("MainWindow", false);
+  //resetAutoSaveSettings();  // saveWindowSize = false;
+  readOptions();
   if ( settings() -> maximized() )
     showMaximized();
   enablePlayerActions();
@@ -728,8 +734,8 @@ void KPlayerWindow::initActions (void)
   action = this -> action ("help_report_bug");
   if ( action )
   {
-    disconnect (action, SIGNAL(activated()), 0, 0);
-    connect (action, SIGNAL(activated()), SLOT(helpReportBug()));
+    disconnect (action, SIGNAL(triggered()), 0, 0);
+    connect (action, SIGNAL(triggered()), SLOT(helpReportBug()));
     //action -> setStatusTip (i18n("Opens the manual section on bug reporting"));
     //action -> setWhatsThis (i18n("Report Bug command opens the section of KPlayer user manual that explains how to report a bug in KPlayer, including all the information that may be helpful in finding and fixing the bug."));
   }
@@ -774,7 +780,7 @@ void KPlayerWindow::initStatusBar (void)
   statusBar() -> setMinimumHeight (statusBar() -> layout() -> minimumSize().height());
   if ( m_status_label )
   {
-    connect (m_status_label, SIGNAL (itemPressed (int)), this, SLOT (statusPressed()));
+    connect (m_status_label, SIGNAL (linkActivated (const QString&)), this, SLOT (showErrors (const QString&)));
     m_status_label -> setWhatsThis (i18n("Status area of the status bar tells you if there have been playback errors."));
   }
   if ( m_state_label )
@@ -801,7 +807,8 @@ void KPlayerWindow::saveOptions (void)
   kdDebugTime() << "Saving options\n";
 #endif
   config() -> deleteGroup ("General Options");
-  saveMainWindowSettings (config() -> group ("General Options"));
+  KConfigGroup group (config() -> group ("General Options"));
+  saveMainWindowSettings (group);
   /*
   config() -> setGroup ("General Options");
   Qt::Dock dock = DockTornOff;
@@ -858,20 +865,22 @@ void KPlayerWindow::saveOptions (void)
     config() -> writeEntry ("Main Window Width", m_normal_geometry.width());
     config() -> writeEntry ("Main Window Height", m_normal_geometry.height());
   }
-  config() -> writeEntry ("Menu Bar Normally Visible", m_menubar_normally_visible);
-  config() -> writeEntry ("Menu Bar FullScreen Visible", m_menubar_fullscreen_visible);
-  config() -> writeEntry ("Status Bar Normally Visible", m_statusbar_normally_visible);
-  config() -> writeEntry ("Status Bar FullScreen Visible", m_statusbar_fullscreen_visible);
-  config() -> writeEntry ("Message Log Normally Visible", m_messagelog_normally_visible);
-  config() -> writeEntry ("Message Log FullScreen Visible", m_messagelog_fullscreen_visible);
-  config() -> writeEntry ("Playlist Editor Normally Visible", m_library_normally_visible);
-  config() -> writeEntry ("Playlist Editor FullScreen Visible", m_library_fullscreen_visible);
+  */
+  group.writeEntry ("Menu Bar Normally Visible", m_menubar_normally_visible);
+  group.writeEntry ("Menu Bar FullScreen Visible", m_menubar_fullscreen_visible);
+  group.writeEntry ("Status Bar Normally Visible", m_statusbar_normally_visible);
+  group.writeEntry ("Status Bar FullScreen Visible", m_statusbar_fullscreen_visible);
+  group.writeEntry ("Message Log Normally Visible", m_messagelog_normally_visible);
+  group.writeEntry ("Message Log FullScreen Visible", m_messagelog_fullscreen_visible);
+  group.writeEntry ("Playlist Editor Normally Visible", m_library_normally_visible);
+  group.writeEntry ("Playlist Editor FullScreen Visible", m_library_fullscreen_visible);
   for ( int i = 0; i < KPLAYER_TOOLBARS; i ++ )
   {
-    config() -> writeEntry (QString (m_toolbar[i].name) + " Normally Visible", m_toolbar[i].normally_visible);
-    config() -> writeEntry (QString (m_toolbar[i].name) + " FullScreen Visible", m_toolbar[i].fullscreen_visible);
+    group.writeEntry (QString (m_toolbar[i].name) + " Normally Visible", m_toolbar[i].normally_visible);
+    group.writeEntry (QString (m_toolbar[i].name) + " FullScreen Visible", m_toolbar[i].fullscreen_visible);
   }
-  */
+  group.writeEntry (QString (m_toolbar[MAIN_TOOLBAR].name) + " Button Style",
+    (int) toolBar (m_toolbar[MAIN_TOOLBAR].name) -> toolButtonStyle());
 }
 
 void KPlayerWindow::readOptions (void)
@@ -879,7 +888,8 @@ void KPlayerWindow::readOptions (void)
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Reading options\n";
 #endif
-  applyMainWindowSettings (config() -> group ("General Options"));
+  KConfigGroup group (config() -> group ("General Options"));
+  applyMainWindowSettings (group);
   /*
   config() -> setGroup ("General Options");
   QRect available (availableGeometry());
@@ -944,26 +954,27 @@ void KPlayerWindow::readOptions (void)
     library() -> undock();
   if ( width > 0 && height > 0 )
     library() -> setGeometry (left, top, width, height);
-  m_menubar_normally_visible = config() -> readBoolEntry ("Menu Bar Normally Visible", m_menubar_normally_visible);
-  m_menubar_fullscreen_visible = config() -> readBoolEntry ("Menu Bar FullScreen Visible", m_menubar_fullscreen_visible);
+  */
+  m_menubar_normally_visible = group.readEntry ("Menu Bar Normally Visible", m_menubar_normally_visible);
+  m_menubar_fullscreen_visible = group.readEntry ("Menu Bar FullScreen Visible", m_menubar_fullscreen_visible);
   showMenubar();
-  m_statusbar_normally_visible = config() -> readBoolEntry ("Status Bar Normally Visible", m_statusbar_normally_visible);
-  m_statusbar_fullscreen_visible = config() -> readBoolEntry ("Status Bar FullScreen Visible", m_statusbar_fullscreen_visible);
+  m_statusbar_normally_visible = group.readEntry ("Status Bar Normally Visible", m_statusbar_normally_visible);
+  m_statusbar_fullscreen_visible = group.readEntry ("Status Bar FullScreen Visible", m_statusbar_fullscreen_visible);
   showStatusbar();
+  toolBar (m_toolbar[MAIN_TOOLBAR].name) -> setToolButtonStyle ((Qt::ToolButtonStyle) group.readEntry (QString (m_toolbar[MAIN_TOOLBAR].name) + " Button Style", (int) Qt::ToolButtonIconOnly));
   for ( int i = 0; i < KPLAYER_TOOLBARS; i ++ )
   {
-    m_toolbar[i].normally_visible = config() -> readBoolEntry (QString (m_toolbar[i].name) + " Normally Visible", m_toolbar[i].normally_visible);
-    m_toolbar[i].fullscreen_visible = config() -> readBoolEntry (QString (m_toolbar[i].name) + " FullScreen Visible", m_toolbar[i].fullscreen_visible);
+    m_toolbar[i].normally_visible = group.readEntry (QString (m_toolbar[i].name) + " Normally Visible", m_toolbar[i].normally_visible);
+    m_toolbar[i].fullscreen_visible = group.readEntry (QString (m_toolbar[i].name) + " FullScreen Visible", m_toolbar[i].fullscreen_visible);
     //kdDebugTime() << "Show " << m_toolbar[i].name << " " << m_toolbar[i].action << "\n";
     showToolbar (i);
   }
-  m_messagelog_normally_visible = config() -> readBoolEntry ("Message Log Normally Visible", m_messagelog_normally_visible);
-  m_messagelog_fullscreen_visible = config() -> readBoolEntry ("Message Log FullScreen Visible", m_messagelog_fullscreen_visible);
+  m_messagelog_normally_visible = group.readEntry ("Message Log Normally Visible", m_messagelog_normally_visible);
+  m_messagelog_fullscreen_visible = group.readEntry ("Message Log FullScreen Visible", m_messagelog_fullscreen_visible);
   showMessageLog();
-  m_library_normally_visible = config() -> readBoolEntry ("Playlist Editor Normally Visible", m_library_normally_visible);
-  m_library_fullscreen_visible = config() -> readBoolEntry ("Playlist Editor FullScreen Visible", m_library_fullscreen_visible);
+  m_library_normally_visible = group.readEntry ("Playlist Editor Normally Visible", m_library_normally_visible);
+  m_library_fullscreen_visible = group.readEntry ("Playlist Editor FullScreen Visible", m_library_fullscreen_visible);
   showLibrary();
-  */
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Done reading options\n";
 #endif
@@ -1299,7 +1310,7 @@ void KPlayerWindow::playlistStopped (void)
   playerProgressChanged (process() -> position(), KPlayerProcess::Position);
 }
 
-void KPlayerWindow::statusPressed (void)
+void KPlayerWindow::showErrors (const QString&)
 {
   if ( log() -> hasError() || m_error_detected )
     showMessageLog (true);
@@ -1479,7 +1490,7 @@ void KPlayerWindow::showToolbar (int index)
       && ! settings() -> fullScreen() && ! settings() -> maximized() )
     {
       settings() -> setDisplaySize (QSize (settings() -> displaySize().width(), hint));
-      //zoom();
+      zoom();
     }
   }
   else
@@ -1636,7 +1647,7 @@ void KPlayerWindow::playerErrorDetected (void)
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Error detected\n";
 #endif
-  setStatusText (i18n("Error"));
+  setStatusText (QString ("<a href=error>%1</a>").arg (i18n("Error")));
   if ( log() -> isHidden() && m_status_label )
     m_status_label -> setCursor (Qt::PointingHandCursor);
   m_error_detected = true;
@@ -2000,7 +2011,8 @@ void KPlayerWindow::toNormalScreen (void)
 void KPlayerWindow::initialSize (void)
 {
 #ifdef DEBUG_KPLAYER_WINDOW
-  kdDebugTime() << "KPlayerWindow::initialSize (" << isMaximized() << ")\n";
+  kdDebugTime() << "KPlayerWindow::initialSize\n";
+  kdDebugTime() << " Maximized " << isMaximized() << "\n";
 #endif
   QSize size (settings() -> displaySize());
   if ( settings() -> constrainedSize() || settings() -> properties() -> hasVideo() || ! size.isEmpty() )
@@ -2013,7 +2025,8 @@ void KPlayerWindow::initialSize (void)
       break;
     }
 #ifdef DEBUG_KPLAYER_RESIZING
-  kdDebugTime() << "             " << log() -> isHidden() << " " << log() -> place() << " " << library() -> isHidden() << " " << library() -> place() << "\n";
+  kdDebugTime() << " Log     visible " << log() -> isVisible() << " area " << dockWidgetArea (log());
+  kdDebugTime() << " Library visible " << library() -> isVisible() << " area " << dockWidgetArea (library()) << "\n";
 #endif
   if ( library() -> isVisible() // && library() -> place() == QDockWindow::InDock
       || log() -> isVisible() /* && log() -> place() == QDockWindow::InDock */ )
@@ -2152,7 +2165,6 @@ void KPlayerWindow::syncronize (bool user_resize)
 #endif
 }*/
 
-/*
 void KPlayerWindow::zoom (void)
 {
   if ( m_full_screen )
@@ -2160,6 +2172,8 @@ void KPlayerWindow::zoom (void)
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "KPlayerWindow::zoom\n";
 #endif
+  adjustSize();
+/*
   QSize target (minimumSizeHint());
   QRect available (availableGeometry());
   KMainWindow::setMinimumSize (target.width(), target.height());
@@ -2253,11 +2267,13 @@ void KPlayerWindow::zoom (void)
 //syncronizeEvents();
   QApplication::postEvent (this, new QEvent (QEvent::LayoutRequest));
 //checkBarActions();
+*/
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "Zoom done\n";
 #endif
 }
 
+/*
 void KPlayerWindow::do_move (const QRect& frame)
 {
   QRect available (availableGeometry());

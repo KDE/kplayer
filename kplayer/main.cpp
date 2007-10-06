@@ -45,9 +45,9 @@ int main (int argc, char *argv[])
 #ifdef DEBUG_KPLAYER_MAIN
   kdDebugTime() << " Local directory " << localdir << "\n";
 #endif
+  QString rcpath (KStandardDirs::locateLocal ("config", "kplayerrc"));
   if ( localdir.endsWith ("/.kde4/") )
   {
-    QString rcpath (KStandardDirs::locateLocal ("config", "kplayerrc"));
     QString plpath (KStandardDirs::locateLocal ("config", "kplayerplaylistrc"));
     QString mlpath (KStandardDirs::locateLocal ("config", "kplayerlibraryrc"));
 #ifdef DEBUG_KPLAYER_MAIN

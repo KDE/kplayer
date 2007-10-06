@@ -36,6 +36,9 @@ KPlayerLogWindow::KPlayerLogWindow (KActionCollection* ac, QWidget* parent)
   //setCloseMode (QDockWidget::Always);
   //setNewLine (true);
   setWindowTitle (i18n("Messages"));
+  setAllowedAreas (Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
+  setFeatures (DockWidgetClosable | DockWidgetMovable | DockWidgetFloatable | DockWidgetVerticalTitleBar);
+  setWhatsThis (i18n("Message log is a window where KPlayer shows messages it receives from MPlayer. KPlayer can show it automatically when it detects an MPlayer error if that option is selected in KPlayer settings."));
 }
 
 void KPlayerLogWindow::initialize (QMenu* menu)
