@@ -702,6 +702,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("view_zoom_3_1", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (zoom31()));
   toggle -> setText (i18n("Zoom to &300%"));
+  // xgettext:no-c-format
   toggle -> setStatusTip (i18n("Scales video to 300% of the original size"));
   // xgettext:no-c-format
   toggle -> setWhatsThis (i18n("Zoom to 300% command resizes the video area to thrice the original video size of the current file."));
