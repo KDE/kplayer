@@ -651,7 +651,7 @@ void KPlayerWindow::initActions (void)
   actionCollection() -> addAction ("settings_volume_toolbar", action);
   connect (action, SIGNAL (triggered()), SLOT (viewVolumeToolbar()));
   action -> setText (i18n("Show &Volume Toolbar"));
-  action -> setIcon (KIcon ("volume"));
+  action -> setIcon (KIcon ("player-volume"));
   action -> setStatusTip (i18n("Shows/hides the volume toolbar"));
   action -> setWhatsThis (i18n("Show Volume Toolbar command shows or hides the volume toolbar."));
 

@@ -3893,7 +3893,7 @@ void KPlayerDiskTrackProperties::setupInfo (void)
 
 QString KPlayerDiskTrackProperties::icon (void) const
 {
-  return parent() -> getString ("Type") == "Audio CD" ? "sound" : "video";
+  return parent() -> getString ("Type") == "Audio CD" ? "audio-basic" : "video";
 }
 
 QString KPlayerDiskTrackProperties::deviceOption (void) const

@@ -3388,21 +3388,21 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_move_up", action);
   action -> setText (i18n("Move &Up"));
-  action -> setIcon (KIcon ("1uparrow"));
+  action -> setIcon (KIcon ("arrow-up"));
   action -> setStatusTip (i18n("Moves the selected items up in the playlist"));
   action -> setWhatsThis (i18n("Move Up command moves the selected items up in a playlist. You can also move items around by clicking and dragging them with the left mouse button."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_move_down", action);
   action -> setText (i18n("Move &Down"));
-  action -> setIcon (KIcon ("1downarrow"));
+  action -> setIcon (KIcon ("arrow-down"));
   action -> setStatusTip (i18n("Moves the selected items down in the playlist"));
   action -> setWhatsThis (i18n("Move Down command moves the selected items down in a playlist. You can also move items around by clicking and dragging them with the left mouse button."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_remove", action);
   action -> setText (i18n("Re&move"));
-  action -> setIcon (KIcon ("editdelete"));
+  action -> setIcon (KIcon ("list-remove"));
   action -> setShortcut (Qt::Key_Delete);
   action -> setStatusTip (i18n("Removes the selected items from the multimedia library"));
   action -> setWhatsThis (i18n("Remove command removes the selected items from the multimedia library."));
@@ -3413,7 +3413,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_go_back", action);
   action -> setText (i18n("&Back"));
-  action -> setIcon (KIcon ("back"));
+  action -> setIcon (KIcon ("go-previous"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Left);
   action -> setStatusTip (i18n("Opens the previous folder"));
   action -> setWhatsThis (i18n("Go back command opens the previous folder from the history."));
@@ -3421,7 +3421,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_go_forward", action);
   action -> setText (i18n("&Forward"));
-  action -> setIcon (KIcon ("forward"));
+  action -> setIcon (KIcon ("go-next"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Right);
   action -> setStatusTip (i18n("Opens the next folder"));
   action -> setWhatsThis (i18n("Go forward command opens the next folder from the history."));
@@ -3429,7 +3429,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_go_up", action);
   action -> setText (i18n("&Up"));
-  action -> setIcon (KIcon ("up"));
+  action -> setIcon (KIcon ("go-up"));
   action -> setShortcut (Qt::AltModifier + Qt::ShiftModifier + Qt::Key_Up);
   action -> setStatusTip (i18n("Opens the parent folder"));
   action -> setWhatsThis (i18n("Go up command opens the parent folder of the current folder."));
@@ -3437,7 +3437,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_go_down", action);
   action -> setText (i18n("&Down"));
-  action -> setIcon (KIcon ("down"));
+  action -> setIcon (KIcon ("go-down"));
   action -> setShortcut (Qt::AltModifier + Qt::ShiftModifier + Qt::Key_Down);
   action -> setStatusTip (i18n("Opens the selected folder"));
   action -> setWhatsThis (i18n("Go down command opens the selected folder."));

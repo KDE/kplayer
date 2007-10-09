@@ -389,7 +389,7 @@ QString KPlayerContainerNode::icon (void) const
 
 QString KPlayerContainerNode::openIcon (void) const
 {
-  return origin() ? origin() -> icon() : "folder_open";
+  return origin() ? origin() -> icon() : "folder";
 }
 
 QString KPlayerContainerNode::suggestId (void) const
@@ -1827,12 +1827,12 @@ void KPlayerGroupNode::setupSource (void)
 
 QString KPlayerGroupNode::icon (void) const
 {
-  return origin() ? origin() -> icon() : "folder_green";
+  return origin() ? origin() -> icon() : "folder-green";
 }
 
 QString KPlayerGroupNode::openIcon (void) const
 {
-  return origin() ? origin() -> icon() : "folder_green_open";
+  return origin() ? origin() -> icon() : "folder-green";
 }
 
 bool KPlayerGroupNode::isGroup (void) const
@@ -2040,12 +2040,12 @@ void KPlayerPlaylistNode::releaseOrigin (void)
 
 QString KPlayerPlaylistNode::icon (void) const
 {
-  return origin() ? origin() -> icon() : "folder_violet";
+  return origin() ? origin() -> icon() : "folder-violet";
 }
 
 QString KPlayerPlaylistNode::openIcon (void) const
 {
-  return origin() ? origin() -> icon() : "folder_violet_open";
+  return origin() ? origin() -> icon() : "folder-violet";
 }
 
 bool KPlayerPlaylistNode::canLink (KPlayerContainerNode* node) const
@@ -2132,12 +2132,12 @@ bool KPlayerNowPlayingNode::isNowPlaying (void) const
 
 QString KPlayerNowPlayingNode::icon (void) const
 {
-  return origin() ? origin() -> icon() : "folder_red";
+  return origin() ? origin() -> icon() : "folder-red";
 }
 
 QString KPlayerNowPlayingNode::openIcon (void) const
 {
-  return origin() ? origin() -> icon() : "folder_red_open";
+  return origin() ? origin() -> icon() : "folder-red";
 }
 
 void KPlayerNowPlayingNode::setupOrigin (void)
@@ -2250,12 +2250,12 @@ KPlayerContainerNode* KPlayerRecentNode::createBranch (const QString& id, KPlaye
 
 QString KPlayerRecentNode::icon (void) const
 {
-  return origin() ? origin() -> icon() : "folder_red";
+  return origin() ? origin() -> icon() : "folder-red";
 }
 
 QString KPlayerRecentNode::openIcon (void) const
 {
-  return origin() ? origin() -> icon() : "folder_red_open";
+  return origin() ? origin() -> icon() : "folder-red";
 }
 
 KPlayerRecentsNode::~KPlayerRecentsNode()
@@ -2416,12 +2416,12 @@ KPlayerContainerNode* KPlayerDevicesNode::createBranch (const QString& id, KPlay
 
 QString KPlayerDevicesNode::icon (void) const
 {
-  return "system";
+  return "computer";
 }
 
 QString KPlayerDevicesNode::openIcon (void) const
 {
-  return "system";
+  return icon();
 }
 
 bool KPlayerDevicesNode::isDevices (void) const
@@ -2761,7 +2761,7 @@ KPlayerDeviceNode::~KPlayerDeviceNode()
 
 QString KPlayerDeviceNode::icon (void) const
 {
-  return "tv";
+  return "video-television";
 }
 
 QString KPlayerDeviceNode::openIcon (void) const
@@ -2830,7 +2830,8 @@ KPlayerNode* KPlayerDiskNode::createLeaf (const QString& id)
 QString KPlayerDiskNode::icon (void) const
 {
   const QString& type (media() -> type());
-  return type == "DVD" ? "dvd_unmount" : type == "Audio CD" ? "cdaudio_unmount" : "cdrom_unmount";
+  return type == "DVD" ? "media-optical" : type == "Audio CD" ? "media-optical-audio"
+    : type.startsWith ("Data") ? "cd-data" : "cd";
 }
 
 bool KPlayerDiskNode::ready (void) const

@@ -477,7 +477,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("file_properties", action);
   connect (action, SIGNAL (triggered()), SLOT (fileProperties()));
   action -> setText (i18n("&Properties..."));
-  action -> setIcon (KIcon ("properties"));
+  action -> setIcon (KIcon ("document-properties"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Return);
   action -> setStatusTip (i18n("Opens the File Properties dialog"));
   action -> setWhatsThis (i18n("Properties command opens the File Properties dialog that lets you choose many options specific to the currently loaded file. See the File properties micro-HOWTO for details."));
@@ -486,7 +486,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("player_play", action);
   connect (action, SIGNAL (triggered()), SLOT (play()));
   action -> setText (i18n("&Play"));
-  action -> setIcon (KIcon ("player_play"));
+  action -> setIcon (KIcon ("media-playback-start"));
   action -> setShortcut (Qt::Key_Return);
   action -> setStatusTip (i18n("Plays the currently loaded file"));
   action -> setWhatsThis (i18n("Play command starts playback of the current file. If the player has been paused, this command resumes playback. This command is available when a file is loaded."));
@@ -495,7 +495,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("player_pause", action);
   connect (action, SIGNAL (triggered()), SLOT (pause()));
   action -> setText (i18n("Paus&e"));
-  action -> setIcon (KIcon ("player_pause"));
+  action -> setIcon (KIcon ("media-playback-pause"));
   action -> setShortcut (Qt::Key_Space);
   action -> setStatusTip (i18n("Pauses the player"));
   action -> setWhatsThis (i18n("Pause command pauses or resumes playback of the current file. This command is available when the player is not idle."));
@@ -504,7 +504,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("player_stop", action);
   connect (action, SIGNAL (triggered()), SLOT (stop()));
   action -> setText (i18n("&Stop"));
-  action -> setIcon (KIcon ("player_stop"));
+  action -> setIcon (KIcon ("media-playback-stop"));
   action -> setShortcut (Qt::Key_Escape);
   action -> setStatusTip (i18n("Stops the player"));
   action -> setWhatsThis (i18n("Stop command stops playback of the current file. This command is available when the player is not idle."));
@@ -521,7 +521,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("player_fast_forward", action);
   connect (action, SIGNAL (triggered()), SLOT (fastForward()));
   action -> setText (i18n("F&ast Forward"));
-  action -> setIcon (KIcon ("player_fwd"));
+  action -> setIcon (KIcon ("media-seek-forward"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_Right);
   action -> setStatusTip (i18n("Moves playback forward fast"));
   action -> setWhatsThis (i18n("Fast Forward command moves playback forward by ten percent of the time length of the current file. This command is available when playing a file."));
@@ -538,7 +538,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("player_fast_backward", action);
   connect (action, SIGNAL (triggered()), SLOT (fastBackward()));
   action -> setText (i18n("Fast Back&ward"));
-  action -> setIcon (KIcon ("player_rew"));
+  action -> setIcon (KIcon ("media-seek-backward"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_Left);
   action -> setStatusTip (i18n("Moves playback backward fast"));
   action -> setWhatsThis (i18n("Fast Backward command moves playback backward by ten percent of the time length of the current file. This command is available when playing a file."));
@@ -547,6 +547,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("player_start", action);
   connect (action, SIGNAL (triggered()), SLOT (start()));
   action -> setText (i18n("Back &to Start"));
+  action -> setIcon (KIcon ("media-skip-backward"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_Home);
   action -> setStatusTip (i18n("Moves playback to the beginning"));
   action -> setWhatsThis (i18n("Back to Start command moves playback to the beginning of the current file. This command is available when playing a file."));
@@ -571,7 +572,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("audio_mute", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (mute()));
   toggle -> setText (i18n("&Mute"));
-  toggle -> setIcon (KIcon ("mute"));
+  toggle -> setIcon (KIcon ("audio-volume-muted"));
   toggle -> setShortcut (Qt::ControlModifier + Qt::Key_Backslash);
   toggle -> setStatusTip (i18n("Turns the sound on/off"));
   toggle -> setWhatsThis (i18n("Mute command turns the sound on or off."));
@@ -582,7 +583,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("view_maintain_aspect", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (maintainAspect()));
   toggle -> setText (i18n("Maintain &Aspect"));
-  toggle -> setIcon (KIcon ("viewmagfit"));
+  toggle -> setIcon (KIcon ("zoom-best-fit"));
   toggle -> setShortcut (Qt::ControlModifier + Qt::Key_A);
   toggle -> setStatusTip (i18n("Maintains the video aspect ratio"));
   toggle -> setWhatsThis (i18n("Maintain Aspect command toggles the option to maintain the video aspect ratio."));
@@ -610,7 +611,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("popup_volume", psa);
   connect (psa -> slider(), SIGNAL (changed (int)), SLOT (volumeChanged (int)));
   psa -> setText (i18n("Volume"));
-  psa -> setIcon (KIcon ("volume"));
+  psa -> setIcon (KIcon ("player-volume"));
   psa -> setShortcut (Qt::Key_F9);
   psa -> setStatusTip (i18n("Shows the volume popup slider"));
   psa -> setWhatsThis (i18n("Volume button displays a slider that shows the current sound volume level and allows you to change it."));
@@ -635,7 +636,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("view_full_screen", action);
   connect (action, SIGNAL (triggered()), SLOT (fullScreen()));
   action -> setText (i18n("&Full Screen"));
-  action -> setIcon (KIcon ("window_fullscreen"));
+  action -> setIcon (KIcon ("view-fullscreen"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_F);
   action -> setStatusTip (i18n("Switches to full screen mode"));
   action -> setWhatsThis (i18n("Full Screen command switches to full screen video display and back to normal mode."));
@@ -744,7 +745,6 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("audio_delay_up", action);
   connect (action, SIGNAL (triggered()), SLOT (audioDelayIncrease()));
   action -> setText (i18n("I&ncrease Delay"));
-  action -> setIcon (KIcon ());
   action -> setShortcut (Qt::ControlModifier + Qt::Key_BracketLeft);
   action -> setStatusTip (i18n("Increases audio delay"));
   action -> setWhatsThis (i18n("Increase Delay command increases the delay of sound relative to video."));
@@ -753,7 +753,6 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("audio_delay_down", action);
   connect (action, SIGNAL (triggered()), SLOT (audioDelayDecrease()));
   action -> setText (i18n("D&ecrease Delay"));
-  action -> setIcon (KIcon ());
   action -> setShortcut (Qt::ControlModifier + Qt::Key_BracketRight);
   action -> setStatusTip (i18n("Decreases audio delay"));
   action -> setWhatsThis (i18n("Decrease Delay command decreases the delay of sound relative to video."));

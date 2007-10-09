@@ -55,7 +55,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   actionCollection() -> addAction ("file_open_url", action);
   connect (action, SIGNAL (triggered()), SLOT (filePlayUrl()));
   action -> setText (i18n("Play &URL..."));
-  action -> setIcon (KIcon ("fileopenurl"));
+  action -> setIcon (KIcon ("images-display"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_U);
   action -> setStatusTip (i18n("Plays a URL"));
   action -> setWhatsThis (i18n("Play URL command displays the standard URL dialog and lets you type or paste in a URL to put on the playlist and start playing. The URL can be a remote network location, a local file path, or a KDE I/O Slave URL."));
@@ -77,7 +77,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   actionCollection() -> addAction ("player_next", action);
   connect (action, SIGNAL (triggered()), SLOT (next()));
   action -> setText (i18n("&Next"));
-  action -> setIcon (KIcon ("1rightarrow"));
+  action -> setIcon (KIcon ("arrow-right-double"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Down);
   action -> setStatusTip (i18n("Plays the next item on the playlist"));
   action -> setWhatsThis (i18n("Next command starts playing the next item on the current playlist."));
@@ -86,7 +86,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   actionCollection() -> addAction ("player_previous", action);
   connect (action, SIGNAL (triggered()), SLOT (previous()));
   action -> setText (i18n("P&revious"));
-  action -> setIcon (KIcon ("1leftarrow"));
+  action -> setIcon (KIcon ("arrow-left-double"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Up);
   action -> setStatusTip (i18n("Plays the previous item on the playlist"));
   action -> setWhatsThis (i18n("Previous command starts playing the previous item on the current playlist."));
