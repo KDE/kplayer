@@ -75,7 +75,7 @@ KPlayerPopupSliderAction::KPlayerPopupSliderAction (QObject* parent)
 #ifdef DEBUG_KPLAYER_SLIDERS
   kdDebugTime() << "Popup slider size " << m_slider -> width() << "x" << m_slider -> height() << "\n";
 #endif
-  connect (this, SIGNAL (triggered()), SLOT (slotActivated()));
+  connect (this, SIGNAL (triggered()), SLOT (popUpSlider()));
 }
 
 KPlayerPopupSliderAction::~KPlayerPopupSliderAction()
@@ -85,7 +85,7 @@ KPlayerPopupSliderAction::~KPlayerPopupSliderAction()
 #endif
 }
 
-void KPlayerPopupSliderAction::slotActivated (void)
+void KPlayerPopupSliderAction::popUpSlider (void)
 {
   QWidget* button = defaultWidget();
 #ifdef DEBUG_KPLAYER_SLIDERS
@@ -163,38 +163,24 @@ KPlayerSliderAction::~KPlayerSliderAction()
 #endif
 }
 
-/*int KPlayerSliderAction::plug (QWidget* widget, int index)
+QWidget* KPlayerSliderAction::createWidget (QWidget* parent)
 {
-  int result = K3WidgetAction::plug (widget, index);
-  if ( result < 0 )
-    return result;
-  KToolBar* toolbar = (KToolBar*) widget;
-  if ( ! text().isEmpty() )
-    QToolTip::add (slider(), text());
-  orientationChanged (toolbar -> orientation());
-  connect (toolbar, SIGNAL (orientationChanged (Orientation)), this, SLOT (orientationChanged (Orientation)));
-  return result;
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "KPlayerSliderAction::createWidget\n";
+#endif
+  disconnect (slider() -> parent(), SIGNAL (orientationChanged (Qt::Orientation)),
+    slider(), SLOT (parentOrientationChanged (Qt::Orientation)));
+  connect (parent, SIGNAL (orientationChanged (Qt::Orientation)),
+    slider(), SLOT (parentOrientationChanged (Qt::Orientation)));
+  return QWidgetAction::createWidget (parent);
 }
-
-void KPlayerSliderAction::unplug (QWidget* widget)
-{
-  K3WidgetAction::unplug (widget);
-  if ( ! slider() || ! isPlugged() || widget != slider() -> parent() )
-    return;
-  disconnect (widget, SIGNAL (orientationChanged (Orientation)), this, SLOT (orientationChanged (Orientation)));
-}
-
-void KPlayerSliderAction::orientationChanged (Qt::Orientation orientation)
-{
-  if ( slider() )
-    slider() -> setOrientation (orientation);
-}*/
 
 KPlayerSlider::KPlayerSlider (Qt::Orientation orientation, QWidget* parent)
   : QSlider (orientation, parent)
 {
-  m_dragging = m_changing_orientation = false;
-  connect (this, SIGNAL (valueChanged (int)), SLOT (sliderValueChanged (int)));
+  //m_dragging = false;
+  //m_changing_orientation = false;
+  //connect (this, SIGNAL (valueChanged (int)), SLOT (sliderValueChanged (int)));
 }
 
 KPlayerSlider::~KPlayerSlider()
@@ -202,6 +188,14 @@ KPlayerSlider::~KPlayerSlider()
 #ifdef DEBUG_KPLAYER_SLIDERS
   kdDebugTime() << "KPlayerSlider destroyed\n";
 #endif
+}
+
+void KPlayerSlider::parentOrientationChanged (Qt::Orientation orientation)
+{
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "KPlayerSlider orientation changed to " << orientation << "\n";
+#endif
+  setOrientation (orientation);
 }
 
 QSize KPlayerSlider::sizeHint() const
@@ -256,6 +250,7 @@ QSize KPlayerSlider::minimumSizeHint() const
   return hint;
 }
 
+/*
 void KPlayerSlider::setOrientation (Qt::Orientation o)
 {
   if ( o == orientation() )
@@ -315,6 +310,7 @@ void KPlayerSlider::setValue (int value)
   else
     QSlider::setValue (- value);
 }
+*/
 
 void KPlayerSlider::setup (int minimum, int maximum, int value,
   bool tickMarks, int tickInterval, int pageStep, int singleStep)
@@ -329,6 +325,7 @@ void KPlayerSlider::setup (int minimum, int maximum, int value,
   updateGeometry();
 }
 
+/*
 void KPlayerSlider::sliderValueChanged (int)
 {
   if ( ! m_changing_orientation )
@@ -352,6 +349,7 @@ void KPlayerSlider::mouseReleaseEvent (QMouseEvent* event)
 #endif
   QSlider::mouseReleaseEvent (event);
 }
+*/
 
 void KPlayerSlider::keyPressEvent (QKeyEvent* event)
 {

@@ -38,6 +38,7 @@ public:
   /** The minimum size hint. */
   virtual QSize minimumSizeHint() const;
 
+#if 0
   /** The minimum value. */
   int minValue (void) const;
   /** Sets the minimum value. */
@@ -50,46 +51,32 @@ public:
   int value (void) const;
   /** Sets the current value. */
   void setValue (int);
+#endif
 
   /** Sets up the slider by setting all options in one go. */
   void setup (int minValue, int maxValue, int value, bool tickMarks, int tickInterval, int pageStep, int lineStep);
-  /** Sets the slider orientation. */
-  virtual void setOrientation (Qt::Orientation);
-
-  /** Returns the dragging state. */
-  bool dragging (void)
-    { return m_dragging; }
-
-signals:
-  /** Emitted when the slider value changes. */
-  void changed (int);
 
 protected slots:
   /** Receives the valueChanged signal from QSlider. */
-  void sliderValueChanged (int);
-  /** Keeps track of dragging state. */
-  //void sliderThumbPressed (void);
-  /** Keeps track of dragging state. */
-  //void sliderThumbReleased (void);
+  //void sliderValueChanged (int);
+  /** Changes the slider orientation when the toolbar orientation changes. */
+  void parentOrientationChanged (Qt::Orientation);
 
 protected:
   /** Filters keystrokes. */
   virtual void keyPressEvent (QKeyEvent*);
   /** Remember mouse button state. */
-  virtual void mousePressEvent (QMouseEvent*);
+  //virtual void mousePressEvent (QMouseEvent*);
   /** Remember mouse button state. */
-  virtual void mouseReleaseEvent (QMouseEvent*);
+  //virtual void mouseReleaseEvent (QMouseEvent*);
   /** Processes the wheel event. Reverses direction when the slider is horizontal. */
   virtual void wheelEvent (QWheelEvent*);
 
   /** Dragging state. */
-  bool m_dragging;
+  //bool m_dragging;
 
   // Recursion prevention. Should be private.
-  bool m_changing_orientation;
-
-  friend class KPlayerSliderAction;
-  friend class KPlayerPopupSliderAction;
+  //bool m_changing_orientation;
 };
 
 /**KPlayer popup frame.
@@ -129,7 +116,7 @@ public:
 
 protected slots:
   /** Pops up the slider. */
-  virtual void slotActivated (void);
+  void popUpSlider (void);
 
 protected:
   /** The slider. */
@@ -154,16 +141,10 @@ public:
   /** Returns a pointer to the KPlayerSlider object. */
   KPlayerSlider* slider (void)
     { return (KPlayerSlider*) defaultWidget(); }
-#if 0
-  /** Plugs the slider into the toolbar. */
-  virtual int plug (QWidget* widget, int index = -1);
-  /** Unplugs the slider from the toolbar. */
-  virtual void unplug (QWidget* widget);
 
-protected slots:
-  /** Changes the slider orientation when the toolbar orientation changes. */
-  void orientationChanged (Qt::Orientation);
-#endif
+protected:
+  /** Creates and sets up a new slider. */
+  virtual QWidget* createWidget (QWidget* parent);
 };
 
 #endif

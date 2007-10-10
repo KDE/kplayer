@@ -593,7 +593,7 @@ void KPlayerEngine::setupActions (void)
   m_updating = true;
   KPlayerSliderAction* sa = new KPlayerSliderAction (actionCollection());
   actionCollection() -> addAction ("player_progress", sa);
-  connect (sa -> slider(), SIGNAL (changed (int)), SLOT (progressChanged (int)));
+  connect (sa -> slider(), SIGNAL (valueChanged (int)), SLOT (progressChanged (int)));
   sa -> setText (i18n("Progress"));
   sa -> slider() -> setup (0, 0, 0, configuration() -> showSliderMarks(), 0, 0, 0);
   sa -> setStatusTip (i18n("Shows player progress and allows seeking"));
@@ -602,14 +602,14 @@ void KPlayerEngine::setupActions (void)
 
   sa = new KPlayerSliderAction (actionCollection());
   actionCollection() -> addAction ("audio_volume", sa);
-  connect (sa -> slider(), SIGNAL (changed (int)), SLOT (volumeChanged (int)));
+  connect (sa -> slider(), SIGNAL (valueChanged (int)), SLOT (volumeChanged (int)));
   sa -> setText (i18n("Volume"));
   sa -> setStatusTip (i18n("Changes volume level"));
   sa -> setWhatsThis (i18n("Volume slider shows the current sound volume level and allows you to change it."));
 
   KPlayerPopupSliderAction* psa = new KPlayerPopupSliderAction (actionCollection());
   actionCollection() -> addAction ("popup_volume", psa);
-  connect (psa -> slider(), SIGNAL (changed (int)), SLOT (volumeChanged (int)));
+  connect (psa -> slider(), SIGNAL (valueChanged (int)), SLOT (volumeChanged (int)));
   psa -> setText (i18n("Volume"));
   psa -> setIcon (KIcon ("player-volume"));
   psa -> setShortcut (Qt::Key_F9);
@@ -823,35 +823,35 @@ void KPlayerEngine::setupActions (void)
 
   sa = new KPlayerSliderAction (actionCollection());
   actionCollection() -> addAction ("video_contrast", sa);
-  connect (sa -> slider(), SIGNAL (changed (int)), SLOT (contrastChanged (int)));
+  connect (sa -> slider(), SIGNAL (valueChanged (int)), SLOT (contrastChanged (int)));
   sa -> setText (i18n("Contrast"));
   sa -> setStatusTip (i18n("Changes contrast level"));
   sa -> setWhatsThis (i18n("Contrast slider shows the current video contrast level and allows you to change it."));
 
   sa = new KPlayerSliderAction (actionCollection());
   actionCollection() -> addAction ("video_brightness", sa);
-  connect (sa -> slider(), SIGNAL (changed (int)), SLOT (brightnessChanged (int)));
+  connect (sa -> slider(), SIGNAL (valueChanged (int)), SLOT (brightnessChanged (int)));
   sa -> setText (i18n("Brightness"));
   sa -> setStatusTip (i18n("Changes brightness level"));
   sa -> setWhatsThis (i18n("Brightness slider shows the current video brightness level and allows you to change it."));
 
   sa = new KPlayerSliderAction (actionCollection());
   actionCollection() -> addAction ("video_hue", sa);
-  connect (sa -> slider(), SIGNAL (changed (int)), SLOT (hueChanged (int)));
+  connect (sa -> slider(), SIGNAL (valueChanged (int)), SLOT (hueChanged (int)));
   sa -> setText (i18n("Hue"));
   sa -> setStatusTip (i18n("Changes hue level"));
   sa -> setWhatsThis (i18n("Hue slider shows the current video hue level and allows you to change it."));
 
   sa = new KPlayerSliderAction (actionCollection());
   actionCollection() -> addAction ("video_saturation", sa);
-  connect (sa -> slider(), SIGNAL (changed (int)), SLOT (saturationChanged (int)));
+  connect (sa -> slider(), SIGNAL (valueChanged (int)), SLOT (saturationChanged (int)));
   sa -> setText (i18n("Saturation"));
   sa -> setStatusTip (i18n("Changes saturation level"));
   sa -> setWhatsThis (i18n("Saturation slider shows the current video saturation level and allows you to change it."));
 
   psa = new KPlayerPopupSliderAction (actionCollection());
   actionCollection() -> addAction ("popup_contrast", psa);
-  connect (psa -> slider(), SIGNAL (changed (int)), SLOT (contrastChanged (int)));
+  connect (psa -> slider(), SIGNAL (valueChanged (int)), SLOT (contrastChanged (int)));
   psa -> setText (i18n("Contrast"));
   psa -> setIcon (KIcon ("contrast"));
   psa -> setShortcut (Qt::Key_F5);
@@ -860,7 +860,7 @@ void KPlayerEngine::setupActions (void)
 
   psa = new KPlayerPopupSliderAction (actionCollection());
   actionCollection() -> addAction ("popup_brightness", psa);
-  connect (psa -> slider(), SIGNAL (changed (int)), SLOT (brightnessChanged (int)));
+  connect (psa -> slider(), SIGNAL (valueChanged (int)), SLOT (brightnessChanged (int)));
   psa -> setText (i18n("Brightness"));
   psa -> setIcon (KIcon ("brightness"));
   psa -> setShortcut (Qt::Key_F6);
@@ -869,7 +869,7 @@ void KPlayerEngine::setupActions (void)
 
   psa = new KPlayerPopupSliderAction (actionCollection());
   actionCollection() -> addAction ("popup_hue", psa);
-  connect (psa -> slider(), SIGNAL (changed (int)), SLOT (hueChanged (int)));
+  connect (psa -> slider(), SIGNAL (valueChanged (int)), SLOT (hueChanged (int)));
   psa -> setText (i18n("Hue"));
   psa -> setIcon (KIcon ("hue"));
   psa -> setShortcut (Qt::Key_F7);
@@ -878,7 +878,7 @@ void KPlayerEngine::setupActions (void)
 
   psa = new KPlayerPopupSliderAction (actionCollection());
   actionCollection() -> addAction ("popup_saturation", psa);
-  connect (psa -> slider(), SIGNAL (changed (int)), SLOT (saturationChanged (int)));
+  connect (psa -> slider(), SIGNAL (valueChanged (int)), SLOT (saturationChanged (int)));
   psa -> setText (i18n("Saturation"));
   psa -> setIcon (KIcon ("saturation"));
   psa -> setShortcut (Qt::Key_F8);
@@ -1021,7 +1021,7 @@ void KPlayerEngine::refreshSettings (void)
 #ifdef DEBUG_KPLAYER_ENGINE
     kdDebugTime() << "  Length " << properties() -> length() << "\n";
 #endif
-    setupProgressSlider (sliderAction ("player_progress") -> slider() -> maxValue());
+    setupProgressSlider (sliderAction ("player_progress") -> slider() -> maximum());
   }
   m_updating = false;
   value = settings() -> frameDrop();
@@ -1144,14 +1144,14 @@ void KPlayerEngine::playerProgressChanged (float progress, KPlayerProcess::Progr
   if ( ! actionCollection() || type != KPlayerProcess::Position )
     return;
   KPlayerSlider* slider = sliderAction ("player_progress") -> slider();
-  if ( slider -> dragging() )
+  if ( slider -> isSliderDown() )
     return;
   m_updating = true;
-  int maxValue = slider -> maxValue();
-  if ( maxValue )
+  int maximum = slider -> maximum();
+  if ( maximum )
   {
     int value = int (progress * m_progress_factor + 0.5);
-    if ( value > maxValue )
+    if ( value > maximum )
       setupProgressSlider (value);
     slider -> setValue (value);
   }
@@ -1232,11 +1232,14 @@ void KPlayerEngine::enablePlayerActions (void)
   busy = busy && properties() -> hasLength();
   if ( ! busy )
   {
-    QMouseEvent me1 (QEvent::MouseButtonRelease, QPoint (0, 0), QPoint (0, 0), Qt::LeftButton,
-      Qt::LeftButton, settings() -> shift() ? Qt::ShiftModifier : Qt::NoModifier);
+    Qt::KeyboardModifiers modifiers = Qt::NoModifier;
+    if ( settings() -> shift() )
+      modifiers |= Qt::ShiftModifier;
+    if ( settings() -> control() )
+      modifiers |= Qt::ControlModifier;
+    QMouseEvent me1 (QEvent::MouseButtonRelease, QPoint (0, 0), QPoint (0, 0), Qt::LeftButton, Qt::NoButton, modifiers);
     QApplication::sendEvent (sliderAction ("player_progress") -> slider(), &me1);
-    QMouseEvent me2 (QEvent::MouseButtonRelease, QPoint (0, 0), QPoint (0, 0), Qt::MidButton,
-      Qt::MidButton, settings() -> shift() ? Qt::ShiftModifier : Qt::NoModifier);
+    QMouseEvent me2 (QEvent::MouseButtonRelease, QPoint (0, 0), QPoint (0, 0), Qt::MidButton, Qt::NoButton, modifiers);
     QApplication::sendEvent (sliderAction ("player_progress") -> slider(), &me2);
   }
   sliderAction ("player_progress") -> slider() -> setEnabled (busy);
