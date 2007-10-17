@@ -1,7 +1,8 @@
 [Desktop Entry]
 ServiceTypes=inode/directory
 Actions=AddToPlaylists;AddToCollection
-Encoding=UTF8
+Encoding=UTF-8
+Type=Service
 
 [Desktop Action AddToPlaylists]
 Name=Add to playlists
