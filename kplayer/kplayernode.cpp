@@ -2386,7 +2386,7 @@ void KPlayerDevicesNode::setupSource (void)
   connect (&m_watch, SIGNAL (dirty (const QString&)), SLOT (dirty (const QString&)));
   connect (&m_lister, SIGNAL (completed()), SLOT (completed()));
   connect (&m_lister, SIGNAL (newItems (const KFileItemList&)), SLOT (refresh (const KFileItemList&)));
-  connect (&m_lister, SIGNAL (deleteItem (KFileItem*)), SLOT (removed (KFileItem*)));
+  connect (&m_lister, SIGNAL (deleteItem (const KFileItem&)), SLOT (removed (const KFileItem&)));
   QStringList mimetypes;
   mimetypes.append ("media/audiocd");
   mimetypes.append ("media/cdrom_mounted");
@@ -2633,32 +2633,32 @@ void KPlayerDevicesNode::completed (void)
   m_complete = true;
 }
 
-void KPlayerDevicesNode::refreshItem (KFileItem* item)
+void KPlayerDevicesNode::refreshItem (const KFileItem& item)
 {
-  QString path ("/dev" + item -> url().path());
+  QString path ("/dev" + item.url().path());
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDevicesNode::refreshItem\n";
-  kdDebugTime() << " Item   " << item -> url().url() << "\n";
-  kdDebugTime() << " Type   " << item -> mimetype() << "\n";
-  kdDebugTime() << " Text   " << item -> text() << "\n";
-  kdDebugTime() << " Name   " << item -> name() << "\n";
-  kdDebugTime() << " Local  " << item -> entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH) << "\n";
-  kdDebugTime() << " Comment " << item -> mimeComment() << "\n";
-  kdDebugTime() << " Icon   " << item -> iconName() << "\n";
-  kdDebugTime() << " URL    " << item -> url().url() << "\n";
-  kdDebugTime() << " Permissions " << item -> permissions() << "\n";
-  kdDebugTime() << " Mode   " << item -> mode() << "\n";
-  kdDebugTime() << " User   " << item -> user() << "\n";
-  kdDebugTime() << " Group  " << item -> group() << "\n";
-  kdDebugTime() << " Size   " << item -> size() << "\n";
-  kdDebugTime() << " Status " << item -> getStatusBarInfo() << "\n";
-  kdDebugTime() << " Marked " << item -> isMarked() << "\n";
+  kdDebugTime() << " Item   " << item.url().url() << "\n";
+  kdDebugTime() << " Type   " << item.mimetype() << "\n";
+  kdDebugTime() << " Text   " << item.text() << "\n";
+  kdDebugTime() << " Name   " << item.name() << "\n";
+  kdDebugTime() << " Local  " << item.entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH) << "\n";
+  kdDebugTime() << " Comment " << item.mimeComment() << "\n";
+  kdDebugTime() << " Icon   " << item.iconName() << "\n";
+  kdDebugTime() << " URL    " << item.url().url() << "\n";
+  kdDebugTime() << " Permissions " << item.permissions() << "\n";
+  kdDebugTime() << " Mode   " << item.mode() << "\n";
+  kdDebugTime() << " User   " << item.user() << "\n";
+  kdDebugTime() << " Group  " << item.group() << "\n";
+  kdDebugTime() << " Size   " << item.size() << "\n";
+  kdDebugTime() << " Status " << item.getStatusBarInfo() << "\n";
+  kdDebugTime() << " Marked " << item.isMarked() << "\n";
   kdDebugTime() << " Path   " << path << "\n";
 #endif
-  QString type (item -> mimetype() == "media/audiocd" ? I18N_NOOP("Audio CD")
-    : item -> mimetype() == "media/dvdvideo" ? "DVD"
-    : item -> mimetype() == "media/svcd" || item -> mimetype() == "media/vcd" ? I18N_NOOP("Video CD")
-    : item -> mimetype().startsWith ("media/dvd") ? I18N_NOOP("Data DVD") : I18N_NOOP("Data CD"));
+  QString type (item.mimetype() == "media/audiocd" ? I18N_NOOP("Audio CD")
+    : item.mimetype() == "media/dvdvideo" ? "DVD"
+    : item.mimetype() == "media/svcd" || item.mimetype() == "media/vcd" ? I18N_NOOP("Video CD")
+    : item.mimetype().startsWith ("media/dvd") ? I18N_NOOP("Data DVD") : I18N_NOOP("Data CD"));
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << " Type   " << type << "\n";
 #endif
@@ -2667,10 +2667,10 @@ void KPlayerDevicesNode::refreshItem (KFileItem* item)
   if ( node && node -> diskDevice() )
   {
     KPlayerDiskNode* disk = (KPlayerDiskNode*) node;
-    disk -> diskInserted (item -> entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH));
+    disk -> diskInserted (item.entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH));
     /*if ( type == "DVD" )
     {
-      QString name (item -> name());
+      QString name (item.name());
 #ifdef DEBUG_KPLAYER_NODE
       kdDebugTime() << " Name   " << name << "\n";
 #endif
@@ -2711,25 +2711,22 @@ void KPlayerDevicesNode::refresh (const KFileItemList& items)
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDevicesNode::refresh\n";
 #endif
-   KFileItem item;
-   for (int i = 0; i < items.size(); ++i){
-    item = items.at(i);
-    refreshItem(&item);
-   }
+  for ( KFileItemList::ConstIterator iterator (items.begin()); iterator != items.end(); ++ iterator )
+    refreshItem (*iterator);
 }
 
-void KPlayerDevicesNode::removed (KFileItem* item)
+void KPlayerDevicesNode::removed (const KFileItem& item)
 {
-  QString path ("/dev" + item -> url().path());
+  QString path ("/dev" + item.url().path());
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDevicesNode::removed\n";
-  kdDebugTime() << " Item   " << item -> url().url() << "\n";
-  kdDebugTime() << " Type   " << item -> mimetype() << "\n";
-  kdDebugTime() << " Text   " << item -> text() << "\n";
-  kdDebugTime() << " Name   " << item -> name() << "\n";
-  kdDebugTime() << " Local  " << item -> entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH) << "\n";
-  kdDebugTime() << " Comment " << item -> mimeComment() << "\n";
-  kdDebugTime() << " Icon   " << item -> iconName() << "\n";
+  kdDebugTime() << " Item   " << item.url().url() << "\n";
+  kdDebugTime() << " Type   " << item.mimetype() << "\n";
+  kdDebugTime() << " Text   " << item.text() << "\n";
+  kdDebugTime() << " Name   " << item.name() << "\n";
+  kdDebugTime() << " Local  " << item.entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH) << "\n";
+  kdDebugTime() << " Comment " << item.mimeComment() << "\n";
+  kdDebugTime() << " Icon   " << item.iconName() << "\n";
   kdDebugTime() << " Path   " << path << "\n";
 #endif
   m_disk_types.remove (path);
@@ -3058,7 +3055,7 @@ void KPlayerDiskNode::pathResult (KIO::Job* job)
   {
     KFileItem item (((KIO::StatJob*) job) -> statResult(), "media:/" + url().fileName());
     if ( ! item.entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH).isEmpty() )
-      parent() -> refreshItem (&item);
+      parent() -> refreshItem (item);
   }
 }
 
@@ -3293,7 +3290,7 @@ void KPlayerDiskNode::statResult (KIO::Job* job)
   {
     KFileItem item (((KIO::StatJob*) job) -> statResult(), "media:/" + url().fileName());
     if ( ! item.entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH).isEmpty() )
-      parent() -> refreshItem (&item);
+      parent() -> refreshItem (item);
   }
   if ( dataDisk() )
   {

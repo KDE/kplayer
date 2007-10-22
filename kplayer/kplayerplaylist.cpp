@@ -938,19 +938,20 @@ KPlayerPlaylistCombobox::KPlayerPlaylistCombobox (QWidget* parent)
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "Creating playlist combobox\n";
 #endif
+  setSizePolicy (QSizePolicy (QSizePolicy::Expanding, QSizePolicy::Fixed, QSizePolicy::ComboBox));
 }
 
 QSize KPlayerPlaylistCombobox::sizeHint() const
 {
   QSize hint = QComboBox::sizeHint();
-  hint.setWidth (configuration() -> preferredSliderLength());
+  //hint.setWidth (configuration() -> preferredSliderLength());
   return hint;
 }
 
 QSize KPlayerPlaylistCombobox::minimumSizeHint() const
 {
   QSize hint = QComboBox::minimumSizeHint();
-  hint.setWidth (configuration() -> minimumSliderLength());
+  //hint.setWidth (configuration() -> minimumSliderLength());
   return hint;
 }
 

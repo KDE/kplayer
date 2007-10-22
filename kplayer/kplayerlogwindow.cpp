@@ -31,6 +31,7 @@
 KPlayerLogWindow::KPlayerLogWindow (KActionCollection* ac, QWidget* parent)
   : QDockWidget (parent)
 {
+  setObjectName ("log");
   setWidget (new KPlayerLogWidget (ac, this));
   //setResizeEnabled (true);
   //setCloseMode (QDockWidget::Always);
@@ -63,16 +64,6 @@ void KPlayerLogWindow::setError (bool flag)
 #endif
   }
   logWidget() -> setError (flag);
-}
-
-void KPlayerLogWindow::hideEvent (QHideEvent* event)
-{
-#ifdef DEBUG_KPLAYER_LOG
-  kdDebugTime() << "Log::hideEvent\n";
-#endif
-  QDockWidget::hideEvent (event);
-  if ( isHidden() ) // || ! event -> spontaneous() )
-    emit windowHidden();
 }
 
 KPlayerLogWidget::KPlayerLogWidget (KActionCollection* ac, QWidget* parent)

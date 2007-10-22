@@ -99,12 +99,6 @@ public:
     { return ((KPlayerLogWidget*) widget()) -> hasError(); }
   /** Sets an error condition. */
   void setError (bool);
-
-protected:
-  virtual void hideEvent (QHideEvent*);
-
-signals:
-  void windowHidden (void);
 };
 
 #endif

@@ -3481,6 +3481,8 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
     ki18n("Go to %1 command opens the corresponding folder in the library window."), this, "library_history");
   connect (historyActionList(), SIGNAL (activated (int)), treeView(), SLOT (goToHistory (int)));
 
+  connect (parent, SIGNAL (visibilityChanged (bool)), SLOT (parentVisibilityChanged (bool)));
+
   m_last_view = m_tree;
 }
 
@@ -3621,9 +3623,16 @@ void KPlayerLibrary::editPlaylist (void)
   open (treeView() -> playlist() -> nowplaying());
 }
 
+void KPlayerLibrary::parentVisibilityChanged (bool visible)
+{
+  if ( ! visible )
+    disconnectActions();
+}
+
 KPlayerLibraryWindow::KPlayerLibraryWindow (KActionCollection* ac, KPlayerPlaylist* playlist, QWidget* parent)
   : QDockWidget (parent)
 {
+  setObjectName ("library");
   setWidget (new KPlayerLibrary (ac, playlist, this));
   //setResizeEnabled (true);
   //setCloseMode (QDockWidget::Always);
@@ -3637,12 +3646,4 @@ KPlayerLibraryWindow::KPlayerLibraryWindow (KActionCollection* ac, KPlayerPlayli
 void KPlayerLibraryWindow::setFocus (void)
 {
   library() -> setFocus();
-}
-
-void KPlayerLibraryWindow::hideEvent (QHideEvent* event)
-{
-  QDockWidget::hideEvent (event);
-  library() -> disconnectActions();
-  if ( isHidden() )
-    emit windowHidden();
 }

@@ -15,16 +15,17 @@
 
 #include <kapplication.h>
 #include <ktoolbar.h>
-#include <qdesktopwidget.h>
-
+#include <qbytearray.h>
 #include <qcursor.h>
+#include <qdesktopwidget.h>
 #include <qevent.h>
 #include <qlayout.h>
-#include <qtooltip.h>
+#include <qstyle.h>
+#include <qtoolbutton.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SLIDERS
-#define DEBUG_KPLAYER_SLIDER_HINTS
+//#define DEBUG_KPLAYER_SLIDER_HINTS
 #endif
 
 #include "kplayerslideraction.h"
@@ -38,7 +39,11 @@ KPlayerPopupFrame::KPlayerPopupFrame (QWidget* parent)
 #ifdef DEBUG_KPLAYER_SLIDERS
   kdDebugTime() << "KPlayerPopupFrame created\n";
 #endif
+  setFrameStyle (QFrame::Panel);
+  setFrameShadow (QFrame::Raised);
+  setLineWidth (2);
   setLayout (new QHBoxLayout);
+  layout() -> setContentsMargins (0, 0, 0, 0);
 }
 
 KPlayerPopupFrame::~KPlayerPopupFrame()
@@ -65,87 +70,88 @@ KPlayerPopupSliderAction::KPlayerPopupSliderAction (QObject* parent)
   : KAction (parent)
 {
   m_frame = new KPlayerPopupFrame;
-  m_frame -> setFrameStyle (QFrame::StyledPanel);
-  m_frame -> setFrameShadow (QFrame::Raised);
-  m_frame -> setLineWidth (2);
-  m_slider = new KPlayerSlider (Qt::Vertical);
+  m_slider = new KPlayerSlider (Qt::Vertical, m_frame);
   m_frame -> layout() -> addWidget (m_slider);
-  m_frame -> resize (36, m_slider -> sizeHint().height() + 4);
-  m_slider -> setGeometry (m_frame -> contentsRect());
-#ifdef DEBUG_KPLAYER_SLIDERS
-  kdDebugTime() << "Popup slider size " << m_slider -> width() << "x" << m_slider -> height() << "\n";
-#endif
-  connect (this, SIGNAL (triggered()), SLOT (popUpSlider()));
+  m_frame -> resize (32, 200);
+  connect (this, SIGNAL (triggered()), SLOT (showSlider()));
 }
 
 KPlayerPopupSliderAction::~KPlayerPopupSliderAction()
 {
+  delete m_frame;
 #ifdef DEBUG_KPLAYER_SLIDERS
   kdDebugTime() << "KPlayerPopupSliderAction destroyed\n";
 #endif
 }
 
-void KPlayerPopupSliderAction::popUpSlider (void)
+QWidget* KPlayerPopupSliderAction::createWidget (QWidget* parent)
 {
-  QWidget* button = defaultWidget();
 #ifdef DEBUG_KPLAYER_SLIDERS
-  if ( sender() )
-    kdDebugTime() << "Sender class name: " << sender() -> metaObject() -> className() << "\n";
-  if ( defaultWidget() )
-    kdDebugTime() << "Widget class name: " << defaultWidget() -> metaObject() -> className() << "\n";
+  kdDebugTime() << "KPlayerPopupSliderAction::createWidget\n";
 #endif
-  /*if ( sender() && sender() -> inherits ("KToolBarButton") )
-    button = (QWidget*) sender();
-  else
+  if ( parent && parent -> inherits ("QToolBar") )
   {
-    KToolBar* toolbar = 0;
-    int index;
-    if ( sender() && sender() -> inherits ("KToolBar") )
-      toolbar = (KToolBar*) sender();
-    else
-      for ( index = 0; index < associatedWidgets().count(); index ++ )
-      {
-        QWidget* container = associatedWidgets().value (index);
-        if ( container && container -> isVisible() && container -> inherits ("KToolBar") )
-        {
-          toolbar = (KToolBar*) container;
-          break;
-        }
-      }
-    if ( toolbar && toolbar -> isVisible() )
-    {
-      int index = findContainer (toolbar);
-      if ( index >= 0 )
-        button = toolbar -> getButton (itemId (index));
-    }
-  }*/
+    QToolBar* toolbar = (QToolBar*) parent;
+    QToolButton* button = new QToolButton (toolbar);
+    button -> setAutoRaise (true);
+    button -> setFocusPolicy (Qt::NoFocus);
+    button -> setIconSize (toolbar -> iconSize());
+    button -> setToolButtonStyle (toolbar -> toolButtonStyle());
+    button -> connect (toolbar, SIGNAL (iconSizeChanged (QSize)), SLOT (setIconSize (QSize)));
+    button -> connect (toolbar, SIGNAL (toolButtonStyleChanged (Qt::ToolButtonStyle)),
+      SLOT (setToolButtonStyle (Qt::ToolButtonStyle)));
+    button -> setDefaultAction (this);
+    button -> setDefaultAction (0);
+    connect (button, SIGNAL (clicked()), SLOT (showSlider()));
+    return button;
+  }
+  return KAction::createWidget (parent);
+}
+
+void KPlayerPopupSliderAction::showSlider (void)
+{
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "KPlayerPopupSliderAction::showSlider\n";
+  if ( sender() )
+    kdDebugTime() << " Sender " << sender() -> metaObject() -> className() << "\n";
+#endif
   QPoint point;
-  if ( button )
+  int width = m_frame -> width();
+  int height = KPlayerEngine::engine() -> configuration() -> preferredSliderLength() + 4;
+  if ( sender() && sender() -> inherits ("QToolButton") )
   {
-    point = button -> mapToGlobal (QPoint (0, button -> height()));
-    if ( point.y() + m_frame -> height() > QApplication::desktop() -> height() )
-      point.setY (point.y() - button -> height() - m_frame -> height());
+    QToolButton* button = (QToolButton*) sender();
+    point = button -> mapToGlobal (QPoint (-2, button -> height()));
+    if ( point.y() + height > QApplication::desktop() -> height() )
+      point.setY (point.y() - button -> height() - height);
+    width = button -> width() + 4;
   }
   else
   {
-    point = QCursor::pos() - QPoint (m_frame -> width() / 2, m_frame -> height() / 2);
-    if ( point.x() + m_frame -> width() > QApplication::desktop() -> width() )
-      point.setX (QApplication::desktop() -> width() - m_frame -> width());
-    if ( point.y() + m_frame -> height() > QApplication::desktop() -> height() )
-      point.setY (QApplication::desktop() -> height() - m_frame -> height());
+    point = QCursor::pos() - QPoint (width / 2, height / 2);
+    if ( point.x() + width > QApplication::desktop() -> width() )
+      point.setX (QApplication::desktop() -> width() - width);
+    if ( point.y() + height > QApplication::desktop() -> height() )
+      point.setY (QApplication::desktop() -> height() - height);
     if ( point.x() < 0 )
       point.setX (0);
     if ( point.y() < 0 )
       point.setY (0);
   }
 #ifdef DEBUG_KPLAYER_SLIDERS
-  kdDebugTime() << "Point: " << point.x() << "x" << point.y() << "\n";
+  kdDebugTime() << " Point  " << point.x() << "x" << point.y() << "\n";
 #endif
   m_frame -> setWhatsThis (whatsThis());
   m_slider -> setWhatsThis (whatsThis());
+  m_frame -> resize (width, height);
   m_frame -> move (point);
   m_frame -> show();
   m_slider -> setFocus();
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << " Frame  " << m_frame -> x() << "x" << m_frame -> y() << " " << m_frame -> width() << "x" << m_frame -> height() << "\n";
+  kdDebugTime() << " Slider " << m_slider -> x() << "x" << m_slider -> y() << " " << m_slider -> width() << "x" << m_slider -> height() << "\n";
+#endif
+  point = QPoint();
 }
 
 KPlayerSliderAction::KPlayerSliderAction (QObject* parent)
@@ -168,8 +174,9 @@ QWidget* KPlayerSliderAction::createWidget (QWidget* parent)
 #ifdef DEBUG_KPLAYER_SLIDERS
   kdDebugTime() << "KPlayerSliderAction::createWidget\n";
 #endif
-  disconnect (slider() -> parent(), SIGNAL (orientationChanged (Qt::Orientation)),
-    slider(), SLOT (parentOrientationChanged (Qt::Orientation)));
+  if ( slider() -> parent() )
+    disconnect (slider() -> parent(), SIGNAL (orientationChanged (Qt::Orientation)),
+      slider(), SLOT (parentOrientationChanged (Qt::Orientation)));
   connect (parent, SIGNAL (orientationChanged (Qt::Orientation)),
     slider(), SLOT (parentOrientationChanged (Qt::Orientation)));
   return QWidgetAction::createWidget (parent);
@@ -181,6 +188,7 @@ KPlayerSlider::KPlayerSlider (Qt::Orientation orientation, QWidget* parent)
   //m_dragging = false;
   //m_changing_orientation = false;
   //connect (this, SIGNAL (valueChanged (int)), SLOT (sliderValueChanged (int)));
+  setSizePolicy (QSizePolicy (QSizePolicy::Expanding, QSizePolicy::Expanding, QSizePolicy::Slider));
 }
 
 KPlayerSlider::~KPlayerSlider()
@@ -198,6 +206,38 @@ void KPlayerSlider::parentOrientationChanged (Qt::Orientation orientation)
   setOrientation (orientation);
 }
 
+void KPlayerSlider::adjustHint (QSize& hint, int length) const
+{
+  QSize size;
+  if ( parent() )
+    foreach ( QObject* object, parent() -> children() )
+      if ( qstrcmp (object -> metaObject() -> className(), "QToolButton") == 0 )
+      {
+        size = ((QToolButton*) object) -> sizeHint();
+        break;
+      }
+  if ( orientation() == Qt::Horizontal )
+  {
+    if ( hint.width() < length )
+      hint.setWidth (length);
+    if ( size.isValid() )
+      hint.setHeight (size.height());
+  }
+  else
+  {
+    if ( hint.height() < length )
+      hint.setHeight (length);
+    if ( size.isValid() )
+      hint.setWidth (size.width());
+    else
+    {
+      int width = style() ? style() -> pixelMetric (QStyle::PM_ToolBarIconSize) : 32;
+      if ( hint.width() > width )
+        hint.setWidth (width);
+    }
+  }
+}
+
 QSize KPlayerSlider::sizeHint() const
 {
 #ifdef DEBUG_KPLAYER_SLIDER_HINTS
@@ -205,19 +245,7 @@ QSize KPlayerSlider::sizeHint() const
 #endif
   QSize hint = QSlider::sizeHint();
   if ( KPlayerEngine::engine() )
-  {
-    int length = KPlayerEngine::engine() -> configuration() -> preferredSliderLength();
-    if ( orientation() == Qt::Horizontal )
-    {
-      if ( hint.width() < length )
-        hint.setWidth (length);
-    }
-    else
-    {
-      if ( hint.height() < length )
-        hint.setHeight (length);
-    }
-  }
+    adjustHint (hint, KPlayerEngine::engine() -> configuration() -> preferredSliderLength());
 #ifdef DEBUG_KPLAYER_SLIDER_HINTS
   kdDebugTime() << " Hint   " << hint.width() << "x" << hint.height() << "\n";
 #endif
@@ -231,86 +259,12 @@ QSize KPlayerSlider::minimumSizeHint() const
 #endif
   QSize hint = QSlider::minimumSizeHint();
   if ( KPlayerEngine::engine() )
-  {
-    int length = KPlayerEngine::engine() -> configuration() -> minimumSliderLength();
-    if ( orientation() == Qt::Horizontal )
-    {
-      if ( hint.width() < length )
-        hint.setWidth (length);
-    }
-    else
-    {
-      if ( hint.height() < length )
-        hint.setHeight (length);
-    }
-  }
+    adjustHint (hint, KPlayerEngine::engine() -> configuration() -> minimumSliderLength());
 #ifdef DEBUG_KPLAYER_SLIDER_HINTS
   kdDebugTime() << " Hint   " << hint.width() << "x" << hint.height() << "\n";
 #endif
   return hint;
 }
-
-/*
-void KPlayerSlider::setOrientation (Qt::Orientation o)
-{
-  if ( o == orientation() )
-    return;
-  m_changing_orientation = true;
-  int minimum = QSlider::minimum();
-  int maximum = QSlider::maximum();
-  int value = QSlider::value();
-  QSlider::setOrientation (o);
-  QSlider::setMinimum (- maximum);
-  QSlider::setMaximum (- minimum);
-  QSlider::setValue (- value);
-  m_changing_orientation = false;
-}
-
-int KPlayerSlider::minValue (void) const
-{
-  if ( orientation() == Qt::Horizontal )
-    return QSlider::minimum();
-  return - QSlider::maximum();
-}
-
-void KPlayerSlider::setMinValue (int minimum)
-{
-  if ( orientation() == Qt::Horizontal )
-    QSlider::setMinimum (minimum);
-  else
-    QSlider::setMaximum (- minimum);
-}
-
-int KPlayerSlider::maxValue (void) const
-{
-  if ( orientation() == Qt::Horizontal )
-    return QSlider::maximum();
-  return - QSlider::minimum();
-}
-
-void KPlayerSlider::setMaxValue (int maximum)
-{
-  if ( orientation() == Qt::Horizontal )
-    QSlider::setMaximum (maximum);
-  else
-    QSlider::setMinimum (- maximum);
-}
-
-int KPlayerSlider::value (void) const
-{
-  if ( orientation() == Qt::Horizontal )
-    return QSlider::value();
-  return - QSlider::value();
-}
-
-void KPlayerSlider::setValue (int value)
-{
-  if ( orientation() == Qt::Horizontal )
-    QSlider::setValue (value);
-  else
-    QSlider::setValue (- value);
-}
-*/
 
 void KPlayerSlider::setup (int minimum, int maximum, int value,
   bool tickMarks, int tickInterval, int pageStep, int singleStep)
@@ -324,32 +278,6 @@ void KPlayerSlider::setup (int minimum, int maximum, int value,
   setValue (value);
   updateGeometry();
 }
-
-/*
-void KPlayerSlider::sliderValueChanged (int)
-{
-  if ( ! m_changing_orientation )
-    emit changed (value());
-}
-
-void KPlayerSlider::mousePressEvent (QMouseEvent* event)
-{
-  m_dragging = (event -> buttons() & (Qt::LeftButton | Qt::MidButton)) != 0;
-#ifdef DEBUG_KPLAYER_SLIDERS
-  kdDebugTime() << "Popup slider mouse press " << event -> modifiers() << " -> " << m_dragging << "\n";
-#endif
-  QSlider::mousePressEvent (event);
-}
-
-void KPlayerSlider::mouseReleaseEvent (QMouseEvent* event)
-{
-  m_dragging = (event -> buttons() & (Qt::LeftButton | Qt::MidButton)) != 0;
-#ifdef DEBUG_KPLAYER_SLIDERS
-  kdDebugTime() << "Popup slider mouse release " << event -> modifiers() << " -> " << m_dragging << "\n";
-#endif
-  QSlider::mouseReleaseEvent (event);
-}
-*/
 
 void KPlayerSlider::keyPressEvent (QKeyEvent* event)
 {

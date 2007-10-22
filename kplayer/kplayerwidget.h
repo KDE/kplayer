@@ -117,7 +117,7 @@ protected:
   virtual void wheelEvent (QWheelEvent*);
   /** Emits the contextMenu signal. */
   virtual void contextMenuEvent (QContextMenuEvent*);
-  virtual void windowActivationChange (bool);
+  virtual void changeEvent (QEvent*);
   virtual void focusInEvent (QFocusEvent*);
   virtual void focusOutEvent (QFocusEvent*);
 

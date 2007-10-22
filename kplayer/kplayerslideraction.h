@@ -38,45 +38,21 @@ public:
   /** The minimum size hint. */
   virtual QSize minimumSizeHint() const;
 
-#if 0
-  /** The minimum value. */
-  int minValue (void) const;
-  /** Sets the minimum value. */
-  void setMinValue (int);
-  /** The maximum value. */
-  int maxValue (void) const;
-  /** Sets the maximum value. */
-  void setMaxValue (int);
-  /** The current value. */
-  int value (void) const;
-  /** Sets the current value. */
-  void setValue (int);
-#endif
-
   /** Sets up the slider by setting all options in one go. */
   void setup (int minValue, int maxValue, int value, bool tickMarks, int tickInterval, int pageStep, int lineStep);
 
 protected slots:
-  /** Receives the valueChanged signal from QSlider. */
-  //void sliderValueChanged (int);
   /** Changes the slider orientation when the toolbar orientation changes. */
   void parentOrientationChanged (Qt::Orientation);
 
 protected:
+  /** Adjusts the hint with the given length and the toolbar icon size. */
+  void adjustHint (QSize& hint, int length) const;
+
   /** Filters keystrokes. */
   virtual void keyPressEvent (QKeyEvent*);
-  /** Remember mouse button state. */
-  //virtual void mousePressEvent (QMouseEvent*);
-  /** Remember mouse button state. */
-  //virtual void mouseReleaseEvent (QMouseEvent*);
   /** Processes the wheel event. Reverses direction when the slider is horizontal. */
   virtual void wheelEvent (QWheelEvent*);
-
-  /** Dragging state. */
-  //bool m_dragging;
-
-  // Recursion prevention. Should be private.
-  //bool m_changing_orientation;
 };
 
 /**KPlayer popup frame.
@@ -114,11 +90,14 @@ public:
   KPlayerSlider* slider (void)
     { return m_slider; }
 
-protected slots:
+public slots:
   /** Pops up the slider. */
-  void popUpSlider (void);
+  void showSlider (void);
 
 protected:
+  /** Connects the button signal. */
+  virtual QWidget* createWidget (QWidget* parent);
+
   /** The slider. */
   KPlayerSlider* m_slider;
   /** The popup frame. */

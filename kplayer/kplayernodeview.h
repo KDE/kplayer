@@ -962,6 +962,8 @@ public slots:
   void open (KPlayerNode*);
   /** Shows library and opens the Now Playing node in it. */
   void editPlaylist (void);
+  /** Disconnects actions when parent is hidden. */
+  void parentVisibilityChanged (bool);
 
 protected:
   /** Action collection. */
@@ -1005,14 +1007,6 @@ public:
 
   /** Sets focus to the library. */
   virtual void setFocus (void);
-
-protected:
-  /** Emits the windowHidden signal. */
-  virtual void hideEvent (QHideEvent*);
-
-signals:
-  /** Emitted when the library window is hidden. */
-  void windowHidden (void);
 };
 
 inline QAction* KPlayerNodeView::action (const char* name) const

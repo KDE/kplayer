@@ -606,12 +606,6 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="0"/>
-  <customwidgets>
-    <customwidget>
-      <class>QFontComboBox</class>
-      <extends>QComboBox</extends>
-    </customwidget>
-  </customwidgets>
   <connections>
     <connection>
       <sender>c_width_slider</sender>

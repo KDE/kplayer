@@ -1089,7 +1089,7 @@ public:
   void dirty (void);
 
   /** Refreshes the given item. */
-  void refreshItem (KFileItem* item);
+  void refreshItem (const KFileItem& item);
 
   /** Removes the given nodes from the list of nodes. */
   virtual void removed (const KPlayerNodeList& nodes);
@@ -1098,9 +1098,9 @@ protected slots:
   /** Refreshes all items. */
   void completed (void);
   /** Refreshes the given items. */
-  void refresh (const KFileItemList &entries);
+  void refresh (const KFileItemList& entries);
   /** Removes the given item. */
-  void removed (KFileItem *fileItem);
+  void removed (const KFileItem& fileItem);
   /** Receives dirty signal from directory watch. */
   void dirty (const QString& path);
 
@@ -1130,7 +1130,7 @@ protected:
   /** Directory watch. */
   KDirWatch m_watch;
   /** Media directory lister. */
-	KDirLister m_lister;
+  KDirLister m_lister;
   /** Indicates whether the initial listing is complete. */
   bool m_complete;
 };

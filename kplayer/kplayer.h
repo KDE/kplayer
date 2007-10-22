@@ -125,7 +125,7 @@ public:
   /** Calculates the minimum size hint for the main window. */
   //virtual QSize minimumSizeHint (void) const;
   /** Sets the minimum size of the main widget. */
-  virtual void setMinimumSize (int, int);
+  //virtual void setMinimumSize (int, int);
 
   /** Returns the full screen state. */
   bool isFullScreen (void) const;
@@ -153,6 +153,9 @@ protected:
   /** Sets up the status bar. */
   void initStatusBar (void);
 
+  /** Shows the dock widget. */
+  void showDockWidget (QDockWidget* widget);
+
   /** Save general options like all bar positions and status as well as the geometry
       and the recent file list to the configuration file. */
   void saveOptions (void);
@@ -176,11 +179,6 @@ protected:
   /** Checks or unchecks bar actions. */
 //void checkBarActions (void);
 
-  /** Enables or disables submenus of the given menu with the given name. */
-  //void enableSubmenu (QMenuData* data, const QString& name, bool enable);
-  /** Returns the top level popup menu at the given position. */
-  //QMenu* popupMenu (int index);
-
   /** Enables a toolbar.
    * @param index the toolbar number
    */
@@ -197,7 +195,7 @@ protected:
   //virtual bool event (QEvent*);
   /** Sets the window geometry on the initial show event. */
   virtual void showEvent (QShowEvent*);
-  virtual void windowActivationChange (bool);
+  virtual void changeEvent (QEvent*);
   virtual void focusInEvent (QFocusEvent*);
   virtual void focusOutEvent (QFocusEvent*);
   /** Handles main window movement. */
@@ -238,9 +236,9 @@ protected:
   bool m_messagelog_normally_visible, m_messagelog_fullscreen_visible;
   bool m_library_normally_visible, m_library_fullscreen_visible;
   bool m_set_display_size, m_initial_show, m_error_detected, m_maximized;
-  bool m_full_screen, m_show_log, m_show_library;
+  bool m_full_screen/*, m_show_log, m_show_library*/;
   Toolbar m_toolbar [KPLAYER_TOOLBARS];
-  QSize m_previous_size, m_video_size;
+  //QSize m_previous_size, m_video_size;
   QRect m_normal_geometry;
   QLabel *m_status_label, *m_state_label, *m_progress_label;
 
@@ -337,10 +335,10 @@ protected slots:
   void playerMessageReceived (QString);
   /** Receives the errorDetected signal from KPlayerProcess. */
   void playerErrorDetected (void);
-  /** Receives the windowHidden signal from KPlayerLogWindow. Updates the menu item. */
-  void logWindowHidden (void);
-  /** Receives the windowHidden signal from KPlayerLibraryWindow. Updates the menu item. */
-  void libraryHidden (void);
+  /** Receives the visibilityChanged signal from KPlayerLogWindow. Updates the menu item. */
+  void logVisibilityChanged (bool);
+  /** Receives the visibilityChanged signal from KPlayerLibraryWindow. Updates the menu item. */
+  void libraryVisibilityChanged (bool);
   /** Receives the updated signal from KPlayerSettings. Updates the slider settings. */
   void refreshSettings (void);
   /** Receives the updated signal from KPlayerProperties. Updates the window caption. */

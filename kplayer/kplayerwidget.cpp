@@ -356,19 +356,22 @@ void KPlayerWorkspace::wheelEvent (QWheelEvent* event)
   mouseActivity();
 }
 
-void KPlayerWorkspace::windowActivationChange (bool old)
+void KPlayerWorkspace::changeEvent (QEvent* event)
 {
-  QWidget::windowActivationChange (old);
-  bool active = isActiveWindow();
+  QWidget::changeEvent (event);
+  if ( event -> type() == QEvent::ActivationChange )
+  {
+    bool active = isActiveWindow();
 #ifdef DEBUG_KPLAYER_WORKSPACE
-  kdDebugTime() << "Workspace activation " << old << " -> " << active << "\n";
+    kdDebugTime() << "Workspace activation " << active << "\n";
 #endif
-  if ( active && focusProxy() )
-    KPlayerX11SetInputFocus (focusProxy() -> winId());
+    if ( active && focusProxy() )
+      KPlayerX11SetInputFocus (focusProxy() -> winId());
 #ifdef DEBUG_KPLAYER_WORKSPACE
-  else if ( active )
-    kdDebugTime() << "  no focus proxy\n";
+    else if ( active )
+      kdDebugTime() << "  no focus proxy\n";
 #endif
+  }
 }
 
 void KPlayerWorkspace::focusInEvent (QFocusEvent* event)

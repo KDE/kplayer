@@ -19,6 +19,7 @@
 #include <qfileinfo.h>
 #include <qregexp.h>
 
+//#define KPLAYER_EXTRACT_META_INFORMATION
 #define KPLAYER_PROCESS_SIZE_IDS
 #ifdef DEBUG
 #define DEBUG_KPLAYER_PROPERTIES
@@ -4165,6 +4166,7 @@ void KPlayerItemProperties::setupMeta (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerItemProperties::setupMeta\n";
 #endif
+#ifdef KPLAYER_EXTRACT_META_INFORMATION
   if ( ! hasIcon() && m_meta_info_timer < 2000 )
   {
     QTime timer;
@@ -4204,6 +4206,7 @@ void KPlayerItemProperties::setupMeta (void)
     if ( elapsed >= 100 )
       m_meta_info_timer += elapsed;
   }
+#endif
   KPlayerTrackProperties::setupMeta();
 }
 
