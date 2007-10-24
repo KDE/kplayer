@@ -2103,7 +2103,7 @@ KUrl::List KPlayerEngine::openFiles (const QString& title, QWidget* parent)
 {
   static QString filter = i18n("*|All files\n*.avi *.AVI|AVI files\n*.mpg *.mpeg *.MPG *.MPEG|MPEG files\n*.ogg *.OGG|OGG files\n*.mp3 *.MP3|MP3 files");
   KConfigGroup group (kPlayerConfig() -> group ("Dialog Options"));
-  QString dir = group.readPathEntry ("Open File Directory");
+  QString dir = group.readPathEntry ("Open File Directory", QString());
 //Saving dialog position did not work: dlg.pos() returns wrong position in Qt 3.1.1
 //int x = group.readEntry ("Open File Left", 0);
 //int y = group.readEntry ("Open File Top", 0);
@@ -2169,7 +2169,7 @@ KUrl::List KPlayerEngine::openSubtitles (QWidget* parent)
 {
   static QString filter = i18n("*|All files\n*.aqt *.AQT *.ass *.ASS *.js *.JS *.jss *.JSS *.rt *.RT *.smi *.SMI *.srt *.SRT *.ssa *.SSA *.sub *.SUB *.txt *.TXT *.utf *.UTF *.idx *.IDX *.ifo *.IFO|All subtitle files\n*.aqt *.AQT|AQT files\n*.ass *.ASS|ASS files\n*.js *.JS|JS files\n*.jss *.JSS|JSS files\n*.rt *.RT|RT files\n*.smi *.SMI|SMI files\n*.srt *.SRT|SRT files\n*.ssa *.SSA|SSA files\n*.sub *.SUB|SUB files\n*.txt *.TXT|TXT files\n*.utf *.UTF *.utf8 *.UTF8 *.utf-8 *.UTF-8|UTF files\n*.idx *.IDX *.ifo *.IFO|VobSub files");
   KConfigGroup group (kPlayerConfig() -> group ("Dialog Options"));
-  QString dir = group.readPathEntry ("Open Subtitle Directory");
+  QString dir = group.readPathEntry ("Open Subtitle Directory", QString());
 //int x = group.readEntry ("Open Subtitle Left", 0);
 //int y = group.readEntry ("Open Subtitle Top", 0);
   int width = group.readEntry ("Open Subtitle Width", 0);

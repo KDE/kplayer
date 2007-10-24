@@ -1169,7 +1169,7 @@ void KPlayerProperties::load (void)
   }
   if ( configGroup().hasKey ("Keys") )
   {
-    QStringList keys (configGroup().readEntry ("Keys", nullStringList, ';'));
+    QStringList keys (configGroup().readEntry ("Keys").split(';'));
     QStringList::ConstIterator keysit (keys.begin());
     while ( keysit != keys.end() )
     {
