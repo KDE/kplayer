@@ -955,7 +955,7 @@ void KPlayerStringListProperty::read (KConfigGroup& config, const QString& name)
 {
   int total = config.readEntry (name, 0);
   for ( int i = 0; i < total; i ++ )
-    m_value.append (config.readEntry ("Child" + QString::number (i), QString()));
+    m_value.append (config.readEntry ("Child" + QString::number (i)));
 }
 
 void KPlayerStringListProperty::save (KConfigGroup& config, const QString& name) const
@@ -979,7 +979,7 @@ KPlayerIntegerStringMapProperty::~KPlayerIntegerStringMapProperty()
 void KPlayerIntegerStringMapProperty::read (KConfigGroup& config, const QString& name)
 {
   static QRegExp re_indexvalue ("^(\\d+)=(.*)$");
-  QStringList values (config.readEntry (name, QString()).split (':'));
+  QStringList values (config.readEntry (name).split (':'));
   QStringList::ConstIterator iterator (values.begin());
   while ( iterator != values.end() )
   {
@@ -1169,7 +1169,7 @@ void KPlayerProperties::load (void)
   }
   if ( configGroup().hasKey ("Keys") )
   {
-    QStringList keys (configGroup().readEntry ("Keys").split(';'));
+    QStringList keys (configGroup().readEntry ("Keys").split (';'));
     QStringList::ConstIterator keysit (keys.begin());
     while ( keysit != keys.end() )
     {
@@ -1205,7 +1205,7 @@ void KPlayerProperties::save (void)
   }
   if ( ! keys.isEmpty() )
     configGroup().writeEntry ("Keys", keys.join (";"));
-  if ( config() == KPlayerEngine::engine() -> meta() && ! configGroup().entryMap().isEmpty() )
+  if ( config() == KPlayerEngine::engine() -> meta() && ! configGroup().keyList().isEmpty() )
     configGroup().writeEntry ("Date", QDateTime::currentDateTime());
 }
 
@@ -2709,7 +2709,7 @@ QString KPlayerGenericProperties::type (const QString& id) const
   KPlayerMediaMap::ConstIterator iterator = m_media_map.find (urls);
   if ( iterator != m_media_map.end() )
     return ((KPlayerMediaProperties*) *iterator) -> type();
-  return config() -> group (urls).readEntry ("Type", QString());
+  return config() -> group (urls).readEntry ("Type");
 }
 
 float KPlayerGenericProperties::msf (const QString& id) const
@@ -4120,12 +4120,12 @@ void KPlayerItemProperties::setupInfo (void)
   kdDebugTime() << "KPlayerItemProperties::setupInfo\n";
 #endif
   KPlayerTrackProperties::setupInfo();
-  if ( configGroup().readEntry ("Video Size", QString()) == "0,0" )
+  if ( configGroup().readEntry ("Video Size") == "0,0" )
   {
     configGroup().deleteEntry ("Video Size");
     configGroup().writeEntry ("Has Video", false);
   }
-  QString value (configGroup().readEntry ("Full Screen", QString()));
+  QString value (configGroup().readEntry ("Full Screen"));
   if ( value == "0" )
     configGroup().writeEntry ("Full Screen", false);
   else if ( value == "1" )
@@ -4135,25 +4135,25 @@ void KPlayerItemProperties::setupInfo (void)
     configGroup().deleteEntry ("Full Screen");
     configGroup().writeEntry ("Maximized", true);
   }
-  value = configGroup().readEntry ("Maintain Aspect", QString());
+  value = configGroup().readEntry ("Maintain Aspect");
   if ( value == "0" )
     configGroup().writeEntry ("Maintain Aspect", true);
   else if ( value == "1" )
     configGroup().writeEntry ("Maintain Aspect", false);
-  value = configGroup().readEntry ("Autoload Subtitles", QString());
+  value = configGroup().readEntry ("Autoload Subtitles");
   if ( value == "0" )
     configGroup().writeEntry ("Autoload Subtitles", true);
   else if ( value == "1" )
     configGroup().writeEntry ("Autoload Subtitles", false);
-  value = configGroup().readEntry ("Subtitle Visibility", QString());
+  value = configGroup().readEntry ("Subtitle Visibility");
   if ( value == "0" )
     configGroup().writeEntry ("Subtitle Visibility", true);
   else if ( value == "1" )
     configGroup().writeEntry ("Subtitle Visibility", false);
-  value = configGroup().readEntry ("Command Line Option", QString());
+  value = configGroup().readEntry ("Command Line Option");
   if ( value == "1" )
     configGroup().writeEntry ("Command Line Option", true);
-  value = configGroup().readEntry ("Playlist", QString());
+  value = configGroup().readEntry ("Playlist");
   if ( value == "1" )
     configGroup().writeEntry ("Playlist", true);
   else if ( value == "2" )

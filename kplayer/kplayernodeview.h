@@ -951,6 +951,9 @@ public:
   void emitEnableActionGroup (const QString& name, bool enable)
     { emit enableActionGroup (name, enable); }
 
+  /** Returns the size hint for the workspace. */
+  virtual QSize sizeHint (void) const;
+
 signals:
   /** Emitted when the library needs to be shown. */
   void makeVisible (void);
@@ -988,6 +991,8 @@ protected:
   KPlayerContainerActionList* m_go_to;
   /** History action list. */
   KPlayerHistoryActionList* m_history_list;
+  /** Preferred height. */
+  int m_height;
 };
 
 /**The library window.

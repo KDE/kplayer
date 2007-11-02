@@ -51,6 +51,9 @@ public:
   QAction* action (const char* name) const
     { return m_ac -> action (name); }
 
+  /** Returns the size hint for the workspace. */
+  virtual QSize sizeHint (void) const;
+
 public slots:
   virtual void clear (void);
 
@@ -72,6 +75,8 @@ protected:
   bool m_error;
   /** Error location. */
   int m_location;
+  /** Preferred height. */
+  int m_height;
 };
 
 /**The KPlayer log window.

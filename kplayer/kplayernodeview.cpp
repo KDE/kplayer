@@ -3484,6 +3484,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   connect (parent, SIGNAL (visibilityChanged (bool)), SLOT (parentVisibilityChanged (bool)));
 
   m_last_view = m_tree;
+  m_height = kPlayerConfig() -> group ("General Options").readEntry ("Playlist Height", 300);
 }
 
 KPlayerLibrary::~KPlayerLibrary()
@@ -3517,6 +3518,11 @@ void KPlayerLibrary::terminate (void)
   listView() -> terminate();
   treeView() -> terminate();
   KPlayerNode::terminate();
+}
+
+QSize KPlayerLibrary::sizeHint (void) const
+{
+  return QSize (QSplitter::sizeHint().width(), m_height);
 }
 
 void KPlayerLibrary::setFocus (void)

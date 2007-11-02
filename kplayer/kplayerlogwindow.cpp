@@ -92,6 +92,7 @@ KPlayerLogWidget::KPlayerLogWidget (KActionCollection* ac, QWidget* parent)
   action -> setStatusTip (i18n("Clears all messages from the message log"));
   action -> setWhatsThis (i18n("Clear command removes all messages from the message log."));
   connect (this, SIGNAL (selectionChanged()), SLOT (updateActions()));
+  m_height = kPlayerConfig() -> group ("General Options").readEntry ("Message Log Height", 250);
 }
 
 void KPlayerLogWidget::updateActions (void)
@@ -139,6 +140,11 @@ void KPlayerLogWidget::setError (bool flag)
 #endif
   }
   m_error = flag;
+}
+
+QSize KPlayerLogWidget::sizeHint (void) const
+{
+  return QSize (KTextEdit::sizeHint().width(), m_height);
 }
 
 void KPlayerLogWidget::showEvent (QShowEvent* event)

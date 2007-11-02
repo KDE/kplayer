@@ -25,7 +25,7 @@
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SLIDERS
-//#define DEBUG_KPLAYER_SLIDER_HINTS
+#define DEBUG_KPLAYER_SLIDER_HINTS
 #endif
 
 #include "kplayerslideraction.h"
@@ -204,6 +204,7 @@ void KPlayerSlider::parentOrientationChanged (Qt::Orientation orientation)
   kdDebugTime() << "KPlayerSlider orientation changed to " << orientation << "\n";
 #endif
   setOrientation (orientation);
+  resize (sizeHint());
 }
 
 void KPlayerSlider::adjustHint (QSize& hint, int length) const

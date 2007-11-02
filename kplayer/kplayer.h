@@ -61,6 +61,7 @@ class KPlayerWindow : public KXmlGuiWindow
     const char* action;
     bool normally_visible;
     bool fullscreen_visible;
+    bool auto_break;
   } Toolbar;
 
 public:
@@ -121,7 +122,7 @@ public:
   void showMessageLog (bool);
 
   /** Calculates the size hint for the main window. */
-  //virtual QSize sizeHint (void) const;
+  virtual QSize sizeHint (void) const;
   /** Calculates the minimum size hint for the main window. */
   //virtual QSize minimumSizeHint (void) const;
   /** Sets the minimum size of the main widget. */
@@ -143,11 +144,11 @@ public:
 
 protected:
   /** Returns the total available geometry. */
-  //QRect availableGeometry (void) const;
+  QRect availableGeometry (void) const;
   /** Resizes the main window in response to a zoom request. */
   //void do_zoom (void);
   /** Moves the main window if it does not fit the available screen space. */
-  //void do_move (const QRect& frame);
+  void do_move (const QRect& frame);
   /** Sets up actions and connects signals to slots. */
   void initActions (void);
   /** Sets up the status bar. */
@@ -168,6 +169,8 @@ protected:
       @see KMainWindow#readProperties */
   //virtual void readProperties (KConfig*);
 
+  /** Enables or disables playlist actions. */
+  void enablePlaylistActions (void);
   /** Enables or disables player actions. */
   void enablePlayerActions (void);
   /** Enables or disables video actions. */
@@ -238,7 +241,7 @@ protected:
   bool m_set_display_size, m_initial_show, m_error_detected, m_maximized;
   bool m_full_screen/*, m_show_log, m_show_library*/;
   Toolbar m_toolbar [KPLAYER_TOOLBARS];
-  //QSize m_previous_size, m_video_size;
+  QSize m_previous_size;
   QRect m_normal_geometry;
   QLabel *m_status_label, *m_state_label, *m_progress_label;
 

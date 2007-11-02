@@ -1974,7 +1974,7 @@ void KPlayerPlaylistNode::setupSource (void)
         for ( int i = 0; i < entries; i ++ )
         {
           QString no (QString::number (i));
-          config.writeEntry ("Child" + no, group.readEntry ("Entry " + no, QString()));
+          config.writeEntry ("Child" + no, group.readEntry ("Entry " + no));
         }
         config.writeEntry ("Children", entries);
         np -> media() -> setChildren (children);
@@ -2272,7 +2272,7 @@ void KPlayerRecentsNode::setupSource (void)
     QStringList children;
     for ( int i = 1; i <= limit; i ++ )
     {
-      QString name (group.readEntry ("File" + QString::number (i), QString()));
+      QString name (group.readEntry ("File" + QString::number (i)));
       if ( name.isEmpty() )
         break;
       children.append (name);

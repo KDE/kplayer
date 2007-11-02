@@ -30,6 +30,7 @@
 #include <kwindowsystem.h>
 #include <kxmlguifactory.h>
 #include <qdatetime.h>
+#include <qdesktopwidget.h>
 #include <qevent.h>
 #include <qeventloop.h>
 #include <qlabel.h>
@@ -39,6 +40,7 @@
 //#include <qtoolbutton.h>
 #define DEBUG_KPLAYER_WINDOW
 #define DEBUG_KPLAYER_RESIZING
+//#define DEBUG_KPLAYER_EVENTS
 //#define DEBUG_KPLAYER_SIZING_HACKS
 //#define DEBUG_KPLAYER_NOTIFY_KEY
 //#define DEBUG_KPLAYER_NOTIFY_MOUSE
@@ -72,10 +74,12 @@ extern KAboutData* about;
 KPlayerApplication::KPlayerApplication (void)
   : KUniqueApplication (true, true)
 {
+  installEventFilter (this);
 }
 
 KPlayerApplication::~KPlayerApplication()
 {
+  removeEventFilter (this);
   delete about;
 }
 
@@ -107,6 +111,12 @@ int KPlayerApplication::newInstance (void)
 
 bool KPlayerApplication::notify (QObject* object, QEvent* event)
 {
+#ifdef DEBUG_KPLAYER_EVENTS
+  kdDebugTime() << "KPlayerApplication::notify: event type " << event -> type()
+    << " spontaneous " << event -> spontaneous() << " receiver "
+    << (object ? object -> metaObject() -> className() : "<none>")
+    << (object && ! object -> objectName().isEmpty() ? object -> objectName() : "<unnamed>") << "\n";
+#endif
   static bool overridden = false;
   if ( kPlayerEngine() && kPlayerSettings() && event )
   {
@@ -377,7 +387,7 @@ void dumpObject (const QObject* object, int depth = 20, int indent = 0)
     QWidget* widget = (QWidget*) object;
     kdDebugTime() << spaces.data() << object -> metaObject() -> className() <<
       " " << object -> objectName().toLatin1().data() << " " << widget -> windowTitle().toLatin1().data() <<
-      " " << widget -> winId() <<
+      " " << widget -> winId() << " " << widget -> isVisible() <<
       " " << widget -> minimumSize().width() << "x" << widget -> minimumSize().height() <<
       " " << widget -> minimumSizeHint().width() << "x" << widget -> minimumSizeHint().height() <<
       " " << widget -> sizeHint().width() << "x" << widget -> sizeHint().height() <<
@@ -385,6 +395,14 @@ void dumpObject (const QObject* object, int depth = 20, int indent = 0)
       " " << widget -> geometry().width() << "x" << widget -> geometry().height() <<
       " " << widget -> frameGeometry().x() << "x" << widget -> frameGeometry().y() <<
       " " << widget -> frameGeometry().width() << "x" << widget -> frameGeometry().height() << "\n";
+    if ( object -> inherits ("QToolBar") )
+    {
+      QToolBar* toolbar = (QToolBar*) object;
+      QMainWindow* window = toolbar -> parent() -> inherits ("QMainWindow") ? (QMainWindow*) toolbar -> parent() : 0;
+      kdDebugTime() << spaces.data() << "  area " << (window ? window -> toolBarArea (toolbar) : Qt::NoToolBarArea) <<
+        " break " << (window ? window -> toolBarBreak (toolbar) : false) << " floating " << toolbar -> isFloating() <<
+	" orientation " << toolbar -> orientation() << " style " << toolbar -> toolButtonStyle() << "\n";
+    }
     if ( widget -> layout() && widget -> layout() -> parent() != widget )
       dumpObject (widget -> layout(), depth - 1, indent + 1);
   }
@@ -399,6 +417,21 @@ void dumpObject (const QObject* object, int depth = 20, int indent = 0)
       " " << layout -> margin() << "+" << layout -> spacing() <<
       " " << layout -> alignment() << " " << layout -> expandingDirections() <<
       " " << layout -> hasHeightForWidth() << " " << layout -> heightForWidth (1) << "\n";
+    int i = 0;
+    QLayoutItem* item;
+    while ( (item = layout -> itemAt (i)) )
+    {
+      kdDebugTime() << spaces.data() << "  " << i ++ <<
+        " " << (item -> widget() ? item -> widget() -> metaObject() -> className() : "") <<
+        " " << (item -> widget() ? QByteArray::number (int (item -> widget() -> winId())).data() : "") <<
+        " " << item -> minimumSize().width() << "x" << item -> minimumSize().height() <<
+        " " << item -> sizeHint().width() << "x" << item -> sizeHint().height() <<
+        " " << item -> geometry().width() << "x" << item -> geometry().height() <<
+        " " << item -> alignment() << " " << item -> expandingDirections() <<
+        " " << item -> hasHeightForWidth() << " " << item -> heightForWidth (1) << "\n";
+      if ( item -> layout() )
+        dumpObject (item -> layout(), depth - 1, indent + 1);
+    }
   }
   else if ( object -> inherits ("QAction") )
   {
@@ -431,15 +464,17 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
   m_library_normally_visible = m_library_fullscreen_visible = false;
   m_set_display_size = m_initial_show = m_error_detected = m_maximized = false;
   m_full_screen = /*m_show_log = m_show_library =*/ false;
+  setCorner (Qt::BottomLeftCorner, Qt::BottomDockWidgetArea);
+  setCorner (Qt::BottomRightCorner, Qt::BottomDockWidgetArea);
   Toolbar toolbars [KPLAYER_TOOLBARS] = {
-    { "mainToolBar", KStandardAction::stdName (KStandardAction::ShowToolbar), true, false },
-    { "playlistToolBar", "options_show_playlist", true, false },
-    { "progressToolBar", "settings_progress_toolbar", true, false },
-    { "volumeToolBar", "settings_volume_toolbar", false, false },
-    { "contrastToolBar", "settings_contrast_toolbar", false, false },
-    { "brightnessToolBar", "settings_brightness_toolbar", false, false },
-    { "hueToolBar", "settings_hue_toolbar", false, false },
-    { "saturationToolBar", "settings_saturation_toolbar", false, false }
+    { "mainToolBar", KStandardAction::stdName (KStandardAction::ShowToolbar), true, false, false },
+    { "playlistToolBar", "options_show_playlist", true, false, false },
+    { "progressToolBar", "settings_progress_toolbar", true, false, false },
+    { "volumeToolBar", "settings_volume_toolbar", false, false, false },
+    { "contrastToolBar", "settings_contrast_toolbar", false, false, false },
+    { "brightnessToolBar", "settings_brightness_toolbar", false, false, false },
+    { "hueToolBar", "settings_hue_toolbar", false, false, false },
+    { "saturationToolBar", "settings_saturation_toolbar", false, false, false }
   };
   QString captions [KPLAYER_TOOLBARS] = {
     i18n("Main Toolbar"),
@@ -891,9 +926,9 @@ void KPlayerWindow::saveOptions (void)
   {
     group.writeEntry (QString (m_toolbar[i].name) + " Normally Visible", m_toolbar[i].normally_visible);
     group.writeEntry (QString (m_toolbar[i].name) + " FullScreen Visible", m_toolbar[i].fullscreen_visible);
+    group.writeEntry (QString (m_toolbar[i].name) + " Button Style",
+      (int) toolBar (m_toolbar[i].name) -> toolButtonStyle());
   }
-  group.writeEntry (QString (m_toolbar[MAIN_TOOLBAR].name) + " Button Style",
-    (int) toolBar (m_toolbar[MAIN_TOOLBAR].name) -> toolButtonStyle());
 }
 
 void KPlayerWindow::readOptions (void)
@@ -974,11 +1009,11 @@ void KPlayerWindow::readOptions (void)
   m_statusbar_normally_visible = group.readEntry ("Status Bar Normally Visible", m_statusbar_normally_visible);
   m_statusbar_fullscreen_visible = group.readEntry ("Status Bar FullScreen Visible", m_statusbar_fullscreen_visible);
   showStatusbar();
-  toolBar (m_toolbar[MAIN_TOOLBAR].name) -> setToolButtonStyle ((Qt::ToolButtonStyle) group.readEntry (QString (m_toolbar[MAIN_TOOLBAR].name) + " Button Style", (int) Qt::ToolButtonIconOnly));
   for ( int i = 0; i < KPLAYER_TOOLBARS; i ++ )
   {
     m_toolbar[i].normally_visible = group.readEntry (QString (m_toolbar[i].name) + " Normally Visible", m_toolbar[i].normally_visible);
     m_toolbar[i].fullscreen_visible = group.readEntry (QString (m_toolbar[i].name) + " FullScreen Visible", m_toolbar[i].fullscreen_visible);
+    toolBar (m_toolbar[i].name) -> setToolButtonStyle ((Qt::ToolButtonStyle) group.readEntry (QString (m_toolbar[i].name) + " Button Style", (int) Qt::ToolButtonIconOnly));
     //kdDebugTime() << "Show " << m_toolbar[i].name << " " << m_toolbar[i].action << "\n";
     showToolbar (i);
   }
@@ -1025,6 +1060,17 @@ void KPlayerWindow::disableToolbar (int index)
     toolBar (toolbar.name) -> hide();
   }
   action -> setEnabled (false);
+}
+
+void KPlayerWindow::enablePlaylistActions (void)
+{
+#ifdef DEBUG_KPLAYER_WINDOW
+  kdDebugTime() << "KPlayer: Enabling playlist actions\n";
+#endif
+  if ( playlist() -> isEmpty() )
+    disableToolbar (PLAYLIST_TOOLBAR);
+  else
+    enableToolbar (PLAYLIST_TOOLBAR);
 }
 
 void KPlayerWindow::enablePlayerActions (void)
@@ -1264,6 +1310,7 @@ void KPlayerWindow::playlistActivated (void)
   if ( m_progress_label )
     m_progress_label -> setText ("");
   connect (settings() -> properties(), SIGNAL (updated()), this, SLOT (refreshProperties()));
+  enablePlaylistActions();
   enableVideoActions();
 }
 
@@ -1273,6 +1320,7 @@ void KPlayerWindow::playlistStopped (void)
     log() -> setError (true);
   m_error_detected = false;
   playerProgressChanged (process() -> position(), KPlayerProcess::Position);
+  enablePlaylistActions();
 }
 
 void KPlayerWindow::showErrors (const QString&)
@@ -1746,6 +1794,8 @@ void KPlayerWindow::showEvent (QShowEvent* event)
   else
     kdDebugTime() << "KPlayerWindow::showEvent: no focus proxy\n";
 #endif*/
+  //QTimer::singleShot (20000, toggleAction ("options_show_log"), SLOT (trigger()));
+  //QTimer::singleShot (30000, toggleAction ("options_show_library"), SLOT (trigger()));
 }
 
 void KPlayerWindow::changeEvent (QEvent* event)
@@ -1806,6 +1856,8 @@ void KPlayerWindow::resizeEvent (QResizeEvent* event)
   KXmlGuiWindow::resizeEvent (event);
   if ( ! m_full_screen && ! m_set_display_size && ! settings() -> maximized() && ! isMaximized() && m_initial_show )
     m_normal_geometry.setSize (QSize (width(), height()));
+  if ( ! event -> spontaneous() )
+    m_previous_size = event -> size();
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "WiSize " << event -> oldSize(). width() << "x" << event -> oldSize(). height()
     << " => " << event -> size(). width() << "x" << event -> size(). height() << ", maximized "
@@ -1857,11 +1909,6 @@ void KPlayerWindow::setMinimumSize (int w, int h)
     m_previous_size = size();
 }
 
-QSize KPlayerWindow::sizeHint (void) const
-{
-  return minimumSizeHint() + kPlayerWidget() -> videoSize();
-}
-
 QSize KPlayerWindow::minimumSizeHint (void) const
 {
   KPlayerWindow* that = (KPlayerWindow*) this;
@@ -1885,6 +1932,53 @@ QSize KPlayerWindow::minimumSizeHint (void) const
   return size.boundedTo (availableGeometry().size());
 }
 */
+
+QSize KPlayerWindow::sizeHint (void) const
+{
+#ifdef DEBUG_KPLAYER_RESIZING
+  kdDebugTime() << "KPlayerWindow::sizeHint\n";
+#endif
+  QSize hint (KXmlGuiWindow::sizeHint());
+  int i = 0, left = 0, right = 0;
+  QLayoutItem* item;
+  while ( (item = layout() -> itemAt (i)) )
+  {
+    if ( item -> widget() && item -> widget() -> isVisible() && item -> widget() -> inherits ("QToolBar") )
+    {
+      QToolBar* toolbar = (QToolBar*) item -> widget();
+      if ( ! toolbar -> isFloating() )
+      {
+        Qt::ToolBarArea area = toolBarArea (toolbar);
+        int end = toolbar -> x() + toolbar -> width();
+        if ( area == Qt::LeftToolBarArea )
+        {
+          if ( end > left )
+            left = end;
+        }
+        else if ( area == Qt::RightToolBarArea )
+        {
+          end -= centralWidget() -> x() + centralWidget() -> width();
+          if ( end > right )
+            right = end;
+        }
+      }
+    }
+    i ++;
+  }
+  i = settings() -> displaySize().width();
+  if ( i <= 0 )
+    i = configuration() -> minimumInitialWidth();
+  i += left + right;
+  left = minimumSizeHint().width();
+  if ( i < left )
+    i = left;
+  if ( hint.width() > i )
+    hint.setWidth (i);
+#ifdef DEBUG_KPLAYER_RESIZING
+  kdDebugTime() << " Hint   " << hint.width() << "x" << hint.height() << "\n";
+#endif
+  return hint;
+}
 
 void KPlayerWindow::toFullScreen (void)
 {
@@ -2064,7 +2158,6 @@ void KPlayerWindow::correctSize (void)
     }
     return;
   }
-  /*
   if ( m_previous_size != size() )
   {
     if ( maximized )
@@ -2081,7 +2174,6 @@ void KPlayerWindow::correctSize (void)
   else
     kdDebugTime() << "             Using previous size\n";
 #endif
-  */
 }
 
 void KPlayerWindow::windowStateChanged (uint wid)
@@ -2159,7 +2251,7 @@ void KPlayerWindow::syncronize (bool user_resize)
 
 void KPlayerWindow::zoom (void)
 {
-  if ( m_full_screen )
+  if ( m_full_screen || ! m_initial_show )
     return;
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << "KPlayerWindow::zoom\n";
@@ -2167,7 +2259,90 @@ void KPlayerWindow::zoom (void)
 #ifdef DEBUG_KPLAYER_RESIZING
   dumpObject (this);
 #endif
-  adjustSize();
+  int i = 0, position = 0, left = 0, right = 0;
+  int space = settings() -> displaySize().height();
+  Qt::ToolBarArea current_area = Qt::NoToolBarArea;
+  QLayoutItem* item;
+  while ( (item = layout() -> itemAt (i)) )
+  {
+    if ( item -> widget() && item -> widget() -> isVisible() && item -> widget() -> inherits ("QToolBar") )
+    {
+      QToolBar* toolbar = (QToolBar*) item -> widget();
+      bool has_break = toolBarBreak (toolbar);
+      Qt::ToolBarArea area = toolBarArea (toolbar);
+      if ( area != Qt::NoToolBarArea && ! toolbar -> isFloating() )
+      {
+        bool auto_break = has_break;
+        int j;
+        for ( j = 0; j < KPLAYER_TOOLBARS; j ++ )
+          if ( toolbar -> objectName() == m_toolbar[j].name )
+          {
+            auto_break = has_break && m_toolbar[j].auto_break;
+            break;
+          }
+        int end = toolbar -> x() + toolbar -> width();
+        if ( area == Qt::LeftToolBarArea )
+        {
+          if ( end > left )
+            left = end;
+        }
+        else if ( area == Qt::RightToolBarArea )
+        {
+          end -= centralWidget() -> x() + centralWidget() -> width();
+          if ( end > right )
+            right = end;
+        }
+        QSize hint = toolbar -> sizeHint();
+        int length = toolbar -> orientation() == Qt::Vertical ? hint.height() : hint.width();
+        if ( area != current_area || has_break && ! auto_break )
+        {
+          position = length;
+          if ( current_area < Qt::TopToolBarArea && area >= Qt::TopToolBarArea )
+            space = settings() -> displaySize().isEmpty() ? configuration() -> minimumInitialWidth()
+              : settings() -> displaySize().width() + left + right;
+          current_area = area;
+        }
+        else
+        {
+          position += length;
+          m_toolbar[j].auto_break = auto_break = position > space;
+          if ( auto_break )
+          {
+            position = length;
+            if ( ! has_break )
+              insertToolBarBreak (toolbar);
+          }
+          else if ( has_break )
+            removeToolBarBreak (toolbar);
+        }
+      }
+    }
+    i ++;
+  }
+#ifdef DEBUG_KPLAYER_RESIZING
+  dumpObject (this);
+#endif
+  QSize hint (sizeHint());
+  QSize available (availableGeometry().size() - QSize (1, 1));
+  QSize frame (frameGeometry().size() - size() + hint);
+  if ( frame.width() > available.width() || frame.height() > available.height() )
+  {
+    QSize size (settings() -> displaySize());
+    if ( frame.width() > available.width() )
+      size.setWidth (size.width() + available.width() - frame.width());
+    if ( frame.height() > available.height() )
+      size.setHeight (size.height() + available.height() - frame.height());
+    size = settings() -> constrainSize (size);
+    hint -= settings() -> displaySize() - size;
+    settings() -> setDisplaySize (size);
+  }
+  QRect rect (frameGeometry());
+  rect.setSize (rect.size() - size() + hint);
+  do_move (rect);
+#ifdef DEBUG_KPLAYER_RESIZING
+  kdDebugTime() << " Resize " << hint.width() << "x" << hint.height() << "\n";
+#endif
+  resize (hint);
 #ifdef DEBUG_KPLAYER_RESIZING
   dumpObject (this);
 #endif
@@ -2271,7 +2446,6 @@ void KPlayerWindow::zoom (void)
 #endif
 }
 
-/*
 void KPlayerWindow::do_move (const QRect& frame)
 {
   QRect available (availableGeometry());
@@ -2291,7 +2465,6 @@ void KPlayerWindow::do_move (const QRect& frame)
     move (xc, yc);
   }
 }
-*/
 
 void KPlayerWindow::activateLayout (void)
 {
@@ -2393,21 +2566,12 @@ void KPlayerWindow::do_zoom (void)
     kdDebugTime() << "Zoom unsuccessful\n";
 #endif
 }
+#endif
 
 QRect KPlayerWindow::availableGeometry (void) const
 {
   QRect rect;
-  if ( ! QApplication::desktop() -> isVirtualDesktop() )
-  {
-    rect = QApplication::desktop() -> availableGeometry();
-#ifdef DEBUG_KPLAYER_RESIZING
-      kdDebugTime() << "Screen " << QApplication::desktop() -> screenGeometry().x()
-        << "x" << QApplication::desktop() -> screenGeometry().y()
-        << " " << QApplication::desktop() -> screenGeometry().width()
-        << "x" << QApplication::desktop() -> screenGeometry().height() << "\n";
-#endif
-  }
-  else
+  if ( QApplication::desktop() -> isVirtualDesktop() )
     for ( int i = 0; i < QApplication::desktop() -> numScreens(); i ++ )
     {
       rect |= QApplication::desktop() -> availableGeometry (i);
@@ -2421,6 +2585,16 @@ QRect KPlayerWindow::availableGeometry (void) const
         << " " << QApplication::desktop() -> availableGeometry (i).width()
         << "x" << QApplication::desktop() -> availableGeometry (i).height() << "\n";
 #endif
+    }
+  else
+  {
+    rect = QApplication::desktop() -> availableGeometry();
+#ifdef DEBUG_KPLAYER_RESIZING
+      kdDebugTime() << "Screen " << QApplication::desktop() -> screenGeometry().x()
+        << "x" << QApplication::desktop() -> screenGeometry().y()
+        << " " << QApplication::desktop() -> screenGeometry().width()
+        << "x" << QApplication::desktop() -> screenGeometry().height() << "\n";
+#endif
   }
 #ifdef DEBUG_KPLAYER_RESIZING
   kdDebugTime() << "Desktop " << QApplication::desktop() -> width() << "x" << QApplication::desktop() -> height() << "\n";
@@ -2428,7 +2602,6 @@ QRect KPlayerWindow::availableGeometry (void) const
 #endif
   return rect;
 }
-#endif
 
 /*void KPlayerWindow::barOrientationChanged (Orientation)
 {

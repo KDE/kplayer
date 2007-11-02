@@ -951,7 +951,7 @@ QSize KPlayerPlaylistCombobox::sizeHint() const
 QSize KPlayerPlaylistCombobox::minimumSizeHint() const
 {
   QSize hint = QComboBox::minimumSizeHint();
-  //hint.setWidth (configuration() -> minimumSliderLength());
+  hint.setWidth (configuration() -> minimumSliderLength());
   return hint;
 }
 

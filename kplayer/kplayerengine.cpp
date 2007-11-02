@@ -2420,7 +2420,7 @@ void KPlayerEngine::clearStoreSections (const QString& section)
   int children = group.readEntry ("Children", 0);
   for ( int i = 0; i < children; ++ i )
   {
-    QString entry (group.readEntry ("Child" + QString::number (i), QString()));
+    QString entry (group.readEntry ("Child" + QString::number (i)));
     if ( entry.indexOf ('/') < 0 )
     {
       KUrl url (section);

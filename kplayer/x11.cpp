@@ -22,18 +22,13 @@
 #undef Status
 #include <kdebug.h>
 kdbgstream kdDebugTime (void);
-#define DEBUG_KPLAYER_GRAB
+//#define DEBUG_KPLAYER_GRAB
 //#define DEBUG_KPLAYER_PROPERTY
 //#define DEBUG_KPLAYER_X11
 //#define DEBUG_KPLAYER_FOCUS
 //#define DEBUG_KPLAYER_KEY
 //#define DEBUG_KPLAYER_RESIZE
 //#define DEBUG_KPLAYER_CLIENT
-#endif
-
-#ifdef DEBUG_KPLAYER_CLIENT
-extern Atom qt_xdnd_position;
-extern Atom qt_xdnd_status;
 #endif
 
 /*bool KPlayerX11TestGrab (Display* display, int winid)
@@ -65,8 +60,7 @@ extern void KPlayerWidgetMapHandler (uint);
 extern void KPlayerWidgetUnmapHandler (uint);
 extern void KPlayerWindowStateChanged (uint);
 
-#ifdef DEBUG_KPLAYER_RESIZE
-
+#if defined(DEBUG_KPLAYER_RESIZE) or defined(DEBUG_KPLAYER_PROPERTY)
 const char* KPlayerX11EventTypeNames [LASTEvent] = {
   "EVENT0",
   "EVENT1",
@@ -104,7 +98,6 @@ const char* KPlayerX11EventTypeNames [LASTEvent] = {
   "ClientMessage",
   "MappingNotify"
 };
-
 #endif
 
 #ifdef DEBUG_KPLAYER_RESIZE
@@ -169,8 +162,7 @@ void KPlayerProcessX11Event (XEvent* event)
       ev -> state &= ~ ShiftMask;
   }
 #ifdef DEBUG_KPLAYER_CLIENT
-  else if ( event -> type == ClientMessage && (event -> xclient.message_type == qt_xdnd_position
-    || event -> xclient.message_type == qt_xdnd_status) )
+  else if ( event -> type == ClientMessage )
   {
     XClientMessageEvent* ev = (XClientMessageEvent*) event;
     kdDebugTime() << "X11 ClientMessage " << ev -> message_type << " " << ev -> window << " " 
