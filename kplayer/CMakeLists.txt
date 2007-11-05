@@ -76,6 +76,8 @@ install( FILES  kplayerpartui.rc DESTINATION ${DATA_INSTALL_DIR}/kplayer )
 install( FILES  input.conf DESTINATION ${DATA_INSTALL_DIR}/kplayer )
 install( FILES  kplayerpart.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES  kplayerui.rc DESTINATION ${DATA_INSTALL_DIR}/kplayer )
-install( FILES  kplayer-play-queue.desktop kplayer-next.desktop kplayer-directory.desktop kplayer-actions.desktop DESTINATION ${DATA_INSTALL_DIR}/konqueror/servicemenus )
+install( FILES  kplayer-play-queue.desktop kplayer-next.desktop
+kplayer-directory.desktop kplayer-actions.desktop DESTINATION
+${SERVICES_INSTALL_DIR}/ServiceMenus )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
