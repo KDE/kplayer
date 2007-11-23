@@ -23,6 +23,7 @@
 #include <qfileinfo.h>
 #include <qmenu.h>
 #include <qtooltip.h>
+#include <qapplication.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_PLAYLIST
@@ -55,7 +56,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   actionCollection() -> addAction ("file_open_url", action);
   connect (action, SIGNAL (triggered()), SLOT (filePlayUrl()));
   action -> setText (i18n("Play &URL..."));
-  action -> setIcon (KIcon ("images-display"));
+  action -> setIcon (KIcon ("document-open-remote"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_U);
   action -> setStatusTip (i18n("Plays a URL"));
   action -> setWhatsThis (i18n("Play URL command displays the standard URL dialog and lets you type or paste in a URL to put on the playlist and start playing. The URL can be a remote network location, a local file path, or a KDE I/O Slave URL."));
@@ -73,11 +74,13 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   m_devices = new KPlayerDevicesActionList (ki18n("%1"), ki18n("Shows commands and options available for %1"),
     ki18n("Submenu that shows commands and options available for %1."), this, "file_devices");
 
+  bool isRTL = QApplication::isRightToLeft();
+
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("player_next", action);
   connect (action, SIGNAL (triggered()), SLOT (next()));
   action -> setText (i18n("&Next"));
-  action -> setIcon (KIcon ("arrow-right-double"));
+  action -> setIcon (KIcon (isRTL ? "media-skip-backward" : "media-skip-forward"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Down);
   action -> setStatusTip (i18n("Plays the next item on the playlist"));
   action -> setWhatsThis (i18n("Next command starts playing the next item on the current playlist."));
@@ -86,7 +89,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   actionCollection() -> addAction ("player_previous", action);
   connect (action, SIGNAL (triggered()), SLOT (previous()));
   action -> setText (i18n("P&revious"));
-  action -> setIcon (KIcon ("arrow-left-double"));
+  action -> setIcon (KIcon (isRTL ? "media-skip-forward" : "media-skip-backward"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Up);
   action -> setStatusTip (i18n("Plays the previous item on the playlist"));
   action -> setWhatsThis (i18n("Previous command starts playing the previous item on the current playlist."));
@@ -107,7 +110,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   actionCollection() -> addAction ("player_loop", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (loop()));
   toggle -> setText (i18n("&Loop"));
-  toggle -> setIcon (KIcon ("loop"));
+  toggle -> setIcon (KIcon ("media-playlist-repeat"));
   toggle -> setStatusTip (i18n("Turns the option to loop through the list on/off"));
   toggle -> setWhatsThis (i18n("Loop command toggles the option to start playing items from the beginning of the playlist after playing the last item on the playlist."));
   if ( configuration() -> loop() )
@@ -117,7 +120,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   actionCollection() -> addAction ("player_shuffle", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (shuffle()));
   toggle -> setText (i18n("S&huffle"));
-  toggle -> setIcon (KIcon ("shuffle"));
+  toggle -> setIcon (KIcon ("media-playlist-shuffle"));
   toggle -> setStatusTip (i18n("Turns the option to play items in random order on or off"));
   toggle -> setWhatsThis (i18n("Shuffle command toggles the option to play items in a random order."));
   if ( configuration() -> shuffle() )
