@@ -23,6 +23,7 @@
 #include <q3header.h>
 #include <qlabel.h>
 #include <qmenu.h>
+#include <QtCore/QTimer>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_NODEVIEW
