@@ -16,6 +16,7 @@
 #include <X11/Xlib.h>
 #undef CursorShape
 #include <qbytearray.h>
+#include <qnamespace.h>
 #include <qx11info_x11.h>
 
 #ifdef DEBUG
@@ -23,12 +24,13 @@
 #include <kdebug.h>
 kdbgstream kdDebugTime (void);
 //#define DEBUG_KPLAYER_GRAB
-//#define DEBUG_KPLAYER_PROPERTY
+#define DEBUG_KPLAYER_PROPERTY
 //#define DEBUG_KPLAYER_X11
 //#define DEBUG_KPLAYER_FOCUS
 //#define DEBUG_KPLAYER_KEY
 //#define DEBUG_KPLAYER_RESIZE
 //#define DEBUG_KPLAYER_CLIENT
+#define DEBUG_KPLAYER_FRAME_STRUT
 #endif
 
 /*bool KPlayerX11TestGrab (Display* display, int winid)
@@ -54,8 +56,9 @@ kdbgstream kdDebugTime (void);
   return true;
 }*/
 
-extern void KPlayerSetControlShiftState (bool control, bool shift);
-extern void KPlayerWidgetResizeHandler (bool);
+extern void KPlayerSetKeyboardState (Qt::KeyboardModifiers modifiers);
+extern void KPlayerSetMouseState (Qt::MouseButtons buttons);
+extern void KPlayerSetResizing (bool);
 extern void KPlayerWidgetMapHandler (uint);
 extern void KPlayerWidgetUnmapHandler (uint);
 extern void KPlayerWindowStateChanged (uint);
@@ -141,9 +144,9 @@ void KPlayerProcessX11Event (XEvent* event)
         || event -> type == FocusOut && ev -> mode == NotifyGrab && ev -> detail == NotifyAncestor )
     {
 #ifdef DEBUG_KPLAYER_GRAB
-      kdDebugTime() << "Calling KPlayerWidgetResizeHandler (" << (ev -> mode == NotifyGrab) << ")\n";
+      kdDebugTime() << "KPlayerSetResizing (" << (ev -> mode == NotifyGrab) << ")\n";
 #endif
-      KPlayerWidgetResizeHandler (ev -> mode == NotifyGrab);
+      KPlayerSetResizing (ev -> mode == NotifyGrab);
     }
   }
   else if ( event -> type == KeyPress || event -> type == KeyRelease )
@@ -155,10 +158,17 @@ void KPlayerProcessX11Event (XEvent* event)
       << ev -> subwindow << " " << ev -> x << "x" << ev -> y << " " << ev -> x_root << "x" << ev -> y_root
       << " keycode " << ev -> keycode << " state " << ev -> state << " same " << ev -> same_screen << "\n";
 #endif
-    KPlayerSetControlShiftState ((ev -> state & ControlMask) == ControlMask, (ev -> state & ShiftMask) == ShiftMask);
-    if ( (ev -> state & ShiftMask) == ShiftMask && (ev -> state & (ControlMask | Mod1Mask)) != 0
-        && ev -> keycode != 100 && ev -> keycode != 102
-        && ((ev -> state & Mod1Mask) != Mod1Mask || ev -> keycode != 98 && ev -> keycode != 104) )
+    bool alt = (ev -> state & Mod1Mask) == Mod1Mask;
+    bool control = (ev -> state & ControlMask) == ControlMask;
+    bool shift = (ev -> state & ShiftMask) == ShiftMask;
+    Qt::KeyboardModifiers modifiers = shift ? Qt::ShiftModifier : Qt::NoModifier;
+    if ( control )
+      modifiers |= Qt::ControlModifier;
+    if ( alt )
+      modifiers |= Qt::AltModifier;
+    KPlayerSetKeyboardState (modifiers);
+    if ( shift && (control || alt) && ev -> keycode != 100 && ev -> keycode != 102
+        && (! alt || ev -> keycode != 98 && ev -> keycode != 104) )
       ev -> state &= ~ ShiftMask;
   }
 #ifdef DEBUG_KPLAYER_CLIENT
@@ -375,9 +385,66 @@ void KPlayerX11GetKeyboardMouseState (uint id)
     kdDebugTime() << " root " << root << " " << root_x << "x" << root_y << " child " << child
       << " " << win_x << "x" << win_y << " state " << state << "\n";
 #endif
-    KPlayerSetControlShiftState ((state & ControlMask) == ControlMask, (state & ShiftMask) == ShiftMask);
+    Qt::KeyboardModifiers modifiers = (state & ShiftMask) == ShiftMask ? Qt::ShiftModifier : Qt::NoModifier;
+    if ( (state & ControlMask) == ControlMask )
+      modifiers |= Qt::ControlModifier;
+    if ( (state & Mod1Mask) == Mod1Mask )
+      modifiers |= Qt::AltModifier;
+    KPlayerSetKeyboardState (modifiers);
+    Qt::MouseButtons buttons = (state & Button1Mask) == Button1Mask ? Qt::LeftButton : Qt::NoButton;
+    if ( (state & Button2Mask) == Button2Mask )
+      buttons |= Qt::MidButton;
+    if ( (state & Button3Mask) == Button3Mask )
+      buttons |= Qt::RightButton;
+    KPlayerSetMouseState (buttons);
   }
 }
+
+/*
+void KPlayerX11GetFrameStrut (uint id)
+{
+#ifdef DEBUG_KPLAYER_FRAME_STRUT
+  kdDebugTime() << "KPlayerX11GetFrameStrut " << id << "\n";
+#endif
+  XWindowAttributes a;
+  if ( XGetWindowAttributes (QX11Info::display(), id, &a) )
+  {
+#ifdef DEBUG_KPLAYER_FRAME_STRUT
+    kdDebugTime() << " Coords " << a.x << "x" << a.y << "\n";
+    kdDebugTime() << " Size   " << a.width << "x" << a.height << "\n";
+    kdDebugTime() << " Border " << a.border_width << "\n";
+#endif
+  }
+  Window p = 0, r = 0, *c = 0;
+  uint nc = 0;
+  while ( XQueryTree (QX11Info::display(), id, &r, &p, &c, &nc) )
+  {
+    if ( c && nc > 0 )
+      XFree (c);
+    if ( ! p )
+      return;
+#ifdef DEBUG_KPLAYER_FRAME_STRUT
+    kdDebugTime() << " Parent " << p << "\n";
+#endif
+    int x = 0, y = 0;
+    if ( XTranslateCoordinates (QX11Info::display(), id, p, 0, 0, &x, &y, &r) )
+    {
+#ifdef DEBUG_KPLAYER_FRAME_STRUT
+      kdDebugTime() << " Corner " << x << "x" << y << "\n";
+#endif
+    }
+    if ( XGetWindowAttributes (QX11Info::display(), id, &a) )
+    {
+#ifdef DEBUG_KPLAYER_FRAME_STRUT
+      kdDebugTime() << " Coords " << a.x << "x" << a.y << "\n";
+      kdDebugTime() << " Size   " << a.width << "x" << a.height << "\n";
+      kdDebugTime() << " Border " << a.border_width << "\n";
+#endif
+    }
+    id = p;
+  }
+}
+*/
 
 // fixed for enable-final
 #undef Above
