@@ -86,8 +86,7 @@ public:
   void setAspectOverride (bool override)
     { configuration() -> setOverride ("Aspect", override); }
 
-  QSize displaySize (void) const
-    { return m_display_size; }
+  QSize displaySize (void) const;
   void setDisplaySize (QSize size);
 
   bool displaySizeOverride (void) const
@@ -95,14 +94,15 @@ public:
   void setDisplaySizeOverride (bool override)
     { configuration() -> setOverride ("Display Size", override); }
 
+  QSize adjustedDisplaySize (void) const;
   QSize adjustDisplaySize (bool, bool);
 
   bool setInitialDisplaySize (void);
 
-  bool isAspect (QSize);
-  bool isZoomFactor (int, int = 1);
+  bool isAspect (QSize) const;
+  bool isZoomFactor (int, int = 1) const;
 
-  bool fullScreen (void);
+  bool fullScreen (void) const;
   void setFullScreen (bool);
 
   bool maximized (void) const
@@ -113,25 +113,33 @@ public:
     { return properties ("Maintain Aspect") -> maintainAspect(); }
   void setMaintainAspect (bool, QSize);
 
-  bool constrainedSize (void)
+  bool constrainedSize (void) const
     { return fullScreen() || maximized() || ! configuration() -> resizeAutomatically()
       || KPlayerEngine::engine() -> light(); }
 
   QSize constrainSize (QSize size) const;
   QSize adjustSize (QSize size, bool horizontally = false) const;
 
-  bool control (void) const
-    { return m_control; }
-  void setControl (bool control)
-    { resetControl(); m_control = control; }
+  Qt::KeyboardModifiers modifiers (void) const
+    { return m_modifiers; }
+  void setModifiers (Qt::KeyboardModifiers modifiers)
+    { m_modifiers = modifiers; }
 
+  Qt::MouseButtons buttons (void) const
+    { return m_buttons; }
+  void setButtons (Qt::MouseButtons buttons)
+    { m_buttons = buttons; }
+
+  bool anyButton (void) const
+    { return buttons() != Qt::NoButton; }
+
+  bool control (void) const
+    { return (modifiers() & Qt::ControlModifier) == Qt::ControlModifier; }
   bool shift (void) const
-    { return m_shift; }
-  void setShift (bool shift)
-    { resetShift(); m_shift = shift; }
+    { return (modifiers() & Qt::ShiftModifier) == Qt::ShiftModifier; }
 
   bool anyControl (void) const
-    { return ! m_no_control && (m_control || m_fake_control); }
+    { return ! m_no_control && (control() || m_fake_control); }
   void setNoControl (void)
     { m_no_control = true; m_fake_control = false; }
   void setFakeControl (void)
@@ -140,7 +148,7 @@ public:
     { m_no_control = m_fake_control = false; }
 
   bool anyShift (void) const
-    { return ! m_no_shift && (m_shift || m_fake_shift); }
+    { return ! m_no_shift && (shift() || m_fake_shift); }
   void setNoShift (void)
     { m_no_shift = true; m_fake_shift = false; }
   void setFakeShift (void)
@@ -196,8 +204,8 @@ protected:
   bool m_last_full_screen;
   QSize m_display_size;
   QSize m_aspect;
-  bool m_control;
-  bool m_shift;
+  Qt::MouseButtons m_buttons;
+  Qt::KeyboardModifiers m_modifiers;
   bool m_no_control;
   bool m_no_shift;
   bool m_fake_control;

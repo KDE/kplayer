@@ -40,6 +40,9 @@ public:
 
   void sendConfigureEvent (void);
 
+  /** Returns the size hint for the widget. */
+  virtual QSize sizeHint (void) const;
+
 protected:
   /** Processes the widget resize event. Ensures that MPlayer
       continues to display video. Emits resized signal. */
@@ -93,15 +96,6 @@ public:
   /** Resizes the widget to the given size. */
   void setDisplaySize (QSize);
 
-  /** Handles resizing done by the window manager.
-   *  @param resizing true if resizing has started, false if resizing has completed
-   */
-  void resizeHandler (bool resizing);
-
-  /** Returns whether the workspace is being resized by the user. */
-  bool isResizing (void) const
-    { return m_resizing; }
-
 protected:
   /** Processes the widget resize event. Resizes the KPlayerWidget to the video size. */
   virtual void resizeEvent (QResizeEvent*);
@@ -133,8 +127,6 @@ protected:
   QWidget* m_hidden_widget;
 
   // Following should be private
-  /** Window manager is resizing the top level window. */
-  bool m_resizing;
   /** Mouse activity indicator. */
   bool m_mouse_activity;
   /** Mouse activity timer. */
@@ -143,8 +135,6 @@ protected:
 signals:
   /** Emitted when the widget is resized. */
   void resized (void);
-  /** Emitted when the widget is resized by the user. */
-  void userResize (void);
   /** Emitted when the context menu event is received. */
   void contextMenu (const QPoint& global_position);
 

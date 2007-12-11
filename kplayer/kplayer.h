@@ -25,6 +25,7 @@
 #include <kuniqueapplication.h>
 
 #include "kplayerengine.h"
+#include "kplayersettings.h"
 
 class KPlayerActionList;
 class KPlayerLibraryWindow;
@@ -35,6 +36,7 @@ class KPlayerWorkspace;
 class KToggleAction;
 class KUrl;
 class QLabel;
+class QTabBar;
 
 #define MAIN_TOOLBAR         0
 #define PLAYLIST_TOOLBAR     1
@@ -102,24 +104,41 @@ public:
   /** Logs a message if logging of KPlayer messages is enabled. */
   void log (QString);
 
-  /** Shows or hides the menu bar according to the current settings and updates the user interface. */
-  void showMenubar (void);
-  /** Shows or hides the given toolbar according to the current settings and updates the user interface. */
-  void showToolbar (int);
-  /** Shows or hides the given toolbar and updates the user interface. */
-  void showToolbar (int, bool);
-  /** Shows or hides the status bar according to the current settings and updates the user interface. */
-  void showStatusbar (void);
+  /** Returns whether the menu bar should be currently visible. */
+  bool showMenubar (void) const
+    { return settings() -> fullScreen() ? m_menubar_fullscreen_visible : m_menubar_normally_visible; }
+  /** Sets whether the menu bar should be currently visible. */
+  void showMenubar (bool show)
+    { (settings() -> fullScreen() ? m_menubar_fullscreen_visible : m_menubar_normally_visible) = show; }
 
-  /** Shows or hides the library according to the current settings and updates the user interface. */
-  void showLibrary (void);
-  /** Shows or hides the library and updates the user interface. */
-  void showLibrary (bool);
+  /** Returns whether the status bar should be currently visible. */
+  bool showStatusbar (void) const
+    { return settings() -> fullScreen() ? m_statusbar_fullscreen_visible : m_statusbar_normally_visible; }
+  /** Sets whether the status bar should be currently visible. */
+  void showStatusbar (bool show)
+    { (settings() -> fullScreen() ? m_statusbar_fullscreen_visible : m_statusbar_normally_visible) = show; }
 
-  /** Shows or hides the message log according to the current settings and updates the user interface. */
-  void showMessageLog (void);
-  /** Shows or hides the message log and updates the user interface. */
-  void showMessageLog (bool);
+  /** Returns whether the given toolbar should be currently visible. */
+  bool showToolbar (int index) const
+    { return toggleAction (m_toolbar[index].action) -> isEnabled()
+      && (settings() -> fullScreen() ? m_toolbar[index].fullscreen_visible : m_toolbar[index].normally_visible); }
+  /** Sets whether the given toolbar should be currently visible. */
+  void showToolbar (int index, bool show)
+    { (settings() -> fullScreen() ? m_toolbar[index].fullscreen_visible : m_toolbar[index].normally_visible) = show; }
+
+  /** Returns whether the library should be currently visible. */
+  bool showLibrary (void) const
+    { return settings() -> fullScreen() ? m_library_fullscreen_visible : m_library_normally_visible; }
+  /** Sets whether the library should be currently visible. */
+  void showLibrary (bool show)
+    { (settings() -> fullScreen() ? m_library_fullscreen_visible : m_library_normally_visible) = m_show_library = show; }
+
+  /** Returns whether the message log should be currently visible. */
+  bool showMessageLog (void) const
+    { return settings() -> fullScreen() ? m_messagelog_fullscreen_visible : m_messagelog_normally_visible; }
+  /** Sets whether the message log should be currently visible. */
+  void showMessageLog (bool show)
+    { (settings() -> fullScreen() ? m_messagelog_fullscreen_visible : m_messagelog_normally_visible) = m_show_log = show; }
 
   /** Calculates the size hint for the main window. */
   virtual QSize sizeHint (void) const;
@@ -130,30 +149,29 @@ public:
 
   /** Returns the full screen state. */
   bool isFullScreen (void) const;
-  /** Changes to full screen. */
-  void toFullScreen (void);
-  /** Changes to normal screen size. */
-  void toNormalScreen (void);
-
   /** Replacement for broken QWidget::isMaximized. */
   bool isMaximized (void) const;
+
   /** Replacement for broken QWidget::showMaximized. */
-  virtual void showMaximized (void);
+  //virtual void showMaximized (void);
   /** Calls base class implementation. */
-  virtual void showNormal (void);
+  //virtual void showNormal (void);
+
+  /** Returns whether the message log should be currently visible. */
+  bool logVisible (void) const
+    { return settings() -> fullScreen() ? m_messagelog_fullscreen_visible : m_messagelog_normally_visible; }
 
 protected:
   /** Returns the total available geometry. */
   QRect availableGeometry (void) const;
-  /** Resizes the main window in response to a zoom request. */
-  //void do_zoom (void);
-  /** Moves the main window if it does not fit the available screen space. */
-  void do_move (const QRect& frame);
+
   /** Sets up actions and connects signals to slots. */
   void initActions (void);
   /** Sets up the status bar. */
   void initStatusBar (void);
 
+  /** Finds the tab bar where the widget is docked. */
+  QTabBar* findTabBar (QDockWidget* widget, int* index = 0);
   /** Shows the dock widget. */
   void showDockWidget (QDockWidget* widget);
 
@@ -221,11 +239,6 @@ protected:
   KToggleAction* toggleAction (const char* name) const
     { return (KToggleAction*) action (name); }
 
-  /** Rearranges child windows and clears events. */
-  void activateLayout (void);
-  /** Syncronizes X Server and Qt events. */
-  //void syncronizeEvents (void);
-
   /** The log window object. */
   KPlayerLogWindow* m_log;
   /** The playlist object. */
@@ -238,24 +251,29 @@ protected:
   bool m_statusbar_normally_visible, m_statusbar_fullscreen_visible;
   bool m_messagelog_normally_visible, m_messagelog_fullscreen_visible;
   bool m_library_normally_visible, m_library_fullscreen_visible;
-  bool m_set_display_size, m_initial_show, m_error_detected, m_maximized;
-  bool m_full_screen/*, m_show_log, m_show_library*/;
+  //bool m_toggling_full_screen, m_active_window;
+  bool m_initial_show, m_error_detected;
+  bool m_handle_layout, m_show_library, m_show_log;
   Toolbar m_toolbar [KPLAYER_TOOLBARS];
   QSize m_previous_size;
-  QRect m_normal_geometry;
+  //QRect m_normal_geometry;
   QLabel *m_status_label, *m_state_label, *m_progress_label;
 
 public slots:
   /** Resets the zooming flag when the main window state changes. */
   void windowStateChanged (uint wid);
   /** Syncronizes full screen and maximized settings. */
-  void syncronize (bool);
-  /** Zooms the video to the correct size. */
+  void syncronizeState (bool* pending);
+  /** Syncronizes controls. */
+  void syncronizeControls (void);
+  /** Updates the layout of the window controls. */
+  void updateLayout (const QSize&);
+  /** Resizes the window to the correct size. */
   void zoom (void);
+  /** Finalizes the window layout. */
+  void finalizeLayout (void);
   /** Sets the correct display size. */
   void correctSize (void);
-  /** Adjusts the initial display size. */
-  void initialSize (void);
 
   /** Enables or disables submenus with the given name. */
   void enableSubmenu (const QString& name, bool enable);
@@ -318,13 +336,6 @@ public slots:
   /** Clears the temporary statusbar text when the action is no longer highlighted. */
   //void clearStatusMessage (void);
 
-  /** Handles bar orientation change event. */
-//void barOrientationChanged (Orientation);
-  /** Handles bar place change event. */
-//void barPlaceChanged (QDockWindow::Place);
-  /** Handles bar visibility change event. */
-//void barVisibilityChanged (bool);
-
 protected slots:
   /** Receives the stateChanged signal from KPlayerProcess. */
   void playerStateChanged (KPlayerProcess::State, KPlayerProcess::State);
@@ -338,16 +349,10 @@ protected slots:
   void playerMessageReceived (QString);
   /** Receives the errorDetected signal from KPlayerProcess. */
   void playerErrorDetected (void);
-  /** Receives the visibilityChanged signal from KPlayerLogWindow. Updates the menu item. */
-  void logVisibilityChanged (bool);
-  /** Receives the visibilityChanged signal from KPlayerLibraryWindow. Updates the menu item. */
-  void libraryVisibilityChanged (bool);
   /** Receives the updated signal from KPlayerSettings. Updates the slider settings. */
   void refreshSettings (void);
   /** Receives the updated signal from KPlayerProperties. Updates the window caption. */
   void refreshProperties (void);
-  /** Sets the desired display size. */
-  void setDisplaySize (void);
 
   /** Shows the library window. */
   void makeLibraryVisible (void);

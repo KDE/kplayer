@@ -36,8 +36,8 @@ KPlayerSettings::KPlayerSettings (void)
   kdDebugTime() << "Creating settings\n";
 #endif
   m_last_full_screen = false;
-  setControl (false);
-  setShift (false);
+  setButtons (Qt::NoButton);
+  setModifiers (Qt::NoModifier);
   m_properties = KPlayerMedia::trackProperties (KUrl());
 }
 
@@ -54,7 +54,7 @@ KPlayerSettings::~KPlayerSettings()
 void KPlayerSettings::load (const KUrl& url)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::load (" << url.prettyUrl() << ")\n";
+  kdDebugTime() << "Settings::load " << url.prettyUrl() << "\n";
 #endif
   if ( url == properties() -> url() )
     return;
@@ -101,7 +101,7 @@ void KPlayerSettings::load (const KUrl& url)
 #endif
 }
 
-bool KPlayerSettings::fullScreen (void)
+bool KPlayerSettings::fullScreen (void) const
 {
   if ( kPlayerEngine() -> stopped() )
     return false;
@@ -110,7 +110,7 @@ bool KPlayerSettings::fullScreen (void)
 #endif
   bool full_screen_default = properties() -> hasVideo() ? configuration() -> fullScreen()
     : properties() -> hasNoVideo() ? false : m_last_full_screen;
-  m_last_full_screen = ! configuration() -> override ("Full Screen") && ! properties() -> hasNoVideo() 
+  kPlayerSettings() -> m_last_full_screen = ! configuration() -> override ("Full Screen") && ! properties() -> hasNoVideo()
     && properties() -> hasFullScreen() ? properties() -> fullScreen() : full_screen_default;
 #ifdef DEBUG_KPLAYER_SETTINGS
   kdDebugTime() << "Settings::fullScreen " << properties() -> hasVideo() << " " << properties() -> hasNoVideo()
@@ -122,7 +122,7 @@ bool KPlayerSettings::fullScreen (void)
 void KPlayerSettings::setFullScreen (bool full_screen)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setFullScreen (" << full_screen << ")\n";
+  kdDebugTime() << "Settings::setFullScreen " << full_screen << "\n";
 #endif
   setOverride ("Full Screen", ! configuration() -> rememberFullScreen (shift()));
   properties ("Full Screen") -> setFullScreen (full_screen);
@@ -131,7 +131,7 @@ void KPlayerSettings::setFullScreen (bool full_screen)
 void KPlayerSettings::setMaximized (bool maximized)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setMaximized (" << maximized << ")\n";
+  kdDebugTime() << "Settings::setMaximized " << maximized << "\n";
 #endif
   setOverride ("Maximized", ! configuration() -> rememberMaximized (shift()));
   properties ("Maximized") -> setMaximized (maximized);
@@ -140,7 +140,7 @@ void KPlayerSettings::setMaximized (bool maximized)
 void KPlayerSettings::setMaintainAspect (bool maintain, QSize aspect)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setMaintainAspect (" << maintain << ", " << aspect.width() << "x" << aspect.height() << ")\n";
+  kdDebugTime() << "Settings::setMaintainAspect " << maintain << " " << aspect.width() << "x" << aspect.height() << "\n";
 #endif
   setOverride ("Maintain Aspect", ! configuration() -> rememberMaintainAspect (shift()));
   properties ("Maintain Aspect") -> setMaintainAspect (maintain);
@@ -167,10 +167,15 @@ void KPlayerSettings::setAspect (QSize aspect)
   setAspectOverride (! aspect.isEmpty() && ! m_aspect.isEmpty() && aspect.width() * m_aspect.height() != aspect.height() * m_aspect.width());
 }
 
+QSize KPlayerSettings::displaySize (void) const
+{
+  return m_display_size.isEmpty() ? QSize (configuration() -> preferredVideoWidth(), 0) : m_display_size;
+}
+
 void KPlayerSettings::setDisplaySize (QSize size)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setDisplaySize (" << size.width() << "x" << size.height() << ")\n";
+  kdDebugTime() << "Settings::setDisplaySize " << size.width() << "x" << size.height() << "\n";
 #endif
   m_display_size = size;
 }
@@ -178,7 +183,7 @@ void KPlayerSettings::setDisplaySize (QSize size)
 void KPlayerSettings::setVolume (int volume)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setVolume (" << volume << ")\n";
+  kdDebugTime() << "Settings::setVolume " << volume << "\n";
 #endif
   setOverride ("Volume", false);
   if ( configuration() -> rememberVolume (shift()) )
@@ -192,7 +197,7 @@ void KPlayerSettings::setAudioDelay (float delay)
   if ( fabs (delay) < 0.0001 )
     delay = 0;
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setAudioDelay (" << delay << ")\n";
+  kdDebugTime() << "Settings::setAudioDelay " << delay << "\n";
 #endif
   setOverride ("Audio Delay", ! configuration() -> rememberAudioDelay (shift()));
   properties ("Audio Delay") -> setAudioDelay (delay);
@@ -201,7 +206,7 @@ void KPlayerSettings::setAudioDelay (float delay)
 void KPlayerSettings::setFrameDrop (int frame_drop)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setFrameDrop (" << frame_drop << ")\n";
+  kdDebugTime() << "Settings::setFrameDrop " << frame_drop << "\n";
 #endif
   setOverride ("Frame Dropping", ! configuration() -> rememberFrameDrop (shift()));
   properties ("Frame Dropping") -> setFrameDrop (frame_drop);
@@ -210,7 +215,7 @@ void KPlayerSettings::setFrameDrop (int frame_drop)
 void KPlayerSettings::setContrast (int contrast)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setContrast (" << contrast << ")\n";
+  kdDebugTime() << "Settings::setContrast " << contrast << "\n";
 #endif
   setOverride ("Contrast", false);
   if ( configuration() -> rememberContrast (shift()) )
@@ -222,7 +227,7 @@ void KPlayerSettings::setContrast (int contrast)
 void KPlayerSettings::setBrightness (int brightness)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setBrightness (" << brightness << ")\n";
+  kdDebugTime() << "Settings::setBrightness " << brightness << "\n";
 #endif
   setOverride ("Brightness", false);
   if ( configuration() -> rememberBrightness (shift()) )
@@ -234,7 +239,7 @@ void KPlayerSettings::setBrightness (int brightness)
 void KPlayerSettings::setHue (int hue)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setHue (" << hue << ")\n";
+  kdDebugTime() << "Settings::setHue " << hue << "\n";
 #endif
   setOverride ("Hue", false);
   if ( configuration() -> rememberHue (shift()) )
@@ -246,7 +251,7 @@ void KPlayerSettings::setHue (int hue)
 void KPlayerSettings::setSaturation (int saturation)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setSaturation (" << saturation << ")\n";
+  kdDebugTime() << "Settings::setSaturation " << saturation << "\n";
 #endif
   setOverride ("Saturation", false);
   if ( configuration() -> rememberSaturation (shift()) )
@@ -307,7 +312,7 @@ void KPlayerSettings::addSubtitlePath (const QString& path)
 void KPlayerSettings::setSubtitlePosition (int position)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setSubtitlePosition (" << position << ")\n";
+  kdDebugTime() << "Settings::setSubtitlePosition " << position << "\n";
 #endif
   setOverride ("Subtitle Position", ! configuration() -> rememberSubtitlePosition (shift()));
   properties ("Subtitle Position") -> setSubtitlePosition (position);
@@ -318,21 +323,21 @@ void KPlayerSettings::setSubtitleDelay (float delay)
   if ( fabs (delay) < 0.0001 )
     delay = 0;
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::setSubtitleDelay (" << delay << ")\n";
+  kdDebugTime() << "Settings::setSubtitleDelay " << delay << "\n";
 #endif
   setOverride ("Subtitle Delay", ! configuration() -> rememberSubtitleDelay (shift()));
   properties ("Subtitle Delay") -> setSubtitleDelay (delay);
 }
 
-bool KPlayerSettings::isAspect (QSize size)
+bool KPlayerSettings::isAspect (QSize size) const
 {
   return ! size.isEmpty() && ! aspect().isEmpty() && size.width() * aspect().height() == size.height() * aspect().width();
 }
 
-bool KPlayerSettings::isZoomFactor (int m, int d)
+bool KPlayerSettings::isZoomFactor (int m, int d) const
 {
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::isZoomFactor (" << m << ", " << d << ") "
+  kdDebugTime() << "Settings::isZoomFactor " << m << "/" << d << " "
     << properties() -> currentSize().width() << "x" << properties() -> currentSize().height()
     << " " << displaySize().width() << "x" << displaySize().height()
     << " " << aspect().width() << "x" << aspect().height() << "\n";
@@ -349,12 +354,21 @@ bool KPlayerSettings::isZoomFactor (int m, int d)
   return result;
 }
 
+QSize KPlayerSettings::adjustedDisplaySize (void) const
+{
+  QSize size (constrainedSize() ? constrainSize (kPlayerWorkspace() -> size()) : adjustSize (displaySize()));
+#ifdef DEBUG_KPLAYER_SETTINGS
+  kdDebugTime() << "Settings::adjustedDisplaySize " << size.width() << "x" << size.height() << "\n";
+#endif
+  return size;
+}
+
 QSize KPlayerSettings::adjustDisplaySize (bool user_zoom, bool user_resize)
 {
   QSize size (! user_zoom && constrainedSize() ? constrainSize (kPlayerWorkspace() -> size())
     : adjustSize (displaySize()));
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::adjustDisplaySize (" << user_zoom << ", " << user_resize << ") " << size.width() << "x" << size.height() << "\n";
+  kdDebugTime() << "Settings::adjustDisplaySize " << user_zoom << " " << user_resize << " " << size.width() << "x" << size.height() << "\n";
 #endif
   if ( ! fullScreen() && ! maximized() )
   {
@@ -399,17 +413,18 @@ bool KPlayerSettings::setInitialDisplaySize (void)
   if ( properties() -> displaySizeOption() == 1 )
     size = properties() -> displaySize();
   else if ( ! properties() -> hasOriginalSize() )
-    size = QSize (configuration() -> minimumInitialWidth(), 0);
+    size = QSize (configuration() -> preferredVideoWidth(), 0);
   else
   {
-    int d = 1, n = (configuration() -> minimumInitialWidth() - 1) / properties() -> currentSize().width();
-    if ( n > 0 && properties() -> currentSize().width() * n
-        + properties() -> currentSize().width() / 2 >= configuration() -> minimumInitialWidth() )
+    int width = properties() -> currentSize().width();
+    int d = 1, n = (configuration() -> preferredVideoWidth() - 1) / width;
+    if ( n > 0 && width * n + width / 2 >= configuration() -> preferredVideoWidth() )
       n *= d = 2;
+    n ++;
 #ifdef DEBUG_KPLAYER_SETTINGS
-    kdDebugTime() << "Initial Zoom Factor " << (n + 1) << " / " << d << "\n";
+    kdDebugTime() << "Initial Zoom Factor " << n << " / " << d << "\n";
 #endif
-    size = adjustSize (properties() -> currentSize() * (n + 1) / d);
+    size = adjustSize (properties() -> currentSize() * n / d);
   }
 #ifdef DEBUG_KPLAYER_SETTINGS
   kdDebugTime() << "Settings: Initial size: " << size.width() << "x" << size.height() << "\n";
@@ -444,8 +459,12 @@ QSize KPlayerSettings::adjustSize (QSize size, bool horizontally) const
   return size;
 }
 
-void KPlayerSetControlShiftState (bool control, bool shift)
+void KPlayerSetKeyboardState (Qt::KeyboardModifiers modifiers)
 {
-  KPlayerEngine::engine() -> settings() -> setControl (control);
-  KPlayerEngine::engine() -> settings() -> setShift (shift);
+  KPlayerEngine::engine() -> setModifiers (modifiers);
+}
+
+void KPlayerSetMouseState (Qt::MouseButtons buttons)
+{
+  KPlayerEngine::engine() -> setButtons (buttons);
 }

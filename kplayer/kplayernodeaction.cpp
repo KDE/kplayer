@@ -437,13 +437,13 @@ void KPlayerDiskActionMenu::setText (const QString& text)
   kdDebugTime() << " Populate  " << device() -> populated() << "\n";
   if ( device() -> disk() )
     kdDebugTime() << " Disk type " << device() -> disk() -> type() << "\n";
-  kdDebugTime() << " Complete  " << device() -> parent() -> complete() << "\n";
+  //kdDebugTime() << " Complete  " << device() -> parent() -> complete() << "\n";
 #endif
   KPlayerDeviceActionMenu::setText (text);
   bool use_name = device() -> disk() && device() -> name() != device() -> disk() -> defaultName();
   m_play_action -> setText (use_name ? i18n("&Play %1", text) : i18n("&Play Disk"));
   if ( ! m_populated && ! device() -> dataDisk() && (device() -> populated()
-    || device() -> disk() && device() -> parent() -> complete()) )
+    || device() -> disk() /*&& device() -> parent() -> complete()*/) )
   {
     m_populated = true;
     device() -> populate();

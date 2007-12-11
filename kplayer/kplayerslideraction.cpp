@@ -204,7 +204,12 @@ void KPlayerSlider::parentOrientationChanged (Qt::Orientation orientation)
   kdDebugTime() << "KPlayerSlider orientation changed to " << orientation << "\n";
 #endif
   setOrientation (orientation);
-  resize (sizeHint());
+  setMinimumSize (QSize (0, 0));
+  if ( parentWidget() )
+  {
+    parentWidget() -> setMinimumSize (QSize (0, 0));
+    parentWidget() -> adjustSize();
+  }
 }
 
 void KPlayerSlider::adjustHint (QSize& hint, int length) const

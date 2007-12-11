@@ -52,90 +52,6 @@
             <item>
               <layout class="QGridLayout">
                 <item row="0" column="0">
-                  <widget class="QLabel" name="l_minimum_initial_width">
-                    <property name="sizePolicy">
-                      <sizepolicy>
-                        <hsizetype>1</hsizetype>
-                        <vsizetype>5</vsizetype>
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                      </sizepolicy>
-                    </property>
-                    <property name="text">
-                      <string>&amp;Minimum initial video width</string>
-                    </property>
-                    <property name="alignment">
-                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                    </property>
-                    <property name="buddy" stdset="0">
-                      <cstring>c_minimum_initial_width</cstring>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                      <string>Minimum width of the video area when starting to play a new file</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                      <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
-                    </property>
-                    <property name="wordWrap">
-                      <bool>false</bool>
-                    </property>
-                  </widget>
-                </item>
-                <item row="0" column="1">
-                  <widget class="QLineEdit" name="c_minimum_initial_width">
-                    <property name="sizePolicy">
-                      <sizepolicy>
-                        <hsizetype>0</hsizetype>
-                        <vsizetype>0</vsizetype>
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                      </sizepolicy>
-                    </property>
-                    <property name="maximumSize">
-                      <size>
-                        <width>70</width>
-                        <height>32767</height>
-                      </size>
-                    </property>
-                    <property name="text">
-                      <string/>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                      <string>Minimum width of the video area when starting to play a new file</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                      <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
-                    </property>
-                  </widget>
-                </item>
-                <item row="0" column="2">
-                  <widget class="QLabel" name="l_minimum_initial_width_pixels">
-                    <property name="sizePolicy">
-                      <sizepolicy>
-                        <hsizetype>1</hsizetype>
-                        <vsizetype>5</vsizetype>
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                      </sizepolicy>
-                    </property>
-                    <property name="text">
-                      <string>pixels</string>
-                    </property>
-                    <property name="alignment">
-                      <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                      <string>Minimum width of the video area when starting to play a new file</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                      <string>Option to choose the minimum horizontal size that the video area should be when loading and starting to play a new file. KPlayer will take the original video size and enlarge it in 50% increments until it is at least this size.</string>
-                    </property>
-                    <property name="wordWrap">
-                      <bool>false</bool>
-                    </property>
-                  </widget>
-                </item>
-                <item row="1" column="0">
                   <widget class="QLabel" name="l_playlist_menu_size">
                     <property name="sizePolicy">
                       <sizepolicy>
@@ -165,7 +81,7 @@
                     </property>
                   </widget>
                 </item>
-                <item row="1" column="1">
+                <item row="0" column="1">
                   <widget class="QLineEdit" name="c_playlist_menu_size">
                     <property name="sizePolicy">
                       <sizepolicy>
@@ -192,7 +108,7 @@
                     </property>
                   </widget>
                 </item>
-                <item row="2" column="0">
+                <item row="1" column="0">
                   <widget class="QLabel" name="l_recent_menu_size">
                     <property name="sizePolicy">
                       <sizepolicy>
@@ -222,7 +138,7 @@
                     </property>
                   </widget>
                 </item>
-                <item row="2" column="1">
+                <item row="1" column="1">
                   <widget class="QLineEdit" name="c_recent_menu_size">
                     <property name="sizePolicy">
                       <sizepolicy>
@@ -249,7 +165,7 @@
                     </property>
                   </widget>
                 </item>
-                <item row="3" column="0">
+                <item row="2" column="0">
                   <widget class="QLabel" name="l_recent_list_size">
                     <property name="sizePolicy">
                       <sizepolicy>
@@ -279,7 +195,7 @@
                     </property>
                   </widget>
                 </item>
-                <item row="3" column="1">
+                <item row="2" column="1">
                   <widget class="QLineEdit" name="c_recent_list_size">
                     <property name="sizePolicy">
                       <sizepolicy>
@@ -306,7 +222,7 @@
                     </property>
                   </widget>
                 </item>
-                <item row="4" column="0">
+                <item row="3" column="0">
                   <widget class="QLabel" name="l_cache_size_limit">
                     <property name="sizePolicy">
                       <sizepolicy>
@@ -336,7 +252,7 @@
                     </property>
                   </widget>
                 </item>
-                <item row="4" column="1">
+                <item row="3" column="1">
                   <widget class="QLineEdit" name="c_cache_size_limit">
                     <property name="sizePolicy">
                       <sizepolicy>
@@ -397,12 +313,4 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="0"/>
-  <connections>
-    <connection>
-      <sender>c_resize_automatically</sender>
-      <signal>toggled(bool)</signal>
-      <receiver>KPlayerSettingsGeneralPage</receiver>
-      <slot>resizeAutomaticallyChanged(bool)</slot>
-    </connection>
-  </connections>
 </ui>

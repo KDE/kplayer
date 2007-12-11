@@ -16,6 +16,7 @@
 #include <kcursor.h>
 #include <klocale.h>
 #include <qevent.h>
+#include <qlayout.h>
 #include <qtimer.h>
 
 #ifdef DEBUG
@@ -36,12 +37,6 @@ void KPlayerX11ClearExposeWindow (uint id);
 void KPlayerX11SendConfigureEvent (uint id, int w, int h);
 
 // WM_NORMAL_HINTS, XSizeHints, XSetWMNormalHints() ???
-
-void KPlayerWidgetResizeHandler (bool resizing)
-{
-  if ( kPlayerWorkspace() )
-    kPlayerWorkspace() -> resizeHandler (resizing);
-}
 
 void KPlayerWidgetMapHandler (uint wid)
 {
@@ -67,7 +62,10 @@ KPlayerWidget::KPlayerWidget (QWidget *parent)
   setFocusPolicy (Qt::NoFocus);
   //setEnabled (false);
   //setEraseColor (QColor (0, 0, 0));
+  setPalette (Qt::black);
+  setAutoFillBackground (true);
   setMinimumSize (QSize (0, 0));
+  setSizePolicy (QSizePolicy (QSizePolicy::Fixed, QSizePolicy::Fixed));
 }
 
 KPlayerWidget::~KPlayerWidget()
@@ -227,14 +225,22 @@ void KPlayerWidget::playerStateChanged (KPlayerProcess::State state, KPlayerProc
   sendConfigureEvent();
 }
 
+QSize KPlayerWidget::sizeHint (void) const
+{
+  return kPlayerSettings() -> adjustedDisplaySize();
+}
+
 KPlayerWorkspace::KPlayerWorkspace (QWidget* parent)
   : QWidget (parent), m_timer (this)
 {
 #ifdef DEBUG_KPLAYER_WORKSPACE
   kdDebugTime() << "Creating workspace\n";
 #endif
-  m_mouse_activity = m_resizing = false;
+  m_mouse_activity = false;
   m_widget = new KPlayerWidget (this);
+  setLayout (new QHBoxLayout);
+  layout() -> setContentsMargins (0, 0, 0, 0);
+  layout() -> addWidget (m_widget);
   m_timer.setSingleShot (true);
   connect (&m_timer, SIGNAL (timeout()), SLOT (cursorTimeout()));
   connect (kPlayerProcess(), SIGNAL (stateChanged (KPlayerProcess::State, KPlayerProcess::State)), SLOT (playerStateChanged (KPlayerProcess::State, KPlayerProcess::State)));
@@ -266,29 +272,14 @@ void KPlayerWorkspace::setDisplaySize (QSize size)
   m_widget -> setGeometry ((width() - size.width()) / 2, (height() - size.height()) / 2, size.width(), size.height());
 }
 
-void KPlayerWorkspace::resizeHandler (bool resizing)
-{
-  if ( m_resizing == resizing )
-    return;
-  m_resizing = resizing;
-  if ( ! resizing )
-    QTimer::singleShot (0, this, SIGNAL(userResize()));
-}
-
 void KPlayerWorkspace::resizeEvent (QResizeEvent* event)
 {
-  static bool recursion = false;
 #ifdef DEBUG_KPLAYER_WORKSPACE
   kdDebugTime() << "WSpace " << event -> oldSize(). width() << "x" << event -> oldSize(). height()
     << " => " << event -> size(). width() << "x" << event -> size(). height() << "\n";
 #endif
   QWidget::resizeEvent (event);
-  if ( ! recursion && ! m_resizing )
-  {
-    recursion = true;
-    emit resized();
-    recursion = false;
-  }
+  emit resized();
 }
 
 void KPlayerWorkspace::mouseMoveEvent (QMouseEvent* event)

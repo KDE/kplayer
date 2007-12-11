@@ -151,9 +151,6 @@ public:
 
   void load (void);
   void save (void);
-
-protected slots:
-  void resizeAutomaticallyChanged (bool);
 };
 
 class KPlayerSettingsSubtitles : public QFrame, protected Ui_KPlayerSettingsSubtitlesPage

@@ -64,6 +64,12 @@ static QRegExp re_macintosh ("Macintosh Audio Compression and Expansion", Qt::Ca
 static QRegExp re_amu ("Avid Meridien Uncompressed", Qt::CaseInsensitive);
 static QRegExp re_speech ("Windows Media Audio 9 Speech", Qt::CaseInsensitive);
 
+void KPlayerSetResizing (bool resizing)
+{
+  if ( KPlayerEngine::engine() )
+    KPlayerEngine::engine() -> setResizing (resizing);
+}
+
 void KPlayerWindowStateChanged (uint wid)
 {
   if ( kPlayerEngine() )
@@ -91,6 +97,7 @@ KPlayerFileDialog::KPlayerFileDialog (const QString& dir, const QString& filter,
 }
 
 KPlayerEngine::KPlayerEngine (KActionCollection* ac, QWidget* parent, KConfig* config)
+  : m_timer (this)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Creating engine\n";
@@ -99,7 +106,10 @@ KPlayerEngine::KPlayerEngine (KActionCollection* ac, QWidget* parent, KConfig* c
   m_ac = ac;
   m_light = config == 0;
   m_progress_factor = 0;
-  m_stop = m_updating = m_zooming = m_play_pending = m_enable_screen_saver = m_amixer_running = false;
+  m_stop = m_updating = m_zooming = m_resizing = false;
+  m_pending_resize = m_dockwidget_resize = false;
+  m_layout_user_interaction = false;
+  m_play_pending = m_enable_screen_saver = m_amixer_running = false;
   m_config = light() ? new KConfig ("kplayerrc") : config;
   m_store = new KConfig ("kplayerlibraryrc");
   m_meta = new KConfig ("kplayerplaylistrc");
@@ -109,8 +119,9 @@ KPlayerEngine::KPlayerEngine (KActionCollection* ac, QWidget* parent, KConfig* c
   m_process = new KPlayerProcess;
   m_workspace = new KPlayerWorkspace (parent);
   m_widget = workspace() -> widget();
-  connect (workspace(), SIGNAL (resized()), this, SLOT (workspaceResized()));
-  connect (workspace(), SIGNAL (userResize()), this, SLOT (workspaceUserResize()));
+  m_timer.setSingleShot (true);
+  connect (&m_timer, SIGNAL (timeout()), SLOT (workspaceResize()));
+  connect (workspace(), SIGNAL (resized()), SLOT (workspaceResize()));
   connect (process(), SIGNAL (stateChanged(KPlayerProcess::State, KPlayerProcess::State)), this, SLOT (playerStateChanged(KPlayerProcess::State, KPlayerProcess::State)));
   connect (process(), SIGNAL (progressChanged(float, KPlayerProcess::ProgressType)), this, SLOT (playerProgressChanged(float, KPlayerProcess::ProgressType)));
   connect (process(), SIGNAL (infoAvailable()), this, SLOT (playerInfoAvailable()));
@@ -1033,8 +1044,8 @@ void KPlayerEngine::refreshSettings (void)
   process() -> frameDrop (value);
   if ( settings() -> setInitialDisplaySize() )
   {
-    emit initialSize();
-    setDisplaySize();
+    //emit initialSize();
+    handleLayout();
     refreshAspect();
   }
 }
@@ -1068,8 +1079,8 @@ void KPlayerEngine::refreshProperties (void)
   process() -> frameDrop (value);
   if ( settings() -> setInitialDisplaySize() )
   {
-    emit initialSize();
-    setDisplaySize();
+    //emit initialSize();
+    handleLayout();
   }
   enableVideoActions();
   if ( ! light() )
@@ -1191,8 +1202,8 @@ void KPlayerEngine::playerSizeAvailable (void)
 #endif
   if ( settings() -> setInitialDisplaySize() )
   {
-    emit initialSize();
-    setDisplaySize();
+    //emit initialSize();
+    handleLayout();
   }
   enableVideoActions();
   if ( ! light() )
@@ -1427,14 +1438,14 @@ void KPlayerEngine::startPlaying (void)
     else if ( properties() -> needsExpanding() )
       autoexpand();
   if ( properties() -> originalSizeKnown() )
-    setDisplaySize();
+    handleLayout();
   process() -> play();
 }
 
 void KPlayerEngine::load (KUrl url)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine::load (" << url.prettyUrl() << ")\n";
+  kdDebugTime() << "Engine::load " << url.prettyUrl() << "\n";
 #endif
   if ( ! actionCollection() || url.path().isEmpty() && url.host().isEmpty() )
     return;
@@ -1530,8 +1541,8 @@ void KPlayerEngine::autoexpand (void)
   properties() -> autoexpand();
   if ( settings() -> setInitialDisplaySize() )
   {
-    emit initialSize();
-    setDisplaySize();
+    //emit initialSize();
+    handleLayout();
     enableVideoActions();
     refreshAspect();
   }
@@ -1625,10 +1636,9 @@ void KPlayerEngine::fullScreen (void)
 {
   settings() -> setFullScreen (toggleAction ("view_full_screen") -> isChecked());
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine::fullScreen (" << settings() -> fullScreen() << ")\n";
+  kdDebugTime() << "Engine::fullScreen " << settings() -> fullScreen() << "\n";
 #endif
-  m_zooming = true;
-  emit syncronize (false);
+  handleLayout();
 }
 
 void KPlayerEngine::normal (void)
@@ -1644,7 +1654,7 @@ void KPlayerEngine::zoomIn (void)
     return;
   normal();
   settings() -> setDisplaySize (settings() -> displaySize() + properties() -> currentSize() / 2);
-  setDisplaySize (true);
+  handleLayout (true);
 }
 
 void KPlayerEngine::zoomOut (void)
@@ -1653,7 +1663,7 @@ void KPlayerEngine::zoomOut (void)
     return;
   normal();
   settings() -> setDisplaySize (settings() -> displaySize() - properties() -> currentSize() / 2);
-  setDisplaySize (true);
+  handleLayout (true);
 }
 
 void KPlayerEngine::zoomTo (int m, int d)
@@ -1662,7 +1672,7 @@ void KPlayerEngine::zoomTo (int m, int d)
     return;
   normal();
   settings() -> setDisplaySize (properties() -> currentSize() * m / d);
-  setDisplaySize (true);
+  handleLayout (true);
 }
 
 void KPlayerEngine::zoom12 (void)
@@ -1700,7 +1710,7 @@ void KPlayerEngine::wheel (int delta, int state)
   if ( ! settings() -> maximized() && ! settings() -> fullScreen() && properties() -> hasOriginalSize() )
   {
     settings() -> setDisplaySize (settings() -> displaySize() + properties() -> currentSize() * delta / 1200);
-    setDisplaySize (true);
+    handleLayout (true);
   }
   else if ( (state & Qt::ControlModifier) == Qt::ControlModifier )
   {
@@ -1724,16 +1734,15 @@ void KPlayerEngine::doubleClick (void)
     return;
   settings() -> setFullScreen (! settings() -> fullScreen());
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine::doubleClick (" << settings() -> fullScreen() << ")\n";
+  kdDebugTime() << "Engine::doubleClick " << settings() -> fullScreen() << "\n";
 #endif
-  m_zooming = true;
-  emit syncronize (false);
+  handleLayout();
 }
 
 void KPlayerEngine::emitWindowStateChanged (uint wid)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine::emitWindowStateChanged (" << wid << ")\n";
+  kdDebugTime() << "Engine::emitWindowStateChanged " << wid << "\n";
 #endif
   emit windowStateChanged (wid);
 }
@@ -1798,7 +1807,7 @@ void KPlayerEngine::stop (void)
   m_stop = true;
   m_play_pending = false;
   process() -> stop();
-  setDisplaySize();
+  handleLayout();
 }
 
 void KPlayerEngine::kill (void)
@@ -2198,7 +2207,7 @@ void KPlayerEngine::getLists (QString path)
     return;
   m_path = path;
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "KPlayerEngine::getLists (" << path << ")\n";
+  kdDebugTime() << "KPlayerEngine::getLists " << path << "\n";
 #endif
   m_audio_codecs_ready = m_audio_drivers_ready = m_video_codecs_ready = m_video_drivers_ready = m_demuxers_ready = false;
   KPlayerLineOutputProcess* player = new KPlayerLineOutputProcess;
@@ -2347,68 +2356,136 @@ void KPlayerEngine::processFinished (KPlayerLineOutputProcess* proc)
 void KPlayerEngine::maintainAspect (bool maintain, QSize aspect)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine::maintainAspect (" << maintain << ", " << aspect.width() << "x" << aspect.height() << ")\n";
+  kdDebugTime() << "Engine::maintainAspect " << maintain << " " << aspect.width() << "x" << aspect.height() << "\n";
 #endif
   if ( aspect.isEmpty() )
     maintain = false;
   settings() -> setMaintainAspect (maintain, aspect);
   refreshAspect();
-  setDisplaySize();
+  handleLayout();
 }
 
-void KPlayerEngine::setDisplaySize (bool user_zoom, bool user_resize)
+void KPlayerEngine::handleLayout (bool user_zoom, bool user_resize)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Engine::setDisplaySize (" << user_zoom << ", " << user_resize << ")\n";
+  kdDebugTime() << "Engine::handleLayout " << user_zoom << ", " << user_resize << "\n";
 #endif
   if ( ! light() )
-    toggleAction ("view_full_screen") -> setChecked (settings() -> fullScreen()
-      && toggleAction ("view_full_screen") -> isEnabled());
-  m_zooming = true;
-  emit syncronize (user_resize);
-  m_zooming = false;
-  QSize size (settings() -> adjustDisplaySize (user_zoom, user_resize));
-  if ( user_zoom || ! settings() -> constrainedSize() )
   {
-    m_zooming = true;
-    emit zoom();
-    m_zooming = false;
+    KToggleAction* action = toggleAction ("view_full_screen");
+    action -> setChecked (settings() -> fullScreen() && action -> isEnabled());
   }
-  workspace() -> setDisplaySize (settings() -> fullScreen() || settings() -> maximized()
-    || KPlayerEngine::engine() -> light() ? size : settings() -> displaySize());
+  if ( zooming() || resizing() || settings() -> anyButton() )
+    return;
+  m_layout_user_interaction = false;
+  m_timer.stop();
+  m_zooming = true;
+  bool pending;
+  emit syncronizeState (&pending);
+  if ( pending )
+    return;
+  emit syncronizeControls();
+  QSize size (settings() -> adjustDisplaySize (user_zoom, user_resize));
+  emit updateLayout (size);
+  size = settings() -> adjustDisplaySize (user_zoom, user_resize);
+  if ( user_zoom || ! settings() -> constrainedSize() )
+    emit zoom();
+  emit finalizeLayout();
+  m_zooming = false;
+  bool fixed_size = settings() -> fullScreen() || settings() -> maximized() || light();
+  if ( ! fixed_size && (user_zoom || user_resize) )
+    configuration() -> setPreferredVideoWidth (settings() -> displaySize().width());
+  workspace() -> setDisplaySize (fixed_size ? size : settings() -> displaySize());
   enableZoomActions();
 }
 
-void KPlayerEngine::workspaceResize (bool user)
+void KPlayerEngine::handleResize (bool user)
 {
-  static QTime lasttime;
-  int msecs = lasttime.msecsTo (QTime::currentTime());
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "KPlayerEngine::workspaceResize " << user << " " << m_zooming << " " << msecs << "\n";
+  kdDebugTime() << "KPlayerEngine::handleResize " << user << " " << zooming() << "\n";
 #endif
-  if ( m_zooming /* || msecs >= 0 && msecs < 200 */ )
+  if ( zooming() )
     return;
+  if ( resizing() || settings() -> anyButton() )
+  {
+    m_pending_resize = true;
+    return;
+  }
+  m_pending_resize = m_dockwidget_resize = false;
   m_zooming = true;
   emit correctSize();
   m_zooming = false;
-  setDisplaySize (false, user);
-  lasttime = QTime::currentTime();
+  handleLayout (false, user);
 }
 
-void KPlayerEngine::workspaceResized (void)
+void KPlayerEngine::workspaceResize (void)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Workspace resized event\n";
+  kdDebugTime() << "Workspace resize event\n";
 #endif
-  workspaceResize (false);
+  handleResize (false);
 }
 
-void KPlayerEngine::workspaceUserResize (void)
+void KPlayerEngine::userResize (void)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
-  kdDebugTime() << "Workspace user resize event\n";
+  kdDebugTime() << "User resize event\n";
 #endif
-  workspaceResize (! light());
+  handleResize (! light());
+}
+
+void KPlayerEngine::dockWidgetResize (void)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Dock widget resize event\n";
+#endif
+  m_dockwidget_resize = true;
+}
+
+void KPlayerEngine::dockWidgetVisibility (bool)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Dock widget visibility event\n";
+#endif
+  if ( settings() -> anyButton() )
+    m_layout_user_interaction = true;
+  else if ( m_layout_user_interaction )
+    m_timer.start (0);
+  else
+    handleLayout();
+}
+
+void KPlayerEngine::setResizing (bool resizing)
+{
+  if ( m_resizing == resizing )
+    return;
+  m_resizing = resizing;
+  if ( ! resizing && m_pending_resize )
+    userResize();
+}
+
+void KPlayerEngine::setModifiers (Qt::KeyboardModifiers modifiers)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Keyboard modifiers " << modifiers << "\n";
+#endif
+  settings() -> setModifiers (modifiers);
+}
+
+void KPlayerEngine::setButtons (Qt::MouseButtons buttons)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Mouse buttons " << buttons << "\n";
+#endif
+  Qt::MouseButtons previous = settings() -> buttons();
+  settings() -> setButtons (buttons);
+  if ( previous == Qt::NoButton )
+    m_pending_resize = m_dockwidget_resize = false;
+  else if ( buttons == Qt::NoButton && m_pending_resize )
+    if ( m_dockwidget_resize )
+      userResize();
+    else
+      workspaceResize();
 }
 
 void KPlayerEngine::clearStoreSections (const QString& section)

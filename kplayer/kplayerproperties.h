@@ -1678,10 +1678,15 @@ public:
   void setResizeAutomatically (bool resize)
     { setBoolean ("Resize Main Window Automatically", resize); }
 
-  int minimumInitialWidth (void) const
+  int preferredVideoWidth (void) const
     { return getInteger ("Minimum Initial Width"); }
-  void setMinimumInitialWidth (int width)
+  void setPreferredVideoWidth (int width)
     { setInteger ("Minimum Initial Width", limit (width, 200)); }
+
+  QPoint preferredWindowPosition (void) const
+    { return QPoint (getInteger ("Position X"), getInteger ("Position Y")); }
+  void setPreferredWindowPosition (const QPoint& position)
+    { setInteger ("Position X", position.x()); setInteger ("Position Y", position.y()); }
 
   int recentMenuSize (void) const
     { return getInteger ("Recent File List Size"); }

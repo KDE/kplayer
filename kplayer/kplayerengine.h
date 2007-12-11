@@ -19,6 +19,7 @@
 #include <kactioncollection.h>
 #include <kdiroperator.h>
 #include <kfiledialog.h>
+#include <qtimer.h>
 
 #include "kplayerprocess.h"
 
@@ -62,8 +63,26 @@ public:
   virtual ~KPlayerEngine();
 
   /** Returns whether the engine is running in the KPart mode. */
-  bool light (void)
+  bool light (void) const
     { return m_light; }
+
+  /** Returns whether zooming is in progress. */
+  bool zooming (void) const
+    { return m_zooming; }
+  /** Resets the zooming flag. */
+  void doneSyncronizing (void)
+    { m_zooming = false; }
+
+  /** Returns whether the workspace is being resized by the user. */
+  bool resizing (void) const
+    { return m_resizing; }
+  /** Sets the workspace resizing indicator and handles the display size.
+   *  @param resizing true if resizing has started, false if resizing has completed
+   */
+  void setResizing (bool resizing);
+
+  void setModifiers (Qt::KeyboardModifiers modifiers);
+  void setButtons (Qt::MouseButtons buttons);
 
   /** Returns whether playback is being stopped at user request. */
   bool stopped (void)
@@ -200,7 +219,7 @@ public:
   void setActionCollection (KActionCollection* collection)
    { m_ac = collection; }
 
-  void setDisplaySize (bool zoom = false, bool resize = false);
+  void handleLayout (bool zoom = false, bool resize = false);
 
   void maintainAspect (bool maintain, QSize aspect);
   void refreshAspect (void);
@@ -259,9 +278,11 @@ public:
 
 public slots:
   /** Handles workspace resized event. */
-  void workspaceResized (void);
-  /** Handles workspace user resize event. */
-  void workspaceUserResize (void);
+  void workspaceResize (void);
+  /** Handles dock widget resized event. */
+  void dockWidgetResize (void);
+  /** Handles dock widget visibility event. */
+  void dockWidgetVisibility (bool);
   /** Receives the updated signal from KPlayerSettings. Updates the settings. */
   void refreshSettings (void);
   /** Receives the updated signal from KPlayerProperties. Updates the settings. */
@@ -397,8 +418,10 @@ public slots:
   void saturationChanged (int);
 
 protected:
+  /** Handles user resize event. */
+  void userResize (void);
   /** Handles workspace resize based on the user flag. */
-  void workspaceResize (bool user);
+  void handleResize (bool user);
   /** Runs amixer with the given command and parameter. */
   void runAmixer (const QString& command, const QString& parameter = QString::null);
 
@@ -470,24 +493,40 @@ protected:
   bool m_updating;
   /** Recursion prevention. */
   bool m_zooming;
+  /** Window manager is resizing the top level window. */
+  bool m_resizing;
+  /** Pending resize indicator. */
+  bool m_pending_resize;
+  /** Dock widget resize indicator. */
+  bool m_dockwidget_resize;
+  /** Layout user interaction indicator. */
+  bool m_layout_user_interaction;
   /** Work around QRangeControl bug. */
   int m_progress_factor;
   /** Do not play any more URLs. */
   bool m_stop;
   /** Start playing when size is known. */
   bool m_play_pending;
+  /** Layout timer. */
+  QTimer m_timer;
 
 signals:
   /** Emitted when a window state changes. */
   void windowStateChanged (uint wid);
   /** Emitted to let the main window syncronize full screen and maximized settings. */
-  void syncronize (bool);
-  /** Emitted when display size changes. */
+  void syncronizeState (bool* pending);
+  /** Emitted to let the main window syncronize controls and menus. */
+  void syncronizeControls (void);
+  /** Emitted to let the main window update the layout of its controls. */
+  void updateLayout (const QSize&);
+  /** Emitted to let the main window resize as necessary. */
   void zoom (void);
+  /** Emitted to let the main window finalize its layout. */
+  void finalizeLayout (void);
   /** Emitted when the workspace size needs adjustment. */
   void correctSize (void);
   /** Emitted when the original display size of a file becomes known. */
-  void initialSize (void);
+  //void initialSize (void);
   /** Emitted when all drivers and codecs have been loaded. */
   void updated (void);
 

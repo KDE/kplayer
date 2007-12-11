@@ -689,7 +689,6 @@ KPlayerSettingsGeneral::KPlayerSettingsGeneral (QWidget* parent)
 void KPlayerSettingsGeneral::load (void)
 {
   c_resize_automatically -> setChecked (configuration() -> resizeAutomatically());
-  resizeAutomaticallyChanged (configuration() -> resizeAutomatically());
   c_playlist_menu_size -> setText (QString::number (configuration() -> playlistMenuSize()));
   c_recent_menu_size -> setText (QString::number (configuration() -> recentMenuSize()));
   c_recent_list_size -> setText (QString::number (configuration() -> recentListSize()));
@@ -701,24 +700,12 @@ void KPlayerSettingsGeneral::load (void)
 void KPlayerSettingsGeneral::save (void)
 {
   configuration() -> setResizeAutomatically (c_resize_automatically -> isChecked());
-  if ( configuration() -> resizeAutomatically() )
-    configuration() -> setMinimumInitialWidth (labs (c_minimum_initial_width -> text().toInt()));
   configuration() -> setPlaylistMenuSize (labs (c_playlist_menu_size -> text().toInt()));
   configuration() -> setRecentMenuSize (labs (c_recent_menu_size -> text().toInt()));
   configuration() -> setRecentListSize (labs (c_recent_list_size -> text().toInt()));
   configuration() -> setCacheSizeLimit (labs (c_cache_size_limit -> text().toInt()));
   configuration() -> setAllowDuplicateEntries (c_allow_duplicate_entries -> isChecked());
   configuration() -> setShowMessagesOnError (c_show_messages_on_error -> isChecked());
-}
-
-void KPlayerSettingsGeneral::resizeAutomaticallyChanged (bool resizeAutomaticallyChecked)
-{
-  if ( resizeAutomaticallyChecked )
-    c_minimum_initial_width -> setText (QString::number (configuration() -> minimumInitialWidth()));
-  else
-    c_minimum_initial_width -> setText ("");
-  c_minimum_initial_width -> setEnabled (resizeAutomaticallyChecked);
-  l_minimum_initial_width -> setEnabled (resizeAutomaticallyChecked);
 }
 
 KPlayerSettingsSliders::KPlayerSettingsSliders (QWidget* parent)

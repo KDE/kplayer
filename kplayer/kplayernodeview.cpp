@@ -23,7 +23,7 @@
 #include <q3header.h>
 #include <qlabel.h>
 #include <qmenu.h>
-#include <QtCore/QTimer>
+#include <qtimer.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_NODEVIEW
@@ -2178,7 +2178,6 @@ void KPlayerListView::initialize (void)
   connect (header(), SIGNAL (indexChange (int, int, int)), SLOT (headerIndexChange (int, int, int)));
   //connect (header(), SIGNAL (clicked (int)), SLOT (headerClicked (int)));
   //connect (header(), SIGNAL (sectionHandleDoubleClicked (int)), SLOT (headerAdjustColumn (int)));
-  resize (2000, height());
   m_home_media = KPlayerNode::root() -> nodeById ("file:" + QDir::homePath()) -> media();
 }
 
@@ -2749,26 +2748,6 @@ void KPlayerListView::saveColumnWidths (void)
     ++ index;
   }
 }
-
-#if 0
-void KPlayerListView::resizeContents (int width, int height)
-{
-#ifdef DEBUG_KPLAYER_NODEVIEW
-  kdDebugTime() << "KPlayerListView::resizeContents " << width << "x" << height << "\n";
-#endif
-  KPlayerNodeView::resizeContents (width, height);
-  adjustLastColumn();
-}
-
-void KPlayerListView::viewportResizeEvent (QResizeEvent* event)
-{
-#ifdef DEBUG_KPLAYER_NODEVIEW
-  kdDebugTime() << "KPlayerListView::viewportResizeEvent " << event -> size().width() << "x" << event -> size().height() << "\n";
-#endif
-  KPlayerNodeView::viewportResizeEvent (event);
-  adjustLastColumn();
-}
-#endif
 
 void KPlayerListView::loadHistoryEntry (const KPlayerHistoryEntry& entry)
 {
@@ -3461,13 +3440,14 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   //setResizeMode (treeView(), QSplitter::KeepSize);
   m_list = new KPlayerListView (this);
 
-  int width = config() -> group ("Multimedia Library").readEntry ("Tree View Width", 0);
-  if ( width )
-  {
-    QList<int> sizes;
-    sizes.append (width);
-    setSizes (sizes);
-  }
+  QList<int> sizes;
+  sizes.append (config() -> group ("Multimedia Library").readEntry ("Tree View Width", 150));
+  sizes.append (config() -> group ("Multimedia Library").readEntry ("List View Width", 350));
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << " Tree width " << sizes.first() << "\n";
+  kdDebugTime() << " List width " << sizes.last() << "\n";
+#endif
+  setSizes (sizes);
 
   m_columns = new KPlayerToggleActionList (listView() -> availableAttributes(), listView() -> attributeStates(),
     ki18n("Hide %1"), ki18n("Show %1"), ki18n("Hides %1 column"), ki18n("Shows %1 column"),
@@ -3485,7 +3465,10 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   connect (parent, SIGNAL (visibilityChanged (bool)), SLOT (parentVisibilityChanged (bool)));
 
   m_last_view = m_tree;
-  m_height = kPlayerConfig() -> group ("General Options").readEntry ("Playlist Height", 300);
+  m_height = config() -> group ("General Options").readEntry ("Playlist Height", 300);
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << " Height " << m_height << "\n";
+#endif
 }
 
 KPlayerLibrary::~KPlayerLibrary()
@@ -3512,8 +3495,12 @@ void KPlayerLibrary::terminate (void)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
   kdDebugTime() << "KPlayerLibrary::terminate\n";
+  kdDebugTime() << " Tree width " << sizes().first() << "\n";
+  kdDebugTime() << " List width " << sizes().last() << "\n";
 #endif
   config() -> group ("Multimedia Library").writeEntry ("Tree View Width", sizes().first());
+  config() -> group ("Multimedia Library").writeEntry ("List View Width", sizes().last());
+  config() -> group ("General Options").writeEntry ("Playlist Height", m_height);
   playlistActionList() -> terminate();
   goToActionList() -> terminate();
   listView() -> terminate();
@@ -3526,9 +3513,37 @@ QSize KPlayerLibrary::sizeHint (void) const
   return QSize (QSplitter::sizeHint().width(), m_height);
 }
 
-void KPlayerLibrary::setFocus (void)
+void KPlayerLibrary::resizeEvent (QResizeEvent* event)
 {
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "Library resize to " << event -> size().width() << "x" << event -> size().height() << "\n";
+#endif
+  QSplitter::resizeEvent (event);
+  if ( ! KPlayerEngine::engine() -> zooming() && parent() -> docked() )
+  {
+    rememberHeight();
+#ifdef DEBUG_KPLAYER_NODEVIEW
+    kdDebugTime() << " Height " << m_height << "\n";
+#endif
+  }
+  emit resized();
+}
+
+void KPlayerLibrary::focusInEvent (QFocusEvent* event)
+{
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "Library getting focus\n";
+#endif
+  QSplitter::focusInEvent (event);
   m_last_view -> setFocus();
+}
+
+void KPlayerLibrary::focusOutEvent (QFocusEvent* event)
+{
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "Library loosing focus\n";
+#endif
+  QSplitter::focusOutEvent (event);
 }
 
 void KPlayerLibrary::disconnectActions (void)
@@ -3639,6 +3654,10 @@ void KPlayerLibrary::parentVisibilityChanged (bool visible)
 KPlayerLibraryWindow::KPlayerLibraryWindow (KActionCollection* ac, KPlayerPlaylist* playlist, QWidget* parent)
   : QDockWidget (parent)
 {
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "Creating library window\n";
+#endif
+  hide();
   setObjectName ("library");
   setWidget (new KPlayerLibrary (ac, playlist, this));
   //setResizeEnabled (true);
@@ -3648,9 +3667,30 @@ KPlayerLibraryWindow::KPlayerLibraryWindow (KActionCollection* ac, KPlayerPlayli
   setAllowedAreas (Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
   setFeatures (DockWidgetClosable | DockWidgetMovable | DockWidgetFloatable | DockWidgetVerticalTitleBar);
   setWhatsThis (i18n("Multimedia library is a window where that lets you organize your files, streams, devices, manage your playlists, and choose items for playing. It shows various information about your media files and allows you to search and group them and change their properties."));
+  connect (this, SIGNAL (visibilityChanged (bool)), SLOT (setVisibility (bool)));
 }
 
-void KPlayerLibraryWindow::setFocus (void)
+void KPlayerLibraryWindow::setVisibility (bool visibility)
 {
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "Library visibility " << visibility << "\n";
+#endif
+  m_visibility = visibility;
+}
+
+void KPlayerLibraryWindow::focusInEvent (QFocusEvent* event)
+{
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "Library window getting focus\n";
+#endif
+  QDockWidget::focusInEvent (event);
   library() -> setFocus();
+}
+
+void KPlayerLibraryWindow::focusOutEvent (QFocusEvent* event)
+{
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "Library window loosing focus\n";
+#endif
+  QDockWidget::focusOutEvent (event);
 }

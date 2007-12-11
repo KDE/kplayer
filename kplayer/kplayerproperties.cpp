@@ -1963,6 +1963,12 @@ void KPlayerProperties::initialize (void)
   intinfo -> setDefaultValue (500);
   m_info.insert ("Minimum Initial Width", intinfo);
   intinfo = new KPlayerIntegerPropertyInfo;
+  intinfo -> setDefaultValue (-1);
+  m_info.insert ("Position X", intinfo);
+  intinfo = new KPlayerIntegerPropertyInfo;
+  intinfo -> setDefaultValue (-1);
+  m_info.insert ("Position Y", intinfo);
+  intinfo = new KPlayerIntegerPropertyInfo;
   intinfo -> setDefaultValue (10);
   m_info.insert ("Recent File List Size", intinfo);
   intinfo = new KPlayerIntegerPropertyInfo;

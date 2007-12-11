@@ -1054,8 +1054,8 @@ public:
   virtual bool canSaveAsPlaylist (void) const;
 
   /** Returns whether the initial listing is complete. */
-  bool complete (void) const
-    { return m_complete; }
+  //bool complete (void) const
+  //  { return m_complete; }
 
   /** Returns a node for the given ID from the node list. */
   KPlayerDeviceNode* nodeById (const QString& id)
@@ -1086,23 +1086,27 @@ public:
   /** Updates the list of devices. */
   void update (void);
   /** Updates the list of devices and nodes. */
-  void dirty (void);
+  //void dirty (void);
 
   /** Refreshes the given item. */
-  void refreshItem (const KFileItem& item);
+  //void refreshItem (const KFileItem& item);
 
   /** Removes the given nodes from the list of nodes. */
   virtual void removed (const KPlayerNodeList& nodes);
 
 protected slots:
   /** Refreshes all items. */
-  void completed (void);
+  //void completed (void);
   /** Refreshes the given items. */
-  void refresh (const KFileItemList& entries);
+  //void refresh (const KFileItemList& entries);
   /** Removes the given item. */
-  void removed (const KFileItem& fileItem);
+  //void removed (const KFileItem& fileItem);
   /** Receives dirty signal from directory watch. */
-  void dirty (const QString& path);
+  //void dirty (const QString& path);
+  /** Receives notification of an added device. */
+  void deviceAdded (const QString& udi);
+  /** Receives notification of a removed device. */
+  void deviceRemoved (const QString& udi);
 
 protected:
   /** Initializes the node source. */
@@ -1114,7 +1118,7 @@ protected:
   /** Updates the list of devices. */
   void update (QStringList& current, QStringList& previous);
   /** Adds device names based on the given numeric map. */
-  void addToNameMap (QMap<QString, int>& map, const QString& device, const KLocalizedString& deviceno);
+  //void addToNameMap (QMap<QString, int>& map, const QString& device, const KLocalizedString& deviceno);
 
   /** Device paths. */
   QStringList m_devices;
@@ -1126,13 +1130,13 @@ protected:
   QMap<QString, QString> m_disk_types;
 
   /** Directory. */
-  QDir m_directory;
+  //QDir m_directory;
   /** Directory watch. */
-  KDirWatch m_watch;
+  //KDirWatch m_watch;
   /** Media directory lister. */
-  KDirLister m_lister;
+  //KDirLister m_lister;
   /** Indicates whether the initial listing is complete. */
-  bool m_complete;
+  //bool m_complete;
 };
 
 /**Device node.

@@ -19,6 +19,21 @@
 #include <kio/netaccess.h>
 #include <kprocess.h>
 #include <qregexp.h>
+#include <solid/block.h>
+#include <solid/device.h>
+#include <solid/deviceinterface.h>
+#include <solid/devicenotifier.h>
+#include <solid/dvbinterface.h>
+#include <solid/genericinterface.h>
+#include <solid/opticaldisc.h>
+#include <solid/opticaldrive.h>
+#include <solid/storageaccess.h>
+#include <solid/video.h>
+#ifdef DEBUG_KPLAYER_SOLID
+#include <solid/audiointerface.h>
+#include <solid/storagedrive.h>
+#include <solid/storagevolume.h>
+#endif
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_NODE
@@ -2373,6 +2388,7 @@ KPlayerDevicesNode::~KPlayerDevicesNode()
 
 void KPlayerDevicesNode::setupSource (void)
 {
+#ifdef DEBUG_KPLAYER_DEV
   m_complete = false;
   m_directory = "/dev";
   m_directory.setFilter (QDir::AllEntries | QDir::System);
@@ -2401,6 +2417,9 @@ void KPlayerDevicesNode::setupSource (void)
   m_lister.setMimeFilter (mimetypes);
   m_lister.setAutoErrorHandlingEnabled (false, 0);
   m_lister.openUrl (KUrl ("media:/"));
+#endif
+  connect (Solid::DeviceNotifier::instance(), SIGNAL (deviceAdded (const QString&)), SLOT (deviceAdded (const QString&)));
+  connect (Solid::DeviceNotifier::instance(), SIGNAL (deviceRemoved (const QString&)), SLOT (deviceRemoved (const QString&)));
   m_source = new KPlayerDevicesSource (this);
 }
 
@@ -2448,6 +2467,33 @@ KPlayerContainerNode* KPlayerDevicesNode::getNodeByPath (const QString& path)
   return getNodeById ("/" + path);
 }
 
+void KPlayerDevicesNode::deviceAdded (const QString& udi)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDevicesNode::deviceAdded\n";
+  kdDebugTime() << " Device " << udi << "\n";
+#endif
+  QStringList current, previous;
+  update (current, previous);
+  addedBranches (current);
+  if ( ! previous.isEmpty() )
+    KPlayerContainerNode::removed (previous);
+}
+
+void KPlayerDevicesNode::deviceRemoved (const QString& udi)
+{
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDevicesNode::deviceRemoved\n";
+  kdDebugTime() << " Device " << udi << "\n";
+#endif
+  QStringList current, previous;
+  update (current, previous);
+  addedBranches (current);
+  if ( ! previous.isEmpty() )
+    KPlayerContainerNode::removed (previous);
+}
+
+#ifdef DEBUG_KPLAYER_DEV
 void KPlayerDevicesNode::dirty (const QString&)
 {
 #ifdef DEBUG_KPLAYER_NODE
@@ -2459,9 +2505,135 @@ void KPlayerDevicesNode::dirty (const QString&)
   if ( ! previous.isEmpty() )
     KPlayerContainerNode::removed (previous);
 }
+#endif
 
 void KPlayerDevicesNode::update (void)
 {
+#ifdef DEBUG_KPLAYER_NODE
+  kdDebugTime() << "KPlayerDevicesNode::updateSolid\n";
+#endif
+#ifdef DEBUG_KPLAYER_SOLID
+  foreach ( Solid::Device device, Solid::Device::allDevices() )
+  {
+#ifdef DEBUG_KPLAYER_NODE
+    kdDebugTime() << " Device " << device.udi().toLatin1().constData() << "\n";
+    kdDebugTime() << "  Parent  " << device.parentUdi().toLatin1().constData() << "\n";
+    if ( ! device.vendor().isEmpty() )
+      kdDebugTime() << "  Vendor  " << device.vendor().toLatin1().constData() << "\n";
+    if ( ! device.product().isEmpty() )
+      kdDebugTime() << "  Product " << device.product().toLatin1().constData() << "\n";
+    if ( ! device.icon().isEmpty() )
+      kdDebugTime() << "  Icon    " << device.icon().toLatin1().constData() << "\n";
+#endif
+    if ( device.isDeviceInterface (Solid::DeviceInterface::Block) )
+    {
+      Solid::Block* block = device.as<Solid::Block>();
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Device  " << block -> device().toLatin1().constData() << "\n";
+      kdDebugTime() << "  Major   " << block -> deviceMajor() << "\n";
+      kdDebugTime() << "  Minor   " << block -> deviceMinor() << "\n";
+#endif
+    }
+    if ( device.isDeviceInterface (Solid::DeviceInterface::StorageAccess) )
+    {
+      Solid::StorageAccess* access = device.as<Solid::StorageAccess>();
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Mounted " << access -> isAccessible() << "\n";
+      if ( ! access -> filePath().isEmpty() )
+        kdDebugTime() << "  Path    " << access -> filePath().toLatin1().constData() << "\n";
+#endif
+    }
+    if ( device.isDeviceInterface (Solid::DeviceInterface::StorageDrive) )
+    {
+      Solid::StorageDrive* drive = device.as<Solid::StorageDrive>();
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Bus     " << drive -> bus() << "\n";
+      kdDebugTime() << "  Drive   " << drive -> driveType() << "\n";
+      kdDebugTime() << "  Remove  " << drive -> isRemovable() << "\n";
+      kdDebugTime() << "  Hotplug " << drive -> isHotpluggable() << "\n";
+#endif
+    }
+    if ( device.isDeviceInterface (Solid::DeviceInterface::OpticalDrive) )
+    {
+      Solid::OpticalDrive* drive = device.as<Solid::OpticalDrive>();
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Support " << drive -> supportedMedia() << "\n";
+      kdDebugTime() << "  Read    " << drive -> readSpeed() << "\n";
+      kdDebugTime() << "  Write   " << drive -> writeSpeed() << "\n";
+      kdDebugTime() << "  Speeds  " << drive -> writeSpeeds() << "\n";
+#endif
+    }
+    if ( device.isDeviceInterface (Solid::DeviceInterface::StorageVolume) )
+    {
+      Solid::StorageVolume* volume = device.as<Solid::StorageVolume>();
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Usage   " << volume -> usage() << "\n";
+      if ( ! volume -> fsType().isEmpty() )
+        kdDebugTime() << "  System  " << volume -> fsType().toLatin1().constData() << "\n";
+      if ( ! volume -> label().isEmpty() )
+        kdDebugTime() << "  Label   " << volume -> label().toLatin1().constData() << "\n";
+      if ( ! volume -> uuid().isEmpty() )
+        kdDebugTime() << "  ID      " << volume -> uuid().toLatin1().constData() << "\n";
+      kdDebugTime() << "  Size    " << volume -> size() << "\n";
+#endif
+    }
+    if ( device.isDeviceInterface (Solid::DeviceInterface::OpticalDisc) )
+    {
+      Solid::OpticalDisc* disc = device.as<Solid::OpticalDisc>();
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Disc    " << disc -> discType() << "\n";
+      kdDebugTime() << "  Content " << disc -> availableContent() << "\n";
+      kdDebugTime() << "  Append  " << disc -> isAppendable() << "\n";
+      kdDebugTime() << "  Blank   " << disc -> isBlank() << "\n";
+      kdDebugTime() << "  Rewrite " << disc -> isRewritable() << "\n";
+      kdDebugTime() << "  Capacity " << disc -> capacity() << "\n";
+#endif
+    }
+    if ( device.isDeviceInterface (Solid::DeviceInterface::AudioInterface) )
+    {
+      Solid::AudioInterface* interface = device.as<Solid::AudioInterface>();
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Audio   " << interface -> deviceType() << "\n";
+      kdDebugTime() << "  Card    " << interface -> soundcardType() << "\n";
+      kdDebugTime() << "  Driver  " << interface -> driver() << "\n";
+      if ( ! interface -> name().isEmpty() )
+        kdDebugTime() << "  Name    " << interface -> name().toLatin1().constData() << "\n";
+#endif
+    }
+    if ( device.isDeviceInterface (Solid::DeviceInterface::DvbInterface) )
+    {
+      Solid::DvbInterface* interface = device.as<Solid::DvbInterface>();
+#ifdef DEBUG_KPLAYER_NODE
+      if ( ! interface -> device().isEmpty() )
+        kdDebugTime() << "  DVB     " << interface -> device().toLatin1().constData() << "\n";
+      kdDebugTime() << "  Adapter " << interface -> deviceAdapter() << "\n";
+      kdDebugTime() << "  Type    " << interface -> deviceType() << "\n";
+      kdDebugTime() << "  Index   " << interface -> deviceIndex() << "\n";
+#endif
+    }
+    if ( device.isDeviceInterface (Solid::DeviceInterface::Video) )
+    {
+      Solid::Video* video = device.as<Solid::Video>();
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Protos  " << video -> supportedProtocols() << "\n";
+      kdDebugTime() << "  Drivers " << video -> supportedDrivers() << "\n";
+#endif
+    }
+    if ( device.isDeviceInterface (Solid::DeviceInterface::GenericInterface) )
+    {
+      Solid::GenericInterface* interface = device.as<Solid::GenericInterface>();
+      QMap<QString, QVariant> properties = interface -> allProperties();
+      QMap<QString, QVariant>::const_iterator iterator = properties.constBegin();
+      while ( iterator != properties.constEnd() )
+      {
+#ifdef DEBUG_KPLAYER_NODE
+        kdDebugTime() << "   " << iterator.key().toLatin1().constData() << " " << iterator.value() << "\n";
+#endif
+        ++ iterator;
+      }
+    }
+  }
+#endif
 #ifdef DEBUG_KPLAYER_NODE
   kdDebugTime() << "KPlayerDevicesNode::update\n";
 #endif
@@ -2475,11 +2647,101 @@ void KPlayerDevicesNode::update (QStringList& current, QStringList& previous)
   kdDebugTime() << "KPlayerDevicesNode::update\n";
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
+  const char* types [4] = { I18N_NOOP("CD"), I18N_NOOP("DVD"), I18N_NOOP("DVB"), I18N_NOOP("TV") };
+  QStringList paths [4];
+  int index;
+  previous = m_devices;
+  m_name_map.clear();
+  foreach ( Solid::Device device, Solid::Device::listFromType (Solid::DeviceInterface::OpticalDrive)
+    + Solid::Device::listFromType (Solid::DeviceInterface::DvbInterface)
+    + Solid::Device::listFromType (Solid::DeviceInterface::Video) )
+  {
+    QString path;
+    index = -1;
+    if ( Solid::OpticalDrive* drive = device.as<Solid::OpticalDrive>() )
+    {
+      if ( Solid::Block* block = device.as<Solid::Block>() )
+      {
+        path = block -> device();
+#ifdef DEBUG_KPLAYER_NODE
+        kdDebugTime() << " Device   " << block -> device().toLatin1().constData() << "\n";
+#endif
+      }
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Support " << drive -> supportedMedia() << "\n";
+#endif
+      index = drive -> supportedMedia() >= Solid::OpticalDrive::Dvd ? 1 : 0;
+    }
+    else if ( Solid::DvbInterface* dvb = device.as<Solid::DvbInterface>() )
+    {
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << " Device   " << dvb -> device().toLatin1().constData() << "\n";
+      kdDebugTime() << "  Adapter " << dvb -> deviceAdapter() << "\n";
+      kdDebugTime() << "  Type    " << dvb -> deviceType() << "\n";
+      kdDebugTime() << "  Index   " << dvb -> deviceIndex() << "\n";
+#endif
+      if ( dvb -> deviceAdapter() >= 0 && dvb -> deviceType() == Solid::DvbInterface::DvbVideo )
+      {
+        path = "/dev/dvb/adapter" + QString::number (dvb -> deviceAdapter());
+        index = 2;
+      }
+    }
+    else if ( Solid::Video* video = device.as<Solid::Video>() )
+    {
+      if ( Solid::GenericInterface* interface = device.as<Solid::GenericInterface>() )
+      {
+        path = interface -> allProperties().value ("linux.device_file").toString();
+        if ( path.contains ("video") )
+          index = 3;
+      }
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Protos  " << video -> supportedProtocols() << "\n";
+      kdDebugTime() << "  Drivers " << video -> supportedDrivers() << "\n";
+#endif
+    }
+    if ( index >= 0 && ! path.isEmpty() )
+    {
+#ifdef DEBUG_KPLAYER_NODE
+      kdDebugTime() << "  Type    " << types [index] << "\n";
+#endif
+      if ( ! media() -> hidden (path) )
+      {
+#ifdef DEBUG_KPLAYER_NODE
+        kdDebugTime() << "  Device  " << path.toLatin1().constData() << "\n";
+#endif
+        if ( m_type_map.contains (path) )
+          previous.removeAll (path);
+        else
+        {
+          current.append (path);
+          m_devices.append (path);
+        }
+        m_type_map.insert (path, types [index]);
+        m_name_map.insert (path, i18n("%1 Device", types [index]));
+        paths [index].append (path);
+      }
+    }
+  }
+  for ( index = 0; index < 4; index ++ )
+    if ( paths [index].count() > 1 )
+    {
+      QStringList& list = paths [index];
+      list.sort();
+      QStringList::ConstIterator iterator (list.begin());
+      int i = 1;
+      while ( iterator != list.end() )
+      {
+        const QString& path = *iterator;
+        m_name_map.insert (path, i18n("%1 Device %2", types [index], i));
+        ++ iterator;
+        ++ i;
+      }
+    }
+#ifdef DEBUG_KPLAYER_DEV
   const char* paths[] = { "/dev", "/dev", "/dev", "/dev/dvb" };
   const char* globs[] = { "cdr*", "dvd*", "video*", "adapter*" };
   const char* types[] = { I18N_NOOP("CD"), I18N_NOOP("DVD"), I18N_NOOP("TV"), I18N_NOOP("DVB") };
   QMap<QString, int> maps [sizeof (paths) / sizeof (const char*)];
-  previous = m_devices;
   for ( uint i = 0; i < sizeof (paths) / sizeof (const char*); i ++ )
   {
     QDir dir (paths[i], globs[i], QDir::Unsorted, QDir::AllEntries | QDir::System);
@@ -2560,6 +2822,7 @@ void KPlayerDevicesNode::update (QStringList& current, QStringList& previous)
       }
     }
   }
+#endif
   QStringList::ConstIterator slit (previous.begin());
   while ( slit != previous.end() )
   {
@@ -2568,21 +2831,23 @@ void KPlayerDevicesNode::update (QStringList& current, QStringList& previous)
     ++ slit;
   }
 #ifdef DEBUG_KPLAYER_NODE
-  kdDebugTime() << " CDs    " << maps[0].count() << "\n";
-  kdDebugTime() << " DVDs   " << maps[1].count() << "\n";
-  kdDebugTime() << " TVs    " << maps[2].count() << "\n";
-  kdDebugTime() << " DVBs   " << maps[3].count() << "\n";
   kdDebugTime() << " Added  " << current.count() << "\n";
   kdDebugTime() << " Removed " << previous.count() << "\n";
   kdDebugTime() << " Devices " << m_devices.count() << "\n";
+  kdDebugTime() << " CDs    " << paths[0].count() << "\n";
+  kdDebugTime() << " DVDs   " << paths[1].count() << "\n";
+  kdDebugTime() << " DVBs   " << paths[2].count() << "\n";
+  kdDebugTime() << " TVs    " << paths[3].count() << "\n";
 #endif
-  m_name_map.clear();
+#ifdef DEBUG_KPLAYER_DEV
   addToNameMap (maps[0], i18n("CD Device"), ki18n("CD Device %1"));
   addToNameMap (maps[1], i18n("DVD Device"), ki18n("DVD Device %1"));
   addToNameMap (maps[2], i18n("TV Device"), ki18n("TV Device %1"));
   addToNameMap (maps[3], i18n("DVB Device"), ki18n("DVB Device %1"));
+#endif
 }
 
+#ifdef DEBUG_KPLAYER_DEV
 void KPlayerDevicesNode::addToNameMap (QMap<QString, int>& map, const QString& device, const KLocalizedString& deviceno)
 {
   if ( map.count() == 1 )
@@ -2734,6 +2999,7 @@ void KPlayerDevicesNode::removed (const KFileItem& item)
   if ( node && node -> diskDevice() )
     ((KPlayerDiskNode*) node) -> diskRemoved();
 }
+#endif
 
 void KPlayerDevicesNode::removed (const KPlayerNodeList& nodes)
 {
@@ -3053,9 +3319,11 @@ void KPlayerDiskNode::pathResult (KIO::Job* job)
   }
   else
   {
+#ifdef DEBUG_KPLAYER_DEV
     KFileItem item (((KIO::StatJob*) job) -> statResult(), "media:/" + url().fileName());
     if ( ! item.entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH).isEmpty() )
       parent() -> refreshItem (item);
+#endif
   }
 }
 
@@ -3288,9 +3556,11 @@ void KPlayerDiskNode::statResult (KIO::Job* job)
   }
   else
   {
+#ifdef DEBUG_KPLAYER_DEV
     KFileItem item (((KIO::StatJob*) job) -> statResult(), "media:/" + url().fileName());
     if ( ! item.entry().stringValue (KIO::UDSEntry::UDS_LOCAL_PATH).isEmpty() )
       parent() -> refreshItem (item);
+#endif
   }
   if ( dataDisk() )
   {

@@ -31,6 +31,10 @@
 KPlayerLogWindow::KPlayerLogWindow (KActionCollection* ac, QWidget* parent)
   : QDockWidget (parent)
 {
+#ifdef DEBUG_KPLAYER_LOG
+  kdDebugTime() << "Creating log window\n";
+#endif
+  hide();
   setObjectName ("log");
   setWidget (new KPlayerLogWidget (ac, this));
   //setResizeEnabled (true);
@@ -40,6 +44,7 @@ KPlayerLogWindow::KPlayerLogWindow (KActionCollection* ac, QWidget* parent)
   setAllowedAreas (Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
   setFeatures (DockWidgetClosable | DockWidgetMovable | DockWidgetFloatable | DockWidgetVerticalTitleBar);
   setWhatsThis (i18n("Message log is a window where KPlayer shows messages it receives from MPlayer. KPlayer can show it automatically when it detects an MPlayer error if that option is selected in KPlayer settings."));
+  connect (this, SIGNAL (visibilityChanged (bool)), SLOT (setVisibility (bool)));
 }
 
 void KPlayerLogWindow::initialize (QMenu* menu)
@@ -50,6 +55,14 @@ void KPlayerLogWindow::initialize (QMenu* menu)
   logWidget() -> setPopupMenu (menu);
 }
 
+void KPlayerLogWindow::setVisibility (bool visibility)
+{
+#ifdef DEBUG_KPLAYER_LOG
+  kdDebugTime() << "Log visibility " << visibility << "\n";
+#endif
+  m_visibility = visibility;
+}
+
 void KPlayerLogWindow::setError (bool flag)
 {
   if ( flag && ! logWidget() -> hasError() && ! isVisible() && logWidget() -> width() < 300 )
@@ -58,7 +71,7 @@ void KPlayerLogWindow::setError (bool flag)
     kdDebugTime() << "Log resizing widget\n";
     kdDebugTime() << "Log widget " << logWidget() -> width() << "x" << logWidget() -> height() << "\n";
 #endif
-    logWidget() -> resize (KPlayerEngine::engine() -> configuration() -> minimumInitialWidth(), logWidget() -> height());
+    logWidget() -> resize (KPlayerEngine::engine() -> configuration() -> preferredVideoWidth(), logWidget() -> height());
 #ifdef DEBUG_KPLAYER_LOG
     kdDebugTime() << "Log widget " << logWidget() -> width() << "x" << logWidget() -> height() << "\n";
 #endif
@@ -69,6 +82,9 @@ void KPlayerLogWindow::setError (bool flag)
 KPlayerLogWidget::KPlayerLogWidget (KActionCollection* ac, QWidget* parent)
   : KTextEdit (parent)
 {
+#ifdef DEBUG_KPLAYER_LOG
+  kdDebugTime() << "Creating log widget\n";
+#endif
   m_ac = ac;
   //setTextFormat (Qt::PlainText);
   setReadOnly (true);
@@ -93,6 +109,9 @@ KPlayerLogWidget::KPlayerLogWidget (KActionCollection* ac, QWidget* parent)
   action -> setWhatsThis (i18n("Clear command removes all messages from the message log."));
   connect (this, SIGNAL (selectionChanged()), SLOT (updateActions()));
   m_height = kPlayerConfig() -> group ("General Options").readEntry ("Message Log Height", 250);
+#ifdef DEBUG_KPLAYER_LOG
+  kdDebugTime() << " Height " << m_height << "\n";
+#endif
 }
 
 void KPlayerLogWidget::updateActions (void)
@@ -178,34 +197,48 @@ void KPlayerLogWidget::resizeEvent (QResizeEvent* event)
 {
   bool at_bottom = ! verticalScrollBar() || verticalScrollBar() -> value() == verticalScrollBar() -> maximum();
 #ifdef DEBUG_KPLAYER_LOG
-  kdDebugTime() << "Log::resizeEvent " << event -> size(). width() << " " << event -> size(). height() << " " << event -> oldSize(). width() << " " << event -> oldSize(). height() << " at_bottom " << at_bottom << "\n";
+  kdDebugTime() << "Log::resizeEvent " << event -> oldSize().width() << "x" << event -> oldSize().height() << " -> " << event -> size().width() << "x" << event -> size().height() << " " << at_bottom << "\n";
   if ( verticalScrollBar() )
-    kdDebugTime() << "Log " << width() << " " << height() << " " << verticalScrollBar() -> value() << " / " << verticalScrollBar() -> maximum() << "\n";
+    kdDebugTime() << " Log " << width() << "x" << height() << " " << verticalScrollBar() -> value() << "/" << verticalScrollBar() -> maximum() << "\n";
 #endif
   KTextEdit::resizeEvent (event);
 #ifdef DEBUG_KPLAYER_LOG
-  kdDebugTime() << "                 " << event -> size(). width() << " " << event -> size(). height() << " " << event -> oldSize(). width() << " " << event -> oldSize(). height() << " at_bottom " << at_bottom << "\n";
   if ( verticalScrollBar() )
-    kdDebugTime() << "Log " << width() << " " << height() << " " << verticalScrollBar() -> value() << " / " << verticalScrollBar() -> maximum() << "\n";
+    kdDebugTime() << " Log " << width() << "x" << height() << " " << verticalScrollBar() -> value() << "/" << verticalScrollBar() -> maximum() << "\n";
 #endif
   if ( at_bottom && verticalScrollBar() && verticalScrollBar() -> value() != verticalScrollBar() -> maximum() )
   {
-    //scrollToBottom();
     verticalScrollBar() -> setValue (verticalScrollBar() -> maximum());
 #ifdef DEBUG_KPLAYER_LOG
-    kdDebugTime() << "Log: scrolling to bottom\n";
+    kdDebugTime() << " Log: scrolling to bottom\n";
     if ( verticalScrollBar() )
-      kdDebugTime() << "Log " << width() << " " << height() << " " << verticalScrollBar() -> value() << " / " << verticalScrollBar() -> maximum() << "\n";
+      kdDebugTime() << "Log " << width() << "x" << height() << " " << verticalScrollBar() -> value() << "/" << verticalScrollBar() -> maximum() << "\n";
 #endif
   }
+  if ( ! KPlayerEngine::engine() -> zooming() && parent() -> docked() )
+  {
+    rememberHeight();
+#ifdef DEBUG_KPLAYER_LOG
+    kdDebugTime() << " Height " << m_height << "\n";
+#endif
+  }
+  emit resized();
 }
 
 void KPlayerLogWidget::contextMenuEvent (QContextMenuEvent* event)
 {
-#ifdef DEBUG_KPLAYER_WINDOW
+#ifdef DEBUG_KPLAYER_LOG
   kdDebugTime() << "KPlayerLogWidget::contextMenuEvent\n";
 #endif
   KTextEdit::contextMenuEvent (event);
   m_popup -> popup (event -> globalPos());
   event -> accept();
+}
+
+void KPlayerLogWidget::terminate (void)
+{
+#ifdef DEBUG_KPLAYER_LOG
+  kdDebugTime() << "KPlayerLogWidget::terminate\n";
+#endif
+  kPlayerConfig() -> group ("General Options").writeEntry ("Message Log Height", m_height);
 }

@@ -32,6 +32,7 @@ class KPlayerNodeView;
 class KPlayerListView;
 class KPlayerTreeView;
 class KPlayerLibrary;
+class KPlayerLibraryWindow;
 class KPlayerPlaylist;
 
 /**Node name validator.
@@ -750,11 +751,6 @@ protected:
   bool showColumn (const QString& name) const
     { return m_column_states.contains (name) && m_column_states [name]; }
 
-  /** Adjusts the last column when contents are resized. */
-  //virtual void resizeContents (int width, int height);
-  /** Adjusts the last column when viewport is resized. */
-  //virtual void viewportResizeEvent (QResizeEvent*);
-
   /** Updates the given item as necessary. */
   virtual void update (KPlayerListViewItem* item);
 
@@ -883,7 +879,7 @@ public:
 
   /** Initializes library. */
   void initialize (QMenu* menu);
-  /** Frees up resources. */
+  /** Frees up resources and saves state. */
   void terminate (void);
 
   /** Returns the tree view. */
@@ -896,6 +892,10 @@ public:
   /** Returns the popup menu. */
   QMenu* popupMenu (void) const
     { return m_popup; }
+
+  /** Returns the parent dock widget. */
+  KPlayerLibraryWindow* parent (void) const
+    { return (KPlayerLibraryWindow*) QSplitter::parent(); }
 
   /** Configuration. */
   KConfig* config (void) const
@@ -941,8 +941,9 @@ public:
   void setLastActiveView (KPlayerNodeView* view)
     { m_last_view = view; }
 
-  /** Sets focus to the last active node view. */
-  virtual void setFocus (void);
+  /** Remembers the widget height. */
+  void rememberHeight (void)
+    { m_height = height(); }
 
   /** Disconnects and disables actions. */
   void disconnectActions (void);
@@ -955,6 +956,8 @@ public:
   virtual QSize sizeHint (void) const;
 
 signals:
+  /** Emitted when the widget is resized. */
+  void resized (void);
   /** Emitted when the library needs to be shown. */
   void makeVisible (void);
   /** Emitted when an action group is enabled or disabled. */
@@ -969,6 +972,13 @@ public slots:
   void parentVisibilityChanged (bool);
 
 protected:
+  /** Remembers the library height. Emits the resized signal. */
+  virtual void resizeEvent (QResizeEvent* event);
+  /** Sets the focus to the view that last had focus. */
+  virtual void focusInEvent (QFocusEvent* event);
+  /** Does nothing. */
+  virtual void focusOutEvent (QFocusEvent* event);
+
   /** Action collection. */
   KActionCollection* m_ac;
   /** Playlist. */
@@ -1010,8 +1020,25 @@ public:
   KPlayerLibrary* library (void)
     { return (KPlayerLibrary*) widget(); }
 
-  /** Sets focus to the library. */
-  virtual void setFocus (void);
+  /** Returns whether the widget is visible. */
+  bool visible (void) const
+    { return ! isHidden() && m_visibility; }
+  /** Returns whether the widget is docked and visible. */
+  bool docked (void) const
+    { return ! isFloating() && ! isHidden(); }
+
+protected slots:
+  /** Sets the visibility flag. */
+  void setVisibility (bool visibility);
+
+protected:
+  /** Sets the focus to the library. */
+  virtual void focusInEvent (QFocusEvent* event);
+  /** Does nothing. */
+  virtual void focusOutEvent (QFocusEvent* event);
+
+  /** Visibility indicator. */
+  bool m_visibility;
 };
 
 inline QAction* KPlayerNodeView::action (const char* name) const

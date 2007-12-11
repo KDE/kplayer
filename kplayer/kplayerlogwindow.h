@@ -20,6 +20,8 @@
 #include <ktextedit.h>
 #include <qdockwidget.h>
 
+class KPlayerLogWindow;
+
 /**The KPlayer log widget.
   *@author kiriuja
   */
@@ -43,6 +45,10 @@ public:
   void setPopupMenu (QMenu* menu)
     { m_popup = menu; }
 
+  /** Returns the parent dock widget. */
+  KPlayerLogWindow* parent (void) const
+    { return (KPlayerLogWindow*) KTextEdit::parent(); }
+
   /** Returns the action collection. */
   KActionCollection* actionCollection (void) const
     { return m_ac; }
@@ -51,8 +57,15 @@ public:
   QAction* action (const char* name) const
     { return m_ac -> action (name); }
 
+  /** Remembers the widget height. */
+  void rememberHeight (void)
+    { m_height = height(); }
+
   /** Returns the size hint for the workspace. */
   virtual QSize sizeHint (void) const;
+
+  /** Frees up resources and saves state. */
+  void terminate (void);
 
 public slots:
   virtual void clear (void);
@@ -61,8 +74,13 @@ protected slots:
   /** Updates actions according to the current state. */
   void updateActions (void);
 
+signals:
+  /** Emitted when the widget is resized. */
+  void resized (void);
+
 protected:
   virtual void showEvent (QShowEvent*);
+  /** Remembers the log height. Emits the resized signal. */
   virtual void resizeEvent (QResizeEvent*);
   /** Displays the right click popup menu. */
   virtual void contextMenuEvent (QContextMenuEvent*);
@@ -94,6 +112,13 @@ public:
   KPlayerLogWidget* logWidget (void)
     { return (KPlayerLogWidget*) widget(); }
 
+  /** Returns whether the widget is visible. */
+  bool visible (void) const
+    { return ! isHidden() && m_visibility; }
+  /** Returns whether the widget is docked and visible. */
+  bool docked (void) const
+    { return ! isFloating() && ! isHidden(); }
+
   void addLine (const QString& line)
     { ((KPlayerLogWidget*) widget()) -> append (line); }
   bool isEmpty (void)
@@ -104,6 +129,14 @@ public:
     { return ((KPlayerLogWidget*) widget()) -> hasError(); }
   /** Sets an error condition. */
   void setError (bool);
+
+protected slots:
+  /** Sets the visibility flag. */
+  void setVisibility (bool visibility);
+
+protected:
+  /** Visibility indicator. */
+  bool m_visibility;
 };
 
 #endif
