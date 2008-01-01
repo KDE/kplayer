@@ -3094,7 +3094,7 @@ QString KPlayerDiskNode::icon (void) const
 {
   const QString& type (media() -> type());
   return type == "DVD" ? "media-optical" : type == "Audio CD" ? "media-optical-audio"
-    : type.startsWith ("Data") ? "cd-data" : "cd";
+    : type.startsWith ("Data") ? "media-optical-data" : "media-optical";
 }
 
 bool KPlayerDiskNode::ready (void) const
