@@ -594,7 +594,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("view_maintain_aspect", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (maintainAspect()));
   toggle -> setText (i18n("Maintain &Aspect"));
-  toggle -> setIcon (KIcon ("zoom-best-fit"));
+  toggle -> setIcon (KIcon ("zoom-fit-best"));
   toggle -> setShortcut (Qt::ControlModifier + Qt::Key_A);
   toggle -> setStatusTip (i18n("Maintains the video aspect ratio"));
   toggle -> setWhatsThis (i18n("Maintain Aspect command toggles the option to maintain the video aspect ratio."));
