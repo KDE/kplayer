@@ -101,7 +101,10 @@
                   </widget>
                 </item>
                 <item row="1" column="1" colspan="2">
-                  <widget class="QLineEdit" name="c_device">
+                  <widget class="QComboBox" name="c_device">
+                    <property name="editable">
+                      <bool>true</bool>
+                    </property>
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -219,7 +222,10 @@
                   </widget>
                 </item>
                 <item row="4" column="1" colspan="2">
-                  <widget class="QLineEdit" name="c_mixer">
+                  <widget class="QComboBox" name="c_mixer">
+                    <property name="editable">
+                      <bool>true</bool>
+                    </property>
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -405,15 +411,15 @@
     </connection>
     <connection>
       <sender>c_device</sender>
-      <signal>textChanged(QString)</signal>
+      <signal>editTextChanged(const QString&amp;)</signal>
       <receiver>KPlayerSettingsAudioPage</receiver>
-      <slot>deviceChanged(QString)</slot>
+      <slot>deviceChanged(const QString&amp;)</slot>
     </connection>
     <connection>
       <sender>c_mixer</sender>
-      <signal>textChanged(QString)</signal>
+      <signal>editTextChanged(const QString&amp;)</signal>
       <receiver>KPlayerSettingsAudioPage</receiver>
-      <slot>mixerChanged(QString)</slot>
+      <slot>mixerChanged(const QString&amp;)</slot>
     </connection>
     <connection>
       <sender>c_softvol</sender>

@@ -2,7 +2,7 @@
                            kplayerpart.h
                            -------------
     begin                : Wed Aug 20 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 

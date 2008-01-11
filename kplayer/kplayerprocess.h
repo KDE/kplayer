@@ -2,7 +2,7 @@
                           kplayerprocess.h
                           ----------------
     begin                : Sat Jan 11 2003
-    copyright            : (C) 2002-2007 by kiriuja
+    copyright            : (C) 2002-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 

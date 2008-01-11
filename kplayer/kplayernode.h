@@ -2,7 +2,7 @@
                           kplayernode.h
                           -------------
     begin                : Wed Feb 16 2005
-    copyright            : (C) 2005-2007 by kiriuja
+    copyright            : (C) 2005-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -20,6 +20,8 @@
 #include "kplayersource.h"
 
 #include <qmap.h>
+#include <solid/device.h>
+#include <solid/solidnamespace.h>
 
 class KPlayerContainerNode;
 class KPlayerMediaNode;
@@ -1053,10 +1055,6 @@ public:
   /** Returns whether the node can be saved as a playlist. */
   virtual bool canSaveAsPlaylist (void) const;
 
-  /** Returns whether the initial listing is complete. */
-  //bool complete (void) const
-  //  { return m_complete; }
-
   /** Returns a node for the given ID from the node list. */
   KPlayerDeviceNode* nodeById (const QString& id)
     { return (KPlayerDeviceNode*) KPlayerContainerNode::nodeById (id); }
@@ -1078,31 +1076,17 @@ public:
   /** Returns the suggested name of the given device. */
   const QString& deviceName (const QString& id)
     { return m_name_map [id]; }
-
-  /** Returns the disk type in the given device. */
-  const QString& diskType (const QString& id)
-    { return m_disk_types [id]; }
+  /** Returns the UDI of the given device. */
+  const QString& deviceUdi (const QString& id)
+    { return m_device_udi [id]; }
 
   /** Updates the list of devices. */
   void update (void);
-  /** Updates the list of devices and nodes. */
-  //void dirty (void);
-
-  /** Refreshes the given item. */
-  //void refreshItem (const KFileItem& item);
 
   /** Removes the given nodes from the list of nodes. */
   virtual void removed (const KPlayerNodeList& nodes);
 
 protected slots:
-  /** Refreshes all items. */
-  //void completed (void);
-  /** Refreshes the given items. */
-  //void refresh (const KFileItemList& entries);
-  /** Removes the given item. */
-  //void removed (const KFileItem& fileItem);
-  /** Receives dirty signal from directory watch. */
-  //void dirty (const QString& path);
   /** Receives notification of an added device. */
   void deviceAdded (const QString& udi);
   /** Receives notification of a removed device. */
@@ -1117,8 +1101,10 @@ protected:
 
   /** Updates the list of devices. */
   void update (QStringList& current, QStringList& previous);
-  /** Adds device names based on the given numeric map. */
-  //void addToNameMap (QMap<QString, int>& map, const QString& device, const KLocalizedString& deviceno);
+
+  void updateDevice (const QString& udi, const QString& path, const char* type,
+    QStringList& paths, QStringList& current, QStringList& previous);
+  void updateDeviceNames (QStringList& paths, const char* type);
 
   /** Device paths. */
   QStringList m_devices;
@@ -1126,17 +1112,8 @@ protected:
   QMap<QString, QString> m_type_map;
   /** Device names. */
   QMap<QString, QString> m_name_map;
-  /** Disk types. */
-  QMap<QString, QString> m_disk_types;
-
-  /** Directory. */
-  //QDir m_directory;
-  /** Directory watch. */
-  //KDirWatch m_watch;
-  /** Media directory lister. */
-  //KDirLister m_lister;
-  /** Indicates whether the initial listing is complete. */
-  //bool m_complete;
+  /** Device UDI. */
+  QMap<QString, QString> m_device_udi;
 };
 
 /**Device node.
@@ -1178,6 +1155,14 @@ public:
 
   /** Removes the node and all subnodes. */
   virtual void removed (void);
+
+  /** Returns solid device. */
+  Solid::Device& solidDevice (void)
+    { return m_solid_device; }
+
+protected:
+  /** Solid device. */
+  Solid::Device m_solid_device;
 };
 
 /**Disk node.
@@ -1228,7 +1213,7 @@ public:
   void getLocalPath (void);
 
   /** Updates the node with the disk properties. */
-  void diskInserted (const QString& path = QString::null);
+  void diskInserted (const char* type, const QString& path, const QString& udi);
   /** Updates the node with the device properties. */
   void diskRemoved (void);
 
@@ -1239,15 +1224,18 @@ public:
   /** Returns whether the disk is of a data type. */
   bool dataDisk (void);
 
+  /** Returns solid device. */
+  Solid::Device& solidDisk (void)
+    { return m_solid_disk; }
+
 protected slots:
-  /** Processes the result of a list job. */
-  void listResult (KIO::Job* job);
-  /** Processes the result of a mount job. */
-  void mountResult (KIO::Job* job);
-  /** Processes the result of a stat job. */
-  void pathResult (KIO::Job* job);
-  /** Processes the result of a stat job. */
-  void statResult (KIO::Job* job);
+  /** Receives notification of an added device. */
+  void deviceAdded (const QString& udi);
+  /** Receives notification of a removed device. */
+  void deviceRemoved (const QString& udi);
+
+  /** Processes mount completion notification. */
+  void mountDone (Solid::ErrorType error, QVariant errorData, const QString &udi);
 
   /** Processes an MPlayer output line. */
   void receivedOutput (KPlayerLineOutputProcess*, char*);
@@ -1268,6 +1256,8 @@ protected:
   /** Creates a new leaf node with the given id. */
   virtual KPlayerNode* createLeaf (const QString& id);
 
+  /** Checks Solid list of devices for disk in this device. */
+  void checkDisk (void);
   /** Starts disk autodetection. */
   void autodetect (void);
   /** Wraps up autodetection. */
@@ -1311,6 +1301,8 @@ protected:
   bool m_fast_autodetect;
   /** Local path. */
   QString m_local_path;
+  /** Solid disk. */
+  Solid::Device m_solid_disk;
 };
 
 /**Tuner node.

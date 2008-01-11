@@ -2,7 +2,7 @@
                           kplayerlogwindow.h
                           ------------------
     begin                : Fri May 9 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -74,13 +74,9 @@ protected slots:
   /** Updates actions according to the current state. */
   void updateActions (void);
 
-signals:
-  /** Emitted when the widget is resized. */
-  void resized (void);
-
 protected:
   virtual void showEvent (QShowEvent*);
-  /** Remembers the log height. Emits the resized signal. */
+  /** Remembers the log height. */
   virtual void resizeEvent (QResizeEvent*);
   /** Displays the right click popup menu. */
   virtual void contextMenuEvent (QContextMenuEvent*);
@@ -130,11 +126,22 @@ public:
   /** Sets an error condition. */
   void setError (bool);
 
+signals:
+  /** Emitted when the widget is moved. */
+  void moved (bool docked);
+  /** Emitted when the widget is resized. */
+  void resized (void);
+
 protected slots:
   /** Sets the visibility flag. */
   void setVisibility (bool visibility);
 
 protected:
+  /** Emits the moved signal. */
+  virtual void moveEvent (QMoveEvent*);
+  /** Emits the resized signal. */
+  virtual void resizeEvent (QResizeEvent*);
+
   /** Visibility indicator. */
   bool m_visibility;
 };

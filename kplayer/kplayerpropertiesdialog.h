@@ -2,7 +2,7 @@
                          kplayerpropertiesdialog.h
                          -------------------------
     begin                : Tue Mar 02 2004
-    copyright            : (C) 2004-2007 by kiriuja
+    copyright            : (C) 2004-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 

@@ -2,7 +2,7 @@
                           kplayerwidget.h
                           ---------------
     begin                : Sun Dec 01 2002
-    copyright            : (C) 2002-2007 by kiriuja
+    copyright            : (C) 2002-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -37,8 +37,6 @@ public:
 
   void mapHandler (uint wid);
   void unmapHandler (uint wid);
-
-  void sendConfigureEvent (void);
 
   /** Returns the size hint for the widget. */
   virtual QSize sizeHint (void) const;

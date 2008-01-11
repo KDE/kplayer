@@ -2,7 +2,7 @@
                           kplayerengine.cpp
                           -----------------
     begin                : Tue Feb 10 2004
-    copyright            : (C) 2004-2007 by kiriuja
+    copyright            : (C) 2004-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -105,7 +105,7 @@ KPlayerEngine::KPlayerEngine (KActionCollection* ac, QWidget* parent, KConfig* c
   m_engine = this;
   m_ac = ac;
   m_light = config == 0;
-  m_progress_factor = 0;
+  m_progress_factor = m_timer_ticks = 0;
   m_stop = m_updating = m_zooming = m_resizing = false;
   m_pending_resize = m_dockwidget_resize = false;
   m_layout_user_interaction = false;
@@ -119,8 +119,7 @@ KPlayerEngine::KPlayerEngine (KActionCollection* ac, QWidget* parent, KConfig* c
   m_process = new KPlayerProcess;
   m_workspace = new KPlayerWorkspace (parent);
   m_widget = workspace() -> widget();
-  m_timer.setSingleShot (true);
-  connect (&m_timer, SIGNAL (timeout()), SLOT (workspaceResize()));
+  connect (&m_timer, SIGNAL (timeout()), SLOT (layoutTimerTick()));
   connect (workspace(), SIGNAL (resized()), SLOT (workspaceResize()));
   connect (process(), SIGNAL (stateChanged(KPlayerProcess::State, KPlayerProcess::State)), this, SLOT (playerStateChanged(KPlayerProcess::State, KPlayerProcess::State)));
   connect (process(), SIGNAL (progressChanged(float, KPlayerProcess::ProgressType)), this, SLOT (playerProgressChanged(float, KPlayerProcess::ProgressType)));
@@ -622,7 +621,7 @@ void KPlayerEngine::setupActions (void)
   actionCollection() -> addAction ("popup_volume", psa);
   connect (psa -> slider(), SIGNAL (valueChanged (int)), SLOT (volumeChanged (int)));
   psa -> setText (i18n("Volume"));
-  psa -> setIcon (KIcon ("player-volume"));
+  psa -> setIcon (KIcon ("text-speak"));
   psa -> setShortcut (Qt::Key_F9);
   psa -> setStatusTip (i18n("Shows the volume popup slider"));
   psa -> setWhatsThis (i18n("Volume button displays a slider that shows the current sound volume level and allows you to change it."));
@@ -2377,8 +2376,6 @@ void KPlayerEngine::handleLayout (bool user_zoom, bool user_resize)
   }
   if ( zooming() || resizing() || settings() -> anyButton() )
     return;
-  m_layout_user_interaction = false;
-  m_timer.stop();
   m_zooming = true;
   bool pending;
   emit syncronizeState (&pending);
@@ -2412,10 +2409,26 @@ void KPlayerEngine::handleResize (bool user)
     return;
   }
   m_pending_resize = m_dockwidget_resize = false;
-  m_zooming = true;
-  emit correctSize();
-  m_zooming = false;
+  if ( ! settings() -> constrainedSize() )
+  {
+    m_zooming = true;
+    emit correctSize();
+    m_zooming = false;
+  }
   handleLayout (false, user);
+}
+
+void KPlayerEngine::layoutTimerTick (void)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Layout timer tick\n";
+#endif
+  if ( -- m_timer_ticks == 0 )
+  {
+    m_layout_user_interaction = false;
+    m_timer.stop();
+    handleResize (false);
+  }
 }
 
 void KPlayerEngine::workspaceResize (void)
@@ -2434,6 +2447,15 @@ void KPlayerEngine::userResize (void)
   handleResize (! light());
 }
 
+void KPlayerEngine::dockWidgetMove (bool docked)
+{
+#ifdef DEBUG_KPLAYER_ENGINE
+  kdDebugTime() << "Dock widget move event\n";
+#endif
+  if ( ! docked && settings() -> anyButton() )
+    m_layout_user_interaction = true;
+}
+
 void KPlayerEngine::dockWidgetResize (void)
 {
 #ifdef DEBUG_KPLAYER_ENGINE
@@ -2450,9 +2472,15 @@ void KPlayerEngine::dockWidgetVisibility (bool)
   if ( settings() -> anyButton() )
     m_layout_user_interaction = true;
   else if ( m_layout_user_interaction )
+  {
+    m_timer_ticks = 5;
     m_timer.start (0);
-  else
+  }
+  else if ( ! zooming() )
+  {
+    emit dockWidgetVisibilityChanged();
     handleLayout();
+  }
 }
 
 void KPlayerEngine::setResizing (bool resizing)
@@ -2481,11 +2509,19 @@ void KPlayerEngine::setButtons (Qt::MouseButtons buttons)
   settings() -> setButtons (buttons);
   if ( previous == Qt::NoButton )
     m_pending_resize = m_dockwidget_resize = false;
-  else if ( buttons == Qt::NoButton && m_pending_resize )
-    if ( m_dockwidget_resize )
-      userResize();
-    else
-      workspaceResize();
+  else if ( buttons == Qt::NoButton )
+  {
+    if ( m_layout_user_interaction )
+    {
+      m_timer_ticks = 5;
+      m_timer.start (0);
+    }
+    else if ( m_pending_resize )
+      if ( m_dockwidget_resize )
+        userResize();
+      else
+        workspaceResize();
+  }
 }
 
 void KPlayerEngine::clearStoreSections (const QString& section)

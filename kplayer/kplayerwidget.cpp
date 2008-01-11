@@ -2,7 +2,7 @@
                           kplayerwidget.cpp
                           -----------------
     begin                : Sun Dec 01 2002
-    copyright            : (C) 2002-2007 by kiriuja
+    copyright            : (C) 2002-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -33,10 +33,6 @@
 void KPlayerX11SetInputFocus (uint id);
 void KPlayerX11MapWindow (uint id);
 void KPlayerX11UnmapWindow (uint id);
-void KPlayerX11ClearExposeWindow (uint id);
-void KPlayerX11SendConfigureEvent (uint id, int w, int h);
-
-// WM_NORMAL_HINTS, XSizeHints, XSetWMNormalHints() ???
 
 void KPlayerWidgetMapHandler (uint wid)
 {
@@ -75,22 +71,15 @@ KPlayerWidget::~KPlayerWidget()
 #endif
 }
 
-void KPlayerWidget::sendConfigureEvent (void)
-{
-  KPlayerX11SendConfigureEvent (winId(), width(), height());
-}
-
 void KPlayerWidget::mapHandler (uint wid)
 {
   if ( wid == winId() )
   {
 #ifdef DEBUG_KPLAYER_WIDGET
-    kdDebugTime() << "Mapping; process state " << kPlayerProcess() -> state() << "\n";
+    kdDebugTime() << "Mapping " << wid << " process state " << kPlayerProcess() -> state() << "\n";
 #endif
-    //if ( ! kPlayerProcess() -> is09Version() )
     KPlayerX11UnmapWindow (winId());
     show();
-    //if ( ! kPlayerProcess() -> is09Version() )
     KPlayerX11MapWindow (winId());
   }
 }
@@ -104,9 +93,6 @@ void KPlayerWidget::unmapHandler (uint wid)
 #endif
     hide();
     KPlayerX11MapWindow (winId());
-    //if ( false && kPlayerProcess() -> is09Version() )
-    //  KPlayerX11ClearExposeWindow (winId());
-    sendConfigureEvent();
   }
 }
 
@@ -114,7 +100,6 @@ void KPlayerWidget::showEvent (QShowEvent* event)
 {
   QWidget::showEvent (event);
   //if ( kPlayerProcess() -> is09Version() )
-  sendConfigureEvent();
 }
 
 void KPlayerWidget::resizeEvent (QResizeEvent* event)
@@ -124,21 +109,6 @@ void KPlayerWidget::resizeEvent (QResizeEvent* event)
     << " => " << event -> size().width() << "x" << event -> size().height() << "\n";
 #endif
   QWidget::resizeEvent (event);
-/*if ( kPlayerProcess() -> is09Version() )
-  {
-    KPlayerX11UnmapWindow (winId());
-    KPlayerX11MapWindow (winId());
-  }*/
-  /*if ( false && kPlayerProcess() -> is09Version() )
-  {
-    KPlayerX11UnmapWindow (winId());
-    KPlayerX11MapWindow (winId());
-    KPlayerX11ClearExposeWindow (winId());
-    KPlayerX11SendConfigureEvent (winId(), event -> size().width(), event -> size().height());
-  }*/
-#ifdef DEBUG_KPLAYER_WIDGET
-  kdDebugTime() << "Widget resize; process state " << kPlayerProcess() -> state() << "\n";
-#endif
 }
 
 void KPlayerWidget::mouseMoveEvent (QMouseEvent* event)
@@ -215,14 +185,6 @@ void KPlayerWidget::playerStateChanged (KPlayerProcess::State state, KPlayerProc
 #ifdef DEBUG_KPLAYER_WIDGET
   kdDebugTime() << "State change received by the widget: " << state << "\n";
 #endif
-  /*if ( false && kPlayerProcess() -> is09Version() && state == KPlayerProcess::Playing )
-  {
-    KPlayerX11MapWindow (winId());
-    KPlayerX11ClearExposeWindow (winId());
-  }*/
-  if ( kPlayerProcess() -> is09Version() && state == KPlayerProcess::Playing )
-    KPlayerX11ClearExposeWindow (winId());
-  sendConfigureEvent();
 }
 
 QSize KPlayerWidget::sizeHint (void) const

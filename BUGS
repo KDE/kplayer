@@ -12,9 +12,10 @@ files are not seekable at all. This is an MPlayer problem.
 After playing from slow media like optical disks, some MPlayer processes
 may be left behind. Run killall mplayer to kill them.
 
-Resizing is not very smooth and causes flickering of the video area and
-other parts of the program. Aspect ratio is not maintained while resizing
-the window continuously.
+Resizing was not very smooth and causes flickering of the video area and
+other parts of the program. This is fixed in KPlayer 0.7.
+
+Aspect ratio is not maintained while resizing the window continuously.
 
 Some actions in the Configure Shortcuts and Configure Toolbars dialogs
 have the same name when in fact they are different actions. This is

@@ -2,7 +2,7 @@
                           x11.cpp
                           -------
     begin                : Wed Feb 26 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -24,13 +24,13 @@
 #include <kdebug.h>
 kdbgstream kdDebugTime (void);
 //#define DEBUG_KPLAYER_GRAB
-#define DEBUG_KPLAYER_PROPERTY
+//#define DEBUG_KPLAYER_PROPERTY
 //#define DEBUG_KPLAYER_X11
 //#define DEBUG_KPLAYER_FOCUS
 //#define DEBUG_KPLAYER_KEY
 //#define DEBUG_KPLAYER_RESIZE
 //#define DEBUG_KPLAYER_CLIENT
-#define DEBUG_KPLAYER_FRAME_STRUT
+//#define DEBUG_KPLAYER_FRAME_STRUT
 #endif
 
 /*bool KPlayerX11TestGrab (Display* display, int winid)
@@ -330,6 +330,7 @@ void KPlayerX11UnmapWindow (uint id)
   XFlush (QX11Info::display());
 }
 
+/*
 void KPlayerX11ClearExposeWindow (uint id)
 {
   XClearArea (QX11Info::display(), id, 0, 0, 0, 0, True);
@@ -370,6 +371,7 @@ void KPlayerX11DiscardConfigureEvents (uint id)
 #endif
   ;
 }
+*/
 
 void KPlayerX11GetKeyboardMouseState (uint id)
 {

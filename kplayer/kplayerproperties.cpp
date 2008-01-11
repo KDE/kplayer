@@ -2,7 +2,7 @@
                           kplayerproperties.cpp
                           ---------------------
     begin                : Tue Feb 10 2004
-    copyright            : (C) 2004-2007 by kiriuja
+    copyright            : (C) 2004-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -2144,9 +2144,6 @@ void KPlayerProperties::initialize (void)
   floatinfo = new KPlayerFloatPropertyInfo;
   floatinfo -> setDefaultValue (0.75);
   m_info.insert ("Subtitle Font Outline", floatinfo);
-  boolinfo = new KPlayerBooleanPropertyInfo;
-  boolinfo -> setDefaultValue (true);
-  m_info.insert ("Subtitle Embedded Fonts", boolinfo);
   info = new KPlayerIntegerPropertyInfo;
   m_info.insert ("Subtitle Autoexpand", info);
   intinfo = new KPlayerIntegerPropertyInfo;

@@ -2,7 +2,7 @@
                           kplayernodeview.h
                           ------------------
     begin                : Mon Apr 18 2005
-    copyright            : (C) 2005-2007 by kiriuja
+    copyright            : (C) 2005-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -1027,11 +1027,22 @@ public:
   bool docked (void) const
     { return ! isFloating() && ! isHidden(); }
 
+signals:
+  /** Emitted when the widget is moved. */
+  void moved (bool docked);
+  /** Emitted when the widget is resized. */
+  void resized (void);
+
 protected slots:
   /** Sets the visibility flag. */
   void setVisibility (bool visibility);
 
 protected:
+  /** Emits the moved signal. */
+  virtual void moveEvent (QMoveEvent*);
+  /** Emits the resized signal. */
+  virtual void resizeEvent (QResizeEvent*);
+
   /** Sets the focus to the library. */
   virtual void focusInEvent (QFocusEvent* event);
   /** Does nothing. */

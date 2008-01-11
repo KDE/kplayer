@@ -2,7 +2,7 @@
                           kplayer.h
                           ---------
     begin                : Sat Nov 16 10:12:50 EST 2002
-    copyright            : (C) 2002-2007 by kiriuja
+    copyright            : (C) 2002-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -131,31 +131,26 @@ public:
     { return settings() -> fullScreen() ? m_library_fullscreen_visible : m_library_normally_visible; }
   /** Sets whether the library should be currently visible. */
   void showLibrary (bool show)
-    { (settings() -> fullScreen() ? m_library_fullscreen_visible : m_library_normally_visible) = m_show_library = show; }
+    { (settings() -> fullScreen() ? m_library_fullscreen_visible : m_library_normally_visible) = show; }
 
   /** Returns whether the message log should be currently visible. */
   bool showMessageLog (void) const
     { return settings() -> fullScreen() ? m_messagelog_fullscreen_visible : m_messagelog_normally_visible; }
   /** Sets whether the message log should be currently visible. */
   void showMessageLog (bool show)
-    { (settings() -> fullScreen() ? m_messagelog_fullscreen_visible : m_messagelog_normally_visible) = m_show_log = show; }
+    { (settings() -> fullScreen() ? m_messagelog_fullscreen_visible : m_messagelog_normally_visible) = show; }
 
   /** Calculates the size hint for the main window. */
   virtual QSize sizeHint (void) const;
-  /** Calculates the minimum size hint for the main window. */
-  //virtual QSize minimumSizeHint (void) const;
-  /** Sets the minimum size of the main widget. */
-  //virtual void setMinimumSize (int, int);
 
   /** Returns the full screen state. */
-  bool isFullScreen (void) const;
-  /** Replacement for broken QWidget::isMaximized. */
-  bool isMaximized (void) const;
-
-  /** Replacement for broken QWidget::showMaximized. */
-  //virtual void showMaximized (void);
-  /** Calls base class implementation. */
-  //virtual void showNormal (void);
+  bool fullScreen (void) const;
+  /** Returns the maximized state. */
+  bool maximized (void) const;
+  /** Returns the minimized state. */
+  bool minimized (void) const;
+  /** Returns the shaded state. */
+  bool shaded (void) const;
 
   /** Returns whether the message log should be currently visible. */
   bool logVisible (void) const
@@ -172,20 +167,12 @@ protected:
 
   /** Finds the tab bar where the widget is docked. */
   QTabBar* findTabBar (QDockWidget* widget, int* index = 0);
-  /** Shows the dock widget. */
-  void showDockWidget (QDockWidget* widget);
 
   /** Save general options like all bar positions and status as well as the geometry
       and the recent file list to the configuration file. */
   void saveOptions (void);
   /** Read general options again and initialize all variables like the recent file list. */
   void readOptions (void);
-  /** Saves the current URLs during session end to the session config file.
-      @see KMainWindow#saveProperties */
-  //virtual void saveProperties (KConfig*) const;
-  /** Restores the URLs from the session config file.
-      @see KMainWindow#readProperties */
-  //virtual void readProperties (KConfig*);
 
   /** Enables or disables playlist actions. */
   void enablePlaylistActions (void);
@@ -197,8 +184,6 @@ protected:
   void enableSubtitleActions (void);
   /** Enables or disables, checks or unchecks zoom actions. */
   void enableZoomActions (void);
-  /** Checks or unchecks bar actions. */
-//void checkBarActions (void);
 
   /** Enables a toolbar.
    * @param index the toolbar number
@@ -212,8 +197,6 @@ protected:
   /** Changes the statusbar contents for the standard label permanently, used to indicate current actions. */
   void setStatusText (const QString&);
 
-  /** Processes the widget events. Passes them on to KMainWindow. */
-  //virtual bool event (QEvent*);
   /** Sets the window geometry on the initial show event. */
   virtual void showEvent (QShowEvent*);
   virtual void changeEvent (QEvent*);
@@ -260,34 +243,6 @@ protected:
   QLabel *m_status_label, *m_state_label, *m_progress_label;
 
 public slots:
-  /** Resets the zooming flag when the main window state changes. */
-  void windowStateChanged (uint wid);
-  /** Syncronizes full screen and maximized settings. */
-  void syncronizeState (bool* pending);
-  /** Syncronizes controls. */
-  void syncronizeControls (void);
-  /** Updates the layout of the window controls. */
-  void updateLayout (const QSize&);
-  /** Resizes the window to the correct size. */
-  void zoom (void);
-  /** Finalizes the window layout. */
-  void finalizeLayout (void);
-  /** Sets the correct display size. */
-  void correctSize (void);
-
-  /** Enables or disables submenus with the given name. */
-  void enableSubmenu (const QString& name, bool enable);
-
-  /** Shows the message log if there have been errors. */
-  void showErrors (const QString&);
-
-  /** Resets the player status. */
-  void playlistStarted (void);
-  /** Updates the caption and progress information. */
-  void playlistActivated (void);
-  /** Clears the error condition if any. */
-  void playlistStopped (void);
-
   /** Clears all messages from the message log. */
   void fileClearLog (void);
   /** Ends the program by closing the main window. */
@@ -337,6 +292,36 @@ public slots:
   //void clearStatusMessage (void);
 
 protected slots:
+  /** Resets the zooming flag when the main window state changes. */
+  void windowStateChanged (uint wid);
+  /** Syncronizes full screen and maximized settings. */
+  void syncronizeState (bool* pending);
+  /** Syncronizes controls. */
+  void syncronizeControls (void);
+  /** Updates the layout of the window controls. */
+  void updateLayout (const QSize&);
+  /** Resizes the window to the correct size. */
+  void zoom (void);
+  /** Finalizes the window layout. */
+  void finalizeLayout (void);
+  /** Sets the correct display size. */
+  void correctSize (void);
+  /** Sets the correct display size. */
+  void dockWidgetVisibility (void);
+
+  /** Enables or disables submenus with the given name. */
+  void enableSubmenu (const QString& name, bool enable);
+
+  /** Shows the message log if there have been errors. */
+  void showErrors (const QString&);
+
+  /** Resets the player status. */
+  void playlistStarted (void);
+  /** Updates the caption and progress information. */
+  void playlistActivated (void);
+  /** Clears the error condition if any. */
+  void playlistStopped (void);
+
   /** Receives the stateChanged signal from KPlayerProcess. */
   void playerStateChanged (KPlayerProcess::State, KPlayerProcess::State);
   /** Receives the progressChanged signal from KPlayerProcess. */
@@ -388,8 +373,6 @@ public:
 
   /** Process application X11 events. */
   virtual bool x11EventFilter (XEvent* event);
-
-  //int x11ClientMessage (QWidget* widget, XEvent* event, bool passive_only);
 };
 
 #endif

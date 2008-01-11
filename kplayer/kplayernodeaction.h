@@ -2,7 +2,7 @@
                           kplayernodeaction.h
                           -------------------
     begin                : Wed Apr 05 2006
-    copyright            : (C) 2006-2007 by kiriuja
+    copyright            : (C) 2006-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -132,6 +132,8 @@ public:
 protected:
   /** Creates an action for the given node. */
   virtual QAction* createAction (KPlayerNode* node);
+  /** Updates the action text, status, and whats this. */
+  virtual void updateAction (QAction* action);
 };
 
 /**Device action menu class.
@@ -149,6 +151,8 @@ public:
 
   /** Updates device actions. */
   virtual void setup (void);
+  /** Updates the extra actions and populates the node as necessary. */
+  virtual void update (void);
 
   /** Returns the node. */
   KPlayerDeviceNode* device (void) const
@@ -198,13 +202,12 @@ public:
 
   /** Updates device actions. */
   virtual void setup (void);
+  /** Updates the extra actions and populates the node as necessary. */
+  virtual void update (void);
 
   /** Returns the node. */
   KPlayerDiskNode* device (void) const
     { return (KPlayerDiskNode*) parent(); }
-
-  /** Sets the action text. */
-  virtual void setText (const QString& text);
 
 protected slots:
   /** Loads the disk. */

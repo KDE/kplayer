@@ -2,7 +2,7 @@
                           kplayerlogwindow.cpp
                           --------------------
     begin                : Fri May 9 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -58,7 +58,7 @@ void KPlayerLogWindow::initialize (QMenu* menu)
 void KPlayerLogWindow::setVisibility (bool visibility)
 {
 #ifdef DEBUG_KPLAYER_LOG
-  kdDebugTime() << "Log visibility " << visibility << "\n";
+  kdDebugTime() << "Log visibility " << visibility << " docked " << docked() << "\n";
 #endif
   m_visibility = visibility;
 }
@@ -77,6 +77,26 @@ void KPlayerLogWindow::setError (bool flag)
 #endif
   }
   logWidget() -> setError (flag);
+}
+
+void KPlayerLogWindow::moveEvent (QMoveEvent* event)
+{
+#ifdef DEBUG_KPLAYER_LOG
+  kdDebugTime() << "LogWindow::moveEvent " << event -> oldPos().x() << "x" << event -> oldPos().y() << " -> " << event -> pos().x() << "x" << event -> pos().y() << " " << isHidden() << " " << docked() << "\n";
+#endif
+  QDockWidget::moveEvent (event);
+  if ( ! isHidden() )
+    emit moved (docked());
+}
+
+void KPlayerLogWindow::resizeEvent (QResizeEvent* event)
+{
+#ifdef DEBUG_KPLAYER_LOG
+  kdDebugTime() << "LogWindow::resizeEvent " << event -> oldSize().width() << "x" << event -> oldSize().height() << " -> " << event -> size().width() << "x" << event -> size().height() << " " << isHidden() << " " << docked() << "\n";
+#endif
+  QDockWidget::resizeEvent (event);
+  if ( ! isHidden() )
+    emit resized();
 }
 
 KPlayerLogWidget::KPlayerLogWidget (KActionCollection* ac, QWidget* parent)
@@ -197,7 +217,7 @@ void KPlayerLogWidget::resizeEvent (QResizeEvent* event)
 {
   bool at_bottom = ! verticalScrollBar() || verticalScrollBar() -> value() == verticalScrollBar() -> maximum();
 #ifdef DEBUG_KPLAYER_LOG
-  kdDebugTime() << "Log::resizeEvent " << event -> oldSize().width() << "x" << event -> oldSize().height() << " -> " << event -> size().width() << "x" << event -> size().height() << " " << at_bottom << "\n";
+  kdDebugTime() << "LogWidget::resizeEvent " << event -> oldSize().width() << "x" << event -> oldSize().height() << " -> " << event -> size().width() << "x" << event -> size().height() << " " << at_bottom << "\n";
   if ( verticalScrollBar() )
     kdDebugTime() << " Log " << width() << "x" << height() << " " << verticalScrollBar() -> value() << "/" << verticalScrollBar() -> maximum() << "\n";
 #endif
@@ -215,14 +235,19 @@ void KPlayerLogWidget::resizeEvent (QResizeEvent* event)
       kdDebugTime() << "Log " << width() << "x" << height() << " " << verticalScrollBar() -> value() << "/" << verticalScrollBar() -> maximum() << "\n";
 #endif
   }
-  if ( ! KPlayerEngine::engine() -> zooming() && parent() -> docked() )
+#ifdef DEBUG_KPLAYER_LOG
+  kdDebugTime() << " Mouse down " << KPlayerEngine::engine() -> settings() -> anyButton() << "\n";
+  kdDebugTime() << " Docked " << parent() -> docked() << "\n";
+  kdDebugTime() << " Visible " << parent() -> visible() << "\n";
+#endif
+  if ( KPlayerEngine::engine() -> settings() -> anyButton() && ! KPlayerEngine::engine() -> layoutInProgress()
+    && parent() -> visible() )
   {
     rememberHeight();
 #ifdef DEBUG_KPLAYER_LOG
     kdDebugTime() << " Height " << m_height << "\n";
 #endif
   }
-  emit resized();
 }
 
 void KPlayerLogWidget::contextMenuEvent (QContextMenuEvent* event)

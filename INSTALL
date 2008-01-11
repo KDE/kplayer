@@ -11,6 +11,45 @@ Visit the KPlayer home page for links to binary packages for other distros:
 http://kplayer.sourceforge.net/
 
 
-Build instructions can be found at 
-http://techbase.kde.org/Getting_Started/Build/KDE4
+Compiling from source tarball or CVS
+------------------------------------
 
+Extract the tarball
+
+  tar xjf kplayer-0.7.tar.bz2
+  cd kplayer-0.7
+
+Or download code from CVS
+
+  cvs -d:pserver:anonymous@kplayer.cvs.sourceforge.net:/cvsroot/kplayer login
+  cvs -z3 -d:pserver:anonymous@kplayer.cvs.sourceforge.net:/cvsroot/kplayer co -P kplayer
+  cd kplayer
+
+Create Makefiles
+
+  cmake .
+
+notice the dot after cmake. You can give cmake a few options like
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release .
+
+where /usr is your KDE root directory that you can find by running
+kde-config --prefix
+and release is the build type, the other options being relwithdebinfo,
+debug, debugfull and profile, relwithdebinfo being the default.
+
+Compile
+
+  make
+
+Install
+
+  su -c 'make install'
+
+Run
+
+  kplayer
+
+
+More generic KDE build instructions can be found at 
+http://techbase.kde.org/Getting_Started/Build/KDE4

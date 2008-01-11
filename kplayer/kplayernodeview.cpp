@@ -2,7 +2,7 @@
                           kplayernodeview.cpp
                           --------------------
     begin                : Mon Apr 18 2005
-    copyright            : (C) 2005-2007 by kiriuja
+    copyright            : (C) 2005-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -3516,17 +3516,22 @@ QSize KPlayerLibrary::sizeHint (void) const
 void KPlayerLibrary::resizeEvent (QResizeEvent* event)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
-  kdDebugTime() << "Library resize to " << event -> size().width() << "x" << event -> size().height() << "\n";
+  kdDebugTime() << "Library::resizeEvent " << event -> oldSize().width() << "x" << event -> oldSize().height() << " -> " << event -> size().width() << "x" << event -> size().height() << "\n";
 #endif
   QSplitter::resizeEvent (event);
-  if ( ! KPlayerEngine::engine() -> zooming() && parent() -> docked() )
+#ifdef DEBUG_KPLAYER_LOG
+  kdDebugTime() << " Mouse down " << KPlayerEngine::engine() -> settings() -> anyButton() << "\n";
+  kdDebugTime() << " Docked " << parent() -> docked() << "\n";
+  kdDebugTime() << " Visible " << parent() -> visible() << "\n";
+#endif
+  if ( KPlayerEngine::engine() -> settings() -> anyButton() && ! KPlayerEngine::engine() -> layoutInProgress()
+    && parent() -> visible() )
   {
     rememberHeight();
 #ifdef DEBUG_KPLAYER_NODEVIEW
     kdDebugTime() << " Height " << m_height << "\n";
 #endif
   }
-  emit resized();
 }
 
 void KPlayerLibrary::focusInEvent (QFocusEvent* event)
@@ -3673,9 +3678,29 @@ KPlayerLibraryWindow::KPlayerLibraryWindow (KActionCollection* ac, KPlayerPlayli
 void KPlayerLibraryWindow::setVisibility (bool visibility)
 {
 #ifdef DEBUG_KPLAYER_NODEVIEW
-  kdDebugTime() << "Library visibility " << visibility << "\n";
+  kdDebugTime() << "Library visibility " << visibility << " docked " << docked() << "\n";
 #endif
   m_visibility = visibility;
+}
+
+void KPlayerLibraryWindow::moveEvent (QMoveEvent* event)
+{
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "LibraryWindow::moveEvent " << event -> oldPos().x() << "x" << event -> oldPos().y() << " -> " << event -> pos().x() << "x" << event -> pos().y() << " " << isHidden() << " " << docked() << "\n";
+#endif
+  QDockWidget::moveEvent (event);
+  if ( ! isHidden() )
+    emit moved (docked());
+}
+
+void KPlayerLibraryWindow::resizeEvent (QResizeEvent* event)
+{
+#ifdef DEBUG_KPLAYER_NODEVIEW
+  kdDebugTime() << "LibraryWindow::resizeEvent " << event -> oldSize().width() << "x" << event -> oldSize().height() << " -> " << event -> size().width() << "x" << event -> size().height() << " " << isHidden() << " " << docked() << "\n";
+#endif
+  QDockWidget::resizeEvent (event);
+  if ( ! isHidden() )
+    emit resized();
 }
 
 void KPlayerLibraryWindow::focusInEvent (QFocusEvent* event)

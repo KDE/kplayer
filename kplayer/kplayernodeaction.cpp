@@ -2,7 +2,7 @@
                           kplayernodeaction.cpp
                           ---------------------
     begin                : Wed Apr 05 2006
-    copyright            : (C) 2006-2007 by kiriuja
+    copyright            : (C) 2006-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -274,6 +274,12 @@ QAction* KPlayerDevicesActionList::createAction (KPlayerNode* node)
   return action;
 }
 
+void KPlayerDevicesActionList::updateAction (QAction* action)
+{
+  KPlayerContainerActionList::updateAction (action);
+  ((KPlayerDeviceActionMenu*) action) -> update();
+}
+
 KPlayerDeviceActionMenu::KPlayerDeviceActionMenu (KPlayerDeviceNode* device)
   : KActionMenu (device -> name(), device)
 {
@@ -357,6 +363,10 @@ void KPlayerDeviceActionMenu::updateActions (void)
 #endif
 }
 
+void KPlayerDeviceActionMenu::update (void)
+{
+}
+
 void KPlayerDeviceActionMenu::added (KPlayerContainerNode*, const KPlayerNodeList&, KPlayerNode*)
 {
 #ifdef DEBUG_KPLAYER_NODEACTION
@@ -427,29 +437,6 @@ void KPlayerDiskActionMenu::setup (void)
   updateActions();
 }
 
-void KPlayerDiskActionMenu::setText (const QString& text)
-{
-#ifdef DEBUG_KPLAYER_NODEACTION
-  kdDebugTime() << "KPlayerDiskActionMenu::setText\n";
-  kdDebugTime() << " URL    " << device() -> url().url() << "\n";
-  kdDebugTime() << " Text   " << text << "\n";
-  kdDebugTime() << " Populated " << m_populated << "\n";
-  kdDebugTime() << " Populate  " << device() -> populated() << "\n";
-  if ( device() -> disk() )
-    kdDebugTime() << " Disk type " << device() -> disk() -> type() << "\n";
-  //kdDebugTime() << " Complete  " << device() -> parent() -> complete() << "\n";
-#endif
-  KPlayerDeviceActionMenu::setText (text);
-  bool use_name = device() -> disk() && device() -> name() != device() -> disk() -> defaultName();
-  m_play_action -> setText (use_name ? i18n("&Play %1", text) : i18n("&Play Disk"));
-  if ( ! m_populated && ! device() -> dataDisk() && (device() -> populated()
-    || device() -> disk() /*&& device() -> parent() -> complete()*/) )
-  {
-    m_populated = true;
-    device() -> populate();
-  }
-}
-
 void KPlayerDiskActionMenu::loadDisk (void)
 {
 #ifdef DEBUG_KPLAYER_NODEACTION
@@ -494,4 +481,25 @@ void KPlayerDiskActionMenu::updateActions (void)
   addAction (m_play_action);
   KPlayerDeviceActionMenu::updateActions();
   addAction (m_load_action);
+}
+
+void KPlayerDiskActionMenu::update (void)
+{
+#ifdef DEBUG_KPLAYER_NODEACTION
+  kdDebugTime() << "KPlayerDiskActionMenu::update\n";
+  kdDebugTime() << " URL    " << device() -> url().url() << "\n";
+  kdDebugTime() << " Populated " << m_populated << "\n";
+  kdDebugTime() << " Populate  " << device() -> populated() << "\n";
+  if ( device() -> disk() )
+    kdDebugTime() << " Disk type " << device() -> disk() -> type() << "\n";
+  //kdDebugTime() << " Complete  " << device() -> parent() -> complete() << "\n";
+#endif
+  bool use_name = device() -> disk() && device() -> name() != device() -> disk() -> defaultName();
+  m_play_action -> setText (use_name ? i18n("&Play %1", text()) : i18n("&Play Disk"));
+  if ( ! m_populated && ! device() -> dataDisk() && (device() -> populated()
+    || device() -> disk() /*&& device() -> parent() -> complete()*/) )
+  {
+    m_populated = true;
+    device() -> populate();
+  }
 }

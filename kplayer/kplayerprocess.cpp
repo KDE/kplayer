@@ -2,7 +2,7 @@
                           kplayerprocess.cpp
                           ------------------
     begin                : Sat Jan 11 2003
-    copyright            : (C) 2002-2007 by kiriuja
+    copyright            : (C) 2002-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -614,7 +614,6 @@ void KPlayerProcess::start (void)
     *m_player << "-subcp" << encoding;
   if ( properties() -> hasSubtitleFramerate() )
     *m_player << "-subfps" << properties() -> subtitleFramerateString();
-  *m_player << (configuration() -> subtitleEmbeddedFonts() ? "-embeddedfonts" : "-noembeddedfonts");
   if ( properties() -> subtitleClosedCaption() )
     *m_player << "-subcc";
   if ( properties() -> videoDoubleBuffering() )
@@ -1623,8 +1622,8 @@ void KPlayerProcess::receivedOutputLine (KPlayerLineOutputProcess* proc, char* s
   }
   static float prev_position = -1;
   float ftime;
-  if ( state() == Running )
-    kPlayerWidget() -> sendConfigureEvent();
+  //if ( state() == Running )
+  //  kPlayerWidget() -> sendConfigureEvent();
   if ( re_version.indexIn (str) >= 0 )
   {
     m_09_version = true;

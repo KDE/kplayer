@@ -2,7 +2,7 @@
                           kplayersettings.cpp
                           -------------------
     begin                : Tue Apr 22 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -106,15 +106,15 @@ bool KPlayerSettings::fullScreen (void) const
   if ( kPlayerEngine() -> stopped() )
     return false;
 #ifdef DEBUG_KPLAYER_SETTINGS
-  bool last_full_screen = m_last_full_screen;
+//bool last_full_screen = m_last_full_screen;
 #endif
   bool full_screen_default = properties() -> hasVideo() ? configuration() -> fullScreen()
     : properties() -> hasNoVideo() ? false : m_last_full_screen;
   kPlayerSettings() -> m_last_full_screen = ! configuration() -> override ("Full Screen") && ! properties() -> hasNoVideo()
     && properties() -> hasFullScreen() ? properties() -> fullScreen() : full_screen_default;
 #ifdef DEBUG_KPLAYER_SETTINGS
-  kdDebugTime() << "Settings::fullScreen " << properties() -> hasVideo() << " " << properties() -> hasNoVideo()
-    << " " << configuration() -> fullScreen() << " " << last_full_screen << " = " << m_last_full_screen << "\n";
+//kdDebugTime() << "Settings::fullScreen " << properties() -> hasVideo() << " " << properties() -> hasNoVideo()
+//  << " " << configuration() -> fullScreen() << " " << last_full_screen << " = " << m_last_full_screen << "\n";
 #endif
   return m_last_full_screen;
 }

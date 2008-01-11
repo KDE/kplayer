@@ -2,7 +2,7 @@
                           kplayersettingsdialog.h
                           -----------------------
     begin                : Tue Apr 22 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -103,6 +103,8 @@ protected:
   bool m_softvol;
   /** Amixer tracking flags. */
   bool m_amixer_running, m_rerun_amixer;
+  /** Device listed indicator. */
+  bool m_devices_listed;
 };
 
 class KPlayerSettingsControls : public QFrame, protected Ui_KPlayerSettingsControlsPage

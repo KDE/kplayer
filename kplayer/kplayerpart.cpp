@@ -2,7 +2,7 @@
                            kplayerpart.cpp
                            ---------------
     begin                : Wed Aug 20 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -125,7 +125,7 @@ QString resourcePath (const QString& filename);
 KAboutData* KPlayerPart::createAboutData (void)
 {
   KAboutData* about = new KAboutData ("kplayer", 0, ki18n("KPlayerPart"), "0.7", description, KAboutData::License_File,
-    ki18n("(C) 2002-2007, kiriuja"), license, "http://kplayer.sourceforge.net/", "http://kplayer.sourceforge.net/email.html");
+    ki18n("(C) 2002-2008, kiriuja"), license, "http://kplayer.sourceforge.net/", "http://kplayer.sourceforge.net/email.html");
   about -> setLicenseTextFile (resourcePath ("COPYING"));
   about -> addAuthor (ki18n("kiriuja"), KLocalizedString(), "http://kplayer.sourceforge.net/email.html");
   return about;

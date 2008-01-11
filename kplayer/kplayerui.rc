@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kplayer" version="16">
+<kpartgui name="kplayer" version="17">
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <Action name="file_open"/>
@@ -171,7 +171,6 @@
   <Action name="popup_volume"/>
   <Action name="popup_contrast"/>
   <Action name="popup_brightness"/>
-  <Action name="popup_hue"/>
   <Action name="popup_saturation"/>
 </ToolBar>
 <ToolBar name="playlistToolBar"><text>Playlist Toolbar</text>

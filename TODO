@@ -1,36 +1,21 @@
-0.6.3
- + Subtitles
-  + Font name
-  + Bold and italic
-  + Text size and scale
-  + Text width
-  + Font outline
-  + Use embedded fonts
-  + Closed caption
-  + Encoding
-  + Frame rate
-  + Auto expand
-  + Open and drop
-  + Vobsub
-  + Allow loading multiple subtitles
- + Dialogs
-  + Do not set focus on init
-  + Allow Shift-arrow on sliders
-  + Empty display size
- + Library
-  + Restore player shortcuts
-  + Leave Shift-Right and Shift-Left for library
- + Video area
-  + Hide mouse cursor after delay
-  + Screen saver disabling
- + Documentation
-  + Update manual
-  + Update screenshots
-  + Update license
-  + Update version
-  + Release notes
+0.7.0
+ + Port to v4 APIs
+  + Engine
+  + Properties
+  + Nodes
+  + Playlist
+  + Main window
+  + Message log
+  + Devices
+ + Sizing
+  + Keep video size
+  + Keep widget size
+  + Keep window position
+  + Smooth resizing
 
-0.6.x
+0.7.x
+ Port to v4 APIs
+  Multimedia library
  Devices
   Radio
    Channels
@@ -42,11 +27,9 @@
    Allow playing from webcam
   Allow playing disks from files and directories
   Allow removing and readding channels and tracks
- Process
-  Kill runaway MPlayers
  Main window
   Smooth resizing while keeping aspect ratio
-  Panscan
+  Pan and scan
   Xinerama
  Dialogs
   Collapse duplicate actions

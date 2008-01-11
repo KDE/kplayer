@@ -2,7 +2,7 @@
                           kplayersource.cpp
                           -----------------
     begin                : Thu Jan 12 2006
-    copyright            : (C) 2006-2007 by kiriuja
+    copyright            : (C) 2006-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 

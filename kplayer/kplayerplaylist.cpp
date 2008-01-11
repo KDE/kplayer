@@ -2,7 +2,7 @@
                           kplayerplaylist.cpp
                           --------------------
     begin                : Wed Sep 3 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -74,13 +74,11 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   m_devices = new KPlayerDevicesActionList (ki18n("%1"), ki18n("Shows commands and options available for %1"),
     ki18n("Submenu that shows commands and options available for %1."), this, "file_devices");
 
-  bool isRTL = QApplication::isRightToLeft();
-
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("player_next", action);
   connect (action, SIGNAL (triggered()), SLOT (next()));
   action -> setText (i18n("&Next"));
-  action -> setIcon (KIcon (isRTL ? "media-skip-backward" : "media-skip-forward"));
+  action -> setIcon (KIcon ("media-skip-forward"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Down);
   action -> setStatusTip (i18n("Plays the next item on the playlist"));
   action -> setWhatsThis (i18n("Next command starts playing the next item on the current playlist."));
@@ -89,7 +87,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   actionCollection() -> addAction ("player_previous", action);
   connect (action, SIGNAL (triggered()), SLOT (previous()));
   action -> setText (i18n("P&revious"));
-  action -> setIcon (KIcon (isRTL ? "media-skip-forward" : "media-skip-backward"));
+  action -> setIcon (KIcon ("media-skip-backward"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Up);
   action -> setStatusTip (i18n("Plays the previous item on the playlist"));
   action -> setWhatsThis (i18n("Previous command starts playing the previous item on the current playlist."));
@@ -103,6 +101,8 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   //widget -> setShortcutConfigurable (false);
   widget -> setStatusTip (i18n("Shows playlist items and allows you to select an item to play"));
   widget -> setWhatsThis (i18n("Playlist combo box in the closed state displays the current playlist item. You can drop down the combo box to see the entire list and select a different item to load and play."));
+  //playlist() -> setStatusTip (widget -> statusTip());
+  //playlist() -> setWhatsThis (widget -> whatsThis());
   connect (playlist(), SIGNAL (activated(int)), SLOT (play(int)));
   //QToolTip::add (playlist(), i18n("Playlist"));
 
@@ -110,7 +110,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   actionCollection() -> addAction ("player_loop", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (loop()));
   toggle -> setText (i18n("&Loop"));
-  toggle -> setIcon (KIcon ("media-playlist-repeat"));
+  toggle -> setIcon (KIcon ("loop"));
   toggle -> setStatusTip (i18n("Turns the option to loop through the list on/off"));
   toggle -> setWhatsThis (i18n("Loop command toggles the option to start playing items from the beginning of the playlist after playing the last item on the playlist."));
   if ( configuration() -> loop() )
@@ -120,7 +120,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   actionCollection() -> addAction ("player_shuffle", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (shuffle()));
   toggle -> setText (i18n("S&huffle"));
-  toggle -> setIcon (KIcon ("media-playlist-shuffle"));
+  toggle -> setIcon (KIcon ("shuffle"));
   toggle -> setStatusTip (i18n("Turns the option to play items in random order on or off"));
   toggle -> setWhatsThis (i18n("Shuffle command toggles the option to play items in a random order."));
   if ( configuration() -> shuffle() )

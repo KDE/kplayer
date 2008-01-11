@@ -2,7 +2,7 @@
                           kplayerslideraction.h
                           ---------------------
     begin                : Sat Jan 11 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -19,6 +19,7 @@
 #include <kaction.h>
 #include <qframe.h>
 #include <qslider.h>
+#include <qtoolbutton.h>
 
 /**KPlayer's slider widget. Works around the Qt upside-down slider bug.
   *@author kiriuja
@@ -71,6 +72,21 @@ public:
 protected:
   /** Closes the popup frame when Alt, Tab, Esc, Enter or Return is pressed. */
   virtual void keyPressEvent (QKeyEvent*);
+};
+
+/**Toolbar button that shows a popup slider.
+  *@author kiriuja
+  */
+class KPlayerPopupToolButton : public QToolButton
+{
+  Q_OBJECT
+
+public:
+  /** The KPlayerPopupToolButton constructor. Parameters are passed on to QToolButton. */
+  KPlayerPopupToolButton (QWidget* parent = 0);
+
+  /** Prevents the action from being triggered when clicked. */
+  virtual void nextCheckState (void);
 };
 
 /**Action representing a popup slider activated by a toolbar button.

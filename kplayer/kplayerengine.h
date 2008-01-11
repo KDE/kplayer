@@ -2,7 +2,7 @@
                           kplayerengine.h
                           ---------------
     begin                : Tue Feb 10 2004
-    copyright            : (C) 2004-2007 by kiriuja
+    copyright            : (C) 2004-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -80,6 +80,10 @@ public:
    *  @param resizing true if resizing has started, false if resizing has completed
    */
   void setResizing (bool resizing);
+
+  /** Returns layout in progress indicator. */
+  bool layoutInProgress (void) const
+    { return zooming() || m_layout_user_interaction; }
 
   void setModifiers (Qt::KeyboardModifiers modifiers);
   void setButtons (Qt::MouseButtons buttons);
@@ -277,26 +281,6 @@ public:
     { return listIndex (m_video_drivers, driver); }
 
 public slots:
-  /** Handles workspace resized event. */
-  void workspaceResize (void);
-  /** Handles dock widget resized event. */
-  void dockWidgetResize (void);
-  /** Handles dock widget visibility event. */
-  void dockWidgetVisibility (bool);
-  /** Receives the updated signal from KPlayerSettings. Updates the settings. */
-  void refreshSettings (void);
-  /** Receives the updated signal from KPlayerProperties. Updates the settings. */
-  void refreshProperties (void);
-
-  /** Receives the stateChanged signal from KPlayerProcess. */
-  void playerStateChanged (KPlayerProcess::State, KPlayerProcess::State);
-  /** Receives the progressChanged signal from KPlayerProcess. */
-  void playerProgressChanged (float, KPlayerProcess::ProgressType);
-  /** Receives the infoAvailable signal from KPlayerProcess. */
-  void playerInfoAvailable (void);
-  /** Receives the sizeAvailable signal from KPlayerProcess. */
-  void playerSizeAvailable (void);
-
   /** Displays the Open Subtitle File dialog and loads the chosen subtitles.
       Restarts playback if a file was playing. */
   void fileOpenSubtitles (void);
@@ -509,6 +493,8 @@ protected:
   bool m_play_pending;
   /** Layout timer. */
   QTimer m_timer;
+  /** Layout timer tick count. */
+  int m_timer_ticks;
 
 signals:
   /** Emitted when a window state changes. */
@@ -525,12 +511,36 @@ signals:
   void finalizeLayout (void);
   /** Emitted when the workspace size needs adjustment. */
   void correctSize (void);
-  /** Emitted when the original display size of a file becomes known. */
-  //void initialSize (void);
   /** Emitted when all drivers and codecs have been loaded. */
   void updated (void);
+  /** Emitted when dock widget visibility changes. */
+  void dockWidgetVisibilityChanged (void);
 
 protected slots:
+  /** Counts down layout timer events and handles layout. */
+  void layoutTimerTick (void);
+  /** Handles workspace resized event. */
+  void workspaceResize (void);
+  /** Handles dock widget moved event. */
+  void dockWidgetMove (bool docked);
+  /** Handles dock widget resized event. */
+  void dockWidgetResize (void);
+  /** Handles dock widget visibility event. */
+  void dockWidgetVisibility (bool);
+  /** Receives the updated signal from KPlayerSettings. Updates the settings. */
+  void refreshSettings (void);
+  /** Receives the updated signal from KPlayerProperties. Updates the settings. */
+  void refreshProperties (void);
+
+  /** Receives the stateChanged signal from KPlayerProcess. */
+  void playerStateChanged (KPlayerProcess::State, KPlayerProcess::State);
+  /** Receives the progressChanged signal from KPlayerProcess. */
+  void playerProgressChanged (float, KPlayerProcess::ProgressType);
+  /** Receives the infoAvailable signal from KPlayerProcess. */
+  void playerInfoAvailable (void);
+  /** Receives the sizeAvailable signal from KPlayerProcess. */
+  void playerSizeAvailable (void);
+
   /** Processes an MPlayer output line. */
   void receivedOutput (KPlayerLineOutputProcess*, char*);
   /** Finishes refreshing lists. */

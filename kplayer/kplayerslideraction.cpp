@@ -2,7 +2,7 @@
                           kplayerslideraction.cpp
                           -----------------------
     begin                : Sat Jan 11 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -21,7 +21,6 @@
 #include <qevent.h>
 #include <qlayout.h>
 #include <qstyle.h>
-#include <qtoolbutton.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SLIDERS
@@ -66,9 +65,27 @@ void KPlayerPopupFrame::keyPressEvent (QKeyEvent* ev)
   }
 }
 
+KPlayerPopupToolButton::KPlayerPopupToolButton (QWidget* parent)
+  : QToolButton (parent)
+{
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "KPlayerPopupToolButton created\n";
+#endif
+}
+
+void KPlayerPopupToolButton::nextCheckState (void)
+{
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "Popup button clicked\n";
+#endif
+}
+
 KPlayerPopupSliderAction::KPlayerPopupSliderAction (QObject* parent)
   : KAction (parent)
 {
+#ifdef DEBUG_KPLAYER_SLIDERS
+  kdDebugTime() << "KPlayerPopupSliderAction created\n";
+#endif
   m_frame = new KPlayerPopupFrame;
   m_slider = new KPlayerSlider (Qt::Vertical, m_frame);
   m_frame -> layout() -> addWidget (m_slider);
@@ -92,7 +109,7 @@ QWidget* KPlayerPopupSliderAction::createWidget (QWidget* parent)
   if ( parent && parent -> inherits ("QToolBar") )
   {
     QToolBar* toolbar = (QToolBar*) parent;
-    QToolButton* button = new QToolButton (toolbar);
+    QToolButton* button = new KPlayerPopupToolButton (toolbar);
     button -> setAutoRaise (true);
     button -> setFocusPolicy (Qt::NoFocus);
     button -> setIconSize (toolbar -> iconSize());
@@ -101,7 +118,6 @@ QWidget* KPlayerPopupSliderAction::createWidget (QWidget* parent)
     button -> connect (toolbar, SIGNAL (toolButtonStyleChanged (Qt::ToolButtonStyle)),
       SLOT (setToolButtonStyle (Qt::ToolButtonStyle)));
     button -> setDefaultAction (this);
-    button -> setDefaultAction (0);
     connect (button, SIGNAL (clicked()), SLOT (showSlider()));
     return button;
   }
@@ -118,9 +134,15 @@ void KPlayerPopupSliderAction::showSlider (void)
   QPoint point;
   int width = m_frame -> width();
   int height = KPlayerEngine::engine() -> configuration() -> preferredSliderLength() + 4;
+  QToolButton* button = 0;
   if ( sender() && sender() -> inherits ("QToolButton") )
+    button = (QToolButton*) sender();
+  else
+    foreach ( QWidget* widget, createdWidgets() )
+      if ( widget -> isVisible() && widget -> inherits ("QToolButton") )
+        button = (QToolButton*) widget;
+  if ( button )
   {
-    QToolButton* button = (QToolButton*) sender();
     point = button -> mapToGlobal (QPoint (-2, button -> height()));
     if ( point.y() + height > QApplication::desktop() -> height() )
       point.setY (point.y() - button -> height() - height);
@@ -179,6 +201,8 @@ QWidget* KPlayerSliderAction::createWidget (QWidget* parent)
       slider(), SLOT (parentOrientationChanged (Qt::Orientation)));
   connect (parent, SIGNAL (orientationChanged (Qt::Orientation)),
     slider(), SLOT (parentOrientationChanged (Qt::Orientation)));
+  //slider() -> setStatusTip (statusTip());
+  //slider() -> setWhatsThis (whatsThis());
   return QWidgetAction::createWidget (parent);
 }
 

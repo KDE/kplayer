@@ -2,7 +2,7 @@
                           kplayersettingsdialog.cpp
                           -------------------------
     begin                : Tue Apr 22 2003
-    copyright            : (C) 2003-2007 by kiriuja
+    copyright            : (C) 2003-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -23,6 +23,9 @@
 #include <qpushbutton.h>
 #include <qregexp.h>
 #include <qslider.h>
+#include <solid/audiointerface.h>
+#include <solid/device.h>
+#include <solid/deviceinterface.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SETTINGS_DIALOG
@@ -32,6 +35,11 @@
 #include "kplayersettingsdialog.moc"
 #include "kplayerengine.h"
 #include "kplayersettings.h"
+
+QString comboEntry (QComboBox* combo)
+{
+  return combo -> currentIndex() < 0 ? combo -> currentText() : combo -> itemData (combo -> currentIndex()).toString();
+}
 
 KPlayerSettingsDialog::KPlayerSettingsDialog (QWidget* parent)
   : KPageDialog (parent)
@@ -380,6 +388,7 @@ KPlayerSettingsAudio::KPlayerSettingsAudio (QWidget* parent)
   : QFrame (parent)
 {
   m_amixer_running = false;
+  m_devices_listed = true;
   setupUi (this);
   loadLists();
   load();
@@ -449,8 +458,8 @@ void KPlayerSettingsAudio::save (void)
   configuration() -> setAudioDriver (listEntry (c_driver));
   if ( c_driver -> currentIndex() > 0 )
   {
-    configuration() -> setAudioDevice (c_device -> text());
-    configuration() -> setMixerDevice (c_mixer -> text());
+    configuration() -> setAudioDevice (comboEntry (c_device));
+    configuration() -> setMixerDevice (comboEntry (c_mixer));
     configuration() -> setMixerChannel (c_channel -> currentText());
   }
   configuration() -> setSoftwareVolume (c_softvol -> isChecked());
@@ -493,7 +502,7 @@ void KPlayerSettingsAudio::runAmixer (void)
   c_channel -> clear();
   KPlayerLineOutputProcess* amixer = new KPlayerLineOutputProcess;
   *amixer << "amixer";
-  QString mixer = c_mixer -> text();
+  QString mixer = comboEntry (c_mixer);
   if ( ! mixer.isEmpty() )
   {
     *amixer << "-D" << mixer;
@@ -563,14 +572,112 @@ void KPlayerSettingsAudio::driverChanged (int index)
 #endif
   bool device = index > 0;
   bool softvol = c_softvol -> isChecked();
-  bool mixer = device && ! softvol && (driver == "alsa" || driver == "oss" || driver == "sun");
-  bool channel = mixer && driver != "sun";
+  bool alsa = driver == "alsa";
+  bool oss = driver == "oss";
+  bool sun = driver == "sun";
+  bool mixer = device && ! softvol && (alsa || oss || sun);
+  bool channel = mixer && ! sun;
   if ( driver != m_driver )
   {
+    m_devices_listed = false;
+    c_device -> clear();
+    c_mixer -> clear();
+    if ( alsa || oss )
+    {
+      QStringList cards;
+      foreach ( Solid::Device device, Solid::Device::listFromType (Solid::DeviceInterface::AudioInterface) )
+        if ( Solid::AudioInterface* interface = device.as<Solid::AudioInterface>() )
+        {
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+          kdDebugTime() << " Device type " << interface -> deviceType() << "\n";
+          kdDebugTime() << " Card type " << interface -> soundcardType() << "\n";
+          kdDebugTime() << " Driver " << interface -> driver() << "\n";
+          if ( ! interface -> name().isEmpty() )
+            kdDebugTime() << " Name   " << interface -> name().toLatin1().constData() << "\n";
+#endif
+          if ( interface -> deviceType() & (Solid::AudioInterface::AudioControl | Solid::AudioInterface::AudioOutput) )
+          {
+            QString name;
+            if ( alsa && interface -> driver() == Solid::AudioInterface::Alsa )
+            {
+              bool ok;
+              QVariantList list = interface -> driverHandle().toList();
+              if ( ! list.isEmpty() )
+              {
+                name = list[0].toString();
+                index = list[0].toInt (&ok);
+                if ( ok && index >= 0 )
+                {
+                  QFile info ("/proc/asound/card" + QString::number (index) + "/id");
+                  if ( info.open (QIODevice::ReadOnly) )
+                  {
+                    QByteArray id (info.readLine());
+                    info.close();
+                    if ( ! id.isEmpty() && id.endsWith ('\n') )
+                      id.chop (1);
+                    if ( ! id.isEmpty() )
+                      name = id;
+                  }
+                }
+              }
+              int device = -1;
+              if ( list.count() > 1 )
+              {
+                index = list[1].toInt (&ok);
+                if ( ok )
+                  device = index;
+              }
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+              if ( ! name.isEmpty() )
+                kdDebugTime() << " Card   " << name.toLatin1().constData() << "\n";
+              if ( device >= 0 )
+                kdDebugTime() << " Device " << device << "\n";
+#endif
+              name = "hw:" + name;
+              if ( interface -> deviceType() & Solid::AudioInterface::AudioOutput )
+                cards.append (name);
+              if ( device >= 0 )
+                name += "," + QString::number (device);
+            }
+            else if ( oss && interface -> driver() == Solid::AudioInterface::OpenSoundSystem )
+            {
+              name = interface -> driverHandle().toString();
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+              kdDebugTime() << " Device " << name << "\n";
+#endif
+            }
+            else
+              continue;
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+            kdDebugTime() << " Adding " << name.toLatin1().constData() << "\n";
+#endif
+            QString entry = interface -> name().isEmpty() ? name : i18n ("%1: %2", name, interface -> name());
+            if ( entry.endsWith (" ()") )
+              entry.remove (entry.length() - 3, 3);
+            if ( interface -> deviceType() & Solid::AudioInterface::AudioOutput )
+              c_device -> addItem (entry, name);
+            if ( interface -> deviceType() & Solid::AudioInterface::AudioControl )
+              c_mixer -> addItem (entry, name);
+          }
+        }
+      if ( alsa )
+        for ( int i = c_mixer -> count() - 1; i >= 0; i -- )
+          if ( ! cards.contains (c_mixer -> itemData (i).toString().section (',', 0, 0)) )
+          {
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
+            kdDebugTime() << " Removing " << c_mixer -> itemText (i) << "\n";
+#endif
+            c_mixer -> removeItem (i);
+          }
+    }
     bool original = driver == configuration() -> audioDriver();
-    c_device -> setText (original && device ? configuration() -> audioDevice() : "");
-    m_device = c_device -> text();
-    c_mixer -> setText (original && mixer ? configuration() -> mixerDevice() : "");
+    c_device -> model() -> sort (0);
+    c_device -> setEditText (original && device ? configuration() -> audioDevice() : "");
+    c_device -> setCurrentIndex (c_device -> findData (c_device -> currentText()));
+    m_device = c_device -> currentText();
+    c_mixer -> model() -> sort (0);
+    c_mixer -> setEditText (original && mixer ? configuration() -> mixerDevice() : "");
+    c_mixer -> setCurrentIndex (c_mixer -> findData (c_mixer -> currentText()));
     if ( channel )
       if ( driver == "oss" )
       {
@@ -582,6 +689,7 @@ void KPlayerSettingsAudio::driverChanged (int index)
       else if ( ! m_amixer_running )
         runAmixer();
     c_channel -> setEditText (original && channel ? configuration() -> mixerChannel() : "");
+    m_devices_listed = true;
   }
   c_device -> setEnabled (device);
   c_mixer -> setEnabled (mixer);
@@ -593,10 +701,20 @@ void KPlayerSettingsAudio::deviceChanged (const QString& device)
 {
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
   kdDebugTime() << "KPlayerSettingsAudio::deviceChanged\n";
+#endif
+  if ( ! m_devices_listed )
+    return;
+#ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
   kdDebugTime() << " Device " << device << "\n";
 #endif
-  if ( c_mixer -> isEnabled() && c_mixer -> text() == m_device && listEntry (c_driver) == "alsa" )
-    c_mixer -> setText (device);
+  if ( c_mixer -> isEnabled() && listEntry (c_driver) == "alsa" )
+    if ( c_device -> currentIndex() < 0 )
+    {
+      if ( c_mixer -> currentText() == m_device )
+        c_mixer -> setEditText (device);
+    }
+    else if ( c_mixer -> currentIndex() >= 0 || c_mixer -> currentText().isEmpty() )
+      c_mixer -> setCurrentIndex (c_mixer -> findData (comboEntry (c_device).section (',', 0, 0)));
   m_device = device;
 }
 
@@ -605,7 +723,7 @@ void KPlayerSettingsAudio::mixerChanged (const QString&)
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
   kdDebugTime() << "KPlayerSettingsAudio::mixerChanged\n";
 #endif
-  if ( ! c_softvol -> isChecked() && listEntry (c_driver) == "alsa" )
+  if ( m_devices_listed && ! c_softvol -> isChecked() && listEntry (c_driver) == "alsa" )
     runAmixer();
 }
 
@@ -620,7 +738,7 @@ void KPlayerSettingsAudio::softvolChanged (bool checked)
   QString driver (listEntry (c_driver));
   bool empty = checked || driver != configuration() -> audioDriver()
     || driver != "alsa" && driver != "oss" && driver != "sun";
-  c_mixer -> setText (empty ? "" : configuration() -> hasMixerDevice()
+  c_mixer -> setEditText (empty ? "" : configuration() -> hasMixerDevice()
     || m_softvol == checked ? configuration() -> mixerDevice() : configuration() -> audioDevice());
   c_channel -> setEditText (empty || driver == "sun" ? "" : configuration() -> mixerChannel());
   driverChanged (c_driver -> currentIndex());
@@ -810,7 +928,6 @@ void KPlayerSettingsSubtitles::load (void)
   }
   else
     c_encoding -> setCurrentIndex (0);
-  c_embedded_fonts -> setChecked (configuration() -> subtitleEmbeddedFonts());
   c_closed_caption -> setChecked (configuration() -> subtitleClosedCaption());
   c_subtitles_autoexpand -> setChecked (configuration() -> hasSubtitleAutoexpand());
   autoexpandChanged (c_subtitles_autoexpand -> isChecked());
@@ -841,7 +958,6 @@ void KPlayerSettingsSubtitles::save (void)
     configuration() -> setSubtitleEncoding (c_encoding -> currentText().section (':', 0, 0));
   else
     configuration() -> resetSubtitleEncoding();
-  configuration() -> setSubtitleEmbeddedFonts (c_embedded_fonts -> isChecked());
   configuration() -> setSubtitleClosedCaption (c_closed_caption -> isChecked());
   if ( c_subtitles_autoexpand -> isChecked() )
     configuration() -> setSubtitleAutoexpand (c_aspect -> currentIndex() + 1);
@@ -899,7 +1015,7 @@ void KPlayerSettingsSubtitles::autoexpandChanged (bool autoexpandChecked)
   }
   else
   {
-    c_aspect -> addItem ("", 0);
+    c_aspect -> insertItem (0, "");
     c_aspect -> setCurrentIndex (0);
   }
   c_aspect -> setEnabled (autoexpandChecked);

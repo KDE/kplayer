@@ -2,7 +2,7 @@
                           kplayerproperties.h
                           -------------------
     begin                : Tue Feb 10 2004
-    copyright            : (C) 2004-2007 by kiriuja
+    copyright            : (C) 2004-2008 by kiriuja
     email                : http://kplayer.sourceforge.net/email.html
  ***************************************************************************/
 
@@ -2195,11 +2195,6 @@ public:
     { return has ("Subtitle Text Width"); }
   QString subtitleTextWidthString (void) const
     { return asString ("Subtitle Text Width"); }
-
-  bool subtitleEmbeddedFonts (void) const
-    { return getBoolean ("Subtitle Embedded Fonts"); }
-  void setSubtitleEmbeddedFonts (bool enable)
-    { setBoolean ("Subtitle Embedded Fonts", enable); }
 
   int subtitlePositionStep (void) const
     { return getInteger ("Subtitle Position Step"); }
