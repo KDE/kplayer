@@ -1,3 +1,10 @@
+WARNING: This application is licenced under GPL 3.  However it links
+to Qt which is licenced under GPL 2 only.  Since these licences are 
+incompatible it is illegal to distribute binaries of this application
+unless the licencing for Qt changes.
+
+--------
+
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 3, 29 June 2007
 
