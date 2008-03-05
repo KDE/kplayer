@@ -27,7 +27,7 @@ class KPlayerContainerNode;
 class KPlayerMediaNode;
 class KPlayerNode;
 class KPlayerRootNode;
-class KProcess;
+class KPlayerDeviceNode;
 
 /**Node map by ID.
   * @author kiriuja

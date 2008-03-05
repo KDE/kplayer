@@ -30,11 +30,8 @@
 class KPlayerActionList;
 class KPlayerLibraryWindow;
 class KPlayerLogWindow;
-class KPlayerNodeView;
 class KPlayerPlaylist;
-class KPlayerWorkspace;
 class KToggleAction;
-class KUrl;
 class QLabel;
 class QTabBar;
 

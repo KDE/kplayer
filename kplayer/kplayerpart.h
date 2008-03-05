@@ -26,8 +26,6 @@
 #include "kplayerprocess.h"
 
 class KPlayerPart;
-class KPlayerPopupSliderAction;
-class KPlayerSliderAction;
 
 #define PROGRESS_TOOLBAR    1
 #define VOLUME_TOOLBAR      2

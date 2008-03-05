@@ -23,12 +23,8 @@
 class KPlayerCollectionNode;
 class KPlayerContainerNode;
 class KPlayerRootNode;
-class KPlayerDeviceProperties;
 class KPlayerDevicesNode;
-class KPlayerDeviceNode;
 class KPlayerDiskNode;
-class KPlayerTVNode;
-class KPlayerDVBNode;
 class KPlayerNode;
 class KPlayerNodeList;
 
