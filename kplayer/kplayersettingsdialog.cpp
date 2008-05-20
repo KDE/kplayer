@@ -585,8 +585,8 @@ void KPlayerSettingsAudio::driverChanged (int index)
     if ( alsa || oss )
     {
       QStringList cards;
-      foreach ( Solid::Device device, Solid::Device::listFromType (Solid::DeviceInterface::AudioInterface) )
-        if ( Solid::AudioInterface* interface = device.as<Solid::AudioInterface>() )
+      foreach ( const Solid::Device &device, Solid::Device::listFromType (Solid::DeviceInterface::AudioInterface) )
+        if ( const Solid::AudioInterface* interface = device.as<Solid::AudioInterface>() )
         {
 #ifdef DEBUG_KPLAYER_SETTINGS_DIALOG
           kdDebugTime() << " Device type " << interface -> deviceType() << "\n";

@@ -2471,7 +2471,7 @@ void KPlayerDevicesNode::update (void)
   kdDebugTime() << "KPlayerDevicesNode::updateSolid\n";
 #endif
 #ifdef DEBUG_KPLAYER_SOLID
-  foreach ( Solid::Device device, Solid::Device::allDevices() )
+  foreach ( const Solid::Device& device, Solid::Device::allDevices() )
   {
 #ifdef DEBUG_KPLAYER_NODE
     kdDebugTime() << " Device " << device.udi().toLatin1().constData() << "\n";
@@ -2485,7 +2485,7 @@ void KPlayerDevicesNode::update (void)
 #endif
     if ( device.isDeviceInterface (Solid::DeviceInterface::Block) )
     {
-      Solid::Block* block = device.as<Solid::Block>();
+      const Solid::Block* block = device.as<Solid::Block>();
 #ifdef DEBUG_KPLAYER_NODE
       kdDebugTime() << "  Device  " << block -> device().toLatin1().constData() << "\n";
       kdDebugTime() << "  Major   " << block -> deviceMajor() << "\n";
@@ -2494,7 +2494,7 @@ void KPlayerDevicesNode::update (void)
     }
     if ( device.isDeviceInterface (Solid::DeviceInterface::StorageAccess) )
     {
-      Solid::StorageAccess* access = device.as<Solid::StorageAccess>();
+      const Solid::StorageAccess* access = device.as<Solid::StorageAccess>();
 #ifdef DEBUG_KPLAYER_NODE
       kdDebugTime() << "  Mounted " << access -> isAccessible() << "\n";
       if ( ! access -> filePath().isEmpty() )
@@ -2503,7 +2503,7 @@ void KPlayerDevicesNode::update (void)
     }
     if ( device.isDeviceInterface (Solid::DeviceInterface::StorageDrive) )
     {
-      Solid::StorageDrive* drive = device.as<Solid::StorageDrive>();
+      const Solid::StorageDrive* drive = device.as<Solid::StorageDrive>();
 #ifdef DEBUG_KPLAYER_NODE
       kdDebugTime() << "  Bus     " << drive -> bus() << "\n";
       kdDebugTime() << "  Drive   " << drive -> driveType() << "\n";
@@ -2513,7 +2513,7 @@ void KPlayerDevicesNode::update (void)
     }
     if ( device.isDeviceInterface (Solid::DeviceInterface::OpticalDrive) )
     {
-      Solid::OpticalDrive* drive = device.as<Solid::OpticalDrive>();
+      const Solid::OpticalDrive* drive = device.as<Solid::OpticalDrive>();
 #ifdef DEBUG_KPLAYER_NODE
       kdDebugTime() << "  Support " << drive -> supportedMedia() << "\n";
       kdDebugTime() << "  Read    " << drive -> readSpeed() << "\n";
@@ -2523,7 +2523,7 @@ void KPlayerDevicesNode::update (void)
     }
     if ( device.isDeviceInterface (Solid::DeviceInterface::StorageVolume) )
     {
-      Solid::StorageVolume* volume = device.as<Solid::StorageVolume>();
+      const Solid::StorageVolume* volume = device.as<Solid::StorageVolume>();
 #ifdef DEBUG_KPLAYER_NODE
       kdDebugTime() << "  Usage   " << volume -> usage() << "\n";
       if ( ! volume -> fsType().isEmpty() )
@@ -2537,7 +2537,7 @@ void KPlayerDevicesNode::update (void)
     }
     if ( device.isDeviceInterface (Solid::DeviceInterface::OpticalDisc) )
     {
-      Solid::OpticalDisc* disc = device.as<Solid::OpticalDisc>();
+      const Solid::OpticalDisc* disc = device.as<Solid::OpticalDisc>();
 #ifdef DEBUG_KPLAYER_NODE
       kdDebugTime() << "  Disc    " << disc -> discType() << "\n";
       kdDebugTime() << "  Content " << disc -> availableContent() << "\n";
@@ -2549,7 +2549,7 @@ void KPlayerDevicesNode::update (void)
     }
     if ( device.isDeviceInterface (Solid::DeviceInterface::AudioInterface) )
     {
-      Solid::AudioInterface* interface = device.as<Solid::AudioInterface>();
+      const Solid::AudioInterface* interface = device.as<Solid::AudioInterface>();
 #ifdef DEBUG_KPLAYER_NODE
       kdDebugTime() << "  Audio   " << interface -> deviceType() << "\n";
       kdDebugTime() << "  Type    " << interface -> soundcardType() << "\n";
@@ -2572,7 +2572,7 @@ void KPlayerDevicesNode::update (void)
     }
     if ( device.isDeviceInterface (Solid::DeviceInterface::DvbInterface) )
     {
-      Solid::DvbInterface* interface = device.as<Solid::DvbInterface>();
+      const Solid::DvbInterface* interface = device.as<Solid::DvbInterface>();
 #ifdef DEBUG_KPLAYER_NODE
       if ( ! interface -> device().isEmpty() )
         kdDebugTime() << "  DVB     " << interface -> device().toLatin1().constData() << "\n";
@@ -2583,7 +2583,7 @@ void KPlayerDevicesNode::update (void)
     }
     if ( device.isDeviceInterface (Solid::DeviceInterface::Video) )
     {
-      Solid::Video* video = device.as<Solid::Video>();
+      const Solid::Video* video = device.as<Solid::Video>();
 #ifdef DEBUG_KPLAYER_NODE
       kdDebugTime() << "  Protos  " << video -> supportedProtocols() << "\n";
       kdDebugTime() << "  Drivers " << video -> supportedDrivers() << "\n";
@@ -2592,7 +2592,7 @@ void KPlayerDevicesNode::update (void)
     }
     if ( device.isDeviceInterface (Solid::DeviceInterface::GenericInterface) )
     {
-      Solid::GenericInterface* interface = device.as<Solid::GenericInterface>();
+      const Solid::GenericInterface* interface = device.as<Solid::GenericInterface>();
       QMap<QString, QVariant> properties = interface -> allProperties();
       QMap<QString, QVariant>::const_iterator iterator = properties.constBegin();
       while ( iterator != properties.constEnd() )
@@ -2621,9 +2621,9 @@ void KPlayerDevicesNode::update (QStringList& current, QStringList& previous)
   previous = m_devices;
   m_name_map.clear();
   QStringList paths, dvdpaths;
-  foreach ( Solid::Device device, Solid::Device::listFromType (Solid::DeviceInterface::OpticalDrive) )
-    if ( Solid::OpticalDrive* drive = device.as<Solid::OpticalDrive>() )
-      if ( Solid::Block* block = device.as<Solid::Block>() )
+  foreach ( const Solid::Device& device, Solid::Device::listFromType (Solid::DeviceInterface::OpticalDrive) )
+    if ( const Solid::OpticalDrive* drive = device.as<Solid::OpticalDrive>() )
+      if ( const Solid::Block* block = device.as<Solid::Block>() )
       {
         QString path = block -> device();
         if ( ! path.isEmpty() )
@@ -2640,8 +2640,8 @@ void KPlayerDevicesNode::update (QStringList& current, QStringList& previous)
       }
   updateDeviceNames (paths, "CD");
   updateDeviceNames (dvdpaths, "DVD");
-  foreach ( Solid::Device device, Solid::Device::listFromType (Solid::DeviceInterface::DvbInterface) )
-    if ( Solid::DvbInterface* dvb = device.as<Solid::DvbInterface>() )
+  foreach ( const Solid::Device& device, Solid::Device::listFromType (Solid::DeviceInterface::DvbInterface) )
+    if ( const Solid::DvbInterface* dvb = device.as<Solid::DvbInterface>() )
       if ( dvb -> deviceAdapter() >= 0 && dvb -> deviceType() == Solid::DvbInterface::DvbVideo )
       {
 #ifdef DEBUG_KPLAYER_NODE
@@ -2654,8 +2654,8 @@ void KPlayerDevicesNode::update (QStringList& current, QStringList& previous)
           paths, current, previous);
       }
   updateDeviceNames (paths, "DVB");
-  foreach ( Solid::Device device, Solid::Device::listFromType (Solid::DeviceInterface::Video) )
-    if ( Solid::Video* video = device.as<Solid::Video>() )
+  foreach ( const Solid::Device& device, Solid::Device::listFromType (Solid::DeviceInterface::Video) )
+    if ( const Solid::Video* video = device.as<Solid::Video>() )
     {
       QString path = video -> driverHandle ("video4linux").toString();
       if ( path.contains ("video") )
@@ -2920,9 +2920,9 @@ void KPlayerDiskNode::checkDisk (void)
   kdDebugTime() << "KPlayerDiskNode::checkDisk\n";
   kdDebugTime() << " URL    " << url().url() << "\n";
 #endif
-  foreach ( Solid::Device device, Solid::Device::listFromType (Solid::DeviceInterface::OpticalDisc) )
-    if ( Solid::OpticalDisc* disc = device.as<Solid::OpticalDisc>() )
-      if ( Solid::Block* block = device.as<Solid::Block>() )
+  foreach ( const Solid::Device& device, Solid::Device::listFromType (Solid::DeviceInterface::OpticalDisc) )
+    if ( const Solid::OpticalDisc* disc = device.as<Solid::OpticalDisc>() )
+      if ( const Solid::Block* block = device.as<Solid::Block>() )
       {
 #ifdef DEBUG_KPLAYER_NODE
         kdDebugTime() << " Disc   " << disc -> discType() << "\n";
@@ -2949,7 +2949,7 @@ void KPlayerDiskNode::checkDisk (void)
 #ifdef DEBUG_KPLAYER_NODE
           kdDebugTime() << " Type   " << type << "\n";
 #endif
-          if ( Solid::StorageAccess* access = device.as<Solid::StorageAccess>() )
+          if ( const Solid::StorageAccess* access = device.as<Solid::StorageAccess>() )
           {
             path = access -> filePath();
 #ifdef DEBUG_KPLAYER_NODE
