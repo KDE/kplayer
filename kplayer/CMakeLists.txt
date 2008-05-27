@@ -57,7 +57,7 @@ kde4_add_executable(kplayer ${kplayer_SRCS})
 
 target_link_libraries(kplayer ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDE3SUPPORT_LIBRARY})
 
-install(TARGETS kplayer DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS kplayer ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 
