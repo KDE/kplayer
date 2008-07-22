@@ -65,7 +65,7 @@ set(kplayerpart_PART_SRCS ${kplayer_common_SRCS} kplayerpart.cpp)
 
 kde4_add_plugin(kplayerpart WITH_PREFIX ${kplayerpart_PART_SRCS})
 
-target_link_libraries(kplayerpart ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDE3SUPPORT_LIBRARY})
+target_link_libraries(kplayerpart ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDE3SUPPORT_LIBRARY} ${X11_LIBRARIES})
 
 install(TARGETS kplayerpart DESTINATION ${PLUGIN_INSTALL_DIR} )
 
