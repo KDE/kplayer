@@ -878,10 +878,10 @@ void KPlayerStringHistoryProperty::save (KConfigGroup& config, const QString& na
   kdDebugTime() << "KPlayerStringHistoryProperty::save\n";
 #endif
   KPlayerStringProperty::save (config, name);
-  QStringList::ConstIterator it (history().begin());
-  if ( it != history().end() && *it == value() )
+  QStringList::ConstIterator it (history().constBegin());
+  if ( it != history().constEnd() && *it == value() )
     ++ it;
-  for ( int i = 0; i < 10 && it != history().end(); i ++ )
+  for ( int i = 0; i < 10 && it != history().constEnd(); i ++ )
   {
 #ifdef DEBUG_KPLAYER_PROPERTIES
     kdDebugTime() << " History " << *it << "\n";
@@ -961,8 +961,8 @@ void KPlayerStringListProperty::read (KConfigGroup& config, const QString& name)
 void KPlayerStringListProperty::save (KConfigGroup& config, const QString& name) const
 {
   int i = 0;
-  QStringList::ConstIterator iterator (value().begin());
-  while ( iterator != value().end() )
+  QStringList::ConstIterator iterator (value().constBegin());
+  while ( iterator != value().constEnd() )
   {
     config.writeEntry ("Child" + QString::number (i), *iterator);
     ++ iterator;
@@ -980,8 +980,8 @@ void KPlayerIntegerStringMapProperty::read (KConfigGroup& config, const QString&
 {
   static QRegExp re_indexvalue ("^(\\d+)=(.*)$");
   QStringList values (config.readEntry (name).split (':'));
-  QStringList::ConstIterator iterator (values.begin());
-  while ( iterator != values.end() )
+  QStringList::ConstIterator iterator (values.constBegin());
+  while ( iterator != values.constEnd() )
   {
     if ( re_indexvalue.indexIn (*iterator) >= 0 )
       m_value.insert (re_indexvalue.cap (1).toInt(), re_indexvalue.cap (2));
@@ -997,8 +997,8 @@ void KPlayerIntegerStringMapProperty::save (KConfigGroup& config, const QString&
     && ! ((KPlayerIntegerStringMapPropertyInfo*) KPlayerProperties::info (name)) -> multipleEntriesRequired() )
   {
     QStringList values;
-    QMap<int, QString>::ConstIterator iterator (value().begin());
-    while ( iterator != value().end() )
+    QMap<int, QString>::ConstIterator iterator (value().constBegin());
+    while ( iterator != value().constEnd() )
     {
       QString value (QString::number (iterator.key()));
       if ( ! iterator.value().isEmpty() )
@@ -1048,7 +1048,7 @@ bool KPlayerPersistentUrlProperty::defaults (bool)
 int KPlayerPropertyCounts::count (const QString& key) const
 {
   KPlayerPropertyCounts::ConstIterator iterator = find (key);
-  return iterator == end() ? 0 : iterator.value();
+  return iterator == constEnd() ? 0 : iterator.value();
 }
 
 void KPlayerPropertyCounts::add (const KPlayerPropertyCounts& counts)
@@ -1056,7 +1056,7 @@ void KPlayerPropertyCounts::add (const KPlayerPropertyCounts& counts)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "Adding property counts\n";
 #endif
-  for ( KPlayerPropertyCounts::ConstIterator iterator = counts.begin(); iterator != counts.end(); ++ iterator )
+  for ( KPlayerPropertyCounts::ConstIterator iterator = counts.constBegin(); iterator != counts.constEnd(); ++ iterator )
   {
     KPlayerPropertyCounts::Iterator it = find (iterator.key());
     if ( it == end() )
@@ -1074,7 +1074,7 @@ void KPlayerPropertyCounts::subtract (const KPlayerPropertyCounts& counts)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "Subtracting property counts\n";
 #endif
-  for ( KPlayerPropertyCounts::ConstIterator iterator = counts.begin(); iterator != counts.end(); ++ iterator )
+  for ( KPlayerPropertyCounts::ConstIterator iterator = counts.constBegin(); iterator != counts.constEnd(); ++ iterator )
   {
     int value = count (iterator.key());
     if ( value > iterator.value() )
@@ -1100,8 +1100,8 @@ KPlayerProperties::~KPlayerProperties()
   kdDebugTime() << "Destroying properties\n";
 #endif
   cleanup();
-  KPlayerPropertyMap::ConstIterator iterator = properties().begin();
-  while ( iterator != properties().end() )
+  KPlayerPropertyMap::ConstIterator iterator = properties().constBegin();
+  while ( iterator != properties().constEnd() )
   {
     delete iterator.value();
     ++ iterator;
@@ -1139,7 +1139,7 @@ void KPlayerProperties::defaults (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerProperties::defaults\n";
 #endif
-  for ( KPlayerPropertyInfoMap::ConstIterator iterator = m_info.begin(); iterator != m_info.end(); ++ iterator )
+  for ( KPlayerPropertyInfoMap::ConstIterator iterator = m_info.constBegin(); iterator != m_info.constEnd(); ++ iterator )
     if ( has (iterator.key()) && m_properties [iterator.key()] -> defaults (iterator.value() -> canReset()) )
     {
       delete m_properties [iterator.key()];
@@ -1153,8 +1153,8 @@ void KPlayerProperties::load (void)
   kdDebugTime() << "KPlayerProperties::load\n";
   kdDebugTime() << " Group  " << configGroupName() << "\n";
 #endif
-  KPlayerPropertyInfoMap::ConstIterator iterator (m_info.begin());
-  while ( iterator != m_info.end() )
+  KPlayerPropertyInfoMap::ConstIterator iterator (m_info.constBegin());
+  while ( iterator != m_info.constEnd() )
   {
     if ( iterator.value() -> exists (this, iterator.key()) )
     {
@@ -1170,8 +1170,8 @@ void KPlayerProperties::load (void)
   if ( configGroup().hasKey ("Keys") )
   {
     QStringList keys (configGroup().readEntry ("Keys").split (';'));
-    QStringList::ConstIterator keysit (keys.begin());
-    while ( keysit != keys.end() )
+    QStringList::ConstIterator keysit (keys.constBegin());
+    while ( keysit != keys.constEnd() )
     {
       if ( configGroup().hasKey (*keysit) )
       {
@@ -1195,8 +1195,8 @@ void KPlayerProperties::save (void)
 #endif
   purge();
   QStringList keys;
-  KPlayerPropertyMap::ConstIterator iterator (m_properties.begin());
-  while ( iterator != m_properties.end() )
+  KPlayerPropertyMap::ConstIterator iterator (m_properties.constBegin());
+  while ( iterator != m_properties.constEnd() )
   {
     iterator.value() -> save (configGroup(), iterator.key());
     if ( ! m_info.contains (iterator.key()) )
@@ -1233,7 +1233,7 @@ void KPlayerProperties::cleanup (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerProperties::cleanup\n";
 #endif
-  for ( KPlayerPropertyMap::ConstIterator iterator = m_previous.begin(); iterator != m_previous.end(); ++ iterator )
+  for ( KPlayerPropertyMap::ConstIterator iterator = m_previous.constBegin(); iterator != m_previous.constEnd(); ++ iterator )
     delete iterator.value();
   m_previous.clear();
   m_added.clear();
@@ -1246,14 +1246,14 @@ void KPlayerProperties::diff (KPlayerProperties* properties)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "KPlayerProperties::diff\n";
 #endif
-  for ( KPlayerPropertyMap::ConstIterator iterator = m_properties.begin();
-      iterator != m_properties.end(); ++ iterator )
+  for ( KPlayerPropertyMap::ConstIterator iterator = m_properties.constBegin();
+      iterator != m_properties.constEnd(); ++ iterator )
     if ( ! properties -> has (iterator.key()) )
       m_added.insert (iterator.key(), 1);
     else if ( compare (properties, iterator.key()) != 0 )
       m_changed.insert (iterator.key(), 1);
-  for ( KPlayerPropertyMap::ConstIterator iterator = properties -> properties().begin();
-      iterator != properties -> properties().end(); ++ iterator )
+  for ( KPlayerPropertyMap::ConstIterator iterator = properties -> properties().constBegin();
+      iterator != properties -> properties().constEnd(); ++ iterator )
     if ( ! has (iterator.key()) )
       m_removed.insert (iterator.key(), 1);
   update();
@@ -1297,14 +1297,14 @@ QStringList KPlayerProperties::defaultOrder (void)
 
 KPlayerPropertyInfo* KPlayerProperties::info (const QString& key)
 {
-  KPlayerPropertyInfoMap::ConstIterator iterator = m_info.find (key);
-  return iterator == m_info.end() ? &m_meta_info : *iterator;
+  KPlayerPropertyInfoMap::ConstIterator iterator = m_info.constFind (key);
+  return iterator == m_info.constEnd() ? &m_meta_info : *iterator;
 }
 
 KPlayerProperty* KPlayerProperties::property (const QString& key) const
 {
   KPlayerPropertyMap::ConstIterator iterator = m_properties.find (key);
-  return iterator == m_properties.end() ? 0 : iterator.value();
+  return iterator == m_properties.constEnd() ? 0 : iterator.value();
 }
 
 KPlayerProperty* KPlayerProperties::get (const QString& key)
@@ -1346,7 +1346,7 @@ void KPlayerProperties::reset (const QString& key)
 void KPlayerProperties::beginUpdate (void)
 {
   if ( m_previous.isEmpty() )
-    for ( KPlayerPropertyMap::ConstIterator iterator = m_properties.begin(); iterator != m_properties.end(); ++ iterator )
+    for ( KPlayerPropertyMap::ConstIterator iterator = m_properties.constBegin(); iterator != m_properties.constEnd(); ++ iterator )
       m_previous.insert (iterator.key(), info (iterator.key()) -> copy (iterator.value()));
 }
 
@@ -1687,7 +1687,7 @@ void KPlayerProperties::count (KPlayerPropertyCounts& counts) const
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "Counting properties\n";
 #endif
-  for ( KPlayerPropertyMap::ConstIterator iterator = properties().begin(); iterator != properties().end(); ++ iterator )
+  for ( KPlayerPropertyMap::ConstIterator iterator = properties().constBegin(); iterator != properties().constEnd(); ++ iterator )
   {
     KPlayerPropertyCounts::Iterator it = counts.find (iterator.key());
     if ( it == counts.end() )
@@ -2173,8 +2173,8 @@ void KPlayerProperties::terminate (void)
 #ifdef DEBUG_KPLAYER_PROPERTIES
   kdDebugTime() << "Terminating properties\n";
 #endif
-  KPlayerPropertyInfoMap::ConstIterator iterator (m_info.begin());
-  while ( iterator != m_info.end() )
+  KPlayerPropertyInfoMap::ConstIterator iterator (m_info.constBegin());
+  while ( iterator != m_info.constEnd() )
   {
     delete iterator.value();
     ++ iterator;
@@ -2340,8 +2340,8 @@ void KPlayerConfiguration::itemReset (void)
     setSaturation (initialSaturation());
   setSubtitleDelay (0);
   setAudioDelay (0);
-  KPlayerPropertyInfoMap::ConstIterator iterator (m_info.begin());
-  while ( iterator != m_info.end() )
+  KPlayerPropertyInfoMap::ConstIterator iterator (m_info.constBegin());
+  while ( iterator != m_info.constEnd() )
   {
     iterator.value() -> setOverride (false);
     ++ iterator;
@@ -2636,8 +2636,8 @@ KPlayerTrackProperties* KPlayerMedia::trackProperties (const KUrl& url)
         properties = new KPlayerDiskTrackProperties (diskProperties (parenturl), url);
       else
       {
-        KPlayerMediaMap::ConstIterator iterator = m_media_map.find (urls);
-        if ( iterator == m_media_map.end() ? urls.startsWith ("kplayer:/devices/dev/dvb/")
+        KPlayerMediaMap::ConstIterator iterator = m_media_map.constFind (urls);
+        if ( iterator == m_media_map.constEnd() ? urls.startsWith ("kplayer:/devices/dev/dvb/")
             : ((KPlayerDeviceProperties*) *iterator) -> type() == "DVB" )
           properties = new KPlayerDVBChannelProperties (dvbProperties (parenturl), url);
         else
@@ -2659,8 +2659,8 @@ KPlayerMedia* KPlayerMedia::reference (const QString& urls)
   kdDebugTime() << " URL    " << urls << "\n";
 #endif
   KPlayerMedia* media = 0;
-  KPlayerMediaMap::ConstIterator iterator = m_media_map.find (urls);
-  if ( iterator != m_media_map.end() )
+  KPlayerMediaMap::ConstIterator iterator = m_media_map.constFind (urls);
+  if ( iterator != m_media_map.constEnd() )
   {
     media = *iterator;
     media -> reference();
@@ -2709,8 +2709,8 @@ QString KPlayerGenericProperties::type (const QString& id) const
   KUrl u (url());
   u.addPath (id);
   QString urls (u.url());
-  KPlayerMediaMap::ConstIterator iterator = m_media_map.find (urls);
-  if ( iterator != m_media_map.end() )
+  KPlayerMediaMap::ConstIterator iterator = m_media_map.constFind (urls);
+  if ( iterator != m_media_map.constEnd() )
     return ((KPlayerMediaProperties*) *iterator) -> type();
   return config() -> group (urls).readEntry ("Type");
 }
@@ -2881,12 +2881,12 @@ KPlayerTunerProperties::~KPlayerTunerProperties()
 int KPlayerTunerProperties::channelFrequency (const QString& id) const
 {
   QMap<QString, int>::ConstIterator iterator = m_frequencies.find (id);
-  if ( iterator == m_frequencies.end() )
+  if ( iterator == m_frequencies.constEnd() )
   {
     ((KPlayerTunerProperties*) this) -> channels();
     iterator = m_frequencies.find (id);
   }
-  return iterator == m_frequencies.end() ? 0 : iterator.value();
+  return iterator == m_frequencies.constEnd() ? 0 : iterator.value();
 }
 
 static struct KPlayerChannelGroup
@@ -4182,7 +4182,7 @@ void KPlayerItemProperties::setupMeta (void)
     if ( info.isValid() )
     {
       QStringList keys (info.supportedKeys());
-      for ( QStringList::ConstIterator iterator = keys.begin(); iterator != keys.end(); ++ iterator )
+      for ( QStringList::ConstIterator iterator = keys.constBegin(); iterator != keys.constEnd(); ++ iterator )
       {
         QString key (*iterator);
         KFileMetaInfoItem item (info.item (key));
