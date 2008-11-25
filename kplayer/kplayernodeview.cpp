@@ -651,7 +651,7 @@ void KPlayerHistoryActionList::update (int current)
       updateAction (action);
       m_actions.append (action);
     }
-    while ( iterator != m_history.begin() && (count < halflimit || actions().count() < limit) );
+    while ( iterator != m_history.constBegin() && (count < halflimit || actions().count() < limit) );
     plug();
   }
 }

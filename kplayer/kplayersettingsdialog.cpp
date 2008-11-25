@@ -890,7 +890,7 @@ void KPlayerSettingsSubtitles::loadLists (void)
   QList<int>::ConstIterator it (sizes.begin());
   for ( int i = 1; i < *it; ++ i )
     c_text_size -> addItem (QString::number (i));
-  while ( it != sizes.end() )
+  while ( it != sizes.constEnd() )
   {
     c_text_size -> addItem (QString::number (*it));
     ++ it;
