@@ -559,27 +559,27 @@ inline KPlayerEngine* kPlayerEngine (void)
 
 inline KPlayerProcess* kPlayerProcess (void)
 {
-  return kPlayerEngine() -> process();
+  return ( kPlayerEngine() ? kPlayerEngine() -> process() : 0 );
 }
 
 inline KConfig* kPlayerConfig (void)
 {
-  return kPlayerEngine() -> config();
+  return ( kPlayerEngine() ? kPlayerEngine() -> config() : 0 );
 }
 
 inline KPlayerSettings* kPlayerSettings (void)
 {
-  return kPlayerEngine() -> settings();
+  return ( kPlayerEngine() ? kPlayerEngine() -> settings() : 0 );
 }
 
 inline KPlayerWidget* kPlayerWidget (void)
 {
-  return kPlayerEngine() -> widget();
+  return ( kPlayerEngine() ? kPlayerEngine() -> widget() : 0 );
 }
 
 inline KPlayerWorkspace* kPlayerWorkspace (void)
 {
-  return kPlayerEngine() -> workspace();
+  return ( kPlayerEngine() ? kPlayerEngine() -> workspace() : 0 );
 }
 
 #endif
