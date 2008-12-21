@@ -461,10 +461,12 @@ QSize KPlayerSettings::adjustSize (QSize size, bool horizontally) const
 
 void KPlayerSetKeyboardState (Qt::KeyboardModifiers modifiers)
 {
-  KPlayerEngine::engine() -> setModifiers (modifiers);
+  if ( KPlayerEngine::engine() )
+    KPlayerEngine::engine() -> setModifiers (modifiers);
 }
 
 void KPlayerSetMouseState (Qt::MouseButtons buttons)
 {
-  KPlayerEngine::engine() -> setButtons (buttons);
+  if ( KPlayerEngine::engine() )
+    KPlayerEngine::engine() -> setButtons (buttons);
 }
