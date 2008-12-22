@@ -372,7 +372,7 @@ KPlayerTrackActionList::~KPlayerTrackActionList()
 #ifdef DEBUG_KPLAYER_ACTIONLIST
   kdDebugTime() << "Destroying track action list\n";
 #endif
-  delete m_action_group;
+//  delete m_action_group;
 }
 
 void KPlayerTrackActionList::addActions (const QMap<int, QString>& ids, int id)
