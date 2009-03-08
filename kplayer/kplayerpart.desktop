@@ -4,6 +4,7 @@ Type=Service
 X-KDE-Library=libkplayerpart
 Icon=kplayer
 Name=KPlayer
+Name[hne]=केप्लेयर
 Name[ku]=KLêdar
 Name[pa]=ਕੇ-ਪਲੇਅਰ
 Name[x-test]=xxKPlayerxx
