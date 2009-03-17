@@ -258,7 +258,7 @@ and <guilabel>Saturation</guilabel></term>
 <listitem><para>The <guilabel>default</guilabel> option uses the same setting
 as for other files. The <guilabel>set to</guilabel> option sets the specified
 initial contrast, brightness, hue or saturation when loading the file.
-The <guilabel>add</guilabel> and <guilabel>substract</guilabel> options adjust
+The <guilabel>add</guilabel> and <guilabel>subtract</guilabel> options adjust
 the contrast, brightness, hue or saturation relative to the normal setting. See
 the <link linkend="howto-properties">introduction section</link> of this HOWTO
 for more details and some examples of how this
