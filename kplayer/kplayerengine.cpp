@@ -640,7 +640,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("&Load Subtitles..."));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_S);
   action -> setStatusTip (i18n("Opens a subtitle file"));
-  action -> setWhatsThis (i18n("Load Subtitles command displays the standard Open File dialog and lets you choose a subtitle file to use with the current file or URL. If you load subtitles when video is playing, KPlayer will display the subtitles immediately. By default it will also remember the subtitles you choose in the current file properties. This command is available for video files."));
+  action -> setWhatsThis (i18n("The 'Load Subtitles' command displays the standard Open File dialog and allows you to choose a subtitle file to use with the current file or URL. If you load subtitles when a video is playing, KPlayer will display the subtitles immediately. By default it will also remember the subtitles you choose in the current file's properties. This command is available for video files."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("view_full_screen", action);
@@ -649,17 +649,17 @@ void KPlayerEngine::setupActions (void)
   action -> setIcon (KIcon ("view-fullscreen"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_F);
   action -> setStatusTip (i18n("Switches to full screen mode"));
-  action -> setWhatsThis (i18n("Full Screen command switches to full screen video display and back to normal mode."));
+  action -> setWhatsThis (i18n("The 'Full Screen' command switches between full screen video display and normal mode."));
 
   action = KStandardAction::zoomIn (this, SLOT (zoomIn()), actionCollection());
   actionCollection() -> addAction ("view_zoom_in", action);
   action -> setStatusTip (i18n("Enlarges the video"));
-  action -> setWhatsThis (i18n("Zoom In command enlarges the video area by one half of the original video size of the current file."));
+  action -> setWhatsThis (i18n("The 'Zoom In' command enlarges the video area by one half of the original video size of the current file."));
 
   action = KStandardAction::zoomOut (this, SLOT (zoomOut()), actionCollection());
   actionCollection() -> addAction ("view_zoom_out", action);
   action -> setStatusTip (i18n("Shrinks the video"));
-  action -> setWhatsThis (i18n("Zoom Out command reduces the video area by one half of the original video size of the current file."));
+  action -> setWhatsThis (i18n("The 'Zoom Out' command reduces the video area by one half of the original video size of the current file."));
 
   QActionGroup* action_group = new QActionGroup (this);
   action_group -> setExclusive (true);
@@ -669,9 +669,9 @@ void KPlayerEngine::setupActions (void)
   connect (toggle, SIGNAL (triggered()), SLOT (zoom12()));
   toggle -> setText (i18n("Zoom to 5&0%"));
   // xgettext:no-c-format
-  toggle -> setStatusTip (i18n("Scales video to 50% of the original size"));
+  toggle -> setStatusTip (i18n("Scales video to 50% of its original size"));
   // xgettext:no-c-format
-  toggle -> setWhatsThis (i18n("Zoom to 50% command resizes the video area to one half of the original video size of the current file."));
+  toggle -> setWhatsThis (i18n("The 'Zoom to 50%' command resizes the video area to one half of the original video size of the current file."));
 
   toggle = new KToggleAction (action_group);
   actionCollection() -> addAction ("view_zoom_1_1", toggle);
@@ -680,43 +680,43 @@ void KPlayerEngine::setupActions (void)
   toggle -> setShortcut (Qt::ControlModifier + Qt::Key_Backspace);
   toggle -> setStatusTip (i18n("Scales video to its original size"));
   // xgettext:no-c-format
-  toggle -> setWhatsThis (i18n("Zoom to 100% command resizes the video area to the original video size of the current file."));
+  toggle -> setWhatsThis (i18n("The 'Zoom to 100%' command resizes the video area to the original video size of the current file."));
 
   toggle = new KToggleAction (action_group);
   actionCollection() -> addAction ("view_zoom_3_2", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (zoom32()));
   toggle -> setText (i18n("Zoo&m to 150%"));
   // xgettext:no-c-format
-  toggle -> setStatusTip (i18n("Scales video to 150% of the original size"));
+  toggle -> setStatusTip (i18n("Scales video to 150% of its original size"));
   // xgettext:no-c-format
-  toggle -> setWhatsThis (i18n("Zoom to 150% command resizes the video area to 150% of the original video size of the current file."));
+  toggle -> setWhatsThis (i18n("The 'Zoom to 150%' command resizes the video area to 150% of the original video size of the current file."));
 
   toggle = new KToggleAction (action_group);
   actionCollection() -> addAction ("view_zoom_2_1", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (zoom21()));
   toggle -> setText (i18n("Zoom to &200%"));
   // xgettext:no-c-format
-  toggle -> setStatusTip (i18n("Scales video to 200% of the original size"));
+  toggle -> setStatusTip (i18n("Scales video to 200% of its original size"));
   // xgettext:no-c-format
-  toggle -> setWhatsThis (i18n("Zoom to 200% command resizes the video area to twice the original video size of the current file."));
+  toggle -> setWhatsThis (i18n("The 'Zoom to 200%' command resizes the video area to twice the original video size of the current file."));
 
   toggle = new KToggleAction (action_group);
   actionCollection() -> addAction ("view_zoom_5_2", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (zoom52()));
   toggle -> setText (i18n("Zoom &to 250%"));
   // xgettext:no-c-format
-  toggle -> setStatusTip (i18n("Scales video to 250% of the original size"));
+  toggle -> setStatusTip (i18n("Scales video to 250% of its original size"));
   // xgettext:no-c-format
-  toggle -> setWhatsThis (i18n("Zoom to 250% command resizes the video area to 250% of the original video size of the current file."));
+  toggle -> setWhatsThis (i18n("The 'Zoom to 250%' command resizes the video area to 250% of the original video size of the current file."));
 
   toggle = new KToggleAction (action_group);
   actionCollection() -> addAction ("view_zoom_3_1", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (zoom31()));
   toggle -> setText (i18n("Zoom to &300%"));
   // xgettext:no-c-format
-  toggle -> setStatusTip (i18n("Scales video to 300% of the original size"));
+  toggle -> setStatusTip (i18n("Scales video to 300% of its original size"));
   // xgettext:no-c-format
-  toggle -> setWhatsThis (i18n("Zoom to 300% command resizes the video area to thrice the original video size of the current file."));
+  toggle -> setWhatsThis (i18n("The 'Zoom to 300%' command resizes the video area to three times the original video size of the current file."));
 
   action_group = new QActionGroup (this);
   action_group -> setExclusive (true);
@@ -726,7 +726,7 @@ void KPlayerEngine::setupActions (void)
   connect (toggle, SIGNAL (triggered()), SLOT (maintainOriginalAspect()));
   toggle -> setText (i18n("Maintain Original &Aspect"));
   toggle -> setStatusTip (i18n("Maintains the original video aspect ratio"));
-  toggle -> setWhatsThis (i18n("Maintain Original Aspect command toggles the option to maintain the original video aspect ratio of the current file."));
+  toggle -> setWhatsThis (i18n("The 'Maintain Original Aspect' command toggles the option to maintain the original video aspect ratio of the current file."));
   if ( settings() -> maintainAspect() )
     toggle -> setChecked (true);
 
@@ -735,21 +735,21 @@ void KPlayerEngine::setupActions (void)
   connect (toggle, SIGNAL (triggered()), SLOT (maintainCurrentAspect()));
   toggle -> setText (i18n("Maintain &Current Aspect"));
   toggle -> setStatusTip (i18n("Maintains the current video aspect ratio"));
-  toggle -> setWhatsThis (i18n("Maintain Current Aspect command toggles the option to maintain the current video aspect ratio."));
+  toggle -> setWhatsThis (i18n("The 'Maintain Current Aspect' command toggles the option to maintain the current video aspect ratio."));
 
   toggle = new KToggleAction (action_group);
   actionCollection() -> addAction ("view_aspect_4_3", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (aspect43()));
-  toggle -> setText (i18n("Force &4 to 3 Aspect"));
-  toggle -> setStatusTip (i18n("Sets 4 to 3 video aspect ratio"));
-  toggle -> setWhatsThis (i18n("Force 4 to 3 Aspect command toggles the option to maintain four to three video aspect ratio."));
+  toggle -> setText (i18n("Force &4-to-3 Aspect"));
+  toggle -> setStatusTip (i18n("Sets a 4-to-3 video aspect ratio"));
+  toggle -> setWhatsThis (i18n("The 'Force 4-to-3 Aspect' command toggles the option to maintain a four-to-three video aspect ratio."));
 
   toggle = new KToggleAction (action_group);
   actionCollection() -> addAction ("view_aspect_16_9", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (aspect169()));
-  toggle -> setText (i18n("Force 1&6 to 9 Aspect"));
-  toggle -> setStatusTip (i18n("Sets 16 to 9 video aspect ratio"));
-  toggle -> setWhatsThis (i18n("Force 16 to 9 Aspect command toggles the option to maintain sixteen to nine video aspect ratio."));
+  toggle -> setText (i18n("Force 1&6-to-9 Aspect"));
+  toggle -> setStatusTip (i18n("Sets a 16-to-9 video aspect ratio"));
+  toggle -> setWhatsThis (i18n("The 'Force 16-to-9 Aspect' command toggles the option to maintain a sixteen-to-nine video aspect ratio."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("audio_delay_up", action);
@@ -757,7 +757,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("I&ncrease Delay"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_BracketLeft);
   action -> setStatusTip (i18n("Increases audio delay"));
-  action -> setWhatsThis (i18n("Increase Delay command increases the delay of sound relative to video."));
+  action -> setWhatsThis (i18n("The 'Increase Delay' command increases the delay of the sound relative to the video."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("audio_delay_down", action);
@@ -765,7 +765,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("D&ecrease Delay"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_BracketRight);
   action -> setStatusTip (i18n("Decreases audio delay"));
-  action -> setWhatsThis (i18n("Decrease Delay command decreases the delay of sound relative to video."));
+  action -> setWhatsThis (i18n("The 'Decrease Delay' command decreases the delay of the sound relative to the video."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("video_contrast_down", action);
@@ -773,7 +773,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("Decrease C&ontrast"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_1);
   action -> setStatusTip (i18n("Decreases video contrast"));
-  action -> setWhatsThis (i18n("Decrease Contrast command decreases the video contrast."));
+  action -> setWhatsThis (i18n("The 'Decrease Contrast' command decreases the video contrast."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("video_contrast_up", action);
@@ -781,7 +781,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("Increase &Contrast"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_2);
   action -> setStatusTip (i18n("Increases video contrast"));
-  action -> setWhatsThis (i18n("Increase Contrast command increases the video contrast."));
+  action -> setWhatsThis (i18n("The 'Increase Contrast' command increases the video contrast."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("video_brightness_down", action);
@@ -789,7 +789,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("Decrease B&rightness"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_3);
   action -> setStatusTip (i18n("Decreases video brightness"));
-  action -> setWhatsThis (i18n("Decrease Brightness command decreases the video brightness."));
+  action -> setWhatsThis (i18n("The 'Decrease Brightness' command decreases the video brightness."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("video_brightness_up", action);
@@ -797,7 +797,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("Increase &Brightness"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_4);
   action -> setStatusTip (i18n("Increases video brightness"));
-  action -> setWhatsThis (i18n("Increase Brightness command increases the video brightness."));
+  action -> setWhatsThis (i18n("The 'Increase Brightness' command increases the video brightness."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("video_hue_down", action);
@@ -805,7 +805,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("Decrease H&ue"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_5);
   action -> setStatusTip (i18n("Decreases video hue"));
-  action -> setWhatsThis (i18n("Decrease Hue command decreases the video hue."));
+  action -> setWhatsThis (i18n("The 'Decrease Hue' command decreases the video hue."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("video_hue_up", action);
@@ -813,7 +813,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("Increase &Hue"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_6);
   action -> setStatusTip (i18n("Increases video hue"));
-  action -> setWhatsThis (i18n("Increase Hue command increases the video hue."));
+  action -> setWhatsThis (i18n("The 'Increase Hue' command increases the video hue."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("video_saturation_down", action);
@@ -821,7 +821,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("Decrease S&aturation"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_7);
   action -> setStatusTip (i18n("Decreases video saturation"));
-  action -> setWhatsThis (i18n("Decrease Saturation command decreases the video saturation."));
+  action -> setWhatsThis (i18n("The 'Decrease Saturation' command decreases the video saturation."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("video_saturation_up", action);
@@ -829,35 +829,35 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("Increase &Saturation"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_8);
   action -> setStatusTip (i18n("Increases video saturation"));
-  action -> setWhatsThis (i18n("Increase Saturation command increases the video saturation."));
+  action -> setWhatsThis (i18n("The 'Increase Saturation' command increases the video saturation."));
 
   sa = new KPlayerSliderAction (actionCollection());
   actionCollection() -> addAction ("video_contrast", sa);
   connect (sa -> slider(), SIGNAL (valueChanged (int)), SLOT (contrastChanged (int)));
   sa -> setText (i18n("Contrast"));
   sa -> setStatusTip (i18n("Changes contrast level"));
-  sa -> setWhatsThis (i18n("Contrast slider shows the current video contrast level and allows you to change it."));
+  sa -> setWhatsThis (i18n("The Contrast slider shows the current video contrast level and allows you to change it."));
 
   sa = new KPlayerSliderAction (actionCollection());
   actionCollection() -> addAction ("video_brightness", sa);
   connect (sa -> slider(), SIGNAL (valueChanged (int)), SLOT (brightnessChanged (int)));
   sa -> setText (i18n("Brightness"));
   sa -> setStatusTip (i18n("Changes brightness level"));
-  sa -> setWhatsThis (i18n("Brightness slider shows the current video brightness level and allows you to change it."));
+  sa -> setWhatsThis (i18n("The Brightness slider shows the current video brightness level and allows you to change it."));
 
   sa = new KPlayerSliderAction (actionCollection());
   actionCollection() -> addAction ("video_hue", sa);
   connect (sa -> slider(), SIGNAL (valueChanged (int)), SLOT (hueChanged (int)));
   sa -> setText (i18n("Hue"));
   sa -> setStatusTip (i18n("Changes hue level"));
-  sa -> setWhatsThis (i18n("Hue slider shows the current video hue level and allows you to change it."));
+  sa -> setWhatsThis (i18n("The Hue slider shows the current video hue level and allows you to change it."));
 
   sa = new KPlayerSliderAction (actionCollection());
   actionCollection() -> addAction ("video_saturation", sa);
   connect (sa -> slider(), SIGNAL (valueChanged (int)), SLOT (saturationChanged (int)));
   sa -> setText (i18n("Saturation"));
   sa -> setStatusTip (i18n("Changes saturation level"));
-  sa -> setWhatsThis (i18n("Saturation slider shows the current video saturation level and allows you to change it."));
+  sa -> setWhatsThis (i18n("The Saturation slider shows the current video saturation level and allows you to change it."));
 
   psa = new KPlayerPopupSliderAction (actionCollection());
   actionCollection() -> addAction ("popup_contrast", psa);
@@ -866,7 +866,7 @@ void KPlayerEngine::setupActions (void)
   psa -> setIcon (KIcon ("contrast"));
   psa -> setShortcut (Qt::Key_F5);
   psa -> setStatusTip (i18n("Shows the contrast popup slider"));
-  psa -> setWhatsThis (i18n("Contrast button displays a slider that shows the current video contrast level and allows you to change it."));
+  psa -> setWhatsThis (i18n("The Contrast button displays a slider that shows the current video contrast level and allows you to change it."));
 
   psa = new KPlayerPopupSliderAction (actionCollection());
   actionCollection() -> addAction ("popup_brightness", psa);
@@ -875,7 +875,7 @@ void KPlayerEngine::setupActions (void)
   psa -> setIcon (KIcon ("brightness"));
   psa -> setShortcut (Qt::Key_F6);
   psa -> setStatusTip (i18n("Shows the brightness popup slider"));
-  psa -> setWhatsThis (i18n("Brightness button displays a slider that shows the current video brightness level and allows you to change it."));
+  psa -> setWhatsThis (i18n("The Brightness button displays a slider that shows the current video brightness level and allows you to change it."));
 
   psa = new KPlayerPopupSliderAction (actionCollection());
   actionCollection() -> addAction ("popup_hue", psa);
@@ -884,7 +884,7 @@ void KPlayerEngine::setupActions (void)
   psa -> setIcon (KIcon ("hue"));
   psa -> setShortcut (Qt::Key_F7);
   psa -> setStatusTip (i18n("Shows the hue popup slider"));
-  psa -> setWhatsThis (i18n("Hue button displays a slider that shows the current video hue level and allows you to change it."));
+  psa -> setWhatsThis (i18n("The Hue button displays a slider that shows the current video hue level and allows you to change it."));
 
   psa = new KPlayerPopupSliderAction (actionCollection());
   actionCollection() -> addAction ("popup_saturation", psa);
@@ -893,7 +893,7 @@ void KPlayerEngine::setupActions (void)
   psa -> setIcon (KIcon ("saturation"));
   psa -> setShortcut (Qt::Key_F8);
   psa -> setStatusTip (i18n("Shows the saturation popup slider"));
-  psa -> setWhatsThis (i18n("Saturation button displays a slider that shows the current video saturation level and allows you to change it."));
+  psa -> setWhatsThis (i18n("The Saturation button displays a slider that shows the current video saturation level and allows you to change it."));
 
   action_group = new QActionGroup (this);
   action_group -> setExclusive (true);
@@ -903,14 +903,14 @@ void KPlayerEngine::setupActions (void)
   connect (toggle, SIGNAL (triggered()), SLOT (softFrameDrop()));
   toggle -> setText (i18n("S&oft Frame Dropping"));
   toggle -> setStatusTip (i18n("Turns soft frame dropping on/off"));
-  toggle -> setWhatsThis (i18n("Soft Frame Dropping command toggles the soft frame dropping option. If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. The soft option drops frames less aggressively than the hard one, and should not cause playback problems. The Frame drop option can also be set on the Advanced page either globally in KPlayer Settings or for a particular file in the File Properties."));
+  toggle -> setWhatsThis (i18n("The 'Soft Frame Dropping' command toggles the soft frame dropping option. If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. The soft option drops frames less aggressively than the hard one, and should not cause playback problems. The Frame drop option can also be set on the Advanced page either globally in KPlayer Settings or for a particular file in the File Properties."));
 
   toggle = new KToggleAction (action_group);
   actionCollection() -> addAction ("player_hard_frame_drop", toggle);
   connect (toggle, SIGNAL (triggered()), SLOT (hardFrameDrop()));
   toggle -> setText (i18n("&Hard Frame Dropping"));
   toggle -> setStatusTip (i18n("Turns hard frame dropping on/off"));
-  toggle -> setWhatsThis (i18n("Hard Frame Dropping command toggles the hard frame dropping option. If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. The hard option drops frames more aggressively than the soft one, and may sometimes break decoding. The Frame drop option can also be set on the Advanced page either globally in KPlayer Settings or for a particular file in the File Properties."));
+  toggle -> setWhatsThis (i18n("The 'Hard Frame Dropping' command toggles the hard frame dropping option. If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. The hard option drops frames more aggressively than the soft one, and may sometimes break decoding. The Frame drop option can also be set on the Advanced page either globally in KPlayer Settings or for a particular file in the File Properties."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("subtitles_move_down", action);
@@ -918,7 +918,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("Move &Down"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_Comma);
   action -> setStatusTip (i18n("Moves subtitles down"));
-  action -> setWhatsThis (i18n("Move Down command moves the subtitles down."));
+  action -> setWhatsThis (i18n("The 'Move Down' command moves the subtitles down."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("subtitles_move_up", action);
@@ -926,7 +926,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("Move &Up"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_Period);
   action -> setStatusTip (i18n("Moves subtitles up"));
-  action -> setWhatsThis (i18n("Move Up command moves the subtitles up."));
+  action -> setWhatsThis (i18n("The 'Move Up' command moves the subtitles up."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("subtitles_delay_decrease", action);
@@ -934,7 +934,7 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("D&ecrease Delay"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_Apostrophe);
   action -> setStatusTip (i18n("Decreases subtitle delay"));
-  action -> setWhatsThis (i18n("Decrease Delay command decreases the delay of subtitles relative to video."));
+  action -> setWhatsThis (i18n("The 'Decrease Delay' command decreases the delay of the subtitles relative to the video."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("subtitles_delay_increase", action);
@@ -942,16 +942,16 @@ void KPlayerEngine::setupActions (void)
   action -> setText (i18n("I&ncrease Delay"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_Semicolon);
   action -> setStatusTip (i18n("Increases subtitle delay"));
-  action -> setWhatsThis (i18n("Increase Delay command increases the delay of subtitles relative to video."));
+  action -> setWhatsThis (i18n("The 'Increase Delay' command increases the delay of the subtitles relative to the video."));
 
   m_video_action_list = new KPlayerTrackActionList (ki18n("Track %1"), ki18n("Selects %1 video track"),
-    ki18n("Video %1 command switches to the selected video track."), this, "video_streams");
+    ki18n("The 'Video %1' command switches to the selected video track."), this, "video_streams");
   connect (videoActionList(), SIGNAL (activated (int)), SLOT (videoStream (int)));
   m_audio_action_list = new KPlayerTrackActionList (ki18n("Track %1"), ki18n("Selects %1 audio track"),
-    ki18n("Audio %1 command switches to the selected audio track."), this, "audio_streams");
+    ki18n("The 'Audio %1' command switches to the selected audio track."), this, "audio_streams");
   connect (audioActionList(), SIGNAL (activated (int)), SLOT (audioStream (int)));
   m_subtitle_action_list = new KPlayerSubtitleTrackActionList (ki18n("Track %1"), ki18n("Selects %1 subtitle track"),
-    ki18n("Subtitles %1 command switches to the selected subtitle track."), this, "subtitle_streams");
+    ki18n("The 'Subtitles %1' command switches to the selected subtitle track."), this, "subtitle_streams");
   connect (subtitleActionList(), SIGNAL (activated (int)), SLOT (subtitleStream (int)));
 
   refreshSettings();
@@ -1429,6 +1429,7 @@ void KPlayerEngine::startPlaying (void)
   if ( properties() -> audioDriverString().startsWith ("alsa") )
     getAlsaVolume();
   if ( settings() -> showSubtitles() )
+  {
     if ( ! properties() -> originalSizeKnown() && process() -> gettingInfo() )
     {
       m_play_pending = true;
@@ -1436,6 +1437,7 @@ void KPlayerEngine::startPlaying (void)
     }
     else if ( properties() -> needsExpanding() )
       autoexpand();
+  }
   if ( properties() -> originalSizeKnown() )
     handleLayout();
   process() -> play();
@@ -1446,7 +1448,7 @@ void KPlayerEngine::load (KUrl url)
 #ifdef DEBUG_KPLAYER_ENGINE
   kdDebugTime() << "Engine::load " << url.prettyUrl() << "\n";
 #endif
-  if ( ! actionCollection() || url.path().isEmpty() && url.host().isEmpty() )
+  if ( ! actionCollection() || (url.path().isEmpty() && url.host().isEmpty()) )
     return;
   m_last_volume = settings() -> volume();
   if ( url == properties() -> url() )
@@ -2517,10 +2519,12 @@ void KPlayerEngine::setButtons (Qt::MouseButtons buttons)
       m_timer.start (0);
     }
     else if ( m_pending_resize )
+    {
       if ( m_dockwidget_resize )
         userResize();
       else
         workspaceResize();
+    }
   }
 }
 
@@ -2638,6 +2642,7 @@ void KPlayerEngine::amixerFinished (KPlayerLineOutputProcess* proc)
   if ( m_amixer_volume >= 0 )
   {
     if ( configuration() -> mute() )
+    {
       if ( m_amixer_volume == 0 )
         m_last_volume = 0;
       else
@@ -2645,6 +2650,7 @@ void KPlayerEngine::amixerFinished (KPlayerLineOutputProcess* proc)
         configuration() -> setMute (false);
         toggleAction ("audio_mute") -> setChecked (false);
       }
+    }
     int volume = m_amixer_volume + settings() -> actualVolume() - m_last_volume;
 #ifdef DEBUG_KPLAYER_ENGINE
     kdDebugTime() << " Volume " << m_amixer_volume << "\n";

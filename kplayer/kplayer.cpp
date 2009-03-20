@@ -485,14 +485,14 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
     "video_saturation"
   };
   QString whatsthis [KPLAYER_TOOLBARS] = {
-    i18n("Main toolbar contains buttons for commonly used operations. Left clicking an icon will activate the corresponding action. Some of the buttons will pop up slider controls when clicked. The sliders let you change various player controls: sound volume, video contrast, brightness, hue and saturation. The video controls will only be available for video files."),
-    i18n("Playlist toolbar shows the multimedia title currently loaded or being played, offers commands to go to the next or previous items on the playlist, and also lets you see the entire playlist that consists of items that are currently being played or have been played recently. If you select a different item from the list, KPlayer will load and start playing it. The toolbar also contains options to loop and shuffle the playlist."),
-    i18n("Progress and seeking toolbar is shown when the time length of a media file is known. It displays the playback progress and also allows seeking, that is, moving the playback point back and forth within the file. To seek to a specific position, drag the slider thumb to that position with the left mouse button, or simply click at that position with the middle mouse button. To move forward or backward in steps, left click the slider to the left or right of the thumb, or click the Forward and Backward buttons."),
-    i18n("Volume toolbar has a volume slider that shows the current sound volume and allows you to change it. This is the same slider you get from the volume pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Volume Toolbar option on the Settings menu. Clicking the Volume button on this toolbar will also hide it. In addition the toolbar has a Mute button that turns the sound off and back on."),
-    i18n("Contrast toolbar has a contrast slider that shows the current video contrast and allows you to change it. This is the same slider you get from the contrast pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Contrast Toolbar option on the Settings menu. Clicking the Contrast button on this toolbar will also hide it."),
-    i18n("Brightness toolbar has a brightness slider that shows the current video brightness and allows you to change it. This is the same slider you get from the brightness pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Brightness Toolbar option on the Settings menu. Clicking the Brightness button on this toolbar will also hide it."),
-    i18n("Hue toolbar has a hue slider that shows the current video hue and allows you to change it. This is the same slider you get from the hue pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Hue Toolbar option on the Settings menu. Clicking the Hue button on this toolbar will also hide it."),
-    i18n("Saturation toolbar has a saturation slider that shows the current video saturation and allows you to change it. This is the same slider you get from the saturation pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Saturation Toolbar option on the Settings menu. Clicking the Saturation button on this toolbar will also hide it.")
+    i18n("The Main toolbar contains buttons for commonly used operations. Left clicking an icon will activate the corresponding action. Some of the buttons will pop up slider controls when clicked. The sliders let you change various player controls: sound volume, video contrast, brightness, hue and saturation. The video controls will only be available for video files."),
+    i18n("The Playlist toolbar shows the multimedia title currently loaded or being played, offers commands to go to the next or previous items on the playlist, and also lets you see the entire playlist of items that are currently being played or have been played recently. If you select a different item from the list, KPlayer will load and start playing it. The toolbar also contains options to loop and shuffle the playlist."),
+    i18n("The 'Progress and Seeking' toolbar is shown when the time length of a media file is known. It displays the playback progress and also allows seeking, that is, moving the playback point back and forth within the file. To seek to a specific position, drag the slider thumb to that position with the left mouse button, or simply click at that position with the middle mouse button. To move forward or backward in steps, left click the slider to the left or right of the thumb, or click the Forward and Backward buttons."),
+    i18n("The Volume toolbar has a volume slider that shows the current sound volume and allows you to change it. This is the same slider that can be reached using the volume pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Volume Toolbar option on the Settings menu. Clicking the Volume button on this toolbar will also hide it. In addition the toolbar has a Mute button that can be used to toggle whether the sound is on or off."),
+    i18n("The Contrast toolbar has a contrast slider that shows the current video contrast and allows you to change it. This is the same slider that can be reached using the contrast pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Contrast Toolbar option on the Settings menu. Clicking the Contrast button on this toolbar will also hide it."),
+    i18n("The Brightness toolbar has a brightness slider that shows the current video brightness and allows you to change it. This is the same slider that can be reached using the brightness pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Brightness Toolbar option on the Settings menu. Clicking the Brightness button on this toolbar will also hide it."),
+    i18n("The Hue toolbar has a hue slider that shows the current video hue and allows you to change it. This is the same slider that can be reached using the hue pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Hue Toolbar option on the Settings menu. Clicking the Hue button on this toolbar will also hide it."),
+    i18n("The Saturation toolbar has a saturation slider that shows the current video saturation and allows you to change it. This is the same slider that can be reached using the saturation pop-up slider button on the main toolbar, but it will not disappear when you click elsewhere. You can show or hide the toolbar using the Show Saturation Toolbar option on the Settings menu. Clicking the Saturation button on this toolbar will also hide it.")
   };
   KPlayerEngine::initialize (actionCollection(), this, KGlobal::config().data());
   connect (engine(), SIGNAL (windowStateChanged (uint)), SLOT (windowStateChanged (uint)));
@@ -600,8 +600,8 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
     m_toolbar[i] = toolbars[i];
   KToolBar* toolbar = toolBar (m_toolbar[PLAYLIST_TOOLBAR].name);
   toolbar -> setAllowedAreas (Qt::TopToolBarArea | Qt::BottomToolBarArea);
-  menuBar() -> setWhatsThis (i18n("Menu bar contains names of drop-down menus. Left click a name to alternately show and hide that menu, or use Alt + the underlined letter in the name as a hot key, for example Alt+F to show the File menu."));
-  statusBar() -> setWhatsThis (i18n("Status bar shows general information about the player status and progress."));
+  menuBar() -> setWhatsThis (i18n("The menu bar contains names of drop-down menus. Left click a name to alternately show and hide that menu, or use Alt + the underlined letter in the name as a hot key; for example, Alt+F shows the File menu."));
+  statusBar() -> setWhatsThis (i18n("The status bar shows general information about the player's status and progress."));
   for ( i = 0; i < KPLAYER_TOOLBARS; i ++ )
   {
     toolbar = toolBar (m_toolbar[i].name);
@@ -642,15 +642,15 @@ void KPlayerWindow::initActions (void)
 #endif
   QAction* action = KStandardAction::quit (this, SLOT (fileQuit()), actionCollection());
   action -> setStatusTip (i18n("Quits KPlayer"));
-  action -> setWhatsThis (i18n("Quit command saves the playlist and all settings, stops playing and closes KPlayer."));
+  action -> setWhatsThis (i18n("The 'Quit' command saves the playlist and all settings, stops playing and closes KPlayer."));
 
   action = KStandardAction::showMenubar (this, SLOT (viewMenubar()), actionCollection());
   action -> setStatusTip (i18n("Shows/hides the menu bar"));
-  action -> setWhatsThis (i18n("Show Menubar command shows or hides the menu bar."));
+  action -> setWhatsThis (i18n("The 'Show Menu Bar' command shows or hides the menu bar."));
 
   action = KStandardAction::showStatusbar (this, SLOT (viewStatusbar()), actionCollection());
   action -> setStatusTip (i18n("Shows/hides the status bar"));
-  action -> setWhatsThis (i18n("Show Statusbar command shows or hides the status bar."));
+  action -> setWhatsThis (i18n("The 'Show Status Bar' command shows or hides the status bar."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("options_show_playlist", action);
@@ -658,7 +658,7 @@ void KPlayerWindow::initActions (void)
   action -> setText (i18n("&Show Playlist"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_P);
   action -> setStatusTip (i18n("Shows/hides the playlist"));
-  action -> setWhatsThis (i18n("Show Playlist command shows or hides the playlist toolbar."));
+  action -> setWhatsThis (i18n("The 'Show Playlist' command shows or hides the playlist toolbar."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("options_show_library", action);
@@ -666,7 +666,7 @@ void KPlayerWindow::initActions (void)
   action -> setText (i18n("Sho&w Library"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_L);
   action -> setStatusTip (i18n("Shows/hides the multimedia library"));
-  action -> setWhatsThis (i18n("Show Library command shows or hides the multimedia library."));
+  action -> setWhatsThis (i18n("The 'Show Library' command shows or hides the multimedia library."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("options_show_log", action);
@@ -674,21 +674,21 @@ void KPlayerWindow::initActions (void)
   action -> setText (i18n("Show Message &Log"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_G);
   action -> setStatusTip (i18n("Shows/hides the message log"));
-  action -> setWhatsThis (i18n("Show Message Log command shows or hides the message log."));
+  action -> setWhatsThis (i18n("The 'Show Message Log' command shows or hides the message log."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("options_show_toolbar", action);
   connect (action, SIGNAL (triggered()), SLOT (viewMainToolbar()));
   action -> setText (i18n("Show Main &Toolbar"));
   action -> setStatusTip (i18n("Shows/hides the main toolbar"));
-  action -> setWhatsThis (i18n("Show Main Toolbar command shows or hides the main toolbar."));
+  action -> setWhatsThis (i18n("The 'Show Main Toolbar' command shows or hides the main toolbar."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("settings_progress_toolbar", action);
   connect (action, SIGNAL (triggered()), SLOT (viewProgressToolbar()));
   action -> setText (i18n("Show &Progress Toolbar"));
   action -> setStatusTip (i18n("Shows/hides the progress toolbar"));
-  action -> setWhatsThis (i18n("Show Progress Toolbar command shows or hides the progress toolbar. This command is available when the time length of the current file is known."));
+  action -> setWhatsThis (i18n("The 'Show Progress Toolbar' command shows or hides the progress toolbar. This command is available when the time length of the current file is known."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("settings_volume_toolbar", action);
@@ -696,7 +696,7 @@ void KPlayerWindow::initActions (void)
   action -> setText (i18n("Show &Volume Toolbar"));
   action -> setIcon (KIcon ("player-volume"));
   action -> setStatusTip (i18n("Shows/hides the volume toolbar"));
-  action -> setWhatsThis (i18n("Show Volume Toolbar command shows or hides the volume toolbar."));
+  action -> setWhatsThis (i18n("The 'Show Volume Toolbar' command shows or hides the volume toolbar."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("settings_contrast_toolbar", action);
@@ -704,7 +704,7 @@ void KPlayerWindow::initActions (void)
   action -> setText (i18n("Show C&ontrast Toolbar"));
   action -> setIcon (KIcon ("contrast"));
   action -> setStatusTip (i18n("Shows/hides the contrast toolbar"));
-  action -> setWhatsThis (i18n("Show Contrast Toolbar command shows or hides the contrast toolbar. This command is available for video files."));
+  action -> setWhatsThis (i18n("The 'Show Contrast Toolbar' command shows or hides the contrast toolbar. This command is available for video files."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("settings_brightness_toolbar", action);
@@ -712,7 +712,7 @@ void KPlayerWindow::initActions (void)
   action -> setText (i18n("Show &Brightness Toolbar"));
   action -> setIcon (KIcon ("brightness"));
   action -> setStatusTip (i18n("Shows/hides the brightness toolbar"));
-  action -> setWhatsThis (i18n("Show Brightness Toolbar command shows or hides the brightness toolbar. This command is available for video files."));
+  action -> setWhatsThis (i18n("The 'Show Brightness Toolbar' command shows or hides the brightness toolbar. This command is available for video files."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("settings_hue_toolbar", action);
@@ -720,7 +720,7 @@ void KPlayerWindow::initActions (void)
   action -> setText (i18n("Show H&ue Toolbar"));
   action -> setIcon (KIcon ("hue"));
   action -> setStatusTip (i18n("Shows/hides the hue toolbar"));
-  action -> setWhatsThis (i18n("Show Hue Toolbar command shows or hides the hue toolbar. This command is available for video files."));
+  action -> setWhatsThis (i18n("The 'Show Hue Toolbar' command shows or hides the hue toolbar. This command is available for video files."));
 
   action = new KToggleAction (actionCollection());
   actionCollection() -> addAction ("settings_saturation_toolbar", action);
@@ -728,19 +728,19 @@ void KPlayerWindow::initActions (void)
   action -> setText (i18n("Show &Saturation Toolbar"));
   action -> setIcon (KIcon ("saturation"));
   action -> setStatusTip (i18n("Shows/hides the saturation toolbar"));
-  action -> setWhatsThis (i18n("Show Saturation Toolbar command shows or hides the saturation toolbar. This command is available for video files."));
+  action -> setWhatsThis (i18n("The 'Show Saturation Toolbar' command shows or hides the saturation toolbar. This command is available for video files."));
 
   action = KStandardAction::keyBindings (this, SLOT (settingsKeyBindings()), actionCollection());
   action -> setStatusTip (i18n("Opens the KPlayer key bindings dialog"));
-  action -> setWhatsThis (i18n("Configure Shortcuts command opens a dialog that lets you see and change KPlayer's shortcut key bindings, or associations between actions and the corresponding keys or combinations of keys that activate them. If you change the bindings, make sure not to duplicate an existing shortcut and also not to use the Shift key for your new shortcuts, because the Shift key has a special function in KPlayer."));
+  action -> setWhatsThis (i18n("The 'Configure Shortcuts' command opens a dialog that allows you to see and change KPlayer's shortcut key bindings, or associations between actions and the corresponding keys or combinations of keys that activate them. If you change the bindings, make sure not to duplicate an existing shortcut and also not to use the Shift key for your new shortcuts, because the Shift key has a special function in KPlayer."));
 
   action = KStandardAction::configureToolbars (this, SLOT (settingsConfigureToolbars()), actionCollection());
   action -> setStatusTip (i18n("Opens the KPlayer toolbar configuration dialog"));
-  action -> setWhatsThis (i18n("Configure Toolbars command opens a dialog that lets you see and change KPlayer's toolbars and controls assigned to them."));
+  action -> setWhatsThis (i18n("The 'Configure Toolbars' command opens a dialog that allows you to see and change KPlayer's toolbars and controls assigned to them."));
 
   action = KStandardAction::preferences (this, SLOT (settingsConfigure()), actionCollection());
   action -> setStatusTip (i18n("Opens the KPlayer configuration dialog"));
-  action -> setWhatsThis (i18n("Configure KPlayer command opens a dialog that lets you configure the program, modifying various aspects of its functionality, user interface and interaction with MPlayer. For more information see the Configuration dialog chapter and the Advanced configuration micro-HOWTO in the user manual."));
+  action -> setWhatsThis (i18n("The 'Configure KPlayer' command opens a dialog that allows you to configure the program, modifying various aspects of its functionality, user interface and interaction with MPlayer. For more information see the Configuration dialog chapter and the Advanced configuration micro-HOWTO in the user manual."));
 
   createGUI();
 

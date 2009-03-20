@@ -160,7 +160,7 @@ void KPlayerSettings::setAspect (QSize aspect)
   kdDebugTime() << "Settings::setAspect " << m_aspect.width() << "x" << m_aspect.height() << " => " << aspect.width() << "x" << aspect.height() << "\n";
 #endif
   if ( ! aspect.isEmpty() && ! m_aspect.isEmpty() && aspect.width() * m_aspect.height()
-      == aspect.height() * m_aspect.width() || aspect.isEmpty() && m_aspect.isEmpty() )
+      == aspect.height() * m_aspect.width() || (aspect.isEmpty() && m_aspect.isEmpty()) )
     return;
   m_aspect = aspect;
   aspect = properties() -> currentAspect();

@@ -242,7 +242,7 @@
                       <string>Distance between slider tick marks as a percentage</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to specify the distance between tick marks on the a slider, in percents of slider length.</string>
+                      <string>Option to specify the distance between slider tick marks, as a percentage of the slider length.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>
@@ -272,7 +272,7 @@
                       <string>Distance between slider tick marks as a percentage</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to specify the distance between tick marks on sliders, in percents of slider length.</string>
+                      <string>Option to specify the distance between slider tick marks, as a percentage of the slider length.</string>
                     </property>
                   </widget>
                 </item>
@@ -296,7 +296,7 @@
                       <string>Distance between slider tick marks as a percentage</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to specify the distance between tick marks on sliders, in percents of slider length.</string>
+                      <string>Option to specify the distance between slider tick marks, as a percentage of the slider length.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>

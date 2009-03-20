@@ -802,7 +802,7 @@ KPlayerListViewItem* KPlayerNodeView::itemForNode (KPlayerNode* node, bool open)
   else
   {
     item = itemForNode (node -> parent(), open);
-    if ( ! item || ! open && ! item -> isOpen() )
+    if ( ! item || (! open && ! item -> isOpen()) )
       return 0;
     if ( ! item -> isOpen() )
       setOpen (item, true);
@@ -944,7 +944,7 @@ void KPlayerNodeView::startEditing (Q3ListViewItem* item, int column)
 #endif
   if ( before + width > visibleWidth() - 50 )
     before = 0;
-  if ( pos + width + after > contentsX() + visibleWidth() && pos > contentsX() + before || pos < contentsX() + before )
+  if ( (pos + width + after > contentsX() + visibleWidth() && pos > contentsX() + before) || pos < contentsX() + before )
     setContentsPos (pos < contentsX() + before || before + width + after > visibleWidth() ? pos - before
       : pos + width + after - visibleWidth(), contentsY());
   header() -> repaint();
@@ -1054,7 +1054,7 @@ bool KPlayerNodeView::eventFilter (QObject* object, QEvent* event)
     {
       if ( event -> type() == QEvent::MouseButtonPress )
         (section == 0 ? firstcolumn : anothercolumn) = true;
-      else if ( event -> type() == QEvent::MouseMove && (firstcolumn || anothercolumn && section <= 0) )
+      else if ( event -> type() == QEvent::MouseMove && (firstcolumn || (anothercolumn && section <= 0)) )
         return true;
     }
     else
@@ -1244,13 +1244,13 @@ void KPlayerNodeView::findDropTarget (const QPoint& pos, Q3ListViewItem*& parent
   }*/
   if ( ! item )
     return;
-  if ( ! container -> allowsCustomOrder() || node -> isContainer() && offset <= height )
+  if ( ! container -> allowsCustomOrder() || ( node -> isContainer() && offset <= height ) )
   {
     parent = node -> isContainer() ? item : item -> parent();
     return;
   }
   if ( node -> isContainer() && (p.x() >= depthToPixels (item -> depth() + 1)
-    || item -> isOpen() && item -> firstChild()) )
+    || ( item -> isOpen() && item -> firstChild()) ) )
   {
     parent = item;
     after = item;
@@ -1500,8 +1500,8 @@ bool KPlayerNodeView::event (QEvent* e)
     kdDebugTime() << "KPlayerNodeView::event ShortcutOverride " << key << " " << state << "\n";
 #endif
     if ( (state & Qt::ShiftModifier) == Qt::ShiftModifier && (key == Qt::Key_Left || key == Qt::Key_Right)
-      || (state & Qt::ControlModifier) == Qt::ControlModifier
-      && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_A) )
+      || ( (state & Qt::ControlModifier) == Qt::ControlModifier
+      && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_A) ) )
     {
 #ifdef DEBUG_KPLAYER_NODEVIEW
       kdDebugTime() << " override\n";
@@ -1809,7 +1809,7 @@ void KPlayerNodeView::addGroup (void)
     QString name = KInputDialog::getText (container -> isPlaylist() ? i18n("Add playlist") : i18n("Add folder"),
       container -> isPlaylist() ? i18n("Playlist name") : i18n("Folder name"),
       QString::null, 0, 0, &validator, QString::null,
-      i18n("Folder name field allows you to enter a name for a new folder. OK button will be enabled when you enter a unique and valid name."));
+      container -> isPlaylist() ? i18n("The 'Playlist name' field allows you to enter a name for a new playlist. The OK button will be enabled when a unique and valid name has been entered.") : i18n("The 'Folder name' field allows you to enter a name for a new folder. The OK button will be enabled when a unique and valid name has been entered."));
     if ( ! name.isNull() )
       container -> addBranch (name);
   }
@@ -1855,7 +1855,7 @@ KPlayerContainerNode* KPlayerNodeView::addToNewPlaylist (const KPlayerNodeList& 
   KPlayerNodeNameValidator validator (container);
   QString name = KInputDialog::getText (i18n("Add to new playlist"), i18n("Playlist name"),
     QString::null, 0, 0, &validator, QString::null,
-    i18n("Playlist name field allows you to enter a name for a new playlist. OK button will be enabled when you enter a unique and valid name."));
+    i18n("The 'Playlist name' field allows you to enter a name for a new playlist. The OK button will be enabled when a unique and valid name has been entered."));
   if ( ! name.isNull() )
   {
     container -> addBranch (name);
@@ -1902,10 +1902,12 @@ void KPlayerNodeView::addToPlaylists (void)
 #endif
   KPlayerNodeList list (getSelectedNodes());
   if ( ! list.isEmpty() )
+  {
     if ( list.count() == 1 && list.first() == playlist() -> nowplaying() )
       playlist() -> addToPlaylists();
     else
       playlistActionList() -> node() -> append (list);
+  }
 }
 
 void KPlayerNodeView::addToPlaylist (KPlayerNode* node)
@@ -1952,10 +1954,12 @@ void KPlayerNodeView::addToCollection (void)
 #endif
   KPlayerNodeList list (getSelectedNodes());
   if ( ! list.isEmpty() )
+  {
     if ( list.count() == 1 && list.first() == playlist() -> nowplaying() )
       playlist() -> addToCollection();
     else
       KPlayerNode::root() -> getNodeByUrl (KUrl ("kplayer:/collection")) -> add (list);
+  }
 }
 
 void KPlayerNodeView::editName (void)
@@ -2293,19 +2297,19 @@ void KPlayerListView::updateActions (void)
   {
     a -> setText (i18n("&Device..."));
     a -> setStatusTip (i18n("Adds a new device"));
-    a -> setWhatsThis (i18n("Add device command allows you to add a new device. You will need to give the new device a unique name and specify the device path and type."));
+    a -> setWhatsThis (i18n("The 'Add device' command allows you to add a new device. You will need to give the new device a unique name, and specify the device path and type."));
   }
   else if ( container && container -> isPlaylist() )
   {
     a -> setText (i18n("&Playlist..."));
     a -> setStatusTip (i18n("Adds a new playlist"));
-    a -> setWhatsThis (i18n("Add playlist command allows you to add a new playlist. You will need to give the new playlist a unique name."));
+    a -> setWhatsThis (i18n("The 'Add playlist' command allows you to add a new playlist. You will need to give the new playlist a unique name."));
   }
   else
   {
     a -> setText (i18n("F&older..."));
     a -> setStatusTip (i18n("Adds a new subfolder to the selected folder"));
-    a -> setWhatsThis (i18n("Add folder command allows you to add a new subfolder to the selected folder. You will need to give the new subfolder a unique name."));
+    a -> setWhatsThis (i18n("The 'Add folder' command allows you to add a new subfolder to the selected folder. You will need to give the new subfolder a unique name."));
   }
   enable = selection && rootNode() -> canSaveAsPlaylist();
   library() -> emitEnableActionGroup ("library_add_to", enable);
@@ -2314,8 +2318,8 @@ void KPlayerListView::updateActions (void)
   action ("library_add_to_collection") -> setEnabled (enable);
   action ("library_rename") -> setEnabled (node && node -> canRename());
   library() -> emitEnableActionGroup ("library_edit", node && ! node -> isContainer());
-  action ("library_properties") -> setEnabled (node && (node -> hasProperties() || node -> isContainer()
-    && ((KPlayerContainerNode*) node) -> origin() && ((KPlayerContainerNode*) node) -> origin() -> hasProperties()));
+  action ("library_properties") -> setEnabled (node && (node -> hasProperties() || (node -> isContainer()
+    && ((KPlayerContainerNode*) node) -> origin() && ((KPlayerContainerNode*) node) -> origin() -> hasProperties())));
   action ("library_select_all") -> setEnabled (firstChild() != 0);
   enable = selection && rootNode() -> allowsCustomOrder();
   action ("library_move_up") -> setEnabled (enable);
@@ -2460,7 +2464,7 @@ void KPlayerListView::updateAttributes (const KPlayerPropertyCounts& added, cons
     if ( ! name.isEmpty() )
     {
       KPlayerPropertyInfo* info = KPlayerMedia::info (name);
-      if ( ! attributeCounts().contains (name) || rootNode() -> isDirectory() && name == "Path" )
+      if ( ! attributeCounts().contains (name) || (rootNode() -> isDirectory() && name == "Path" ))
       {
         m_available_attributes.removeAll (name);
         m_attribute_states.insert (name, false);
@@ -2469,7 +2473,7 @@ void KPlayerListView::updateAttributes (const KPlayerPropertyCounts& added, cons
       {
         if ( ! availableAttributes().contains (name) )
           insertAttribute (m_available_attributes, name);
-        m_attribute_states.insert (name, info -> show() && attributeCounts().contains (name) || showColumn (name));
+        m_attribute_states.insert (name, (info -> show() && attributeCounts().contains (name)) || showColumn (name));
       }
       if ( ! info -> canEdit() )
         m_editable_attributes.removeAll (name);
@@ -3105,19 +3109,19 @@ void KPlayerTreeView::updateActions (void)
   {
     a -> setText (i18n("&Device..."));
     a -> setStatusTip (i18n("Adds a new device"));
-    a -> setWhatsThis (i18n("Add device command allows you to add a new device. You will need to give the new device a unique name and specify the device path and type."));
+    a -> setWhatsThis (i18n("The 'Add device' command allows you to add a new device. You will need to give the new device a unique name, and specify the device path and type."));
   }
   else if ( node && node -> isPlaylist() )
   {
     a -> setText (i18n("&Playlist..."));
     a -> setStatusTip (i18n("Adds a new playlist"));
-    a -> setWhatsThis (i18n("Add playlist command allows you to add a new playlist. You will need to give the new playlist a unique name."));
+    a -> setWhatsThis (i18n("The 'Add playlist' command allows you to add a new playlist. You will need to give the new playlist a unique name."));
   }
   else
   {
     a -> setText (i18n("F&older..."));
     a -> setStatusTip (i18n("Adds a new subfolder to the selected folder"));
-    a -> setWhatsThis (i18n("Add folder command allows you to add a new subfolder to the selected folder. You will need to give the new subfolder a unique name."));
+    a -> setWhatsThis (i18n("The 'Add folder' command allows you to add a new subfolder to the selected folder. You will need to give the new subfolder a unique name."));
   }
   enable = selection && node -> canSaveAsPlaylist();
   library() -> emitEnableActionGroup ("library_add_to", enable);
@@ -3127,7 +3131,7 @@ void KPlayerTreeView::updateActions (void)
   action ("library_rename") -> setEnabled (selection && node -> canRename());
   library() -> emitEnableActionGroup ("library_edit", false);
   action ("library_properties") -> setEnabled (selection && (node -> hasProperties()
-    || node -> origin() && node -> origin() -> hasProperties()));
+    || (node -> origin() && node -> origin() -> hasProperties())));
   action ("library_select_all") -> setEnabled (node == currentNode());
   enable = selection && node -> allowsCustomOrder();
   action ("library_move_up") -> setEnabled (enable);
@@ -3286,98 +3290,98 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action -> setText (i18n("&Play"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_Return);
   action -> setStatusTip (i18n("Plays the selected items"));
-  action -> setWhatsThis (i18n("Play command plays the selected items."));
+  action -> setWhatsThis (i18n("The 'Play' command plays the selected items."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_play_next", action);
   action -> setText (i18n("Play &Next"));
   action -> setStatusTip (i18n("Plays the selected items after the currently played item"));
-  action -> setWhatsThis (i18n("Play next command plays the selected items after the currently played item finishes playing."));
+  action -> setWhatsThis (i18n("The 'Play Next' command plays the selected items after the currently playing item has finished."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_queue", action);
   action -> setText (i18n("&Queue"));
   action -> setStatusTip (i18n("Queues the selected items"));
-  action -> setWhatsThis (i18n("Queue command queues the selected items for playing."));
+  action -> setWhatsThis (i18n("The 'Queue' command queues the selected items for playing."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_queue_next", action);
   action -> setText (i18n("Queue Ne&xt"));
   action -> setStatusTip (i18n("Queues the selected items for playing after the currently played item"));
-  action -> setWhatsThis (i18n("Queue next command queues the selected items for playing after the currently played item finishes playing."));
+  action -> setWhatsThis (i18n("The 'Queue Next' command queues the selected items for playing after the currently playing item has finished."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_add_files", action);
   action -> setText (i18n("&Files..."));
   action -> setStatusTip (i18n("Adds files to the selected folder"));
-  action -> setWhatsThis (i18n("Add files command displays the standard Open File dialog and lets you choose a file or several files to add to the selected folder."));
+  action -> setWhatsThis (i18n("The 'Add files' command displays the standard Open File dialog and allows you to choose a file (or several files) to add to the selected folder."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_add_url", action);
   action -> setText (i18n("&URL..."));
   action -> setStatusTip (i18n("Adds a URL to the selected folder"));
-  action -> setWhatsThis (i18n("Add URL command displays the standard Open URL dialog and lets you type or paste in a URL to add to the selected folder."));
+  action -> setWhatsThis (i18n("The 'Add URL' command displays the standard Open URL dialog and allows you to type or paste in a URL to add to the selected folder."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_add_group", action);
   action -> setText (i18n("F&older..."));
   action -> setStatusTip (i18n("Adds a new subfolder to the selected folder"));
-  action -> setWhatsThis (i18n("Add folder command allows you to add a new subfolder to the selected folder. You will need to give the new subfolder a unique name."));
+  action -> setWhatsThis (i18n("The 'Add folder' command allows you to add a new subfolder to the selected folder. You will need to give the new subfolder a unique name."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_add_to_new_playlist", action);
   action -> setText (i18n("&New Playlist..."));
   action -> setStatusTip (i18n("Adds selected items to a new playlist"));
-  action -> setWhatsThis (i18n("Add to new playlist command prompts for a new playlist name and adds the selected items to the new playlist."));
+  action -> setWhatsThis (i18n("The 'Add to New Playlist' command prompts for a new playlist name and adds the selected items to the new playlist."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_add_to_playlists", action);
   action -> setText (i18n("&Playlists"));
   action -> setStatusTip (i18n("Adds selected items to the root playlist"));
-  action -> setWhatsThis (i18n("Add to playlists command adds the selected items to the root playlist."));
+  action -> setWhatsThis (i18n("The 'Add to Playlists' command adds the selected items to the root playlist."));
 
   m_playlists = new KPlayerContainerActionList (ki18n("%1"), ki18n("Adds selected items to %1 playlist"),
-    ki18n("Add to playlist command adds the selected items to the %1 playlist."), this, "library_add_to_playlist");
+    ki18n("The 'Add to %1' command adds the selected items to the %1 playlist."), this, "library_add_to_playlist");
   playlistActionList() -> setMaximumSize (configuration() -> playlistMenuSize());
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_add_to_collection", action);
   action -> setText (i18n("&Collection"));
   action -> setStatusTip (i18n("Adds selected items to the collection"));
-  action -> setWhatsThis (i18n("Add to collection command adds the selected items to the multimedia collection."));
+  action -> setWhatsThis (i18n("The 'Add to Collection' command adds the selected items to the multimedia collection."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_rename", action);
   action -> setText (i18n("&Rename"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_F2);
-  action -> setStatusTip (i18n("Lets you rename the selected item"));
-  action -> setWhatsThis (i18n("Rename command starts edit mode for the current item in the multimedia library so you can change the item name."));
+  action -> setStatusTip (i18n("Allows you to rename the selected item"));
+  action -> setWhatsThis (i18n("The 'Rename' command starts edit mode for the current item in the multimedia library so you can change the item name."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_properties", action);
   action -> setText (i18n("Propert&ies..."));
-  action -> setStatusTip (i18n("Opens Properties dialog for the selected item"));
-  action -> setWhatsThis (i18n("Properties command opens File Properties dialog for the current item in the multimedia library. See the File properties micro-HOWTO for details."));
+  action -> setStatusTip (i18n("Opens the Properties dialog for the selected item"));
+  action -> setWhatsThis (i18n("The 'Properties' command opens the File Properties dialog for the current item in the multimedia library. See the File properties micro-HOWTO for details."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_select_all", action);
   action -> setText (i18n("&Select All"));
   action -> setStatusTip (i18n("Selects all items in the current folder"));
-  action -> setWhatsThis (i18n("Select all command selects all items in the current folder of the multimedia library."));
+  action -> setWhatsThis (i18n("The 'Select All' command selects all items in the current folder of the multimedia library."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_move_up", action);
   action -> setText (i18n("Move &Up"));
   action -> setIcon (KIcon ("arrow-up"));
   action -> setStatusTip (i18n("Moves the selected items up in the playlist"));
-  action -> setWhatsThis (i18n("Move Up command moves the selected items up in a playlist. You can also move items around by clicking and dragging them with the left mouse button."));
+  action -> setWhatsThis (i18n("The 'Move Up' command moves the selected items up in the playlist. You can also move items around by clicking and dragging them with the left mouse button."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_move_down", action);
   action -> setText (i18n("Move &Down"));
   action -> setIcon (KIcon ("arrow-down"));
   action -> setStatusTip (i18n("Moves the selected items down in the playlist"));
-  action -> setWhatsThis (i18n("Move Down command moves the selected items down in a playlist. You can also move items around by clicking and dragging them with the left mouse button."));
+  action -> setWhatsThis (i18n("The 'Move Down' command moves the selected items down in the playlist. You can also move items around by clicking and dragging them with the left mouse button."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_remove", action);
@@ -3385,9 +3389,9 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action -> setIcon (KIcon ("list-remove"));
   action -> setShortcut (Qt::Key_Delete);
   action -> setStatusTip (i18n("Removes the selected items from the multimedia library"));
-  action -> setWhatsThis (i18n("Remove command removes the selected items from the multimedia library."));
+  action -> setWhatsThis (i18n("The 'Remove' command removes the selected items from the multimedia library."));
   m_go_to = new KPlayerContainerActionList (ki18n("%1"), ki18n("Opens %1 in the library window"),
-    ki18n("Go to %1 command opens the corresponding folder in the library window."), this, "library_go_to_list");
+    ki18n("The 'Go to %1' command opens the corresponding folder in the library window."), this, "library_go_to_list");
   connect (goToActionList(), SIGNAL(activated(KPlayerNode*)), SLOT(open(KPlayerNode*)));
 
   action = new KAction (actionCollection());
@@ -3396,7 +3400,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action -> setIcon (KIcon ("go-previous"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Left);
   action -> setStatusTip (i18n("Opens the previous folder"));
-  action -> setWhatsThis (i18n("Go back command opens the previous folder from the history."));
+  action -> setWhatsThis (i18n("The 'Go Back' command opens the previous folder from the history."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_go_forward", action);
@@ -3404,7 +3408,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action -> setIcon (KIcon ("go-next"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Right);
   action -> setStatusTip (i18n("Opens the next folder"));
-  action -> setWhatsThis (i18n("Go forward command opens the next folder from the history."));
+  action -> setWhatsThis (i18n("The 'Go Forward' command opens the next folder from the history."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_go_up", action);
@@ -3412,7 +3416,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action -> setIcon (KIcon ("go-up"));
   action -> setShortcut (Qt::AltModifier + Qt::ShiftModifier + Qt::Key_Up);
   action -> setStatusTip (i18n("Opens the parent folder"));
-  action -> setWhatsThis (i18n("Go up command opens the parent folder of the current folder."));
+  action -> setWhatsThis (i18n("The 'Go Up' command opens the parent folder of the current folder."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_go_down", action);
@@ -3420,21 +3424,21 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   action -> setIcon (KIcon ("go-down"));
   action -> setShortcut (Qt::AltModifier + Qt::ShiftModifier + Qt::Key_Down);
   action -> setStatusTip (i18n("Opens the selected folder"));
-  action -> setWhatsThis (i18n("Go down command opens the selected folder."));
+  action -> setWhatsThis (i18n("The 'Go Down' command opens the selected folder."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_go_to_origin", action);
   action -> setText (i18n("&To Origin"));
   action -> setShortcut (Qt::AltModifier + Qt::ShiftModifier + Qt::Key_Left);
   action -> setStatusTip (i18n("Opens the origin of the current folder"));
-  action -> setWhatsThis (i18n("Go to origin command opens the origin folder of the current folder."));
+  action -> setWhatsThis (i18n("The 'Go To Origin' command opens the origin folder of the current folder."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("playlist_edit", action);
   connect (action, SIGNAL (triggered()), SLOT (editPlaylist()));
   action -> setText (i18n("&Edit"));
   action -> setStatusTip (i18n("Opens the playlist in the multimedia library"));
-  action -> setWhatsThis (i18n("Edit command opens the playlist in the multimedia library and allows you to edit it."));
+  action -> setWhatsThis (i18n("The 'Edit' command opens the playlist in the multimedia library and allows you to edit it."));
 
   m_tree = new KPlayerTreeView (this);
   //setResizeMode (treeView(), QSplitter::KeepSize);
@@ -3451,15 +3455,15 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
 
   m_columns = new KPlayerToggleActionList (listView() -> availableAttributes(), listView() -> attributeStates(),
     ki18n("Hide %1"), ki18n("Show %1"), ki18n("Hides %1 column"), ki18n("Shows %1 column"),
-    ki18n("Hide %1 command hides the column."), ki18n("Show %1 command shows the column."), this, "library_columns");
+    ki18n("The 'Hide %1' command hides the column."), ki18n("The 'Show %1' command shows the column."), this, "library_columns");
 
   m_edit = new KPlayerSimpleActionList (listView() -> editableAttributes(),
     ki18n("%1"), ki18n("Starts edit mode for %1 field"),
-    ki18n("Edit %1 starts edit mode for this field of the current item."), this, "library_edit");
+    ki18n("'Edit %1' starts edit mode for this field of the current item."), this, "library_edit");
 
   m_history_list = new KPlayerHistoryActionList (treeView() -> history(),
     ki18n("%1"), ki18n("Opens %1 in the library window"),
-    ki18n("Go to %1 command opens the corresponding folder in the library window."), this, "library_history");
+    ki18n("The 'Go to %1' command opens the corresponding folder in the library window."), this, "library_history");
   connect (historyActionList(), SIGNAL (activated (int)), treeView(), SLOT (goToHistory (int)));
 
   connect (parent, SIGNAL (visibilityChanged (bool)), SLOT (parentVisibilityChanged (bool)));
@@ -3671,7 +3675,7 @@ KPlayerLibraryWindow::KPlayerLibraryWindow (KActionCollection* ac, KPlayerPlayli
   setWindowTitle (i18n("Multimedia Library"));
   setAllowedAreas (Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea);
   setFeatures (DockWidgetClosable | DockWidgetMovable | DockWidgetFloatable | DockWidgetVerticalTitleBar);
-  setWhatsThis (i18n("Multimedia library is a window where you can organize your files, streams and devices, manage your playlists, and choose items for playing. It shows various information about your media files and allows you to search and group them, as well as change their properties."));
+  setWhatsThis (i18n("The Multimedia library is a window where you can organize your files, streams and devices; manage your playlists; and choose items for playing. It shows various pieces of information about your media files, and allows you to search and group them, as well as change their properties."));
   connect (this, SIGNAL (visibilityChanged (bool)), SLOT (setVisibility (bool)));
 }
 

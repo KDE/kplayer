@@ -146,10 +146,10 @@
                       <cstring>c_maximum</cstring>
                     </property>
                     <property name="toolTip" stdset="0">
-                      <string>Maximum volume in percents of the normal level</string>
+                      <string>Maximum volume as a percentage of the normal level</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to specify the maximum sound volume in percents of the normal volume level.</string>
+                      <string>Option to specify the maximum sound volume as a percentage of the normal volume level.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>
@@ -173,10 +173,10 @@
                       </size>
                     </property>
                     <property name="toolTip" stdset="0">
-                      <string>Maximum volume in percents of the normal level</string>
+                      <string>Maximum volume as a percentage of the normal level</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to specify the maximum sound volume in percents of the normal volume level.</string>
+                      <string>Option to specify the maximum sound volume as a percentage of the normal volume level.</string>
                     </property>
                   </widget>
                 </item>
@@ -189,10 +189,10 @@
                       <set>Qt::AlignVCenter|Qt::AlignLeft</set>
                     </property>
                     <property name="toolTip" stdset="0">
-                      <string>Maximum volume in percents of the normal level</string>
+                      <string>Maximum volume as a percentage of the normal level</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to specify the maximum sound volume in percents of the normal volume level.</string>
+                      <string>Option to specify the maximum sound volume as a percentage of the normal volume level.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>

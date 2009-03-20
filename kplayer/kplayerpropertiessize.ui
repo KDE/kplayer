@@ -299,7 +299,7 @@
                       <string>Initial video display size or aspect</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
+                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>
@@ -312,7 +312,7 @@
                       <string>Initial video display size or aspect</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
+                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
                     </property>
                     <item>
                       <property name="text">
@@ -343,7 +343,7 @@
                       <string>Initial video display size or aspect</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
+                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
                     </property>
                   </widget>
                 </item>
@@ -362,7 +362,7 @@
                       <string>Initial video display size or aspect</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
+                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>
@@ -381,7 +381,7 @@
                       <string>Initial video display size or aspect</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding Shift key down.</string>
+                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
                     </property>
                   </widget>
                 </item>
@@ -400,7 +400,7 @@
                       <string>Initial full screen window state</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to choose whether to start playing this file in a full screen window. Default does not change the window state for this file. It is easier to set this property by switching to full screen or restoring KPlayer window while holding Shift key down.</string>
+                      <string>Option to choose whether to start playing this file in a full screen window. Default does not change the window state for this file. It is easier to set this property by switching to full screen or restoring KPlayer window while holding the Shift key down.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>
@@ -413,7 +413,7 @@
                       <string>Initial full screen window state</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to choose whether to start playing this file in a full screen window. Default does not change the window state for this file. It is easier to set this property by switching to full screen or restoring KPlayer window while holding Shift key down.</string>
+                      <string>Option to choose whether to start playing this file in a full screen window. Default does not change the window state for this file. It is easier to set this property by switching to full screen or restoring KPlayer window while holding the Shift key down.</string>
                     </property>
                     <item>
                       <property name="text">
@@ -447,7 +447,7 @@
                       <string>Initial maximized window state</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to choose whether to start playing this file in a maximized or normal window. Default does not change the window state for this file. If the full screen option is also set, it will take precedence. It is easier to set this property by maximizing or restoring KPlayer window while holding Shift key down.</string>
+                      <string>Option to choose whether to start playing this file in a maximized or normal window. Default does not change the window state for this file. If the full screen option is also set, it will take precedence. It is easier to set this property by maximizing or restoring KPlayer window while holding the Shift key down.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>
@@ -460,7 +460,7 @@
                       <string>Initial maximized window state</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to choose whether to start playing this file in a maximized or normal window. Default does not change the window state for this file. If the full screen option is also set, it will take precedence. It is easier to set this property by maximizing or restoring KPlayer window while holding Shift key down.</string>
+                      <string>Option to choose whether to start playing this file in a maximized or normal window. Default does not change the window state for this file. If the full screen option is also set, it will take precedence. It is easier to set this property by maximizing or restoring KPlayer window while holding the Shift key down.</string>
                     </property>
                     <item>
                       <property name="text">
@@ -494,7 +494,7 @@
                       <string>Maintain video aspect when resizing window</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to maintain video aspect when resizing KPlayer window. Default leaves the maintain aspect option unchanged for this file. It is easier to set this property by clicking Maintain Aspect button on the main KPlayer toolbar while holding Shift key down.</string>
+                      <string>Option to maintain video aspect when resizing KPlayer window. Default leaves the maintain aspect option unchanged for this file. It is easier to set this property by clicking Maintain Aspect button on the main KPlayer toolbar while holding the Shift key down.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>
@@ -507,7 +507,7 @@
                       <string>Maintain video aspect when resizing window</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to maintain video aspect when resizing KPlayer window. Default leaves the maintain aspect option unchanged for this file. It is easier to set this property by clicking Maintain Aspect button on the main KPlayer toolbar while holding Shift key down.</string>
+                      <string>Option to maintain video aspect when resizing KPlayer window. Default leaves the maintain aspect option unchanged for this file. It is easier to set this property by clicking Maintain Aspect button on the main KPlayer toolbar while holding the Shift key down.</string>
                     </property>
                     <item>
                       <property name="text">

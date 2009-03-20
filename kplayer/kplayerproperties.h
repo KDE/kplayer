@@ -1739,98 +1739,98 @@ public:
   bool rememberSize (void) const
     { return getBoolean ("Remember Size"); }
   bool rememberSize (bool shift) const
-    { return rememberSize() || shift && rememberWithShift(); }
+    { return rememberSize() || (shift && rememberWithShift()); }
   void setRememberSize (bool remember)
     { setBoolean ("Remember Size", remember); }
 
   bool rememberAspect (void) const
     { return getBoolean ("Remember Aspect"); }
   bool rememberAspect (bool shift) const
-    { return rememberAspect() || shift && rememberWithShift(); }
+    { return rememberAspect() || (shift && rememberWithShift()); }
   void setRememberAspect (bool remember)
     { setBoolean ("Remember Aspect", remember); }
 
   bool rememberFullScreen (void) const
     { return getBoolean ("Remember Full Screen"); }
   bool rememberFullScreen (bool shift) const
-    { return rememberFullScreen() || shift && rememberWithShift(); }
+    { return rememberFullScreen() || (shift && rememberWithShift()); }
   void setRememberFullScreen (bool remember)
     { setBoolean ("Remember Full Screen", remember); }
 
   bool rememberMaximized (void) const
     { return getBoolean ("Remember Maximized"); }
   bool rememberMaximized (bool shift) const
-    { return rememberMaximized() || shift && rememberWithShift(); }
+    { return rememberMaximized() || (shift && rememberWithShift()); }
   void setRememberMaximized (bool remember)
     { setBoolean ("Remember Maximized", remember); }
 
   bool rememberMaintainAspect (void) const
     { return getBoolean ("Remember Maintain Aspect"); }
   bool rememberMaintainAspect (bool shift) const
-    { return rememberMaintainAspect() || shift && rememberWithShift(); }
+    { return rememberMaintainAspect() || (shift && rememberWithShift()); }
   void setRememberMaintainAspect (bool remember)
     { setBoolean ("Remember Maintain Aspect", remember); }
 
   bool rememberVolume (void) const
     { return getBoolean ("Remember Volume"); }
   bool rememberVolume (bool shift) const
-    { return rememberVolume() || shift && rememberWithShift(); }
+    { return rememberVolume() || (shift && rememberWithShift()); }
   void setRememberVolume (bool remember)
     { setBoolean ("Remember Volume", remember); }
 
   bool rememberAudioDelay (void) const
     { return getBoolean ("Remember Audio Delay"); }
   bool rememberAudioDelay (bool shift) const
-    { return rememberAudioDelay() || shift && rememberWithShift(); }
+    { return rememberAudioDelay() || (shift && rememberWithShift()); }
   void setRememberAudioDelay (bool remember)
     { setBoolean ("Remember Audio Delay", remember); }
 
   bool rememberFrameDrop (void) const
     { return getBoolean ("Remember Frame Drop"); }
   bool rememberFrameDrop (bool shift) const
-    { return rememberFrameDrop() || shift && rememberWithShift(); }
+    { return rememberFrameDrop() || (shift && rememberWithShift()); }
   void setRememberFrameDrop (bool remember)
     { setBoolean ("Remember Frame Drop", remember); }
 
   bool rememberContrast (void) const
     { return getBoolean ("Remember Contrast"); }
   bool rememberContrast (bool shift) const
-    { return rememberContrast() || shift && rememberWithShift(); }
+    { return rememberContrast() || (shift && rememberWithShift()); }
   void setRememberContrast (bool remember)
     { setBoolean ("Remember Contrast", remember); }
 
   bool rememberBrightness (void) const
     { return getBoolean ("Remember Brightness"); }
   bool rememberBrightness (bool shift) const
-    { return rememberBrightness() || shift && rememberWithShift(); }
+    { return rememberBrightness() || (shift && rememberWithShift()); }
   void setRememberBrightness (bool remember)
     { setBoolean ("Remember Brightness", remember); }
 
   bool rememberHue (void) const
     { return getBoolean ("Remember Hue"); }
   bool rememberHue (bool shift) const
-    { return rememberHue() || shift && rememberWithShift(); }
+    { return rememberHue() || (shift && rememberWithShift()); }
   void setRememberHue (bool remember)
     { setBoolean ("Remember Hue", remember); }
 
   bool rememberSaturation (void) const
     { return getBoolean ("Remember Saturation"); }
   bool rememberSaturation (bool shift) const
-    { return rememberSaturation() || shift && rememberWithShift(); }
+    { return rememberSaturation() || (shift && rememberWithShift()); }
   void setRememberSaturation (bool remember)
     { setBoolean ("Remember Saturation", remember); }
 
   bool rememberSubtitlePosition (void) const
     { return getBoolean ("Remember Subtitle Position"); }
   bool rememberSubtitlePosition (bool shift) const
-    { return rememberSubtitlePosition() || shift && rememberWithShift(); }
+    { return rememberSubtitlePosition() || (shift && rememberWithShift()); }
   void setRememberSubtitlePosition (bool remember)
     { setBoolean ("Remember Subtitle Position", remember); }
 
   bool rememberSubtitleDelay (void) const
     { return getBoolean ("Remember Subtitle Delay"); }
   bool rememberSubtitleDelay (bool shift) const
-    { return rememberSubtitleDelay() || shift && rememberWithShift(); }
+    { return rememberSubtitleDelay() || (shift && rememberWithShift()); }
   void setRememberSubtitleDelay (bool remember)
     { setBoolean ("Remember Subtitle Delay", remember); }
 

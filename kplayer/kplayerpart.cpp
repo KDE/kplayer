@@ -189,7 +189,7 @@ void KPlayerPart::initActions (void)
   connect (action, SIGNAL (triggered()), SLOT (launchKPlayer()));
   action -> setText (i18n("Start &KPlayer"));
   action -> setStatusTip (i18n("Stops playback and starts KPlayer with the current URL"));
-  action -> setWhatsThis (i18n("Start KPlayer command stops playback, opens the full KPlayer, puts the multimedia file or URL on the playlist and starts playing it. It is always recommended that you choose this command, since it will give you better interface and more options when playing the multimedia."));
+  action -> setWhatsThis (i18n("The 'Start KPlayer' command stops playback, opens the full KPlayer, puts the multimedia file or URL on the playlist and starts playing it. It is always recommended that you choose this command, since it will give you a better interface and more options when playing the file."));
   kPlayerEngine() -> setActionCollection (actionCollection());
   kPlayerEngine() -> setupActions();
 }

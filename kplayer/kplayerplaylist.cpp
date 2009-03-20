@@ -50,7 +50,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   KAction* action = KStandardAction::open (this, SLOT (filePlay()), actionCollection());
   action -> setText (i18n("&Play..."));
   action -> setStatusTip (i18n("Plays an existing file"));
-  action -> setWhatsThis (i18n("Play command displays the standard Open File dialog and lets you choose a file or several files to put on the playlist and start playing."));
+  action -> setWhatsThis (i18n("The 'Play' command displays the standard Open File dialog and allows you to choose a file (or several files) to put on the playlist and start playing."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("file_open_url", action);
@@ -59,7 +59,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   action -> setIcon (KIcon ("document-open-remote"));
   action -> setShortcut (Qt::ControlModifier + Qt::Key_U);
   action -> setStatusTip (i18n("Plays a URL"));
-  action -> setWhatsThis (i18n("Play URL command displays the standard URL dialog and lets you type or paste in a URL to put on the playlist and start playing. The URL can be a remote network location, a local file path, or a KDE I/O Slave URL."));
+  action -> setWhatsThis (i18n("The 'Play URL' command displays the standard URL dialog and allows you to type or paste in a URL to put on the playlist and start playing. The URL can be a remote network location, a local file path, or a KDE I/O Slave URL."));
 
   m_playlists = new KPlayerContainerActionList (ki18n("%1"), ki18n("Plays the %1 list"),
     ki18n("Play List %1 starts playing the list."), this, "play_list");
@@ -81,7 +81,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   action -> setIcon (KIcon ("media-skip-forward"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Down);
   action -> setStatusTip (i18n("Plays the next item on the playlist"));
-  action -> setWhatsThis (i18n("Next command starts playing the next item on the current playlist."));
+  action -> setWhatsThis (i18n("The 'Next' command starts playing the next item on the current playlist."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("player_previous", action);
@@ -90,7 +90,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   action -> setIcon (KIcon ("media-skip-backward"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Up);
   action -> setStatusTip (i18n("Plays the previous item on the playlist"));
-  action -> setWhatsThis (i18n("Previous command starts playing the previous item on the current playlist."));
+  action -> setWhatsThis (i18n("The 'Previous' command starts playing the previous item on the current playlist."));
 
   m_playlist = new KPlayerPlaylistCombobox;
   QWidgetAction* widget = new QWidgetAction (actionCollection());
@@ -100,7 +100,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   //widget -> setAutoSized (true);
   //widget -> setShortcutConfigurable (false);
   widget -> setStatusTip (i18n("Shows playlist items and allows you to select an item to play"));
-  widget -> setWhatsThis (i18n("Playlist combo box in the closed state displays the current playlist item. You can drop down the combo box to see the entire list and select a different item to load and play."));
+  widget -> setWhatsThis (i18n("The Playlist combo box, when closed, displays the current playlist item. You can drop down the combo box to see the entire list, and select a different item to load and play."));
   //playlist() -> setStatusTip (widget -> statusTip());
   //playlist() -> setWhatsThis (widget -> whatsThis());
   connect (playlist(), SIGNAL (activated(int)), SLOT (play(int)));
@@ -112,7 +112,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   toggle -> setText (i18n("&Loop"));
   toggle -> setIcon (KIcon ("loop"));
   toggle -> setStatusTip (i18n("Turns the option to loop through the list on/off"));
-  toggle -> setWhatsThis (i18n("Loop command toggles the option to start playing items from the beginning of the playlist after playing the last item on the playlist."));
+  toggle -> setWhatsThis (i18n("The 'Loop' command toggles the option to start playing items from the beginning of the playlist after playing the last item on the playlist."));
   if ( configuration() -> loop() )
     toggle -> setChecked (true);
 
@@ -122,7 +122,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   toggle -> setText (i18n("S&huffle"));
   toggle -> setIcon (KIcon ("shuffle"));
   toggle -> setStatusTip (i18n("Turns the option to play items in random order on or off"));
-  toggle -> setWhatsThis (i18n("Shuffle command toggles the option to play items in a random order."));
+  toggle -> setWhatsThis (i18n("The 'Shuffle' command toggles the option to play items in a random order."));
   if ( configuration() -> shuffle() )
     toggle -> setChecked (true);
 
@@ -131,24 +131,24 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   connect (action, SIGNAL (triggered()), SLOT (addFiles()));
   action -> setText (i18n("&Files..."));
   action -> setStatusTip (i18n("Adds files to the playlist"));
-  action -> setWhatsThis (i18n("Add files command displays the standard Open File dialog and lets you choose a file or several files to add to the playlist."));
+  action -> setWhatsThis (i18n("The 'Add Files' command displays the standard Open File dialog and allows you to choose a file (or several files) to add to the playlist."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("playlist_add_url", action);
   connect (action, SIGNAL (triggered()), SLOT (addUrl()));
   action -> setText (i18n("&URL..."));
   action -> setStatusTip (i18n("Adds a URL to the playlist"));
-  action -> setWhatsThis (i18n("Add URL command displays the standard Open URL dialog and lets you type or paste in a URL to add to the playlist."));
+  action -> setWhatsThis (i18n("The 'Add URL' command displays the standard Open URL dialog and allows you to type or paste in a URL to add to the playlist."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("playlist_add_to_playlists", action);
   connect (action, SIGNAL (triggered()), SLOT (addToPlaylists()));
   action -> setText (i18n("&Playlists..."));
   action -> setStatusTip (i18n("Saves the playlist under a new name"));
-  action -> setWhatsThis (i18n("Add to new playlist command prompts for a new playlist name and saves the playlist under the new name."));
+  action -> setWhatsThis (i18n("The 'Add to New Playlist' command prompts for a new playlist name and saves the playlist under the new name."));
 
   m_playlists_add = new KPlayerContainerActionList (ki18n("%1"), ki18n("Adds playlist items to %1 playlist"),
-    ki18n("Add to playlist command adds the playlist items to the %1 playlist."), this, "playlist_add_to_playlist");
+    ki18n("The 'Add to %1' command adds the playlist items to the %1 playlist."), this, "playlist_add_to_playlist");
   playlistAddActionList() -> setMaximumSize (configuration() -> playlistMenuSize());
 
   action = new KAction (actionCollection());
@@ -156,7 +156,7 @@ KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   connect (action, SIGNAL (triggered()), SLOT (addToCollection()));
   action -> setText (i18n("&Collection..."));
   action -> setStatusTip (i18n("Saves the playlist in the collection"));
-  action -> setWhatsThis (i18n("Add to collection command prompts for a new folder name and saves the playlist under the new name in the multimedia collection."));
+  action -> setWhatsThis (i18n("The 'Add to Collection' command prompts for a new folder name and saves the playlist under the new name in the multimedia collection."));
   connect (process(), SIGNAL (stateChanged(KPlayerProcess::State, KPlayerProcess::State)),
     SLOT (playerStateChanged(KPlayerProcess::State, KPlayerProcess::State)));
   connect (configuration(), SIGNAL (updated()), this, SLOT (refreshSettings()));
@@ -769,7 +769,7 @@ void KPlayerPlaylist::addToPlaylists (void)
     KPlayerNodeNameValidator validator (container);
     QString name = KInputDialog::getText (i18n("Add to playlists"), i18n("Playlist name"),
       QString::null, 0, 0, &validator, QString::null,
-      i18n("Playlist name field allows you to enter a name for a new playlist. OK button will be enabled when you enter a unique and valid name."));
+      i18n("The 'Playlist name' field allows you to enter a name for a new playlist. The OK button will be enabled when a unique and valid name has been entered."));
     if ( ! name.isNull() )
     {
       container -> addBranch (name);
@@ -801,7 +801,7 @@ void KPlayerPlaylist::addToCollection (void)
     KPlayerNodeNameValidator validator (container);
     QString name = KInputDialog::getText (i18n("Add to collection"), i18n("Folder name"),
       QString::null, 0, 0, &validator, QString::null,
-      i18n("Folder name field allows you to enter a name for a new folder. OK button will be enabled when you enter a unique and valid name."));
+      i18n("The 'Folder name' field allows you to enter a name for a new folder. The OK button will be enabled when a unique and valid name has been entered."));
     if ( ! name.isNull() )
     {
       container -> addBranch (name);

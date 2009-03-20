@@ -227,10 +227,10 @@
                   </size>
                 </property>
                 <property name="toolTip" stdset="0">
-                  <string>Width of the subtitle area in percent of the video width</string>
+                  <string>Width of the subtitle area, as a percentage of the video width</string>
                 </property>
                 <property name="whatsThis" stdset="0">
-                  <string>Option to specify the width of the subtitle area in percent of the video width.</string>
+                  <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
                 </property>
               </widget>
             </item>
@@ -246,10 +246,10 @@
                   <cstring>c_width</cstring>
                 </property>
                 <property name="toolTip" stdset="0">
-                  <string>Width of the subtitle area in percent of the video width</string>
+                  <string>Width of the subtitle area, as a percentage of the video width</string>
                 </property>
                 <property name="whatsThis" stdset="0">
-                  <string>Option to specify the width of the subtitle area in percent of the video width.</string>
+                  <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
                 </property>
                 <property name="wordWrap">
                   <bool>false</bool>
@@ -279,10 +279,10 @@
                   </sizepolicy>
                 </property>
                 <property name="toolTip" stdset="0">
-                  <string>Width of the subtitle area in percent of the video width</string>
+                  <string>Width of the subtitle area, as a percentage of the video width</string>
                 </property>
                 <property name="whatsThis" stdset="0">
-                  <string>Option to specify the width of the subtitle area in percent of the video width.</string>
+                  <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
                 </property>
               </widget>
             </item>
@@ -295,10 +295,10 @@
                   </size>
                 </property>
                 <property name="toolTip" stdset="0">
-                  <string>Width of the subtitle area in percent of the video width</string>
+                  <string>Width of the subtitle area, as a percentage of the video width</string>
                 </property>
                 <property name="whatsThis" stdset="0">
-                  <string>Option to specify the width of the subtitle area in percent of the video width.</string>
+                  <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
                 </property>
               </widget>
             </item>
@@ -311,10 +311,10 @@
                   <set>Qt::AlignVCenter|Qt::AlignLeft</set>
                 </property>
                 <property name="toolTip" stdset="0">
-                  <string>Width of the subtitle area in percent of the video width</string>
+                  <string>Width of the subtitle area, as a percentage of the video width</string>
                 </property>
                 <property name="whatsThis" stdset="0">
-                  <string>Option to specify the width of the subtitle area in percent of the video width.</string>
+                  <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
                 </property>
                 <property name="wordWrap">
                   <bool>false</bool>

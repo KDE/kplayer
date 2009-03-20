@@ -114,19 +114,19 @@ KPlayerLogWidget::KPlayerLogWidget (KActionCollection* ac, QWidget* parent)
   connect (action, SIGNAL (triggered()), SLOT (selectAll()));
   action -> setText (i18n("&Select All"));
   action -> setStatusTip (i18n("Selects all messages in the message log"));
-  action -> setWhatsThis (i18n("Select All command selects all messages in the message log."));
+  action -> setWhatsThis (i18n("The 'Select All' command selects all messages in the message log."));
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("log_copy", action);
   connect (action, SIGNAL (triggered()), SLOT (copy()));
   action -> setText (i18n("&Copy"));
   action -> setStatusTip (i18n("Copies the text selected in the message log to the clipboard"));
-  action -> setWhatsThis (i18n("Copy command copies the text selected in the message log to the clipboard."));
+  action -> setWhatsThis (i18n("The 'Copy' command copies the text selected in the message log to the clipboard."));
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("log_clear", action);
   connect (action, SIGNAL (triggered()), SLOT (clear()));
   action -> setText (i18n("C&lear"));
   action -> setStatusTip (i18n("Clears all messages from the message log"));
-  action -> setWhatsThis (i18n("Clear command removes all messages from the message log."));
+  action -> setWhatsThis (i18n("The 'Clear' command removes all messages from the message log."));
   connect (this, SIGNAL (selectionChanged()), SLOT (updateActions()));
   m_height = kPlayerConfig() -> group ("General Options").readEntry ("Message Log Height", 250);
 #ifdef DEBUG_KPLAYER_LOG

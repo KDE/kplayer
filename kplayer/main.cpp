@@ -91,8 +91,8 @@ int main (int argc, char *argv[])
   KCmdLineOptions options;
   options.add ("play", ki18n("Play the files immediately (default)"));
   options.add ("queue", ki18n("Queue the files for playing"));
-  options.add ("play-next", ki18n("Play the files after the currently played file finishes"));
-  options.add ("queue-next", ki18n("Queue the files for playing after the currently played file"));
+  options.add ("play-next", ki18n("Play the files after the currently playing file has finished"));
+  options.add ("queue-next", ki18n("Queue the files for playing after the currently playing file"));
   options.add ("add-to-new-playlist", ki18n("Add the files to a new playlist"));
   options.add ("add-to-playlists", ki18n("Add the files to the list of playlists"));
   options.add ("add-to-collection", ki18n("Add the files to the multimedia collection"));

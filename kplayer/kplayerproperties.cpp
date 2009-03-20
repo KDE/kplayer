@@ -993,8 +993,8 @@ void KPlayerIntegerStringMapProperty::read (KConfigGroup& config, const QString&
 
 void KPlayerIntegerStringMapProperty::save (KConfigGroup& config, const QString& name) const
 {
-  if ( value().count() > 1 || ! value().isEmpty()
-    && ! ((KPlayerIntegerStringMapPropertyInfo*) KPlayerProperties::info (name)) -> multipleEntriesRequired() )
+  if ( value().count() > 1 || (! value().isEmpty()
+    && ! ((KPlayerIntegerStringMapPropertyInfo*) KPlayerProperties::info (name)) -> multipleEntriesRequired() ) )
   {
     QStringList values;
     QMap<int, QString>::ConstIterator iterator (value().constBegin());
@@ -1284,7 +1284,7 @@ QStringList KPlayerProperties::defaultOrder (void)
       while ( it != order.end() )
       {
         KPlayerPropertyInfo* i = KPlayerMedia::info (*it);
-        if ( i -> group() > info -> group() || i -> group() == info -> group() && *it > name )
+        if ( i -> group() > info -> group() || (i -> group() == info -> group() && *it > name) )
           break;
         ++ it;
       }
@@ -1417,7 +1417,7 @@ int KPlayerProperties::getRelativeOption (const QString& key) const
 
 void KPlayerProperties::setRelativeOption (const QString& key, int value, int option)
 {
-  if ( option == 0 || value == 0 && option > 1 && option < 4 )
+  if ( option == 0 || (value == 0 && option > 1 && option < 4) )
     reset (key);
   else
   {
@@ -1498,7 +1498,7 @@ QString KPlayerProperties::asIntegerString (const QString& key) const
 
 void KPlayerProperties::fromString (const QString& key, const QString& value)
 {
-  if ( value.isEmpty() && has (key) || ! value.isEmpty() && value != asString (key) )
+  if ( (value.isEmpty() && has (key)) || (! value.isEmpty() && value != asString (key)) )
   {
     if ( value.isEmpty() && m_properties [key] -> defaults (true) )
       reset (key);
@@ -1518,7 +1518,7 @@ void KPlayerProperties::set (const QString& key, const QString& value)
 void KPlayerProperties::setString (const QString& key, const QString& value)
 {
   const QString& d (stringInfo (key) -> defaultValue());
-  if ( d.isNull() && value.isEmpty() || value == d )
+  if ( (d.isNull() && value.isEmpty()) || value == d )
     reset (key);
   else
     set (key, value);
@@ -1575,7 +1575,7 @@ int KPlayerProperties::getAppendableOption (const QString& key) const
 
 void KPlayerProperties::setAppendable (const QString& key, const QString& value, int option)
 {
-  if ( option == 0 || option == 2 && value.isEmpty() )
+  if ( option == 0 || (option == 2 && value.isEmpty()) )
     reset (key);
   else
   {
@@ -3304,7 +3304,7 @@ KPlayerTrackProperties::~KPlayerTrackProperties()
 void KPlayerTrackProperties::setDisplaySize (const QSize& size, int option)
 {
   if ( ! size.isEmpty() && hasOriginalSize() && (option == 1 && currentSize() == size
-      || option == 2 && size.width() * currentSize().height() == size.height() * currentSize().width()) )
+      || ( option == 2 && size.width() * currentSize().height() == size.height() * currentSize().width()) ) )
     resetDisplaySize();
   else
     KPlayerMediaProperties::setDisplaySize (size, option);

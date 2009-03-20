@@ -438,7 +438,7 @@ void KPlayerSubtitleTrackActionList::update (bool show, const QMap<int, QString>
     connect (action, SIGNAL (triggered()), SLOT (actionActivated()));
     action -> setText (i18n("&None"));
     action -> setStatusTip (i18n("Turns off subtitle display"));
-    action -> setWhatsThis (i18n("Subtitles None command turns off subtitle display."));
+    action -> setWhatsThis (i18n("The 'Subtitles -- None' command turns off subtitle display."));
     if ( ! show )
       action -> setChecked (true);
     m_actions.append (action);

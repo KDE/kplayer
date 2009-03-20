@@ -163,7 +163,7 @@ public:
       || hasExternalSubtitles() || hasVobsubSubtitles(); }
   bool showSubtitles (void) const
     { return properties() -> showInternalSubtitles()
-      || (hasExternalSubtitles() || hasVobsubSubtitles()) && properties() -> showSubtitles(); }
+      || ((hasExternalSubtitles() || hasVobsubSubtitles()) && properties() -> showSubtitles()); }
 
   QString currentSubtitles (void) const;
   const QStringList& subtitles (void) const
