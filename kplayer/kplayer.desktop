@@ -1,9 +1,8 @@
 [Desktop Entry]
-Encoding=UTF-8
 Type=Application
 Exec=kplayer -- %U
-Icon=kplayer.png
-DocPath=kplayer/index.html
+Icon=kplayer
+X-DocPath=kplayer/index.html
 Comment=Media Player
 Comment[be]=Медыяпрайгравальнік
 Comment[bg]=Медия плеър
