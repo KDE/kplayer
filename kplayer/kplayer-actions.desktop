@@ -40,5 +40,6 @@ Name[tr]=Yeni çalma listesine ekle
 Name[uk]=Додати до нового списку відтворення
 Name[x-test]=xxAdd to new playlistxx
 Name[zh_CN]=添加到新的播放列表
+Name[zh_TW]=新增到新的播放清單
 Icon=kplayer
 Exec=kplayer --add-to-new-playlist -- %U
