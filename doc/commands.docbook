@@ -1860,7 +1860,7 @@ below.</para></listitem>
 <para>This toolbar contains <guilabel>Play</guilabel>,
 <guilabel>Pause</guilabel>, <guilabel>Stop</guilabel>, <guilabel>Maintain
 Aspect</guilabel>, <guilabel>Volume</guilabel> and
-<guilabel>Properties</guilabel> buttons which as the same as the ones on the
+<guilabel>Properties</guilabel> buttons which are the same as the ones on the
 <link linkend="toolbar-main">main toolbar</link> in the full &kplayer;.</para>
 
 </sect2>
