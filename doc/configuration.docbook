@@ -359,7 +359,7 @@ cross in it clears the shortcut.</para>
 <para>You can add your own pop up menu to &kplayer;, so that pressing one key
 combination will make the menu appear, then pressing a second key, or using the
 <keysym>Up arrow</keysym> and <keysym>Down arrow</keysym> keys and pressing
-<keycap>Enter</keycap>, will select an item from it.</para>
+&Enter;, will select an item from it.</para>
 
 <para>To do this add a <guilabel>Custom</guilabel> shortcut for each of the
 actions you want to appear in the menu and in the <guilabel>Define

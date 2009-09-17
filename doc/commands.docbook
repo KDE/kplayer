@@ -759,7 +759,7 @@ the <link linkend="howto-library">Multimedia library micro-HOWTO</link>.</para>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>Enter</keycap></keycombo>
+<keycombo action="simul">&Ctrl;&Enter;</keycombo>
 </shortcut>
 <guimenuitem>Play</guimenuitem>
 </menuchoice></term>
