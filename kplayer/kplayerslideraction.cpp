@@ -28,7 +28,6 @@
 #endif
 
 #include "kplayerslideraction.h"
-#include "kplayerslideraction.moc"
 #include "kplayerengine.h"
 #include "kplayersettings.h"
 

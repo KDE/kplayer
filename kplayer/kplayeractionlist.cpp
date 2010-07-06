@@ -23,7 +23,6 @@
 #endif
 
 #include "kplayeractionlist.h"
-#include "kplayeractionlist.moc"
 #include "kplayerproperties.h"
 
 KPlayerActionList::KPlayerActionList (const KLocalizedString& text, const KLocalizedString& status,

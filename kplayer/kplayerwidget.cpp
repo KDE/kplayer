@@ -25,7 +25,6 @@
 #endif
 
 #include "kplayerwidget.h"
-#include "kplayerwidget.moc"
 #include "kplayerengine.h"
 #include "kplayerprocess.h"
 #include "kplayersettings.h"

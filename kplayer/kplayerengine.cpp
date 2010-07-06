@@ -30,7 +30,6 @@
 #endif
 
 #include "kplayerengine.h"
-#include "kplayerengine.moc"
 #include "kplayeractionlist.h"
 #include "kplayerpropertiesdialog.h"
 #include "kplayersettings.h"

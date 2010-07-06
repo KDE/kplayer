@@ -38,7 +38,6 @@
 #endif
 
 #include "kplayerprocess.h"
-#include "kplayerprocess.moc"
 #include "kplayerengine.h"
 #include "kplayersettings.h"
 #include "kplayerwidget.h"
