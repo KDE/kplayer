@@ -21,6 +21,7 @@
 #include <qlist.h>
 
 class QAction;
+class QActionGroup;
 
 /**Action list.
   *@author kiriuja
