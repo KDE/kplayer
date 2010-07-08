@@ -91,9 +91,6 @@
           <property name="whatsThis">
            <string>Option that shows and allows you to change minimum length of slider control. It affects sliders embedded in toolbars.</string>
           </property>
-          <property name="text" stdset="0">
-           <string>1</string>
-          </property>
           <property name="minimum">
            <number>1</number>
           </property>
@@ -155,9 +152,6 @@
           </property>
           <property name="whatsThis">
            <string>Option that shows and allows you to change preferred length of slider control. It affects both popup sliders and sliders embedded in toolbars.</string>
-          </property>
-          <property name="text" stdset="0">
-           <string>1</string>
           </property>
           <property name="minimum">
            <number>1</number>
@@ -234,8 +228,8 @@
           <property name="whatsThis">
            <string>Option to specify the distance between slider tick marks, as a percentage of the slider length.</string>
           </property>
-          <property name="text" stdset="0">
-           <string>0</string>
+          <property name="minimum">
+           <number>1</number>
           </property>
           <property name="maximum">
            <number>100</number>

@@ -834,9 +834,9 @@ KPlayerSettingsSliders::KPlayerSettingsSliders (QWidget* parent)
   : QFrame (parent)
 {
   setupUi (this);
-  c_minimum_slider_length->setSuffix(ki18np(" pixel", " pixels"));
-  c_preferred_slider_length->setSuffix(ki18np(" pixel", " pixels"));
-  c_slider_marks->setSuffix(ki18np(" percent", " percent"));
+  c_minimum_slider_length -> setSuffix(ki18np(" pixel", " pixels"));
+  c_preferred_slider_length -> setSuffix(ki18np(" pixel", " pixels"));
+  c_slider_marks -> setSuffix(ki18np(" percent", " percent"));
   load();
 }
 
@@ -851,18 +851,18 @@ void KPlayerSettingsSliders::load (void)
 
 void KPlayerSettingsSliders::save (void)
 {
-  int value = labs (c_preferred_slider_length -> text().toInt());
+  int value = labs (c_preferred_slider_length -> value());
   if ( value )
     configuration() -> setPreferredSliderLength (value);
   else
     configuration() -> resetPreferredSliderLength();
-  value = labs (c_minimum_slider_length -> text().toInt());
+  value = labs (c_minimum_slider_length -> value());
   if ( value )
     configuration() -> setMinimumSliderLength (value);
   else
     configuration() -> resetMinimumSliderLength();
   configuration() -> setShowSliderMarks (c_show_slider_marks -> isChecked());
-  value = labs (c_slider_marks -> text().toInt());
+  value = labs (c_slider_marks -> value());
   if ( value )
     configuration() -> setSliderMarks (value);
   else
@@ -877,7 +877,7 @@ void KPlayerSettingsSliders::showMarksChanged (bool showMarksChecked)
 
 void KPlayerSettingsSliders::minimumSliderLengthChanged (int minimumSliderLength)
 {
-  c_preferred_slider_length->setMinimum(minimumSliderLength);
+  c_preferred_slider_length -> setMinimum(minimumSliderLength);
 }
 
 KPlayerSettingsSubtitles::KPlayerSettingsSubtitles (QWidget* parent)
@@ -1125,14 +1125,20 @@ KPlayerSettingsProgress::KPlayerSettingsProgress (QWidget* parent)
   : QFrame (parent)
 {
   setupUi (this);
+  c_progress_seek_units -> insertItem(KPlayerSettingsProgress::percent, i18np(" percent", " percent", 0));
+  c_progress_seek_units -> insertItem(KPlayerSettingsProgress::seconds, i18np(" second", " seconds", 0));
+  c_progress_fast_units -> insertItem(KPlayerSettingsProgress::percent, i18np(" percent", " percent", 0));
+  c_progress_fast_units -> insertItem(KPlayerSettingsProgress::seconds, i18np(" second", " seconds", 0));
   load();
 }
 
 void KPlayerSettingsProgress::load (void)
 {
-  c_progress_seek -> setText (QString::number (configuration() -> progressNormalSeek()));
+  c_progress_seek -> setValue (configuration() -> progressNormalSeek());
+  normalSeekAmountChanged (configuration() -> progressNormalSeek());
   c_progress_seek_units -> setCurrentIndex (configuration() -> progressNormalSeekUnits());
-  c_progress_fast -> setText (QString::number (configuration() -> progressFastSeek()));
+  c_progress_fast -> setValue (configuration() -> progressFastSeek());
+  fastSeekAmountChanged (configuration() -> progressFastSeek());
   c_progress_fast_units -> setCurrentIndex (configuration() -> progressFastSeekUnits());
 }
 
@@ -1140,8 +1146,36 @@ void KPlayerSettingsProgress::save (void)
 {
   configuration() -> setProgressNormalSeekUnits (c_progress_seek_units -> currentIndex());
   configuration() -> setProgressFastSeekUnits (c_progress_fast_units -> currentIndex());
-  configuration() -> setProgressNormalSeek (labs (c_progress_seek -> text().toInt()));
-  configuration() -> setProgressFastSeek (labs (c_progress_fast -> text().toInt()));
+  configuration() -> setProgressNormalSeek (labs (c_progress_seek -> value()));
+  configuration() -> setProgressFastSeek (labs (c_progress_fast -> value()));
+}
+
+void KPlayerSettingsProgress::normalSeekAmountChanged (int value)
+{
+  c_progress_seek_units -> setItemText(KPlayerSettingsProgress::percent, i18np(" percent", " percent", value));
+  c_progress_seek_units -> setItemText(KPlayerSettingsProgress::seconds, i18np(" second", " seconds", value));
+}
+
+void KPlayerSettingsProgress::fastSeekAmountChanged (int value)
+{
+  c_progress_fast_units -> setItemText(KPlayerSettingsProgress::percent, i18np(" percent", " percent", value));
+  c_progress_fast_units -> setItemText(KPlayerSettingsProgress::seconds, i18np(" second", " seconds", value));
+}
+
+void KPlayerSettingsProgress::normalSeekUnitsChanged ()
+{
+  if ( c_progress_seek_units -> currentIndex() ==  KPlayerSettingsProgress::percent)
+    c_progress_seek -> setMaximum (100);
+  if ( c_progress_seek_units -> currentIndex() ==  KPlayerSettingsProgress::seconds)
+    c_progress_seek -> setMaximum (9999);
+}
+
+void KPlayerSettingsProgress::fastSeekUnitsChanged ()
+{
+  if ( c_progress_fast_units -> currentIndex() ==  KPlayerSettingsProgress::percent)
+    c_progress_fast -> setMaximum (100);
+  if ( c_progress_fast_units -> currentIndex() ==  KPlayerSettingsProgress::seconds)
+    c_progress_fast -> setMaximum (9999);
 }
 
 KPlayerSettingsVolume::KPlayerSettingsVolume (QWidget* parent)

@@ -222,6 +222,15 @@ public:
 
   void load (void);
   void save (void);
+
+protected:
+  enum IntervalUnits {percent=0, seconds};
+  
+protected slots:
+  void normalSeekAmountChanged(int);
+  void normalSeekUnitsChanged();
+  void fastSeekAmountChanged(int);
+  void fastSeekUnitsChanged();
 };
 
 class KPlayerSettingsVolume : public QFrame, protected Ui_KPlayerSettingsVolumePage
