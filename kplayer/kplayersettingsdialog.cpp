@@ -298,7 +298,6 @@ void KPlayerSettingsDialog::apply (void)
   m_hue -> save();
   m_saturation -> save();
   configuration() -> commit();
-  setButtonGuiItem (KDialog::Cancel, KStandardGuiItem::close());
 }
 
 KPlayerSettingsAdvanced::KPlayerSettingsAdvanced (QWidget* parent)
