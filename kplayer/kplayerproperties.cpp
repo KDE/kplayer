@@ -612,7 +612,7 @@ QString KPlayerCacheProperty::asString (void) const
 int KPlayerCacheProperty::compare (KPlayerProperty* property) const
 {
   int property_value = ((KPlayerCacheProperty*) property) -> value();
-  return value() == property_value || value() < 4 && property_value < 4 ? 0 : value() > property_value ? 1 : -1;
+  return value() == property_value || ( value() < 4 && property_value < 4 ? 0 : value() > property_value ) ? 1 : -1;
 }
 
 void KPlayerCacheProperty::read (KConfigGroup& config, const QString& name)
@@ -3302,7 +3302,7 @@ KPlayerTrackProperties::~KPlayerTrackProperties()
 
 void KPlayerTrackProperties::setDisplaySize (const QSize& size, int option)
 {
-  if ( ! size.isEmpty() && hasOriginalSize() && (option == 1 && currentSize() == size
+  if ( ! size.isEmpty() && hasOriginalSize() && ((option == 1 && currentSize() == size)
       || ( option == 2 && size.width() * currentSize().height() == size.height() * currentSize().width()) ) )
     resetDisplaySize();
   else

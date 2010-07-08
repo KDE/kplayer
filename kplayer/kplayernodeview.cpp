@@ -1499,7 +1499,7 @@ bool KPlayerNodeView::event (QEvent* e)
 #ifdef DEBUG_KPLAYER_NODEVIEW
     kdDebugTime() << "KPlayerNodeView::event ShortcutOverride " << key << " " << state << "\n";
 #endif
-    if ( (state & Qt::ShiftModifier) == Qt::ShiftModifier && (key == Qt::Key_Left || key == Qt::Key_Right)
+    if ( ( (state & Qt::ShiftModifier) == Qt::ShiftModifier && (key == Qt::Key_Left || key == Qt::Key_Right) )
       || ( (state & Qt::ControlModifier) == Qt::ControlModifier
       && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_A) ) )
     {

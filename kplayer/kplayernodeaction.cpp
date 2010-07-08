@@ -455,7 +455,7 @@ void KPlayerDiskActionMenu::playDisk (void)
 #ifdef DEBUG_KPLAYER_NODEACTION
   kdDebugTime() << "KPlayerDiskActionMenu::playDisk\n";
 #endif
-  if ( device() -> dataDisk() || device() -> populated() && device() -> nodes().count() )
+  if ( device() -> dataDisk() || ( device() -> populated() && device() -> nodes().count() ) )
     emit activated (device());
   else
   {
@@ -472,7 +472,7 @@ void KPlayerDiskActionMenu::updateActions (void)
   if ( m_play_disk )
   {
     m_play_disk = false;
-    if ( device() -> dataDisk() || device() -> populated() && device() -> nodes().count() )
+    if ( device() -> dataDisk() || ( device() -> populated() && device() -> nodes().count() ) )
       playDisk();
   }
   removeAction (m_load_action);

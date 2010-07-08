@@ -679,6 +679,7 @@ void KPlayerSettingsAudio::driverChanged (int index)
     c_mixer -> setEditText (original && mixer ? configuration() -> mixerDevice() : "");
     c_mixer -> setCurrentIndex (c_mixer -> findData (c_mixer -> currentText()));
     if ( channel )
+    {
       if ( driver == "oss" )
       {
         c_channel -> clear();
@@ -688,6 +689,7 @@ void KPlayerSettingsAudio::driverChanged (int index)
       }
       else if ( ! m_amixer_running )
         runAmixer();
+    }
     c_channel -> setEditText (original && channel ? configuration() -> mixerChannel() : "");
     m_devices_listed = true;
   }
@@ -708,6 +710,7 @@ void KPlayerSettingsAudio::deviceChanged (const QString& device)
   kdDebugTime() << " Device " << device << "\n";
 #endif
   if ( c_mixer -> isEnabled() && listEntry (c_driver) == "alsa" )
+  {
     if ( c_device -> currentIndex() < 0 )
     {
       if ( c_mixer -> currentText() == m_device )
@@ -715,6 +718,7 @@ void KPlayerSettingsAudio::deviceChanged (const QString& device)
     }
     else if ( c_mixer -> currentIndex() >= 0 || c_mixer -> currentText().isEmpty() )
       c_mixer -> setCurrentIndex (c_mixer -> findData (comboEntry (c_device).section (',', 0, 0)));
+  }
   m_device = device;
 }
 
@@ -737,7 +741,7 @@ void KPlayerSettingsAudio::softvolChanged (bool checked)
   c_maximum -> setEnabled (checked);
   QString driver (listEntry (c_driver));
   bool empty = checked || driver != configuration() -> audioDriver()
-    || driver != "alsa" && driver != "oss" && driver != "sun";
+    || (driver != "alsa" && driver != "oss" && driver != "sun");
   c_mixer -> setEditText (empty ? "" : configuration() -> hasMixerDevice()
     || m_softvol == checked ? configuration() -> mixerDevice() : configuration() -> audioDevice());
   c_channel -> setEditText (empty || driver == "sun" ? "" : configuration() -> mixerChannel());

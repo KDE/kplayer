@@ -53,7 +53,7 @@
         </widget>
       </item>
       <item row="1" column="0">
-        <widget class="QFrame" name="frame1">
+        <widget class="QFrame" name="frame2">
           <property name="sizePolicy">
             <sizepolicy>
               <hsizetype>0</hsizetype>

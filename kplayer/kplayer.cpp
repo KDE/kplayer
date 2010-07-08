@@ -168,12 +168,12 @@ bool KPlayerApplication::notify (QObject* object, QEvent* event)
 #endif
         if ( ! overridden &&
           (kevent -> modifiers() & (Qt::ShiftModifier | Qt::ControlModifier)) == (Qt::ShiftModifier | Qt::ControlModifier)
-          && (kevent -> key() >= Qt::Key_Exclam && kevent -> key() <= Qt::Key_Ampersand
-          || kevent -> key() >= Qt::Key_ParenLeft && kevent -> key() <= Qt::Key_Plus
-          || kevent -> key() == Qt::Key_Colon || kevent -> key() == Qt::Key_Less
-          || kevent -> key() >= Qt::Key_Greater && kevent -> key() <= Qt::Key_At
-          || kevent -> key() == Qt::Key_AsciiCircum || kevent -> key() == Qt::Key_Underscore
-          || kevent -> key() >= Qt::Key_BraceLeft && kevent -> key() <= Qt::Key_AsciiTilde) )
+          && ( ( kevent -> key() >= Qt::Key_Exclam && kevent -> key() <= Qt::Key_Ampersand )
+          || ( kevent -> key() >= Qt::Key_ParenLeft && kevent -> key() <= Qt::Key_Plus )
+          ||  kevent -> key() == Qt::Key_Colon || kevent -> key() == Qt::Key_Less
+          || ( kevent -> key() >= Qt::Key_Greater && kevent -> key() <= Qt::Key_At )
+          ||  kevent -> key() == Qt::Key_AsciiCircum || kevent -> key() == Qt::Key_Underscore
+          || ( kevent -> key() >= Qt::Key_BraceLeft && kevent -> key() <= Qt::Key_AsciiTilde) ) )
         {
           int key;
           switch ( kevent -> key() )
@@ -517,8 +517,8 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
     SLOT (actionListUpdated (KPlayerActionList*)));
   KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
   if ( args -> count() > 0 && (args -> isSet ("play") || args -> isSet ("play-next")
-      || ! args -> isSet ("queue") && ! args -> isSet ("queue-next") && ! args -> isSet ("add-to-new-playlist")
-      && ! args -> isSet ("add-to-playlists") && ! args -> isSet ("add-to-collection")) )
+      || (! args -> isSet ("queue") && ! args -> isSet ("queue-next") && ! args -> isSet ("add-to-new-playlist")
+      && ! args -> isSet ("add-to-playlists") && ! args -> isSet ("add-to-collection"))) )
     engine() -> clearStoreSections ("kplayer:/nowplaying");
   KPlayerNode::initialize();
   m_log = new KPlayerLogWindow (actionCollection(), this);
@@ -1778,7 +1778,7 @@ void KPlayerWindow::syncronizeState (bool* pending)
   bool maximize = settings() -> maximized();
   bool currently_full_screen = fullScreen();
   bool currently_maximized = maximized() && ! currently_full_screen;
-  *pending = currently_full_screen != full_screen || ! full_screen && currently_maximized != maximize;
+  *pending = currently_full_screen != full_screen || ( ! full_screen && currently_maximized != maximize );
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << " Full screen " << currently_full_screen << " -> " << full_screen << "\n";
   kdDebugTime() << " Maximized " << currently_maximized << " -> " << maximize << "\n";
@@ -1825,20 +1825,24 @@ void KPlayerWindow::syncronizeControls (void)
   kdDebugTime() << " Menu visible " << ! menuBar() -> isHidden() << " show " << showMenubar() << "\n";
 #endif
   if ( showMenubar() == menuBar() -> isHidden() )
+  {
     if ( showMenubar() )
       menuBar() -> show();
     else
       menuBar() -> hide();
+  }
   toggleAction (KStandardAction::stdName (KStandardAction::ShowMenubar)) -> setChecked (showMenubar());
   toggleAction (KStandardAction::stdName (KStandardAction::ShowMenubar)) -> setStatusTip (i18n("Shows/hides the menu bar"));
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << " Status visible " << ! statusBar() -> isHidden() << " show " << showStatusbar() << "\n";
 #endif
   if ( showStatusbar() == statusBar() -> isHidden() )
+  {
     if ( showStatusbar() )
       statusBar() -> show();
     else
       statusBar() -> hide();
+  }
   toggleAction (KStandardAction::stdName (KStandardAction::ShowStatusbar)) -> setChecked (showStatusbar());
   toggleAction (KStandardAction::stdName (KStandardAction::ShowStatusbar)) -> setStatusTip (i18n("Shows/hides the status bar"));
   for ( int j = 0; j < KPLAYER_TOOLBARS; j ++ )
@@ -1848,29 +1852,35 @@ void KPlayerWindow::syncronizeControls (void)
     kdDebugTime() << " Toolbar " << m_toolbar[j].name << " visible " << ! toolbar -> isHidden() << " show " << showToolbar (j) << "\n";
 #endif
     if ( showToolbar (j) == toolbar -> isHidden() )
+    {
       if ( showToolbar (j) )
         toolbar -> show();
       else
         toolbar -> hide();
+    }
     toggleAction (m_toolbar[j].action) -> setChecked (showToolbar (j));
   }
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << " Library visible " << ! library() -> isHidden() << " shown " << showLibrary() << " show " << m_show_library << "\n";
 #endif
   if ( showLibrary() == library() -> isHidden() )
+  {
     if ( showLibrary() )
       library() -> show();
     else
       library() -> hide();
+  }
   toggleAction ("options_show_library") -> setChecked (library() -> visible());
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << " Log visible " << ! log() -> isHidden() << " shown " << showMessageLog() << " show " << m_show_log << "\n";
 #endif
   if ( showMessageLog() == log() -> isHidden() )
+  {
     if ( showMessageLog() )
       log() -> show();
     else
       log() -> hide();
+  }
   toggleAction ("options_show_log") -> setChecked (log() -> visible());
   int index;
   QTabBar* tabbar = findTabBar (log(), &index);
@@ -1944,7 +1954,7 @@ void KPlayerWindow::updateLayout (const QSize& size)
         }
         QSize hint = toolbar -> sizeHint();
         int length = toolbar -> orientation() == Qt::Vertical ? hint.height() : hint.width();
-        if ( area != current_area || has_break && ! auto_break )
+        if ( area != current_area || ( has_break && ! auto_break ) )
         {
           position = length;
           if ( current_area < Qt::TopToolBarArea && area >= Qt::TopToolBarArea )

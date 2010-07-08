@@ -202,8 +202,8 @@ void KPlayerPlaylist::enableNextPrevious (void) const
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "KPlayerPlaylist::enableNextPrevious\n";
 #endif
-  action ("player_next") -> setEnabled (nextNode() || count() > 1 || count() > 0 && ! currentNode());
-  action ("player_previous") -> setEnabled (count() > 1 || count() > 0 && ! currentNode());
+  action ("player_next") -> setEnabled (nextNode() || count() > 1 || (count() > 0 && ! currentNode()));
+  action ("player_previous") -> setEnabled (count() > 1 || (count() > 0 && ! currentNode()));
 }
 
 void KPlayerPlaylist::updateActions (void) const
@@ -429,6 +429,7 @@ void KPlayerPlaylist::updated (KPlayerContainerNode*, KPlayerNode* node)
 #endif
   int index = nodes().indexOf (node);
   if ( index >= 0 )
+  {
     if ( node -> isContainer() && node -> ready() )
     {
       playlist() -> removeItem (index);
@@ -444,6 +445,7 @@ void KPlayerPlaylist::updated (KPlayerContainerNode*, KPlayerNode* node)
 #endif
       playlist() -> setItemText (index, node -> name());
     }
+  }
   setCurrentNode (currentNode());
 }
 
@@ -612,6 +614,7 @@ void KPlayerPlaylist::play (const KPlayerNodeList& list)
 void KPlayerPlaylist::playNext (const KPlayerNodeList& list)
 {
   if ( ! list.isEmpty() )
+  {
     if ( list.first() -> topLevelNode() == nowplaying() )
       setNextNodes (list);
     else
@@ -620,6 +623,7 @@ void KPlayerPlaylist::playNext (const KPlayerNodeList& list)
       recent() -> addRecent (list);
       setNextNodes (nodes());
     }
+  }
 }
 
 void KPlayerPlaylist::queue (const KPlayerNodeList& list)
@@ -635,6 +639,7 @@ void KPlayerPlaylist::queue (const KPlayerNodeList& list)
 void KPlayerPlaylist::queueNext (const KPlayerNodeList& list)
 {
   if ( ! list.isEmpty() )
+  {
     if ( list.first() -> topLevelNode() == nowplaying() )
       setNextNodes (list);
     else
@@ -652,6 +657,7 @@ void KPlayerPlaylist::queueNext (const KPlayerNodeList& list)
       setCurrentNode (currentNode());
       enableNextPrevious();
     }
+  }
 }
 
 void KPlayerPlaylist::next (void)

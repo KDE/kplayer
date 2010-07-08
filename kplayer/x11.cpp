@@ -140,8 +140,8 @@ void KPlayerProcessX11Event (XEvent* event)
       << ev -> send_event << " " << ev -> serial << " mode " << KPlayerX11EventModeNames [ev -> mode]
       << " detail " << KPlayerX11EventDetailNames [ev -> detail] << "\n";
 #endif
-    if ( event -> type == FocusIn && ev -> mode == NotifyUngrab
-        || event -> type == FocusOut && ev -> mode == NotifyGrab && ev -> detail == NotifyAncestor )
+    if ( ( event -> type == FocusIn && ev -> mode == NotifyUngrab )
+        || ( event -> type == FocusOut && ev -> mode == NotifyGrab && ev -> detail == NotifyAncestor ) )
     {
 #ifdef DEBUG_KPLAYER_GRAB
       kdDebugTime() << "KPlayerSetResizing (" << (ev -> mode == NotifyGrab) << ")\n";
@@ -168,7 +168,7 @@ void KPlayerProcessX11Event (XEvent* event)
       modifiers |= Qt::AltModifier;
     KPlayerSetKeyboardState (modifiers);
     if ( shift && (control || alt) && ev -> keycode != 100 && ev -> keycode != 102
-        && (! alt || ev -> keycode != 98 && ev -> keycode != 104) )
+        && (! alt || (ev -> keycode != 98 && ev -> keycode != 104)) )
       ev -> state &= ~ ShiftMask;
   }
 #ifdef DEBUG_KPLAYER_CLIENT

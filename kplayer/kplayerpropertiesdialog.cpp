@@ -38,7 +38,7 @@ QString listEntry (QComboBox* combo, bool hasDefault = false)
   static QRegExp re_key_value ("^([^:]+): *(.*)$");
   if ( hasDefault && combo -> currentIndex() == 0 )
     return QString::null;
-  if ( combo -> currentIndex() == 0 || hasDefault && combo -> currentIndex() == 1 )
+  if ( combo -> currentIndex() == 0 || ( hasDefault && combo -> currentIndex() == 1 ) )
     return "";
   if ( re_key_value.indexIn (combo -> currentText()) >= 0 )
     return re_key_value.cap(1);

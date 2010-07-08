@@ -83,7 +83,7 @@ void KPlayerSource::start (bool groups)
   kdDebugTime() << " Groups " << groups << "\n";
 #endif
   m_groups = groups;
-  m_iterating = parent() -> populated() || groups && parent() -> groupsPopulated();
+  m_iterating = parent() -> populated() || ( groups && parent() -> groupsPopulated() );
   if ( m_iterating )
     m_iterator = parent() -> nodes().begin();
   else
@@ -705,7 +705,7 @@ bool KPlayerDirectorySource::enumNext (bool& group, QString& id)
     ++ m_iterator;
     group = info -> isDir();
   }
-  while ( m_groups && ! group || ! checkFileInfo (*info) );
+  while ( ( m_groups && ! group ) || ! checkFileInfo (*info) );
   id = info -> fileName();
 #ifdef DEBUG_KPLAYER_SOURCE
   kdDebugTime() << " Group  " << group << "\n";

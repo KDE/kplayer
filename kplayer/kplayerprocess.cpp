@@ -426,7 +426,7 @@ void KPlayerProcess::get_info (void)
   m_helper = new KPlayerLineOutputProcess;
   *m_helper << properties() -> executablePath() << "-slave" << "-ao" << "null" << "-vo" << "x11"
     << "-wid" << QString::number (kPlayerWorkspace() -> hiddenWidget() -> winId());
-  if ( properties() -> cache() == 1 || ! properties() -> url().isLocalFile() && ! properties() -> useKioslave() )
+  if ( properties() -> cache() == 1 || ( ! properties() -> url().isLocalFile() && ! properties() -> useKioslave() ) )
     *m_helper << "-nocache";
   else if ( properties() -> cache() == 2 )
     *m_helper << "-cache" << QString::number (properties() -> cacheSize());
@@ -561,7 +561,7 @@ void KPlayerProcess::start (void)
   m_subtitle_index = properties() -> subtitleIndex();
   if ( settings() -> hasSubtitles() )
   {
-    if ( settings() -> showVobsubSubtitles() || settings() -> hasVobsubSubtitles() && ! settings() -> showSubtitles() )
+    if ( settings() -> showVobsubSubtitles() || ( settings() -> hasVobsubSubtitles() && ! settings() -> showSubtitles() ) )
     {
       m_vobsub = settings() -> vobsubSubtitles();
       *m_player << "-vobsub" << m_vobsub;
@@ -883,7 +883,7 @@ void KPlayerProcess::absoluteSeek (int seconds)
     return;
   if ( seconds < 0 )
     seconds = 0;
-  if ( m_sent || m_position - m_seek_origin < 0.65 && m_seek_origin - m_position < 0.25 )
+  if ( m_sent || ( m_position - m_seek_origin < 0.65 && m_seek_origin - m_position < 0.25 ) )
   {
     m_send_seek = true;
     m_absolute_seek = seconds;
@@ -951,7 +951,7 @@ void KPlayerProcess::volume (int volume)
 
 void KPlayerProcess::frameDrop (int frame_drop)
 {
-  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+  if ( ! m_player || m_quit || ( state() != Playing && state() != Running ) )
     return;
   if ( m_sent || state() == Running )
   {
@@ -1020,7 +1020,7 @@ void KPlayerProcess::saturation (int saturation)
 
 void KPlayerProcess::subtitleMove (int position, bool absolute)
 {
-  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+  if ( ! m_player || m_quit || ( state() != Playing && state() != Running ) )
     return;
   if ( absolute )
     position -= m_subtitle_position;
@@ -1041,7 +1041,7 @@ void KPlayerProcess::subtitleMove (int position, bool absolute)
 
 void KPlayerProcess::subtitleDelay (float delay, bool absolute)
 {
-  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+  if ( ! m_player || m_quit || ( state() != Playing && state() != Running ) )
     return;
   if ( absolute )
     delay -= m_subtitle_delay;
@@ -1062,7 +1062,7 @@ void KPlayerProcess::subtitleDelay (float delay, bool absolute)
 
 void KPlayerProcess::subtitleIndex (int index)
 {
-  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+  if ( ! m_player || m_quit || ( state() != Playing && state() != Running ) )
     return;
   if ( m_sent || state() == Running )
   {
@@ -1072,7 +1072,7 @@ void KPlayerProcess::subtitleIndex (int index)
   sendPlayerCommand ("sub_select " + QByteArray::number (index) + "\n");
   m_subtitle_index = index;
   m_send_subtitle_index = -2;
-  if ( index == -1 == m_subtitle_visibility )
+  if ( ( index == -1 ) == m_subtitle_visibility )
     subtitleVisibility();
   else
     m_send_subtitle_visibility = false;
@@ -1080,7 +1080,7 @@ void KPlayerProcess::subtitleIndex (int index)
 
 void KPlayerProcess::subtitleVisibility (void)
 {
-  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+  if ( ! m_player || m_quit || ( state() != Playing && state() != Running ) )
     return;
   if ( m_sent || state() == Running )
   {
@@ -1128,7 +1128,7 @@ void KPlayerProcess::subtitles (void)
 
 void KPlayerProcess::audioDelay (float delay, bool absolute)
 {
-  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+  if ( ! m_player || m_quit || ( state() != Playing && state() != Running ) )
     return;
   if ( absolute )
     delay -= m_audio_delay;
@@ -1149,7 +1149,7 @@ void KPlayerProcess::audioDelay (float delay, bool absolute)
 
 void KPlayerProcess::audioID (int id)
 {
-  if ( ! m_player || m_quit || state() != Playing && state() != Running )
+  if ( ! m_player || m_quit || ( state() != Playing && state() != Running ) )
     return;
   if ( m_sent || state() == Running )
   {
@@ -1176,7 +1176,7 @@ void KPlayerProcess::transferData (KIO::Job* job, const QByteArray& data)
   {
     if ( data.size() == 0 )
       return;
-    if ( m_cache.count() == 0 || m_cache.count() == 1 && ! m_first_chunk )
+    if ( m_cache.count() == 0 || ( m_cache.count() == 1 && ! m_first_chunk ) )
     {
 #ifdef DEBUG_KPLAYER_KIOSLAVE
       kdDebugTime() << "Process: Cache: Creating new chunk, size " << data.size() << "\n";
@@ -1275,7 +1275,7 @@ void KPlayerProcess::transferDone (KIO::Job* job)
     kdDebugTime() << "Process: Transfer job ended, result code: " << job -> error()
       << " error page " << error_page << "\n";
 #endif
-    if ( job -> error() != 0 && (job -> error() != 20 || ! m_quit) || error_page )
+    if ( (job -> error() != 0 && (job -> error() != 20 || ! m_quit)) || error_page )
     {
       QString errorString;
       if ( job -> error() != 0 )
@@ -1334,7 +1334,7 @@ void KPlayerProcess::transferTempDone (KIO::Job* job)
     kdDebugTime() << "Process: Temporary file transfer job ended, result code: " << job -> error()
       << " error page " << m_temp_job -> isErrorPage() << "\n";
 #endif
-    if ( job -> error() != 0 && (job -> error() != 20 || ! m_quit) || m_temp_job -> isErrorPage() )
+    if ( (job -> error() != 0 && (job -> error() != 20 || ! m_quit)) || m_temp_job -> isErrorPage() )
     {
       QString errorString;
       if ( job -> error() != 0 )
@@ -1693,7 +1693,7 @@ void KPlayerProcess::receivedOutputLine (KPlayerLineOutputProcess* proc, char* s
   if ( re_crash.indexIn (str) >= 0 )
   {
     int sig = re_crash.cap(1).toInt();
-    if ( sig <= 15 && ! m_quit || sig < 9 || sig > 9 && sig < 15 )
+    if ( (sig <= 15 && ! m_quit) || sig < 9 || (sig > 9 && sig < 15) )
       emit errorDetected();
   }
 //kdDebugTime() << "matching a_or_v regex\n";

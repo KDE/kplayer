@@ -834,6 +834,7 @@ void KPlayerContainerNode::populateGroups (void)
 #endif
   reference();
   if ( ! groupsPopulated() )
+  {
     if ( populated() )
     {
 #ifdef DEBUG_KPLAYER_NODE
@@ -852,6 +853,7 @@ void KPlayerContainerNode::populateGroups (void)
     }
     else
       doPopulateGroups();
+  }
   m_populate_groups ++;
 }
 
@@ -1117,7 +1119,7 @@ void KPlayerContainerNode::setCustomOrder (bool custom)
 #endif
   if ( parent() && allowsCustomOrder() )
   {
-    if ( custom || origin() && origin() -> customOrder() )
+    if ( custom || (origin() && origin() -> customOrder() ) )
       media() -> setCustomOrder (custom);
     else
       media() -> resetCustomOrder();
@@ -1285,6 +1287,7 @@ KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& list, bool link
     QString id (node -> suggestId());
     KPlayerNode* subnode = nodeById (id);
     if ( subnode && acceptsDuplicates() )
+    {
       if ( node -> isContainer() )
       {
         QString base (id);
@@ -1304,6 +1307,7 @@ KPlayerNode* KPlayerContainerNode::added (const KPlayerNodeList& list, bool link
           subnode = nodeById (id);
         }
       }
+    }
     if ( subnode )
     {
       if ( after || customOrder() )
@@ -2135,7 +2139,7 @@ bool KPlayerNowPlayingNode::canLink (KPlayerContainerNode* node) const
   kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
   return node -> isCollection() || node -> isDirectory() || node -> hasProperties()
-    || node -> isPlaylist() && ! node -> isRecent() && ! node -> isNowPlaying();
+    || ( node -> isPlaylist() && ! node -> isRecent() && ! node -> isNowPlaying() );
 }
 
 bool KPlayerNowPlayingNode::isNowPlaying (void) const
@@ -2253,7 +2257,7 @@ bool KPlayerRecentNode::canLink (KPlayerContainerNode* node) const
   kdDebugTime() << " Node   " << node -> url().url() << "\n";
 #endif
   return node -> isCollection() || node -> isDirectory() || node -> hasProperties()
-    || node -> isPlaylist() && ! node -> isRecent() && ! node -> isNowPlaying();
+    || ( node -> isPlaylist() && ! node -> isRecent() && ! node -> isNowPlaying() );
 }
 
 KPlayerContainerNode* KPlayerRecentNode::createBranch (const QString& id, KPlayerContainerNode* origin)
@@ -2331,8 +2335,8 @@ void KPlayerRecentsNode::addRecent (const KPlayerNodeList& list)
       while ( iterator != nodes().constEnd() )
       {
 	KPlayerNode* node = *iterator;
-        if ( container && node -> isContainer() && ((KPlayerContainerNode*) node) -> origin() == listnode
-            || ! container && ! node -> isContainer() && node -> media() == listnode -> media() )
+        if ( ( container && node -> isContainer() && ((KPlayerContainerNode*) node) -> origin() == listnode )
+            || ( ! container && ! node -> isContainer() && node -> media() == listnode -> media() ) )
           previous.append (node);
         ++ iterator;
       }
@@ -3167,12 +3171,12 @@ void KPlayerDiskNode::autodetect (void)
   m_local_path = QString::null;
   if ( ! disk() || ! disk() -> hasType() )
     m_fast_autodetect = false;
-  if ( ! m_fast_autodetect && ready() || m_fast_autodetect && disk() -> type() == "DVD" && m_url != "dvd://" )
+  if ( ( ! m_fast_autodetect && ready() ) || ( m_fast_autodetect && disk() -> type() == "DVD" && m_url != "dvd://" ) )
     m_url = "dvd://";
-  else if ( ! m_fast_autodetect && m_url == "dvd://"
-      || m_fast_autodetect && disk() -> type() == "Audio CD" && m_url != "cdda://" )
+  else if ( ( ! m_fast_autodetect && m_url == "dvd://" )
+      || ( m_fast_autodetect && disk() -> type() == "Audio CD" && m_url != "cdda://" ) )
     m_url = "cdda://";
-  else if ( ! m_fast_autodetect && m_url == "cdda://" || m_fast_autodetect && dataDisk() && m_url != "data://" )
+  else if ( ( ! m_fast_autodetect && m_url == "cdda://" ) || ( m_fast_autodetect && dataDisk() && m_url != "data://" ) )
   {
     if ( dataDisk() )
     {
@@ -3199,8 +3203,8 @@ void KPlayerDiskNode::autodetect (void)
     }
     return;
   }
-  else if ( ! m_fast_autodetect && m_url == "data://"
-      || m_fast_autodetect && disk() -> type() == "Video CD" && m_url != "vcd://" )
+  else if ( ( ! m_fast_autodetect && m_url == "data://" )
+      || ( m_fast_autodetect && disk() -> type() == "Video CD" && m_url != "vcd://" ) )
     m_url = "vcd://";
   else
   {
@@ -3280,13 +3284,14 @@ void KPlayerDiskNode::processFinished (KPlayerLineOutputProcess* process)
     process -> start();
     return;
   }
-  if ( m_autodetected || m_url == "cdda://" && ! m_fast_autodetect )
+  if ( m_autodetected || ( m_url == "cdda://" && ! m_fast_autodetect ) )
+  {
     if ( ! accessDisk() )
     {
       diskRemoved();
       return;
     }
-    else if ( dataDisk() || mediaDisk() && disk() -> hasTracks() )
+    else if ( dataDisk() || ( mediaDisk() && disk() -> hasTracks() ) )
     {
       setDiskType (disk() -> type());
       updateTracks();
@@ -3294,9 +3299,10 @@ void KPlayerDiskNode::processFinished (KPlayerLineOutputProcess* process)
       disk() -> commit();
       return;
     }
+  }
   if ( m_autodetected && disk() )
     autodetected();
-  else if ( m_url != "vcd://" || m_fast_autodetect && disk() && disk() -> hasType() )
+  else if ( m_url != "vcd://" || ( m_fast_autodetect && disk() && disk() -> hasType() ) )
     autodetect();
   else
   {

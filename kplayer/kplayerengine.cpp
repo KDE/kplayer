@@ -2662,7 +2662,7 @@ void KPlayerEngine::amixerFinished (KPlayerLineOutputProcess* proc)
         parameter = QString::number (volume) + "%";
       else
       {
-        volume = volume - m_amixer_volume >> 1;
+        volume = (volume - m_amixer_volume) >> 1;
         parameter = QString::number (m_amixer_volume_first + volume) + "%,"
           + QString::number (m_amixer_volume_first + volume) + "%";
       }
