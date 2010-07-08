@@ -457,7 +457,7 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
   setCorner (Qt::BottomLeftCorner, Qt::BottomDockWidgetArea);
   setCorner (Qt::BottomRightCorner, Qt::BottomDockWidgetArea);
   Toolbar toolbars [KPLAYER_TOOLBARS] = {
-    { "mainToolBar", KStandardAction::stdName (KStandardAction::ShowToolbar), true, false, false },
+    { "mainToolBar", KStandardAction::name (KStandardAction::ShowToolbar), true, false, false },
     { "playlistToolBar", "options_show_playlist", true, false, false },
     { "progressToolBar", "settings_progress_toolbar", true, false, false },
     { "volumeToolBar", "settings_volume_toolbar", false, false, false },
@@ -1219,13 +1219,13 @@ void KPlayerWindow::makeLibraryVisible (void)
 
 void KPlayerWindow::viewMenubar (void)
 {
-  showMenubar (toggleAction (KStandardAction::stdName (KStandardAction::ShowMenubar)) -> isChecked());
+  showMenubar (toggleAction (KStandardAction::name (KStandardAction::ShowMenubar)) -> isChecked());
   engine() -> handleLayout();
 }
 
 void KPlayerWindow::viewStatusbar (void)
 {
-  showStatusbar (toggleAction (KStandardAction::stdName (KStandardAction::ShowStatusbar)) -> isChecked());
+  showStatusbar (toggleAction (KStandardAction::name (KStandardAction::ShowStatusbar)) -> isChecked());
   engine() -> handleLayout();
 }
 
@@ -1831,8 +1831,8 @@ void KPlayerWindow::syncronizeControls (void)
     else
       menuBar() -> hide();
   }
-  toggleAction (KStandardAction::stdName (KStandardAction::ShowMenubar)) -> setChecked (showMenubar());
-  toggleAction (KStandardAction::stdName (KStandardAction::ShowMenubar)) -> setStatusTip (i18n("Shows/hides the menu bar"));
+  toggleAction (KStandardAction::name (KStandardAction::ShowMenubar)) -> setChecked (showMenubar());
+  toggleAction (KStandardAction::name (KStandardAction::ShowMenubar)) -> setStatusTip (i18n("Shows/hides the menu bar"));
 #ifdef DEBUG_KPLAYER_WINDOW
   kdDebugTime() << " Status visible " << ! statusBar() -> isHidden() << " show " << showStatusbar() << "\n";
 #endif
@@ -1843,8 +1843,8 @@ void KPlayerWindow::syncronizeControls (void)
     else
       statusBar() -> hide();
   }
-  toggleAction (KStandardAction::stdName (KStandardAction::ShowStatusbar)) -> setChecked (showStatusbar());
-  toggleAction (KStandardAction::stdName (KStandardAction::ShowStatusbar)) -> setStatusTip (i18n("Shows/hides the status bar"));
+  toggleAction (KStandardAction::name (KStandardAction::ShowStatusbar)) -> setChecked (showStatusbar());
+  toggleAction (KStandardAction::name (KStandardAction::ShowStatusbar)) -> setStatusTip (i18n("Shows/hides the status bar"));
   for ( int j = 0; j < KPLAYER_TOOLBARS; j ++ )
   {
     KToolBar* toolbar = toolBar (m_toolbar[j].name);
