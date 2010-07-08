@@ -834,13 +834,17 @@ KPlayerSettingsSliders::KPlayerSettingsSliders (QWidget* parent)
   : QFrame (parent)
 {
   setupUi (this);
+  c_minimum_slider_length->setSuffix(ki18np(" pixel", " pixels"));
+  c_preferred_slider_length->setSuffix(ki18np(" pixel", " pixels"));
+  c_slider_marks->setSuffix(ki18np(" percent", " percent"));
   load();
 }
 
 void KPlayerSettingsSliders::load (void)
 {
-  c_preferred_slider_length -> setText (QString::number (configuration() -> preferredSliderLength()));
-  c_minimum_slider_length -> setText (QString::number (configuration() -> minimumSliderLength()));
+  c_minimum_slider_length -> setValue (configuration() -> minimumSliderLength());
+  c_preferred_slider_length -> setValue (configuration() -> preferredSliderLength());
+  c_slider_marks -> setValue (configuration() -> sliderMarks());
   c_show_slider_marks -> setChecked (configuration() -> showSliderMarks());
   showMarksChanged (c_show_slider_marks -> isChecked());
 }
@@ -867,13 +871,13 @@ void KPlayerSettingsSliders::save (void)
 
 void KPlayerSettingsSliders::showMarksChanged (bool showMarksChecked)
 {
-  if ( showMarksChecked )
-    c_slider_marks -> setText (QString::number (configuration() -> sliderMarks()));
-  else
-    c_slider_marks -> setText ("");
   l_slider_marks -> setEnabled (showMarksChecked);
   c_slider_marks -> setEnabled (showMarksChecked);
-  l_slider_marks_percent -> setEnabled (showMarksChecked);
+}
+
+void KPlayerSettingsSliders::minimumSliderLengthChanged (int minimumSliderLength)
+{
+  c_preferred_slider_length->setMinimum(minimumSliderLength);
 }
 
 KPlayerSettingsSubtitles::KPlayerSettingsSubtitles (QWidget* parent)

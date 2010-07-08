@@ -139,6 +139,7 @@ public:
 
 protected slots:
   void showMarksChanged (bool);
+  void minimumSliderLengthChanged (int);
 };
 
 class KPlayerSettingsGeneral : public QFrame, protected Ui_KPlayerSettingsGeneralPage
