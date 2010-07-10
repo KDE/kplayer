@@ -267,6 +267,8 @@ public:
 
 protected slots:
   void resetChanged (bool);
+  void minimumContrastValueChanged(int);
+  void maximumContrastValueChanged(int);
 };
 
 class KPlayerSettingsBrightness : public QFrame, protected Ui_KPlayerSettingsBrightnessPage
@@ -284,6 +286,8 @@ public:
 
 protected slots:
   void resetChanged (bool);
+  void minimumBrightnessValueChanged(int);
+  void maximumBrightnessValueChanged(int);
 };
 
 class KPlayerSettingsHue : public QFrame, protected Ui_KPlayerSettingsHuePage
@@ -301,6 +305,8 @@ public:
 
 protected slots:
   void resetChanged (bool);
+  void minimumHueValueChanged(int);
+  void maximumHueValueChanged(int);
 };
 
 class KPlayerSettingsSaturation : public QFrame, protected Ui_KPlayerSettingsSaturationPage
@@ -318,6 +324,8 @@ public:
 
 protected slots:
   void resetChanged (bool);
+  void minimumSaturationValueChanged(int);
+  void maximumSaturationValueChanged(int);
 };
 
 /** The KPlayer settings dialog.

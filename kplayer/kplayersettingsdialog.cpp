@@ -1228,21 +1228,21 @@ KPlayerSettingsContrast::KPlayerSettingsContrast (QWidget* parent)
 
 void KPlayerSettingsContrast::load (void)
 {
-  c_contrast_minimum -> setText (QString::number (configuration() -> contrastMinimum()));
-  c_contrast_maximum -> setText (QString::number (configuration() -> contrastMaximum()));
-  c_contrast_step -> setText (QString::number (configuration() -> contrastStep()));
+  c_contrast_minimum -> setValue (configuration() -> contrastMinimum());
+  c_contrast_maximum -> setValue (configuration() -> contrastMaximum());
+  c_contrast_step -> setValue (configuration() -> contrastStep());
   c_contrast_reset -> setChecked (configuration() -> contrastReset());
   resetChanged (configuration() -> contrastReset());
 }
 
 void KPlayerSettingsContrast::save (void)
 {
-  configuration() -> setContrastMinimumMaximum (c_contrast_minimum -> text().toInt(), c_contrast_maximum -> text().toInt());
-  configuration() -> setContrastStep (labs (c_contrast_step -> text().toInt()));
+  configuration() -> setContrastMinimumMaximum (c_contrast_minimum -> value(), c_contrast_maximum -> value());
+  configuration() -> setContrastStep (c_contrast_step -> value());
   configuration() -> setContrastReset (c_contrast_reset -> isChecked());
   if ( configuration() -> contrastReset() )
   {
-    configuration() -> setInitialContrast (c_contrast_default -> text().toInt());
+    configuration() -> setInitialContrast (c_contrast_default -> value());
     configuration() -> setContrastEvery (c_contrast_every -> currentIndex());
   }
 }
@@ -1251,14 +1251,13 @@ void KPlayerSettingsContrast::resetChanged (bool resetChecked)
 {
   if ( resetChecked )
   {
-    c_contrast_default -> setText (QString::number (configuration() -> initialContrast()));
+    c_contrast_default -> setValue (configuration() -> initialContrast());
     c_contrast_every -> setCurrentIndex (0);
     c_contrast_every -> setItemText (c_contrast_every -> currentIndex(), i18n("file"));
     c_contrast_every -> setCurrentIndex (configuration() -> contrastEvery());
   }
   else
   {
-    c_contrast_default -> setText ("");
     c_contrast_every -> setCurrentIndex (0);
     c_contrast_every -> setItemText (c_contrast_every -> currentIndex(), "");
   }
@@ -1271,6 +1270,22 @@ void KPlayerSettingsContrast::resetChanged (bool resetChecked)
   }
 }
 
+void KPlayerSettingsContrast::minimumContrastValueChanged (int value)
+{
+  c_contrast_default -> setMinimum (value);
+  if ( value >= c_contrast_maximum -> value() )
+    c_contrast_maximum -> setValue (value+1);
+  c_contrast_step -> setMaximum (c_contrast_maximum -> value() - value);
+}
+
+void KPlayerSettingsContrast::maximumContrastValueChanged (int value)
+{
+  c_contrast_default -> setMaximum (value);
+  if ( value <= c_contrast_minimum -> value() )
+    c_contrast_minimum -> setValue (value-1);
+  c_contrast_step -> setMaximum (value - c_contrast_minimum -> value());
+}
+
 KPlayerSettingsBrightness::KPlayerSettingsBrightness (QWidget* parent)
   : QFrame (parent)
 {
@@ -1280,21 +1295,21 @@ KPlayerSettingsBrightness::KPlayerSettingsBrightness (QWidget* parent)
 
 void KPlayerSettingsBrightness::load (void)
 {
-  c_brightness_minimum -> setText (QString::number (configuration() -> brightnessMinimum()));
-  c_brightness_maximum -> setText (QString::number (configuration() -> brightnessMaximum()));
-  c_brightness_step -> setText (QString::number (configuration() -> brightnessStep()));
+  c_brightness_minimum -> setValue (configuration() -> brightnessMinimum());
+  c_brightness_maximum -> setValue (configuration() -> brightnessMaximum());
+  c_brightness_step -> setValue (configuration() -> brightnessStep());
   c_brightness_reset -> setChecked (configuration() -> brightnessReset());
   resetChanged (configuration() -> brightnessReset());
 }
 
 void KPlayerSettingsBrightness::save (void)
 {
-  configuration() -> setBrightnessMinimumMaximum (c_brightness_minimum -> text().toInt(), c_brightness_maximum -> text().toInt());
-  configuration() -> setBrightnessStep (labs (c_brightness_step -> text().toInt()));
+  configuration() -> setBrightnessMinimumMaximum (c_brightness_minimum -> value(), c_brightness_maximum -> value());
+  configuration() -> setBrightnessStep (c_brightness_step -> value());
   configuration() -> setBrightnessReset (c_brightness_reset -> isChecked());
   if ( configuration() -> brightnessReset() )
   {
-    configuration() -> setInitialBrightness (c_brightness_default -> text().toInt());
+    configuration() -> setInitialBrightness (c_brightness_default -> value());
     configuration() -> setBrightnessEvery (c_brightness_every -> currentIndex());
   }
 }
@@ -1303,14 +1318,13 @@ void KPlayerSettingsBrightness::resetChanged (bool resetChecked)
 {
   if ( resetChecked )
   {
-    c_brightness_default -> setText (QString::number (configuration() -> initialBrightness()));
+    c_brightness_default -> setValue (configuration() -> initialBrightness());
     c_brightness_every -> setCurrentIndex (0);
     c_brightness_every -> setItemText (c_brightness_every -> currentIndex(), i18n("file"));
     c_brightness_every -> setCurrentIndex (configuration() -> brightnessEvery());
   }
   else
   {
-    c_brightness_default -> setText ("");
     c_brightness_every -> setCurrentIndex (0);
     c_brightness_every -> setItemText (c_brightness_every -> currentIndex(), "");
   }
@@ -1323,6 +1337,22 @@ void KPlayerSettingsBrightness::resetChanged (bool resetChecked)
   }
 }
 
+void KPlayerSettingsBrightness::minimumBrightnessValueChanged (int value)
+{
+  c_brightness_default -> setMinimum (value);
+  if ( value >= c_brightness_maximum -> value() )
+    c_brightness_maximum -> setValue (value+1);
+  c_brightness_step -> setMaximum (c_brightness_maximum -> value() - value);
+}
+
+void KPlayerSettingsBrightness::maximumBrightnessValueChanged (int value)
+{
+  c_brightness_default -> setMaximum (value);
+  if ( value <= c_brightness_minimum -> value() )
+    c_brightness_minimum -> setValue (value-1);
+  c_brightness_step -> setMaximum (value - c_brightness_minimum -> value());
+}
+
 KPlayerSettingsHue::KPlayerSettingsHue (QWidget* parent)
   : QFrame (parent)
 {
@@ -1332,17 +1362,17 @@ KPlayerSettingsHue::KPlayerSettingsHue (QWidget* parent)
 
 void KPlayerSettingsHue::load (void)
 {
-  c_hue_minimum -> setText (QString::number (configuration() -> hueMinimum()));
-  c_hue_maximum -> setText (QString::number (configuration() -> hueMaximum()));
-  c_hue_step -> setText (QString::number (configuration() -> hueStep()));
+  c_hue_minimum -> setValue (configuration() -> hueMinimum());
+  c_hue_maximum -> setValue (configuration() -> hueMaximum());
+  c_hue_step -> setValue (configuration() -> hueStep());
   c_hue_reset -> setChecked (configuration() -> hueReset());
   resetChanged (configuration() -> hueReset());
 }
 
 void KPlayerSettingsHue::save (void)
 {
-  configuration() -> setHueMinimumMaximum (c_hue_minimum -> text().toInt(), c_hue_maximum -> text().toInt());
-  configuration() -> setHueStep (labs (c_hue_step -> text().toInt()));
+  configuration() -> setHueMinimumMaximum (c_hue_minimum -> value(), c_hue_maximum -> value());
+  configuration() -> setHueStep (c_hue_step -> value());
   configuration() -> setHueReset (c_hue_reset -> isChecked());
   if ( configuration() -> hueReset() )
   {
@@ -1355,14 +1385,13 @@ void KPlayerSettingsHue::resetChanged (bool resetChecked)
 {
   if ( resetChecked )
   {
-    c_hue_default -> setText (QString::number (configuration() -> initialHue()));
+    c_hue_default -> setValue (configuration() -> initialHue());
     c_hue_every -> setCurrentIndex (0);
     c_hue_every -> setItemText (c_hue_every -> currentIndex(), i18n("file"));
     c_hue_every -> setCurrentIndex (configuration() -> hueEvery());
   }
   else
   {
-    c_hue_default -> setText ("");
     c_hue_every -> setCurrentIndex (0);
     c_hue_every -> setItemText (c_hue_every -> currentIndex(), "");
   }
@@ -1375,6 +1404,22 @@ void KPlayerSettingsHue::resetChanged (bool resetChecked)
   }
 }
 
+void KPlayerSettingsHue::minimumHueValueChanged (int value)
+{
+  c_hue_default -> setMinimum (value);
+  if ( value >= c_hue_maximum -> value() )
+    c_hue_maximum -> setValue (value+1);
+  c_hue_step -> setMaximum (c_hue_maximum -> value() - value);
+}
+
+void KPlayerSettingsHue::maximumHueValueChanged (int value)
+{
+  c_hue_default -> setMaximum (value);
+  if ( value <= c_hue_minimum -> value() )
+    c_hue_minimum -> setValue (value-1);
+  c_hue_step -> setMaximum (value - c_hue_minimum -> value());
+}
+
 KPlayerSettingsSaturation::KPlayerSettingsSaturation (QWidget* parent)
   : QFrame (parent)
 {
@@ -1384,17 +1429,17 @@ KPlayerSettingsSaturation::KPlayerSettingsSaturation (QWidget* parent)
 
 void KPlayerSettingsSaturation::load (void)
 {
-  c_saturation_minimum -> setText (QString::number (configuration() -> saturationMinimum()));
-  c_saturation_maximum -> setText (QString::number (configuration() -> saturationMaximum()));
-  c_saturation_step -> setText (QString::number (configuration() -> saturationStep()));
+  c_saturation_minimum -> setValue (configuration() -> saturationMinimum());
+  c_saturation_maximum -> setValue (configuration() -> saturationMaximum());
+  c_saturation_step -> setValue (configuration() -> saturationStep());
   c_saturation_reset -> setChecked (configuration() -> saturationReset());
   resetChanged (configuration() -> saturationReset());
 }
 
 void KPlayerSettingsSaturation::save (void)
 {
-  configuration() -> setSaturationMinimumMaximum (c_saturation_minimum -> text().toInt(), c_saturation_maximum -> text().toInt());
-  configuration() -> setSaturationStep (labs (c_saturation_step -> text().toInt()));
+  configuration() -> setSaturationMinimumMaximum (c_saturation_minimum -> value(), c_saturation_maximum -> value());
+  configuration() -> setSaturationStep (c_saturation_step -> value());
   configuration() -> setSaturationReset (c_saturation_reset -> isChecked());
   if ( configuration() -> saturationReset() )
   {
@@ -1407,14 +1452,13 @@ void KPlayerSettingsSaturation::resetChanged (bool resetChecked)
 {
   if ( resetChecked )
   {
-    c_saturation_default -> setText (QString::number (configuration() -> initialSaturation()));
+    c_saturation_default -> setValue (configuration() -> initialSaturation());
     c_saturation_every -> setCurrentIndex (0);
     c_saturation_every -> setItemText (c_saturation_every -> currentIndex(), i18n("file"));
     c_saturation_every -> setCurrentIndex (configuration() -> saturationEvery());
   }
   else
   {
-    c_saturation_default -> setText ("");
     c_saturation_every -> setCurrentIndex (0);
     c_saturation_every -> setItemText (c_saturation_every -> currentIndex(), "");
   }
@@ -1425,4 +1469,20 @@ void KPlayerSettingsSaturation::resetChanged (bool resetChecked)
     c_saturation_default -> setFocus();
     c_saturation_default -> selectAll();
   }
+}
+
+void KPlayerSettingsSaturation::minimumSaturationValueChanged (int value)
+{
+  c_saturation_default -> setMinimum (value);
+  if ( value >= c_saturation_maximum -> value() )
+    c_saturation_maximum -> setValue (value+1);
+  c_saturation_step -> setMaximum (c_saturation_maximum -> value() - value);
+}
+
+void KPlayerSettingsSaturation::maximumSaturationValueChanged (int value)
+{
+  c_saturation_default -> setMaximum (value);
+  if ( value <= c_saturation_minimum -> value() )
+    c_saturation_minimum -> setValue (value-1);
+  c_saturation_step -> setMaximum (value - c_saturation_minimum -> value());
 }
