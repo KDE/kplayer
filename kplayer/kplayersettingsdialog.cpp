@@ -354,7 +354,7 @@ void KPlayerSettingsAdvanced::save (void)
   configuration() -> setCommandLine (c_command_line -> text());
   configuration() -> setDemuxer (listEntry (c_demuxer));
   configuration() -> setFrameDrop (c_frame_drop -> currentIndex());
-  configuration() -> setCache (c_use_cache -> currentIndex(), labs (c_cache_size -> text().toInt()));
+  configuration() -> setCache (c_use_cache -> currentIndex(), c_cache_size -> value());
   configuration() -> setBuildNewIndex (c_build_index -> currentIndex());
   configuration() -> setOsdLevel (c_osd_level -> currentIndex());
   configuration() -> setUseTemporaryFile (c_use_temporary_file -> isChecked());
@@ -370,12 +370,8 @@ void KPlayerSettingsAdvanced::refreshLists (void)
 
 void KPlayerSettingsAdvanced::cacheChanged (int cache)
 {
-  if ( cache == 2 )
-    c_cache_size -> setText (QString::number (configuration() -> cacheSize()));
-  else
-    c_cache_size -> setText ("");
+  c_cache_size -> setValue (configuration() -> cacheSize());
   c_cache_size -> setEnabled (cache == 2);
-  l_cache_size_kb -> setEnabled (cache == 2);
   if ( cache == 2 && sender() )
   {
     c_cache_size -> setFocus();
@@ -389,6 +385,7 @@ KPlayerSettingsAudio::KPlayerSettingsAudio (QWidget* parent)
   m_amixer_running = false;
   m_devices_listed = true;
   setupUi (this);
+  c_maximum -> setSuffix (ki18np(" percent", " percent"));
   loadLists();
   load();
   QApplication::connect (kPlayerEngine(), SIGNAL (updated()), this, SLOT (refresh()));
@@ -446,7 +443,7 @@ void KPlayerSettingsAudio::load (void)
   c_softvol -> setChecked (m_softvol);
   softvolChanged (m_softvol);
   c_codec -> setCurrentIndex (engine() -> audioCodecIndex (configuration() -> audioCodec()) + 1);
-  c_delay_step -> setText (QString::number (configuration() -> audioDelayStep()));
+  c_delay_step -> setValue (configuration() -> audioDelayStep());
 }
 
 void KPlayerSettingsAudio::save (void)
@@ -464,14 +461,11 @@ void KPlayerSettingsAudio::save (void)
   configuration() -> setSoftwareVolume (c_softvol -> isChecked());
   if ( configuration() -> softwareVolume() )
   {
-    int maximum = labs (c_maximum -> text().toInt());
-    if ( maximum < 10 )
-      configuration() -> resetMaximumSoftwareVolume();
-    else
-      configuration() -> setMaximumSoftwareVolume (maximum);
+    int maximum = c_maximum -> value();
+    configuration() -> setMaximumSoftwareVolume (maximum);
   }
   configuration() -> setAudioCodec (listEntry (c_codec));
-  float value = fabs (c_delay_step -> text().toFloat());
+  float value = c_delay_step -> value();
   if ( value )
     configuration() -> setAudioDelayStep (value);
   else
@@ -736,7 +730,7 @@ void KPlayerSettingsAudio::softvolChanged (bool checked)
   kdDebugTime() << "KPlayerSettingsAudio::softvolChanged\n";
   kdDebugTime() << " Checked " << checked << "\n";
 #endif
-  c_maximum -> setText (checked ? QString::number (configuration() -> maximumSoftwareVolume()) : "");
+  c_maximum -> setValue (configuration() -> maximumSoftwareVolume());
   c_maximum -> setEnabled (checked);
   QString driver (listEntry (c_driver));
   bool empty = checked || driver != configuration() -> audioDriver()
@@ -810,10 +804,10 @@ KPlayerSettingsGeneral::KPlayerSettingsGeneral (QWidget* parent)
 void KPlayerSettingsGeneral::load (void)
 {
   c_resize_automatically -> setChecked (configuration() -> resizeAutomatically());
-  c_playlist_menu_size -> setText (QString::number (configuration() -> playlistMenuSize()));
-  c_recent_menu_size -> setText (QString::number (configuration() -> recentMenuSize()));
-  c_recent_list_size -> setText (QString::number (configuration() -> recentListSize()));
-  c_cache_size_limit -> setText (QString::number (configuration() -> cacheSizeLimit()));
+  c_playlist_menu_size -> setValue (configuration() -> playlistMenuSize());
+  c_recent_menu_size -> setValue (configuration() -> recentMenuSize());
+  c_recent_list_size -> setValue (configuration() -> recentListSize());
+  c_cache_size_limit -> setValue (configuration() -> cacheSizeLimit());
   c_allow_duplicate_entries -> setChecked (configuration() -> allowDuplicateEntries());
   c_show_messages_on_error -> setChecked (configuration() -> showMessagesOnError());
 }
@@ -821,10 +815,10 @@ void KPlayerSettingsGeneral::load (void)
 void KPlayerSettingsGeneral::save (void)
 {
   configuration() -> setResizeAutomatically (c_resize_automatically -> isChecked());
-  configuration() -> setPlaylistMenuSize (labs (c_playlist_menu_size -> text().toInt()));
-  configuration() -> setRecentMenuSize (labs (c_recent_menu_size -> text().toInt()));
-  configuration() -> setRecentListSize (labs (c_recent_list_size -> text().toInt()));
-  configuration() -> setCacheSizeLimit (labs (c_cache_size_limit -> text().toInt()));
+  configuration() -> setPlaylistMenuSize (c_playlist_menu_size -> value());
+  configuration() -> setRecentMenuSize (c_recent_menu_size -> value());
+  configuration() -> setRecentListSize (c_recent_list_size -> value());
+  configuration() -> setCacheSizeLimit (c_cache_size_limit -> value());
   configuration() -> setAllowDuplicateEntries (c_allow_duplicate_entries -> isChecked());
   configuration() -> setShowMessagesOnError (c_show_messages_on_error -> isChecked());
 }
@@ -850,22 +844,10 @@ void KPlayerSettingsSliders::load (void)
 
 void KPlayerSettingsSliders::save (void)
 {
-  int value = labs (c_preferred_slider_length -> value());
-  if ( value )
-    configuration() -> setPreferredSliderLength (value);
-  else
-    configuration() -> resetPreferredSliderLength();
-  value = labs (c_minimum_slider_length -> value());
-  if ( value )
-    configuration() -> setMinimumSliderLength (value);
-  else
-    configuration() -> resetMinimumSliderLength();
+  configuration() -> setPreferredSliderLength (c_preferred_slider_length -> value());
+  configuration() -> setMinimumSliderLength (c_minimum_slider_length -> value());
   configuration() -> setShowSliderMarks (c_show_slider_marks -> isChecked());
-  value = labs (c_slider_marks -> value());
-  if ( value )
-    configuration() -> setSliderMarks (value);
-  else
-    configuration() -> resetSliderMarks();
+  configuration() -> setSliderMarks (c_slider_marks -> value());
 }
 
 void KPlayerSettingsSliders::showMarksChanged (bool showMarksChecked)
@@ -884,6 +866,8 @@ KPlayerSettingsSubtitles::KPlayerSettingsSubtitles (QWidget* parent)
 {
   m_initialized = m_recursion = false;
   setupUi (this);
+  c_width -> setSuffix (ki18np(" percent", " percent"));
+  c_position_step -> setSuffix (ki18np(" percent", " percent"));
   loadLists();
   load();
   m_initialized = true;
@@ -915,12 +899,12 @@ void KPlayerSettingsSubtitles::load (void)
   else
     c_text_size -> setCurrentIndex (0);
   c_autoscale -> setChecked (configuration() -> subtitleAutoscale());
-  c_outline -> setText (QString::number (configuration() -> subtitleFontOutline()));
-  outlineEditChanged (c_outline -> text());
-  c_width -> setText (QString::number (configuration() -> subtitleTextWidth()));
-  widthEditChanged (c_width -> text());
-  c_position_step -> setText (QString::number (configuration() -> subtitlePositionStep()));
-  c_delay_step -> setText (QString::number (configuration() -> subtitleDelayStep()));
+  c_outline -> setValue (configuration() -> subtitleFontOutline());
+  outlineEditChanged (c_outline -> value());
+  c_width -> setValue (configuration() -> subtitleTextWidth());
+  widthEditChanged (c_width -> value());
+  c_position_step -> setValue (configuration() -> subtitlePositionStep());
+  c_delay_step -> setValue (configuration() -> subtitleDelayStep());
   if ( configuration() -> hasSubtitleEncoding() )
   {
     QString encoding = configuration() -> subtitleEncoding();
@@ -953,10 +937,10 @@ void KPlayerSettingsSubtitles::save (void)
   else
     configuration() -> resetSubtitleTextSize();
   configuration() -> setSubtitleAutoscale (c_autoscale -> isChecked());
-  configuration() -> setSubtitleFontOutline (c_outline -> text().toFloat());
-  configuration() -> setSubtitleTextWidth (c_width -> text().toInt());
-  configuration() -> setSubtitlePositionStep (labs (c_position_step -> text().toInt()));
-  value = fabs (c_delay_step -> text().toFloat());
+  configuration() -> setSubtitleFontOutline (c_outline -> value());
+  configuration() -> setSubtitleTextWidth (c_width -> value());
+  configuration() -> setSubtitlePositionStep (c_position_step -> value());
+  value = c_delay_step -> value();
   if ( value )
     configuration() -> setSubtitleDelayStep (value);
   else
@@ -978,16 +962,11 @@ void KPlayerSettingsSubtitles::save (void)
 void KPlayerSettingsSubtitles::widthSliderChanged (int value)
 {
   if ( ! m_recursion )
-    c_width -> setText (QString::number (value));
+    c_width -> setValue (value);
 }
 
-void KPlayerSettingsSubtitles::widthEditChanged (const QString& value)
+void KPlayerSettingsSubtitles::widthEditChanged (const int number)
 {
-  int number = value.toInt();
-  if ( number < 10 )
-    number = 10;
-  else if ( number > 100 )
-    number = 100;
   m_recursion = true;
   c_width_slider -> setValue (number);
   m_recursion = false;
@@ -996,16 +975,12 @@ void KPlayerSettingsSubtitles::widthEditChanged (const QString& value)
 void KPlayerSettingsSubtitles::outlineSliderChanged (int value)
 {
   if ( ! m_recursion )
-    c_outline -> setText (QString::number (float (value) / 20));
+    c_outline -> setValue (value / 20.0);
 }
 
-void KPlayerSettingsSubtitles::outlineEditChanged (const QString& value)
+void KPlayerSettingsSubtitles::outlineEditChanged (const double value)
 {
-  int number = int (value.toFloat() * 20 + 0.5);
-  if ( number < 0 )
-    number = 0;
-  else if ( number > 200 )
-    number = 200;
+  int number = int (value * 20 + 0.5);
   m_recursion = true;
   c_outline_slider -> setValue (number);
   m_recursion = false;
@@ -1145,8 +1120,8 @@ void KPlayerSettingsProgress::save (void)
 {
   configuration() -> setProgressNormalSeekUnits (c_progress_seek_units -> currentIndex());
   configuration() -> setProgressFastSeekUnits (c_progress_fast_units -> currentIndex());
-  configuration() -> setProgressNormalSeek (labs (c_progress_seek -> value()));
-  configuration() -> setProgressFastSeek (labs (c_progress_fast -> value()));
+  configuration() -> setProgressNormalSeek (c_progress_seek -> value());
+  configuration() -> setProgressFastSeek (c_progress_fast -> value());
 }
 
 void KPlayerSettingsProgress::normalSeekAmountChanged (int value)
@@ -1186,21 +1161,21 @@ KPlayerSettingsVolume::KPlayerSettingsVolume (QWidget* parent)
 
 void KPlayerSettingsVolume::load (void)
 {
-  c_volume_minimum -> setText (QString::number (configuration() -> volumeMinimum()));
-  c_volume_maximum -> setText (QString::number (configuration() -> volumeMaximum()));
-  c_volume_step -> setText (QString::number (configuration() -> volumeStep()));
+  c_volume_minimum -> setValue (configuration() -> volumeMinimum());
+  c_volume_maximum -> setValue (configuration() -> volumeMaximum());
+  c_volume_step -> setValue (configuration() -> volumeStep());
   c_volume_reset -> setChecked (configuration() -> volumeReset());
   resetChanged (configuration() -> volumeReset());
 }
 
 void KPlayerSettingsVolume::save (void)
 {
-  configuration() -> setVolumeMinimumMaximum (labs (c_volume_minimum -> text().toInt()), labs (c_volume_maximum -> text().toInt()));
-  configuration() -> setVolumeStep (labs (c_volume_step -> text().toInt()));
+  configuration() -> setVolumeMinimumMaximum (c_volume_minimum -> value(), c_volume_maximum -> value());
+  configuration() -> setVolumeStep (c_volume_step -> value());
   configuration() -> setVolumeReset (c_volume_reset -> isChecked());
   if ( configuration() -> volumeReset() )
   {
-    configuration() -> setInitialVolume (labs (c_volume_default -> text().toInt()));
+    configuration() -> setInitialVolume (c_volume_default -> value());
     configuration() -> setVolumeEvery (c_volume_every -> currentIndex());
   }
 }
@@ -1209,14 +1184,13 @@ void KPlayerSettingsVolume::resetChanged (bool resetChecked)
 {
   if ( resetChecked )
   {
-    c_volume_default -> setText (QString::number (configuration() -> initialVolume()));
+    c_volume_default -> setValue (configuration() -> initialVolume());
     c_volume_every -> setCurrentIndex (0);
     c_volume_every -> setItemText (c_volume_every -> currentIndex(), i18n("file"));
     c_volume_every -> setCurrentIndex (configuration() -> volumeEvery());
   }
   else
   {
-    c_volume_default -> setText ("");
     c_volume_every -> setCurrentIndex (0);
     c_volume_every -> setItemText (c_volume_every -> currentIndex(), "");
   }
@@ -1227,6 +1201,22 @@ void KPlayerSettingsVolume::resetChanged (bool resetChecked)
     c_volume_default -> setFocus();
     c_volume_default -> selectAll();
   }
+}
+
+void KPlayerSettingsVolume::minimumVolumeValueChanged (int value)
+{
+  c_volume_default -> setMinimum (value);
+  if ( value >= c_volume_maximum -> value() )
+    c_volume_maximum -> setValue (value+1);
+  c_volume_step -> setMaximum (c_volume_maximum -> value() - value);
+}
+
+void KPlayerSettingsVolume::maximumVolumeValueChanged (int value)
+{
+  c_volume_default -> setMaximum (value);
+  if ( value <= c_volume_minimum -> value() )
+    c_volume_minimum -> setValue (value-1);
+  c_volume_step -> setMaximum (value - c_volume_minimum -> value());
 }
 
 KPlayerSettingsContrast::KPlayerSettingsContrast (QWidget* parent)

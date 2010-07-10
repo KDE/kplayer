@@ -1,634 +1,620 @@
-<ui version="4.0" stdsetdef="1">
-  <class>KPlayerSettingsSubtitlesPage</class>
-  <widget class="QFrame" name="KPlayerSettingsSubtitlesPage">
-    <property name="geometry">
-      <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>600</width>
-        <height>480</height>
-      </rect>
-    </property>
-    <property name="frameShape">
-      <enum>NoFrame</enum>
-    </property>
-    <property name="frameShadow">
-      <enum>Plain</enum>
-    </property>
-    <property name="lineWidth">
-      <number>0</number>
-    </property>
-    <layout class="QGridLayout">
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KPlayerSettingsSubtitlesPage</class>
+ <widget class="QFrame" name="KPlayerSettingsSubtitlesPage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Plain</enum>
+  </property>
+  <property name="lineWidth">
+   <number>0</number>
+  </property>
+  <layout class="QGridLayout">
+   <item row="0" column="0">
+    <widget class="QFrame" name="frame1">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <layout class="QGridLayout">
       <item row="0" column="0">
-        <widget class="QFrame" name="frame1">
-          <property name="sizePolicy">
-            <sizepolicy>
-              <hsizetype>0</hsizetype>
-              <vsizetype>0</vsizetype>
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-            </sizepolicy>
-          </property>
-          <property name="frameShape">
-            <enum>NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-            <enum>Plain</enum>
-          </property>
-          <layout class="QGridLayout">
-            <item row="0" column="0">
-              <widget class="QLabel" name="l_font_name">
-                <property name="text">
-                  <string>Font &amp;name</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="buddy" stdset="0">
-                  <cstring>c_font_name</cstring>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Name of the font for displaying subtitles and other OSD text</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the name of the font for displaying subtitles and other OSD text.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="0" column="1">
-              <widget class="KFontComboBox" name="c_font_name">
-                <property name="editable">
-                  <bool>true</bool>
-                </property>
-                <property name="sizePolicy">
-                  <sizepolicy>
-                    <hsizetype>3</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                  </sizepolicy>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Name of the font for displaying subtitles and other OSD text</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the name of the font for displaying subtitles and other OSD text.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="0" column="2">
-              <widget class="QCheckBox" name="c_bold">
-                <property name="text">
-                  <string>&amp;Bold</string>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Bold font for displaying subtitles and other OSD text</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to choose bold font for displaying subtitles and other OSD text.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="0" column="3">
-              <widget class="QCheckBox" name="c_italic">
-                <property name="text">
-                  <string>&amp;Italic</string>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Italic font for displaying subtitles and other OSD text</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to choose italic font for displaying subtitles and other OSD text.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="1" column="0">
-              <widget class="QLabel" name="l_text_size">
-                <property name="text">
-                  <string>Text &amp;size</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="buddy" stdset="0">
-                  <cstring>c_text_size</cstring>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Size of subtitle text</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the size of subtitle text.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="1" column="1">
-              <widget class="QComboBox" name="c_text_size">
-                <property name="editable">
-                  <bool>true</bool>
-                </property>
-                <property name="sizePolicy">
-                  <sizepolicy>
-                    <hsizetype>3</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                  </sizepolicy>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Size of subtitle text</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the size of subtitle text.</string>
-                </property>
-                <item>
-                  <property name="text">
-                    <string>auto</string>
-                  </property>
-                </item>
-              </widget>
-            </item>
-            <item row="1" column="2" colspan="2">
-              <widget class="QCheckBox" name="c_autoscale">
-                <property name="text">
-                  <string>&amp;Auto scale</string>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Automatically scale subtitles and other OSD elements</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to automatically scale subtitles and other OSD elements.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="2" column="0">
-              <widget class="QLabel" name="l_outline">
-                <property name="text">
-                  <string>&amp;Outline</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="buddy" stdset="0">
-                  <cstring>c_outline</cstring>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Outline of the font for displaying subtitles and other OSD text</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the outline of the font for displaying subtitles and other OSD text.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="2" column="1">
-              <widget class="QSlider" name="c_outline_slider">
-                <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="minimum">
-                  <number>0</number>
-                </property>
-                <property name="maximum">
-                  <number>200</number>
-                </property>
-                <property name="pageStep">
-                  <number>20</number>
-                </property>
-                <property name="sizePolicy">
-                  <sizepolicy>
-                    <hsizetype>3</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                  </sizepolicy>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Outline of the font for displaying subtitles and other OSD text</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the outline of the font for displaying subtitles and other OSD text.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="2" column="2">
-              <widget class="QLineEdit" name="c_outline">
-                <property name="maximumSize">
-                  <size>
-                    <width>70</width>
-                    <height>32767</height>
-                  </size>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Width of the subtitle area, as a percentage of the video width</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="3" column="0">
-              <widget class="QLabel" name="l_width">
-                <property name="text">
-                  <string>&amp;Width</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="buddy" stdset="0">
-                  <cstring>c_width</cstring>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Width of the subtitle area, as a percentage of the video width</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="3" column="1">
-              <widget class="QSlider" name="c_width_slider">
-                <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="minimum">
-                  <number>10</number>
-                </property>
-                <property name="maximum">
-                  <number>100</number>
-                </property>
-                <property name="pageStep">
-                  <number>10</number>
-                </property>
-                <property name="sizePolicy">
-                  <sizepolicy>
-                    <hsizetype>3</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                  </sizepolicy>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Width of the subtitle area, as a percentage of the video width</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="3" column="2">
-              <widget class="QLineEdit" name="c_width">
-                <property name="maximumSize">
-                  <size>
-                    <width>70</width>
-                    <height>32767</height>
-                  </size>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Width of the subtitle area, as a percentage of the video width</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="3" column="3">
-              <widget class="QLabel" name="l_width_percent">
-                <property name="text">
-                  <string>percent</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Width of the subtitle area, as a percentage of the video width</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="4" column="0" colspan="2">
-              <widget class="QLabel" name="l_position_step">
-                <property name="text">
-                  <string>Position adjustment a&amp;mount</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="buddy" stdset="0">
-                  <cstring>c_position_step</cstring>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Amount of adjustment to subtitle vertical position when using Move Up/Down commands</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the amount in percents of video height by which to move subtitles when using Move Up/Down commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="4" column="2">
-              <widget class="QLineEdit" name="c_position_step">
-                <property name="maximumSize">
-                  <size>
-                    <width>70</width>
-                    <height>32767</height>
-                  </size>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Amount of adjustment to subtitle vertical position when using Move Up/Down commands</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the amount in percents of video height by which to move subtitles when using Move Up/Down commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="4" column="3">
-              <widget class="QLabel" name="l_position_percent">
-                <property name="text">
-                  <string>percent</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Amount of adjustment to subtitle vertical position when using Move Up/Down commands</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the amount in percents of video height by which to move subtitles when using Move Up/Down commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="5" column="0" colspan="2">
-              <widget class="QLabel" name="l_delay_step">
-                <property name="text">
-                  <string>Delay adjustment a&amp;mount</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="buddy" stdset="0">
-                  <cstring>c_delay_step</cstring>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Amount of adjustment to subtitle delay when using Increase/Decrease commands</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the amount in seconds by which to change subtitle delay when using Increase/Decrease Delay commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="5" column="2">
-              <widget class="QLineEdit" name="c_delay_step">
-                <property name="maximumSize">
-                  <size>
-                    <width>70</width>
-                    <height>32767</height>
-                  </size>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Amount of adjustment to subtitle delay when using Increase/Decrease commands</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the amount in seconds by which to change subtitle delay when using Increase/Decrease Delay commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="5" column="3">
-              <widget class="QLabel" name="l_delay_seconds">
-                <property name="text">
-                  <string>seconds</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Amount of adjustment to subtitle delay when using Increase/Decrease commands</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the amount in seconds by which to change subtitle delay when using Increase/Decrease Delay commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="6" column="0">
-              <widget class="QLabel" name="l_encoding">
-                <property name="text">
-                  <string>&amp;Encoding</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="buddy" stdset="0">
-                  <cstring>c_encoding</cstring>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Encoding of the subtitle file</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the encoding of the subtitle file.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="6" column="1" colspan="3">
-              <widget class="QComboBox" name="c_encoding">
-                <property name="editable">
-                  <bool>true</bool>
-                </property>
-                <property name="sizePolicy">
-                  <sizepolicy>
-                    <hsizetype>0</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                  </sizepolicy>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Encoding of the subtitle file</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the encoding of the subtitle file.</string>
-                </property>
-                <item>
-                  <property name="text">
-                    <string>auto</string>
-                  </property>
-                </item>
-              </widget>
-            </item>
-            <item row="7" column="0" colspan="4">
-              <widget class="QCheckBox" name="c_closed_caption">
-                <property name="text">
-                  <string>&amp;Display closed caption subtitles</string>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Display closed caption subtitles if they are available</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to display closed caption subtitles if they are available.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="8" column="0" colspan="2">
-              <widget class="QCheckBox" name="c_subtitles_autoexpand">
-                <property name="text">
-                  <string>Auto &amp;expand video area to aspect ratio</string>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Automatically expand the video area to fit subtitles</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to automatically expand the video area to fit subtitles below the video.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="8" column="2">
-              <widget class="QComboBox" name="c_aspect">
-                <property name="sizePolicy">
-                  <sizepolicy>
-                    <hsizetype>1</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                  </sizepolicy>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Aspect ratio of the expanded video area</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to specify the aspect ratio of the expanded video area. The video will only be expanded if it has a higher aspect ratio than the one you choose.</string>
-                </property>
-                <item>
-                  <property name="text">
-                    <string>1:1</string>
-                  </property>
-                </item>
-                <item>
-                  <property name="text">
-                    <string>4:3</string>
-                  </property>
-                </item>
-                <item>
-                  <property name="text">
-                    <string>16:9</string>
-                  </property>
-                </item>
-              </widget>
-            </item>
-            <item row="9" column="0" colspan="4">
-              <widget class="QCheckBox" name="c_subtitles_autoload">
-                <property name="text">
-                  <string>Auto&amp;load subtitles</string>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>Automatically load subtitle types selected below</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option to automatically load subtitle types selected below by looking for subtitle files with the same name as the currently loaded file and the corresponding subtitle extension.</string>
-                </property>
-              </widget>
-            </item>
-            <item row="10" column="0">
-              <widget class="QLabel" name="l_extensions">
-                <property name="text">
-                  <string>&amp;Extensions</string>
-                </property>
-                <property name="alignment">
-                  <set>Qt::AlignVCenter|Qt::AlignLeft</set>
-                </property>
-                <property name="buddy" stdset="0">
-                  <cstring>c_subtitles_list</cstring>
-                </property>
-                <property name="toolTip" stdset="0">
-                  <string>List of extensions to use for automatically loading subtitles</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option that lets you give a list of extensions that will be used to automatically load subtitles. If you enter multiple extensions, separate them by commas, semicolons, colons, periods or spaces. Extensions you give will be converted to lower and upper case when looking for files. Subtitles with mixed case extensions cannot be autoloaded at this time.</string>
-                </property>
-                <property name="wordWrap">
-                  <bool>false</bool>
-                </property>
-              </widget>
-            </item>
-            <item row="10" column="1" colspan="3">
-              <widget class="QLineEdit" name="c_subtitles_list">
-                <property name="toolTip" stdset="0">
-                  <string>List of extensions to use for automatically loading subtitles</string>
-                </property>
-                <property name="whatsThis" stdset="0">
-                  <string>Option that lets you give a list of extensions that will be used to automatically load subtitles. If you enter multiple extensions, separate them by commas, semicolons, colons, periods or spaces. Extensions you give will be converted to lower and upper case when looking for files. Subtitles with mixed case extensions cannot be autoloaded at this time.</string>
-                </property>
-              </widget>
-            </item>
-          </layout>
-        </widget>
+       <widget class="QLabel" name="l_font_name">
+        <property name="toolTip">
+         <string>Name of the font for displaying subtitles and other OSD text</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the name of the font for displaying subtitles and other OSD text.</string>
+        </property>
+        <property name="text">
+         <string>Font &amp;name</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="buddy">
+         <cstring>c_font_name</cstring>
+        </property>
+       </widget>
       </item>
-    </layout>
-  </widget>
-  <layoutdefault spacing="6" margin="0"/>
-  <connections>
-    <connection>
-      <sender>c_width_slider</sender>
-      <signal>valueChanged(int)</signal>
-      <receiver>KPlayerSettingsSubtitlesPage</receiver>
-      <slot>widthSliderChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>c_width</sender>
-      <signal>textChanged(QString)</signal>
-      <receiver>KPlayerSettingsSubtitlesPage</receiver>
-      <slot>widthEditChanged(QString)</slot>
-    </connection>
-    <connection>
-      <sender>c_outline_slider</sender>
-      <signal>valueChanged(int)</signal>
-      <receiver>KPlayerSettingsSubtitlesPage</receiver>
-      <slot>outlineSliderChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>c_outline</sender>
-      <signal>textChanged(QString)</signal>
-      <receiver>KPlayerSettingsSubtitlesPage</receiver>
-      <slot>outlineEditChanged(QString)</slot>
-    </connection>
-    <connection>
-      <sender>c_subtitles_autoexpand</sender>
-      <signal>toggled(bool)</signal>
-      <receiver>KPlayerSettingsSubtitlesPage</receiver>
-      <slot>autoexpandChanged(bool)</slot>
-    </connection>
-    <connection>
-      <sender>c_subtitles_autoload</sender>
-      <signal>toggled(bool)</signal>
-      <receiver>KPlayerSettingsSubtitlesPage</receiver>
-      <slot>autoloadSubtitlesChanged(bool)</slot>
-    </connection>
-  </connections>
+      <item row="0" column="1">
+       <widget class="KFontComboBox" name="c_font_name">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Name of the font for displaying subtitles and other OSD text</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the name of the font for displaying subtitles and other OSD text.</string>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="c_bold">
+        <property name="toolTip">
+         <string>Bold font for displaying subtitles and other OSD text</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to choose bold font for displaying subtitles and other OSD text.</string>
+        </property>
+        <property name="text">
+         <string>&amp;Bold</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QCheckBox" name="c_italic">
+        <property name="toolTip">
+         <string>Italic font for displaying subtitles and other OSD text</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to choose italic font for displaying subtitles and other OSD text.</string>
+        </property>
+        <property name="text">
+         <string>&amp;Italic</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="l_text_size">
+        <property name="toolTip">
+         <string>Size of subtitle text</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the size of subtitle text.</string>
+        </property>
+        <property name="text">
+         <string>Text &amp;size</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="buddy">
+         <cstring>c_text_size</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="KComboBox" name="c_text_size">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Size of subtitle text</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the size of subtitle text.</string>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>auto</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="2" colspan="2">
+       <widget class="QCheckBox" name="c_autoscale">
+        <property name="toolTip">
+         <string>Automatically scale subtitles and other OSD elements</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to automatically scale subtitles and other OSD elements.</string>
+        </property>
+        <property name="text">
+         <string>&amp;Auto scale</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="l_outline">
+        <property name="toolTip">
+         <string>Outline of the font for displaying subtitles and other OSD text</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the outline of the font for displaying subtitles and other OSD text.</string>
+        </property>
+        <property name="text">
+         <string>&amp;Outline</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="buddy">
+         <cstring>c_outline</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QSlider" name="c_outline_slider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Outline of the font for displaying subtitles and other OSD text</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the outline of the font for displaying subtitles and other OSD text.</string>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>200</number>
+        </property>
+        <property name="pageStep">
+         <number>20</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="invertedAppearance">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2">
+       <widget class="KDoubleNumInput" name="c_outline">
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>32767</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Width of the subtitle area, as a percentage of the video width</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.150000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="l_width">
+        <property name="toolTip">
+         <string>Width of the subtitle area, as a percentage of the video width</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
+        </property>
+        <property name="text">
+         <string>&amp;Width</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="buddy">
+         <cstring>c_width</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QSlider" name="c_width_slider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Width of the subtitle area, as a percentage of the video width</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
+        </property>
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="pageStep">
+         <number>10</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2" colspan="2">
+       <widget class="KIntSpinBox" name="c_width">
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>32767</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Width of the subtitle area, as a percentage of the video width</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
+        </property>
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QLabel" name="l_position_step">
+        <property name="toolTip">
+         <string>Amount of adjustment to subtitle vertical position when using Move Up/Down commands</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the amount in percents of video height by which to move subtitles when using Move Up/Down commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
+        </property>
+        <property name="text">
+         <string>Position adjustment a&amp;mount</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="buddy">
+         <cstring>c_position_step</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2" colspan="2">
+       <widget class="KIntSpinBox" name="c_position_step">
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>32767</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Amount of adjustment to subtitle vertical position when using Move Up/Down commands</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the amount in percents of video height by which to move subtitles when using Move Up/Down commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QLabel" name="l_delay_step">
+        <property name="toolTip">
+         <string>Amount of adjustment to subtitle delay when using Increase/Decrease commands</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the amount in seconds by which to change subtitle delay when using Increase/Decrease Delay commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
+        </property>
+        <property name="text">
+         <string>Delay adjustment a&amp;mount</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="buddy">
+         <cstring>c_delay_step</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2" colspan="2">
+       <widget class="KDoubleNumInput" name="c_delay_step">
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>32767</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Amount of adjustment to subtitle delay when using Increase/Decrease commands</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the amount in seconds by which to change subtitle delay when using Increase/Decrease Delay commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
+        </property>
+        <property name="minimum">
+         <double>0.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="suffix">
+         <string extracomment="Real value"> seconds</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="l_encoding">
+        <property name="toolTip">
+         <string>Encoding of the subtitle file</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the encoding of the subtitle file.</string>
+        </property>
+        <property name="text">
+         <string>&amp;Encoding</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="buddy">
+         <cstring>c_encoding</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1" colspan="3">
+       <widget class="KComboBox" name="c_encoding">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Encoding of the subtitle file</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the encoding of the subtitle file.</string>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>auto</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="7" column="0" colspan="4">
+       <widget class="QCheckBox" name="c_closed_caption">
+        <property name="toolTip">
+         <string>Display closed caption subtitles if they are available</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to display closed caption subtitles if they are available.</string>
+        </property>
+        <property name="text">
+         <string>&amp;Display closed caption subtitles</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0" colspan="2">
+       <widget class="QCheckBox" name="c_subtitles_autoexpand">
+        <property name="toolTip">
+         <string>Automatically expand the video area to fit subtitles</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to automatically expand the video area to fit subtitles below the video.</string>
+        </property>
+        <property name="text">
+         <string>Auto &amp;expand video area to aspect ratio</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <widget class="QComboBox" name="c_aspect">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Aspect ratio of the expanded video area</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to specify the aspect ratio of the expanded video area. The video will only be expanded if it has a higher aspect ratio than the one you choose.</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>1:1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>4:3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>16:9</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="9" column="0" colspan="4">
+       <widget class="QCheckBox" name="c_subtitles_autoload">
+        <property name="toolTip">
+         <string>Automatically load subtitle types selected below</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option to automatically load subtitle types selected below by looking for subtitle files with the same name as the currently loaded file and the corresponding subtitle extension.</string>
+        </property>
+        <property name="text">
+         <string>Auto&amp;load subtitles</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="l_extensions">
+        <property name="toolTip">
+         <string>List of extensions to use for automatically loading subtitles</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option that lets you give a list of extensions that will be used to automatically load subtitles. If you enter multiple extensions, separate them by commas, semicolons, colons, periods or spaces. Extensions you give will be converted to lower and upper case when looking for files. Subtitles with mixed case extensions cannot be autoloaded at this time.</string>
+        </property>
+        <property name="text">
+         <string>&amp;Extensions</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="buddy">
+         <cstring>c_subtitles_list</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1" colspan="3">
+       <widget class="QLineEdit" name="c_subtitles_list">
+        <property name="toolTip">
+         <string>List of extensions to use for automatically loading subtitles</string>
+        </property>
+        <property name="whatsThis">
+         <string>Option that lets you give a list of extensions that will be used to automatically load subtitles. If you enter multiple extensions, separate them by commas, semicolons, colons, periods or spaces. Extensions you give will be converted to lower and upper case when looking for files. Subtitles with mixed case extensions cannot be autoloaded at this time.</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="0"/>
+ <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KDoubleNumInput</class>
+   <extends>QWidget</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KFontComboBox</class>
+   <extends>KComboBox</extends>
+   <header>kfontcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>c_width_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>KPlayerSettingsSubtitlesPage</receiver>
+   <slot>widthSliderChanged(int)</slot>
+  </connection>
+  <connection>
+   <sender>c_width</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>KPlayerSettingsSubtitlesPage</receiver>
+   <slot>widthEditChanged(int)</slot>
+  </connection>
+  <connection>
+   <sender>c_outline_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>KPlayerSettingsSubtitlesPage</receiver>
+   <slot>outlineSliderChanged(int)</slot>
+  </connection>
+  <connection>
+   <sender>c_outline</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>KPlayerSettingsSubtitlesPage</receiver>
+   <slot>outlineEditChanged(double)</slot>
+  </connection>
+  <connection>
+   <sender>c_subtitles_autoexpand</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>KPlayerSettingsSubtitlesPage</receiver>
+   <slot>autoexpandChanged(bool)</slot>
+  </connection>
+  <connection>
+   <sender>c_subtitles_autoload</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>KPlayerSettingsSubtitlesPage</receiver>
+   <slot>autoloadSubtitlesChanged(bool)</slot>
+  </connection>
+ </connections>
 </ui>

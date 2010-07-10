@@ -172,9 +172,9 @@ public:
 
 protected slots:
   void widthSliderChanged (int);
-  void widthEditChanged (const QString&);
+  void widthEditChanged (const int);
   void outlineSliderChanged (int);
-  void outlineEditChanged (const QString&);
+  void outlineEditChanged (const double);
   void autoexpandChanged (bool);
   void autoloadSubtitlesChanged (bool);
 
@@ -248,6 +248,8 @@ public:
 
 protected slots:
   void resetChanged (bool);
+  void minimumVolumeValueChanged(int);
+  void maximumVolumeValueChanged(int);
 };
 
 class KPlayerSettingsContrast : public QFrame, protected Ui_KPlayerSettingsContrastPage

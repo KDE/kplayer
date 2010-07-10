@@ -2076,15 +2076,11 @@ public:
     { return getInteger ("Preferred Slider Length"); }
   void setPreferredSliderLength (int length)
     { setInteger ("Preferred Slider Length", limit (length, 50)); }
-  void resetPreferredSliderLength (void)
-    { reset ("Preferred Slider Length"); }
 
   int minimumSliderLength (void) const
     { return getInteger ("Minimum Slider Length"); }
   void setMinimumSliderLength (int length)
     { setInteger ("Minimum Slider Length", limit (length, 50)); }
-  void resetMinimumSliderLength (void)
-    { reset ("Minimum Slider Length"); }
 
   bool showSliderMarks (void) const
     { return getBoolean ("Show Slider Marks"); }
@@ -2096,8 +2092,6 @@ public:
     { return getInteger ("Slider Marks"); }
   void setSliderMarks (int marks)
     { setInteger ("Slider Marks", limit (marks, 1, 100)); }
-  void resetSliderMarks (void)
-    { reset ("Slider Marks"); }
 
   // Message configuration
 
@@ -2129,8 +2123,6 @@ public:
     { return setBoolean ("Software Volume", value); }
   void setMaximumSoftwareVolume (int maximum)
     { setInteger ("Maximum Software Volume", maximum); }
-  void resetMaximumSoftwareVolume (void)
-    { reset ("Maximum Software Volume"); }
 
   void setMixerDevice (const QString& device)
     { setString ("Mixer Device", device); }

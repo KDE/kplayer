@@ -203,64 +203,24 @@
    <signal>valueChanged(int)</signal>
    <receiver>KPlayerSettingsProgressPage</receiver>
    <slot>normalSeekAmountChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>330</x>
-     <y>222</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>397</x>
-     <y>55</y>
-    </hint>
-   </hints>
   </connection>
   <connection>
    <sender>c_progress_fast</sender>
    <signal>valueChanged(int)</signal>
    <receiver>KPlayerSettingsProgressPage</receiver>
    <slot>fastSeekAmountChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>354</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>420</x>
-     <y>84</y>
-    </hint>
-   </hints>
   </connection>
   <connection>
    <sender>c_progress_seek_units</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>KPlayerSettingsProgressPage</receiver>
    <slot>normalSeekUnitsChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>404</x>
-     <y>222</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>417</x>
-     <y>116</y>
-    </hint>
-   </hints>
   </connection>
   <connection>
    <sender>c_progress_fast_units</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>KPlayerSettingsProgressPage</receiver>
    <slot>fastSeekUnitsChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>429</x>
-     <y>255</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>441</x>
-     <y>153</y>
-    </hint>
-   </hints>
   </connection>
  </connections>
  <slots>

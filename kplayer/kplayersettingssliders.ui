@@ -258,32 +258,12 @@
    <signal>toggled(bool)</signal>
    <receiver>KPlayerSettingsSlidersPage</receiver>
    <slot>showMarksChanged(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>169</x>
-     <y>264</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
   </connection>
   <connection>
    <sender>c_minimum_slider_length</sender>
    <signal>valueChanged(int)</signal>
    <receiver>KPlayerSettingsSlidersPage</receiver>
    <slot>minimumSliderLengthChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>438</x>
-     <y>196</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>331</x>
-     <y>121</y>
-    </hint>
-   </hints>
   </connection>
  </connections>
 </ui>
