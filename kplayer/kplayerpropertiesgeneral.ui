@@ -67,7 +67,7 @@
               </widget>
             </item>
             <item>
-              <widget class="QLineEdit" name="c_name">
+              <widget class="KLineEdit" name="c_name">
                 <property name="sizePolicy">
                   <sizepolicy>
                     <hsizetype>3</hsizetype>
@@ -115,7 +115,7 @@
               </widget>
             </item>
             <item>
-              <widget class="QLineEdit" name="c_url">
+              <widget class="KLineEdit" name="c_url">
                 <property name="sizePolicy">
                   <sizepolicy>
                     <hsizetype>3</hsizetype>
@@ -180,7 +180,7 @@
                         </widget>
                       </item>
                       <item row="0" column="1">
-                        <widget class="QLineEdit" name="c_type">
+                        <widget class="KLineEdit" name="c_type">
                           <property name="sizePolicy">
                             <sizepolicy>
                               <hsizetype>3</hsizetype>
@@ -223,7 +223,7 @@
                         </widget>
                       </item>
                       <item row="1" column="1">
-                        <widget class="QLineEdit" name="c_frequency">
+                        <widget class="KLineEdit" name="c_frequency">
                           <property name="sizePolicy">
                             <sizepolicy>
                               <hsizetype>3</hsizetype>
@@ -290,7 +290,7 @@
                         </widget>
                       </item>
                       <item row="2" column="1">
-                        <widget class="QLineEdit" name="c_length">
+                        <widget class="KLineEdit" name="c_length">
                           <property name="sizePolicy">
                             <sizepolicy>
                               <hsizetype>3</hsizetype>
@@ -483,7 +483,7 @@
                         </widget>
                       </item>
                       <item row="7" column="1" colspan="2">
-                        <widget class="QLineEdit" name="c_channel_file">
+                        <widget class="KLineEdit" name="c_channel_file">
                           <property name="sizePolicy">
                             <sizepolicy>
                               <hsizetype>3</hsizetype>

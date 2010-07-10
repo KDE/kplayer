@@ -89,7 +89,7 @@
                   </widget>
                 </item>
                 <item row="0" column="2">
-                  <widget class="QLineEdit" name="c_track">
+                  <widget class="KLineEdit" name="c_track">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>0</hsizetype>
@@ -173,7 +173,7 @@
                   </widget>
                 </item>
                 <item row="1" column="2">
-                  <widget class="QLineEdit" name="c_contrast">
+                  <widget class="KLineEdit" name="c_contrast">
                     <property name="maximumSize">
                       <size>
                         <width>70</width>
@@ -267,7 +267,7 @@
                   </widget>
                 </item>
                 <item row="2" column="2">
-                  <widget class="QLineEdit" name="c_brightness">
+                  <widget class="KLineEdit" name="c_brightness">
                     <property name="maximumSize">
                       <size>
                         <width>70</width>
@@ -343,7 +343,7 @@
                   </widget>
                 </item>
                 <item row="3" column="2">
-                  <widget class="QLineEdit" name="c_hue">
+                  <widget class="KLineEdit" name="c_hue">
                     <property name="maximumSize">
                       <size>
                         <width>70</width>
@@ -419,7 +419,7 @@
                   </widget>
                 </item>
                 <item row="4" column="2">
-                  <widget class="QLineEdit" name="c_saturation">
+                  <widget class="KLineEdit" name="c_saturation">
                     <property name="maximumSize">
                       <size>
                         <width>70</width>
@@ -497,7 +497,7 @@
                   </widget>
                 </item>
                 <item row="6" column="1">
-                  <widget class="QLineEdit" name="c_bitrate">
+                  <widget class="KLineEdit" name="c_bitrate">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -559,7 +559,7 @@
                   </widget>
                 </item>
                 <item row="7" column="1">
-                  <widget class="QLineEdit" name="c_framerate">
+                  <widget class="KLineEdit" name="c_framerate">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -649,7 +649,7 @@
                   </widget>
                 </item>
                 <item row="8" column="2">
-                  <widget class="QLineEdit" name="c_input">
+                  <widget class="KLineEdit" name="c_input">
                     <property name="maximumSize">
                       <size>
                         <width>70</width>
@@ -995,7 +995,7 @@
                   </widget>
                 </item>
                 <item row="10" column="2">
-                  <widget class="QLineEdit" name="c_norm_id">
+                  <widget class="KLineEdit" name="c_norm_id">
                     <property name="maximumSize">
                       <size>
                         <width>70</width>

@@ -94,7 +94,7 @@
                   </widget>
                 </item>
                 <item row="0" column="2">
-                  <widget class="QLineEdit" name="c_track">
+                  <widget class="KLineEdit" name="c_track">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>0</hsizetype>
@@ -140,7 +140,7 @@
                   </widget>
                 </item>
                 <item row="2" column="0" colspan="4">
-                  <widget class="QLineEdit" name="c_url">
+                  <widget class="KLineEdit" name="c_url">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -398,7 +398,7 @@
                   </widget>
                 </item>
                 <item row="7" column="2">
-                  <widget class="QLineEdit" name="c_position">
+                  <widget class="KLineEdit" name="c_position">
                     <property name="maximumSize">
                       <size>
                         <width>70</width>
@@ -456,7 +456,7 @@
                   </widget>
                 </item>
                 <item row="8" column="2">
-                  <widget class="QLineEdit" name="c_delay">
+                  <widget class="KLineEdit" name="c_delay">
                     <property name="maximumSize">
                       <size>
                         <width>70</width>

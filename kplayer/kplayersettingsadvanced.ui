@@ -64,7 +64,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="c_executable_path">
+       <widget class="KLineEdit" name="c_executable_path">
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -105,7 +105,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="c_command_line">
+       <widget class="KLineEdit" name="c_command_line">
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
