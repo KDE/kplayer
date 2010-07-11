@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>480</height>
+    <width>615</width>
+    <height>359</height>
    </rect>
   </property>
   <property name="frameShape">
@@ -21,20 +21,17 @@
   </property>
   <layout class="QGridLayout">
    <item row="0" column="0">
-    <widget class="QFrame" name="frame1">
+    <widget class="QGroupBox" name="groupBox1">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
-     </property>
      <layout class="QGridLayout">
+      <property name="leftMargin">
+       <number>10</number>
+      </property>
       <item row="0" column="0">
        <widget class="QLabel" name="l_font_name">
         <property name="toolTip">
@@ -44,7 +41,7 @@
          <string>Option to specify the name of the font for displaying subtitles and other OSD text.</string>
         </property>
         <property name="text">
-         <string>Font &amp;name</string>
+         <string>Font &amp;name:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -111,7 +108,7 @@
          <string>Option to specify the size of subtitle text.</string>
         </property>
         <property name="text">
-         <string>Text &amp;size</string>
+         <string>Text &amp;size:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -170,7 +167,7 @@
          <string>Option to specify the outline of the font for displaying subtitles and other OSD text.</string>
         </property>
         <property name="text">
-         <string>&amp;Outline</string>
+         <string>&amp;Outline:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -245,7 +242,7 @@
          <string>Option to specify the width of the subtitle area, as a percentage of the video width.</string>
         </property>
         <property name="text">
-         <string>&amp;Width</string>
+         <string>&amp;Width:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -317,7 +314,7 @@
          <string>Option to specify the amount in percents of video height by which to move subtitles when using Move Up/Down commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
         </property>
         <property name="text">
-         <string>Position adjustment a&amp;mount</string>
+         <string>Position adjustment a&amp;mount:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -361,7 +358,7 @@
          <string>Option to specify the amount in seconds by which to change subtitle delay when using Increase/Decrease Delay commands on Player/Subtitles menu or the corresponding keyboard shortcuts.</string>
         </property>
         <property name="text">
-         <string>Delay adjustment a&amp;mount</string>
+         <string>Delay adjustment a&amp;mount:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -411,7 +408,7 @@
          <string>Option to specify the encoding of the subtitle file.</string>
         </property>
         <property name="text">
-         <string>&amp;Encoding</string>
+         <string>&amp;Encoding:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -527,7 +524,7 @@
          <string>Option that lets you give a list of extensions that will be used to automatically load subtitles. If you enter multiple extensions, separate them by commas, semicolons, colons, periods or spaces. Extensions you give will be converted to lower and upper case when looking for files. Subtitles with mixed case extensions cannot be autoloaded at this time.</string>
         </property>
         <property name="text">
-         <string>&amp;Extensions</string>
+         <string>&amp;Extensions:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -542,6 +539,12 @@
       </item>
       <item row="10" column="1" colspan="3">
        <widget class="KLineEdit" name="c_subtitles_list">
+        <property name="minimumSize">
+         <size>
+          <width>450</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>List of extensions to use for automatically loading subtitles</string>
         </property>
@@ -550,8 +553,34 @@
         </property>
        </widget>
       </item>
+      <item row="5" column="4">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
     </widget>
+   </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
@@ -573,6 +602,11 @@
    <header>kfontcombobox.h</header>
   </customwidget>
   <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
@@ -585,36 +619,96 @@
    <signal>valueChanged(int)</signal>
    <receiver>KPlayerSettingsSubtitlesPage</receiver>
    <slot>widthSliderChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
   <connection>
    <sender>c_width</sender>
    <signal>valueChanged(int)</signal>
    <receiver>KPlayerSettingsSubtitlesPage</receiver>
    <slot>widthEditChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
   <connection>
    <sender>c_outline_slider</sender>
    <signal>valueChanged(int)</signal>
    <receiver>KPlayerSettingsSubtitlesPage</receiver>
    <slot>outlineSliderChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
   <connection>
    <sender>c_outline</sender>
    <signal>valueChanged(double)</signal>
    <receiver>KPlayerSettingsSubtitlesPage</receiver>
    <slot>outlineEditChanged(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
   <connection>
    <sender>c_subtitles_autoexpand</sender>
    <signal>toggled(bool)</signal>
    <receiver>KPlayerSettingsSubtitlesPage</receiver>
    <slot>autoexpandChanged(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
   <connection>
    <sender>c_subtitles_autoload</sender>
    <signal>toggled(bool)</signal>
    <receiver>KPlayerSettingsSubtitlesPage</receiver>
    <slot>autoloadSubtitlesChanged(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
  </connections>
 </ui>

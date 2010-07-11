@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>648</width>
-    <height>480</height>
+    <width>526</width>
+    <height>121</height>
    </rect>
   </property>
   <property name="frameShape">
@@ -21,20 +21,20 @@
   </property>
   <layout class="QGridLayout">
    <item row="0" column="0">
-    <widget class="QFrame" name="frame4">
+    <widget class="QGroupBox" name="groupBox4">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
+     <property name="title">
+      <string>Seek amount</string>
      </property>
      <layout class="QGridLayout">
+      <property name="leftMargin">
+       <number>10</number>
+      </property>
       <item row="0" column="0">
        <layout class="QGridLayout">
         <item row="0" column="0">
@@ -52,7 +52,7 @@
            <string>Option to specify the amount by which playback will be moved forward or backward when using Forward/Backward commands on Player menu, either in seconds or in percents of time length of the file if it is known.</string>
           </property>
           <property name="text">
-           <string>&amp;Normal seek amount</string>
+           <string>&amp;Normal seek amount:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -101,6 +101,12 @@
         </item>
         <item row="0" column="2">
          <widget class="KComboBox" name="c_progress_seek_units">
+          <property name="minimumSize">
+           <size>
+            <width>140</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="toolTip">
            <string>Amount by which to move playback when using Forward/Backward commands</string>
           </property>
@@ -124,7 +130,7 @@
            <string>Option to specify the amount by which playback will be moved forward or backward when using Fast Forward/Backward commands on Player menu, either in seconds or in percents of time length of the file if it is known.</string>
           </property>
           <property name="text">
-           <string>&amp;Fast seek amount</string>
+           <string>&amp;Fast seek amount:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -173,6 +179,12 @@
         </item>
         <item row="1" column="2">
          <widget class="KComboBox" name="c_progress_fast_units">
+          <property name="minimumSize">
+           <size>
+            <width>140</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="toolTip">
            <string>Amount by which to move playback when using Fast Forward/Backward commands</string>
           </property>
@@ -183,8 +195,34 @@
         </item>
        </layout>
       </item>
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
     </widget>
+   </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
@@ -195,6 +233,11 @@
    <extends>QSpinBox</extends>
    <header>knuminput.h</header>
   </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
@@ -203,24 +246,64 @@
    <signal>valueChanged(int)</signal>
    <receiver>KPlayerSettingsProgressPage</receiver>
    <slot>normalSeekAmountChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
   <connection>
    <sender>c_progress_fast</sender>
    <signal>valueChanged(int)</signal>
    <receiver>KPlayerSettingsProgressPage</receiver>
    <slot>fastSeekAmountChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
   <connection>
    <sender>c_progress_seek_units</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>KPlayerSettingsProgressPage</receiver>
    <slot>normalSeekUnitsChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
   <connection>
    <sender>c_progress_fast_units</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>KPlayerSettingsProgressPage</receiver>
    <slot>fastSeekUnitsChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
  </connections>
  <slots>

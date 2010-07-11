@@ -21,20 +21,17 @@
   </property>
   <layout class="QGridLayout">
    <item row="0" column="0">
-    <widget class="QFrame" name="frame1">
+    <widget class="QGroupBox" name="groupBox1">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
-     </property>
      <layout class="QGridLayout">
+      <property name="leftMargin">
+       <number>10</number>
+      </property>
       <item row="0" column="0">
        <layout class="QGridLayout">
         <item row="0" column="0">
@@ -46,7 +43,7 @@
            <string>Option that lists available audio outputs and lets you choose the one to use for playing sound. Recommended choices are OSS (the default) and ALSA (recommended when available). ARTS and SDL are not recommended. Auto will let MPlayer choose an audio output according to its own configuration. If you need to specify more than one output separated by comma, set this option to Auto and put them in Additional Command Line Arguments on Advanced page.</string>
           </property>
           <property name="text">
-           <string>Output d&amp;river</string>
+           <string>Output d&amp;river:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -84,7 +81,7 @@
            <string>Option to specify audio device to use for the chosen audio output. Leave blank to use the default device.</string>
           </property>
           <property name="text">
-           <string>Output dev&amp;ice</string>
+           <string>Output dev&amp;ice:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -138,7 +135,7 @@
            <string>Option to specify the maximum sound volume as a percentage of the normal volume level.</string>
           </property>
           <property name="text">
-           <string>Maximum vo&amp;lume</string>
+           <string>Maximum vo&amp;lume:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -188,7 +185,7 @@
            <string>Option to specify the mixer device to be used to control audio output volume. Leave blank to use the default device.</string>
           </property>
           <property name="text">
-           <string>Mi&amp;xer device</string>
+           <string>Mi&amp;xer device:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -229,7 +226,7 @@
            <string>Option to specify the mixer channel to be used to control audio output volume. Leave blank to use the default channel.</string>
           </property>
           <property name="text">
-           <string>Mixer cha&amp;nnel</string>
+           <string>Mixer cha&amp;nnel:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -270,7 +267,7 @@
            <string>Option that lists available codecs and lets you choose the one to be used for decoding audio. Auto is the recommended choice, it lets MPlayer decide which codec to use automatically. If you need to tell MPlayer to use a particular codec for a given file or stream, set this option in File Properties.</string>
           </property>
           <property name="text">
-           <string>Cod&amp;ec</string>
+           <string>Cod&amp;ec:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -318,7 +315,7 @@
            <string>Option to specify the amount in seconds by which to change audio delay when using Increase/Decrease Delay commands on Player/Audio menu or the corresponding keyboard shortcuts.</string>
           </property>
           <property name="text">
-           <string>Delay adjustment a&amp;mount</string>
+           <string>Delay adjustment a&amp;mount:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -385,6 +382,19 @@
       </item>
      </layout>
     </widget>
+   </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

@@ -27,20 +27,17 @@
   </property>
   <layout class="QGridLayout">
    <item row="0" column="0">
-    <widget class="QFrame" name="frame1">
+    <widget class="QGroupBox" name="groupBox1">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
-     </property>
      <layout class="QVBoxLayout">
+      <property name="leftMargin">
+       <number>10</number>
+      </property>
       <item>
        <widget class="QLabel" name="l_executable_path">
         <property name="toolTip">
@@ -50,7 +47,7 @@
          <string>Path to MPlayer executable, either absolute path or a name to look for in the current environment path.</string>
         </property>
         <property name="text">
-         <string>&amp;Executable path</string>
+         <string>&amp;Executable path:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -91,7 +88,7 @@
          <string>Additional options that will be passed to MPlayer on the command line. See mplayer(1) manpage for a complete list of possible options. You can also choose this option for individual file or URL in File Properties.</string>
         </property>
         <property name="text">
-         <string>Additional command &amp;line arguments</string>
+         <string>Additional command &amp;line arguments:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -134,7 +131,7 @@
            <string>Property that shows and allows you to change the demultiplexer that should be used to handle file formats. If the chosen demuxer fails on a particular file, another one may be used.</string>
           </property>
           <property name="text">
-           <string>Preferred &amp;demuxer</string>
+           <string>Preferred &amp;demuxer:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -172,7 +169,7 @@
            <string>If your system is too slow to play a file, MPlayer can drop some frames so playback does not slow down. None disables dropping, Soft drops less frames, and Hard drops more frames and may sometimes break decoding. You can also choose this option for individual file or URL in File Properties.</string>
           </property>
           <property name="text">
-           <string>&amp;Frame drop</string>
+           <string>&amp;Frame drop:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -219,7 +216,7 @@
            <string>Option to choose whether to use cache and set its size. Auto lets MPlayer use the its own configuration, None tells MPlayer to use no cache, and Set Size lets you set a specific size. You can also choose this option for individual file or URL in File Properties.</string>
           </property>
           <property name="text">
-           <string>Cac&amp;he</string>
+           <string>Cac&amp;he:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -300,7 +297,7 @@
            <string>Option to choose whether to build new index for seeking. Yes builds an index if the file does not have it, No tells MPlayer not to build index, and Force makes it always build an index. You can also choose this option for individual file or URL in File Properties.</string>
           </property>
           <property name="text">
-           <string>&amp;Build new index</string>
+           <string>&amp;Build new index:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -436,7 +433,7 @@
          <string>Option to choose what to include in On Screen Display inside the video area. Since KPlayer can display almost everything outside the video area, the recommended choice is Subtitles Only.</string>
         </property>
         <property name="text">
-         <string>OSD le&amp;vel</string>
+         <string>OSD le&amp;vel:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -488,6 +485,19 @@
      </layout>
     </widget>
    </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="0"/>
@@ -497,6 +507,11 @@
    <extends>QSpinBox</extends>
    <header>knuminput.h</header>
   </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
@@ -505,6 +520,16 @@
    <signal>activated(int)</signal>
    <receiver>KPlayerSettingsAdvancedPage</receiver>
    <slot>cacheChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
   </connection>
  </connections>
 </ui>
