@@ -57,7 +57,7 @@ set(kplayer_SRCS ${kplayer_SRCS}
 
 kde4_add_executable(kplayer ${kplayer_SRCS})
 
-target_link_libraries(kplayer ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDE3SUPPORT_LIBRARY})
+target_link_libraries(kplayer ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDE3SUPPORT_LIBRARY} ${X11_LIBRARIES} ${KDE4_SOLID_LIBS})
 
 install(TARGETS kplayer ${INSTALL_TARGETS_DEFAULT_ARGS})
 
