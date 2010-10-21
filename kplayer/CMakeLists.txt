@@ -73,7 +73,7 @@ install(TARGETS kplayerpart DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES  kplayer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
+install( PROGRAMS  kplayer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES  kplayerpartui.rc DESTINATION ${DATA_INSTALL_DIR}/kplayer )
 install( FILES  input.conf DESTINATION ${DATA_INSTALL_DIR}/kplayer )
 install( FILES  kplayerpart.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
