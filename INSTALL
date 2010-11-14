@@ -11,7 +11,7 @@ Visit the KPlayer home page for links to binary packages for other distros:
 http://kplayer.sourceforge.net/
 
 
-Compiling from source tarball or CVS
+Compiling from source tarball or Git
 ------------------------------------
 
 Extract the tarball
@@ -19,11 +19,10 @@ Extract the tarball
   tar xjf kplayer-0.7.tar.bz2
   cd kplayer-0.7
 
-Or download code from CVS
+Or download code from Git
 
-  cvs -d:pserver:anonymous@kplayer.cvs.sourceforge.net:/cvsroot/kplayer login
-  cvs -z3 -d:pserver:anonymous@kplayer.cvs.sourceforge.net:/cvsroot/kplayer co -P kplayer
-  cd kplayer
+git clone git://anongit.kde.org/kplayer
+cd kplayer
 
 Create Makefiles
 
