@@ -21,8 +21,8 @@ Extract the tarball
 
 Or download code from Git
 
-git clone git://anongit.kde.org/kplayer
-cd kplayer
+  git clone git://anongit.kde.org/kplayer
+  cd kplayer
 
 Create Makefiles
 
