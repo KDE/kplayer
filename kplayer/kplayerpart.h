@@ -22,6 +22,7 @@
 
 #include <kaction.h>
 #include <kparts/browserextension.h>
+#include <kaboutdata.h>
 
 #include "kplayerprocess.h"
 

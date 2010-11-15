@@ -13,6 +13,10 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayerslideraction.h"
+#include "kplayerengine.h"
+#include "kplayersettings.h"
+
 #include <kapplication.h>
 #include <ktoolbar.h>
 #include <qbytearray.h>
@@ -26,10 +30,6 @@
 #define DEBUG_KPLAYER_SLIDERS
 #define DEBUG_KPLAYER_SLIDER_HINTS
 #endif
-
-#include "kplayerslideraction.h"
-#include "kplayerengine.h"
-#include "kplayersettings.h"
 
 KPlayerPopupFrame::KPlayerPopupFrame (QWidget* parent)
   : QFrame (parent, Qt::Popup)

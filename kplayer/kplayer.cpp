@@ -13,6 +13,17 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayer.h"
+#include "kplayer.moc"
+#include "kplayerlogwindow.h"
+#include "kplayernodeaction.h"
+#include "kplayernodeview.h"
+#include "kplayerplaylist.h"
+#include "kplayersettings.h"
+#include "kplayersettingsdialog.h"
+#include "kplayerslideraction.h"
+#include "kplayerwidget.h"
+
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -45,17 +56,6 @@
 //#define DEBUG_KPLAYER_NOTIFY_MOUSE
 //#define DEBUG_KPLAYER_NOTIFY_DRAG
 #endif
-
-#include "kplayer.h"
-#include "kplayer.moc"
-#include "kplayerlogwindow.h"
-#include "kplayernodeaction.h"
-#include "kplayernodeview.h"
-#include "kplayerplaylist.h"
-#include "kplayersettings.h"
-#include "kplayersettingsdialog.h"
-#include "kplayerslideraction.h"
-#include "kplayerwidget.h"
 
 void KPlayerProcessX11Event (XEvent* event);
 void KPlayerX11GetKeyboardMouseState (uint id);

@@ -13,6 +13,11 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayersettingsdialog.h"
+#include "kplayersettingsdialog.moc"
+#include "kplayerengine.h"
+#include "kplayersettings.h"
+
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qcheckbox.h>
@@ -30,11 +35,6 @@
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SETTINGS_DIALOG
 #endif
-
-#include "kplayersettingsdialog.h"
-#include "kplayersettingsdialog.moc"
-#include "kplayerengine.h"
-#include "kplayersettings.h"
 
 QString comboEntry (QComboBox* combo)
 {

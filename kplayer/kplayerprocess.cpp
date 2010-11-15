@@ -17,6 +17,11 @@
 #include <config.h>
 #endif
 
+#include "kplayerprocess.h"
+#include "kplayerengine.h"
+#include "kplayersettings.h"
+#include "kplayerwidget.h"
+
 #include <fcntl.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
@@ -36,11 +41,6 @@
 //#define DEBUG_KPLAYER_KIOSLAVE
 //#define DEBUG_KPLAYER_DUMP
 #endif
-
-#include "kplayerprocess.h"
-#include "kplayerengine.h"
-#include "kplayersettings.h"
-#include "kplayerwidget.h"
 
 #define MIN_VIDEO_LENGTH 5
 #define NO_SEEK_ORIGIN -5

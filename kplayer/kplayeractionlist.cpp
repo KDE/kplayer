@@ -13,6 +13,9 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayeractionlist.h"
+#include "kplayerproperties.h"
+
 #include <kaction.h>
 #include <klocale.h>
 #include <qmenu.h>
@@ -21,9 +24,6 @@
 #ifdef DEBUG
 #define DEBUG_KPLAYER_ACTIONLIST
 #endif
-
-#include "kplayeractionlist.h"
-#include "kplayerproperties.h"
 
 KPlayerActionList::KPlayerActionList (const KLocalizedString& text, const KLocalizedString& status,
     const KLocalizedString& whatsthis, QObject* parent, const QString& name)

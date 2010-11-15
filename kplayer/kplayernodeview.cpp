@@ -13,6 +13,13 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayernodeview.h"
+#include "kplayernodeview.moc"
+#include "kplayernodeaction.h"
+#include "kplayerplaylist.h"
+#include "kplayerpropertiesdialog.h"
+#include "kplayersettings.h"
+
 #include <kiconloader.h>
 #include <kinputdialog.h>
 #include <klineedit.h>
@@ -28,13 +35,6 @@
 #ifdef DEBUG
 #define DEBUG_KPLAYER_NODEVIEW
 #endif
-
-#include "kplayernodeview.h"
-#include "kplayernodeview.moc"
-#include "kplayernodeaction.h"
-#include "kplayerplaylist.h"
-#include "kplayerpropertiesdialog.h"
-#include "kplayersettings.h"
 
 KPlayerNodeNameValidator::KPlayerNodeNameValidator (KPlayerContainerNode* node, QObject* parent)
   : QValidator (parent)

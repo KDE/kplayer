@@ -13,15 +13,15 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayernodeaction.h"
+#include "kplayernodeaction.moc"
+#include "kplayernode.h"
+
 #include <klocale.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_NODEACTION
 #endif
-
-#include "kplayernodeaction.h"
-#include "kplayernodeaction.moc"
-#include "kplayernode.h"
 
 KPlayerNodeActionList::KPlayerNodeActionList (const KLocalizedString& text, const KLocalizedString& status,
     const KLocalizedString& whatsthis, QObject* parent, const QString& name)

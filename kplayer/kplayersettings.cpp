@@ -17,6 +17,10 @@
 #include <config.h>
 #endif
 
+#include "kplayersettings.h"
+#include "kplayerengine.h"
+#include "kplayerwidget.h"
+
 #include <kconfig.h>
 #include <qfileinfo.h>
 #include <qregexp.h>
@@ -24,10 +28,6 @@
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SETTINGS
 #endif
-
-#include "kplayersettings.h"
-#include "kplayerengine.h"
-#include "kplayerwidget.h"
 
 KPlayerSettings::KPlayerSettings (void)
 {

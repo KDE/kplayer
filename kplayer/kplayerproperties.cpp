@@ -13,6 +13,14 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include "kplayerproperties.h"
+#include "kplayerengine.h"
+#include "kplayersettings.h"
+
 #include <fcntl.h>
 #include <kconfig.h>
 #include <klocale.h>
@@ -23,14 +31,6 @@
 #define KPLAYER_PROCESS_SIZE_IDS
 #ifdef DEBUG
 #define DEBUG_KPLAYER_PROPERTIES
-#endif
-
-#include "kplayerproperties.h"
-#include "kplayerengine.h"
-#include "kplayersettings.h"
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
 #endif
 
 const KUrl KPlayerProperties::nullUrl;
@@ -690,7 +690,7 @@ KPlayerSizeProperty::~KPlayerSizeProperty()
 
 QString KPlayerSizeProperty::asString (void) const
 {
-  return QString::number (value().width()) + "x" + QString::number (value().height());
+  return QString::number (value().width()) + 'x' + QString::number (value().height());
 }
 
 int KPlayerSizeProperty::compare (KPlayerProperty* property) const
@@ -919,7 +919,7 @@ QString KPlayerAppendableProperty::appendableValue (const QString& current) cons
 {
   if ( option() == 0 )
     return value();
-  return value().isEmpty() ? current : current.isEmpty() ? value() : current + " " + value();
+  return value().isEmpty() ? current : current.isEmpty() ? value() : current + ' ' + value();
 }
 
 void KPlayerAppendableProperty::setAppendableValue (const QString& value, bool append)
@@ -1001,7 +1001,7 @@ void KPlayerIntegerStringMapProperty::save (KConfigGroup& config, const QString&
     {
       QString value (QString::number (iterator.key()));
       if ( ! iterator.value().isEmpty() )
-        value += "=" + iterator.value();
+        value += '=' + iterator.value();
       values.append (value);
       ++ iterator;
     }
@@ -2789,9 +2789,9 @@ QString KPlayerMediaProperties::audioDriverString (void) const
       device.replace (':', '=');
       if ( driver != "oss" )
         device = "device=" + device;
-      driver += ":" + device;
+      driver += ':' + device;
     }
-    driver += ",";
+    driver += ',';
   }
   return driver;
 }
@@ -2801,7 +2801,7 @@ QString KPlayerMediaProperties::mixerChannelString (void) const
   static QRegExp re_mixer_channel ("^(.*) +([0-9]+)$");
   QString channel (mixerChannel());
   if ( re_mixer_channel.indexIn (channel) >= 0 )
-    channel = re_mixer_channel.cap(1) + "," + re_mixer_channel.cap(2);
+    channel = re_mixer_channel.cap(1) + ',' + re_mixer_channel.cap(2);
   return channel;
 }
 
@@ -2809,7 +2809,7 @@ QString KPlayerMediaProperties::audioCodecString (void) const
 {
   QString codec (audioCodecOption());
   if ( ! codec.isEmpty() )
-      codec += ",";
+      codec += ',';
   return codec;
 }
 
@@ -2825,9 +2825,9 @@ QString KPlayerMediaProperties::videoDriverString (void) const
       device.replace (':', '=');
       if ( driver != "oss" )
         device = "device=" + device;
-      driver += ":" + device;
+      driver += ':' + device;
     }
-    driver += ",";
+    driver += ',';
   }
   return driver;
 }
@@ -2836,7 +2836,7 @@ QString KPlayerMediaProperties::videoCodecString (void) const
 {
   QString codec (videoCodecOption());
   if ( ! codec.isEmpty() )
-      codec += ",";
+      codec += ',';
   return codec;
 }
 
@@ -2859,7 +2859,7 @@ KPlayerDeviceProperties::~KPlayerDeviceProperties()
 void KPlayerDeviceProperties::setupInfo (void)
 {
   KPlayerMediaProperties::setupInfo();
-  setPath ("/" + m_url.path().section ('/', 1, 0xffffffff, QString::SectionSkipEmpty));
+  setPath ('/' + m_url.path().section ('/', 1, 0xffffffff, QString::SectionSkipEmpty));
 }
 
 KPlayerTunerProperties::KPlayerTunerProperties (KPlayerProperties* parent, const KUrl& url)
@@ -3724,7 +3724,7 @@ int KPlayerTrackProperties::getTrackOption (const QString& key) const
   if ( has (key) )
   {
     int i = 1;
-    const QMap<int, QString>& ids (getIntegerStringMap (key + "s"));
+    const QMap<int, QString>& ids (getIntegerStringMap (key + 's'));
     if ( ids.count() > 1 )
     {
       int id = getInteger (key);
@@ -3747,7 +3747,7 @@ void KPlayerTrackProperties::setTrackOption (const QString& key, int value)
   else
   {
     int i = 1, id = 0;
-    const QMap<int, QString>& ids (getIntegerStringMap (key + "s"));
+    const QMap<int, QString>& ids (getIntegerStringMap (key + 's'));
     QMap<int, QString>::ConstIterator iterator (ids.constBegin()), end (ids.constEnd());
     while ( iterator != end && value != i )
     {
@@ -3842,7 +3842,7 @@ void KPlayerTrackProperties::autoexpand (void)
 #endif
     if ( height > res.height() )
     {
-      QString expand = "expand=" + QString::number (res.width()) + ":" + QString::number (height);
+      QString expand = "expand=" + QString::number (res.width()) + ':' + QString::number (height);
       int offset = res.width() / 10;
       height -= res.height();
       if ( offset + offset > height )
@@ -3859,7 +3859,7 @@ void KPlayerTrackProperties::autoexpand (void)
       if ( ! hasCommandLine() )
         setCommandLineOption ("-vf " + expand, 2);
       else if ( re_expand.indexIn (commandLineValue()) >= 0 )
-        setCommandLine (re_expand.cap(1) + "," + expand + re_expand.cap(2));
+        setCommandLine (re_expand.cap(1) + ',' + expand + re_expand.cap(2));
       else
         setCommandLine (commandLineValue() + " -vf " + expand);
       setCurrentResolution (QSize (size.width(), height));
@@ -4078,19 +4078,19 @@ QString KPlayerDVBChannelProperties::deviceSetting (void) const
   if ( hasVideoInput() || parent() -> hasVideoInput() )
   {
     if ( ! setting.isEmpty() )
-      setting += ":";
+      setting += ':';
     setting += "vid=" + QString::number (videoInput());
   }
   if ( hasAudioInput() || parent() -> hasAudioInput() )
   {
     if ( ! setting.isEmpty() )
-      setting += ":";
+      setting += ':';
     setting += "aid=" + QString::number (audioInput());
   }
   if ( hasChannelList() || parent() -> hasChannelList() )
   {
     if ( ! setting.isEmpty() )
-      setting += ":";
+      setting += ':';
     setting += "file=" + channelList();
   }
   return setting;

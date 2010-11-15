@@ -13,6 +13,11 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayerlogwindow.h"
+#include "kplayerlogwindow.moc"
+#include "kplayerengine.h"
+#include "kplayersettings.h"
+
 #include <klocale.h>
 #include <qaction.h>
 #include <qevent.h>
@@ -22,11 +27,6 @@
 #ifdef DEBUG
 #define DEBUG_KPLAYER_LOG
 #endif
-
-#include "kplayerlogwindow.h"
-#include "kplayerlogwindow.moc"
-#include "kplayerengine.h"
-#include "kplayersettings.h"
 
 KPlayerLogWindow::KPlayerLogWindow (KActionCollection* ac, QWidget* parent)
   : QDockWidget (parent)

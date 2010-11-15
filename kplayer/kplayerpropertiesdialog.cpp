@@ -13,6 +13,10 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayerpropertiesdialog.h"
+#include "kplayerpropertiesdialog.moc"
+#include "kplayerproperties.h"
+
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qcheckbox.h>
@@ -28,10 +32,6 @@ QString languageName (int id, QString language);
 #ifdef DEBUG
 #define DEBUG_KPLAYER_PROPERTIES_DIALOG
 #endif
-
-#include "kplayerpropertiesdialog.h"
-#include "kplayerpropertiesdialog.moc"
-#include "kplayerproperties.h"
 
 QString listEntry (QComboBox* combo, bool hasDefault = false)
 {

@@ -13,6 +13,12 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayernode.h"
+#include "kplayernode.moc"
+#include "kplayerprocess.h"
+#include "kplayersettings.h"
+#include "kplayersource.h"
+
 #include <kde_file.h>
 #include <klocale.h>
 #include <kcodecs.h>
@@ -36,12 +42,6 @@
 #define DEBUG_KPLAYER_NODE
 #define DEBUG_KPLAYER_SOLID
 #endif
-
-#include "kplayernode.h"
-#include "kplayernode.moc"
-#include "kplayerprocess.h"
-#include "kplayersettings.h"
-#include "kplayersource.h"
 
 KPlayerRootNode* KPlayerNode::m_root = 0;
 QString KPlayerNode::m_sort_key ("Name");
@@ -2438,7 +2438,7 @@ KPlayerContainerNode* KPlayerDevicesNode::getNodeByPath (const QString& path)
   kdDebugTime() << "KPlayerDevicesNode::getNodeByPath\n";
   kdDebugTime() << " Path   " << path << "\n";
 #endif
-  return getNodeById ("/" + path);
+  return getNodeById ('/' + path);
 }
 
 void KPlayerDevicesNode::deviceAdded (const QString& udi)

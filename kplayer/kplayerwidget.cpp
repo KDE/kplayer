@@ -13,6 +13,11 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayerwidget.h"
+#include "kplayerengine.h"
+#include "kplayerprocess.h"
+#include "kplayersettings.h"
+
 #include <kcursor.h>
 #include <klocale.h>
 #include <qevent.h>
@@ -23,11 +28,6 @@
 #define DEBUG_KPLAYER_WIDGET
 #define DEBUG_KPLAYER_WORKSPACE
 #endif
-
-#include "kplayerwidget.h"
-#include "kplayerengine.h"
-#include "kplayerprocess.h"
-#include "kplayersettings.h"
 
 void KPlayerX11SetInputFocus (uint id);
 void KPlayerX11MapWindow (uint id);

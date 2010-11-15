@@ -13,17 +13,17 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayersource.h"
+#include "kplayersource.moc"
+#include "kplayernode.h"
+#include "kplayerproperties.h"
+
 #include <klocale.h>
 #include <qregexp.h>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SOURCE
 #endif
-
-#include "kplayersource.h"
-#include "kplayersource.moc"
-#include "kplayernode.h"
-#include "kplayerproperties.h"
 
 static QRegExp re_semicolon ("; *");
 

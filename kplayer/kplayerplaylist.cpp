@@ -13,6 +13,14 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayerplaylist.h"
+#include "kplayerplaylist.moc"
+#include "kplayerengine.h"
+#include "kplayernode.h"
+#include "kplayernodeview.h"
+#include "kplayerpropertiesdialog.h"
+#include "kplayersettings.h"
+
 #include <kinputdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -28,14 +36,6 @@
 #ifdef DEBUG
 #define DEBUG_KPLAYER_PLAYLIST
 #endif
-
-#include "kplayerplaylist.h"
-#include "kplayerplaylist.moc"
-#include "kplayerengine.h"
-#include "kplayernode.h"
-#include "kplayernodeview.h"
-#include "kplayerpropertiesdialog.h"
-#include "kplayersettings.h"
 
 KPlayerPlaylist::KPlayerPlaylist (KActionCollection* ac, QObject* parent)
   : QObject (parent)

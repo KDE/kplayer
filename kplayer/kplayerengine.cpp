@@ -13,6 +13,13 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#include "kplayerengine.h"
+#include "kplayeractionlist.h"
+#include "kplayerpropertiesdialog.h"
+#include "kplayersettings.h"
+#include "kplayerslideraction.h"
+#include "kplayerwidget.h"
+
 #include <kapplication.h>
 #include <kconfig.h>
 #include <klocale.h>
@@ -28,13 +35,6 @@
 #ifdef DEBUG
 #define DEBUG_KPLAYER_ENGINE
 #endif
-
-#include "kplayerengine.h"
-#include "kplayeractionlist.h"
-#include "kplayerpropertiesdialog.h"
-#include "kplayersettings.h"
-#include "kplayerslideraction.h"
-#include "kplayerwidget.h"
 
 KPlayerEngine* KPlayerEngine::m_engine = 0;
 

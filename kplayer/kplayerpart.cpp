@@ -13,7 +13,12 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
-#include <kaboutdata.h>
+#include "kplayerpart.h"
+#include "kplayerpart.moc"
+#include "kplayerengine.h"
+#include "kplayersettings.h"
+#include "kplayerwidget.h"
+
 #include <kapplication.h>
 #include <klocalizedstring.h>
 #include <kpluginfactory.h>
@@ -26,12 +31,6 @@
 #ifdef DEBUG
 #define DEBUG_KPLAYER_KPART
 #endif
-
-#include "kplayerpart.h"
-#include "kplayerpart.moc"
-#include "kplayerengine.h"
-#include "kplayersettings.h"
-#include "kplayerwidget.h"
 
 static const KLocalizedString description = ki18n("KPlayerPart, an embeddable KDE media player");
 static const KLocalizedString license = ki18n("This program is distributed under the terms of the GPL version 3 or later.");
