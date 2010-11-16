@@ -1,0 +1,9 @@
+*~
+*.kdev4
+.directory
+*.tmp
+build/
+qtcreator-build/
+CMakeLists.txt.user
+CMakeCache.txt
+debug.log
