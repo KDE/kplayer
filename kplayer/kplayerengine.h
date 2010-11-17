@@ -70,7 +70,7 @@ public:
   bool zooming (void) const
     { return m_zooming; }
   /** Resets the zooming flag. */
-  void doneSyncronizing (void)
+  void doneSynchronizing (void)
     { m_zooming = false; }
 
   /** Returns whether the workspace is being resized by the user. */
@@ -499,10 +499,10 @@ protected:
 signals:
   /** Emitted when a window state changes. */
   void windowStateChanged (uint wid);
-  /** Emitted to let the main window syncronize full screen and maximized settings. */
-  void syncronizeState (bool* pending);
-  /** Emitted to let the main window syncronize controls and menus. */
-  void syncronizeControls (void);
+  /** Emitted to let the main window synchronize full screen and maximized settings. */
+  void synchronizeState (bool* pending);
+  /** Emitted to let the main window synchronize controls and menus. */
+  void synchronizeControls (void);
   /** Emitted to let the main window update the layout of its controls. */
   void updateLayout (const QSize&);
   /** Emitted to let the main window resize as necessary. */

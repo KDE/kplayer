@@ -291,10 +291,10 @@ public slots:
 protected slots:
   /** Resets the zooming flag when the main window state changes. */
   void windowStateChanged (uint wid);
-  /** Syncronizes full screen and maximized settings. */
-  void syncronizeState (bool* pending);
-  /** Syncronizes controls. */
-  void syncronizeControls (void);
+  /** Synchronizes full screen and maximized settings. */
+  void synchronizeState (bool* pending);
+  /** Synchronizes controls. */
+  void synchronizeControls (void);
   /** Updates the layout of the window controls. */
   void updateLayout (const QSize&);
   /** Resizes the window to the correct size. */
@@ -362,7 +362,7 @@ public:
   /** KPlayer application destructor. */
   virtual ~KPlayerApplication();
 
-  /** Creates the main window on the first invokation. Calls KPlayer::start(). */
+  /** Creates the main window on the first invocation. Calls KPlayer::start(). */
   virtual int newInstance (void);
 
   /** Remembers the shift key state. */

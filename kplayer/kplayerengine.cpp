@@ -2379,10 +2379,10 @@ void KPlayerEngine::handleLayout (bool user_zoom, bool user_resize)
     return;
   m_zooming = true;
   bool pending;
-  emit syncronizeState (&pending);
+  emit synchronizeState (&pending);
   if ( pending )
     return;
-  emit syncronizeControls();
+  emit synchronizeControls();
   QSize size (settings() -> adjustDisplaySize (user_zoom, user_resize));
   emit updateLayout (size);
   size = settings() -> adjustDisplaySize (user_zoom, user_resize);

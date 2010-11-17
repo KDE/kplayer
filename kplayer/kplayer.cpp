@@ -496,8 +496,8 @@ KPlayerWindow::KPlayerWindow (QWidget* parent)
   };
   KPlayerEngine::initialize (actionCollection(), this, KGlobal::config().data());
   connect (engine(), SIGNAL (windowStateChanged (uint)), SLOT (windowStateChanged (uint)));
-  connect (engine(), SIGNAL (syncronizeState (bool*)), SLOT (syncronizeState (bool*)));
-  connect (engine(), SIGNAL (syncronizeControls (void)), SLOT (syncronizeControls (void)));
+  connect (engine(), SIGNAL (synchronizeState (bool*)), SLOT (synchronizeState (bool*)));
+  connect (engine(), SIGNAL (synchronizeControls (void)), SLOT (synchronizeControls (void)));
   connect (engine(), SIGNAL (updateLayout (const QSize&)), SLOT (updateLayout (const QSize&)));
   connect (engine(), SIGNAL (zoom()), SLOT (zoom()));
   connect (engine(), SIGNAL (finalizeLayout()), SLOT (finalizeLayout()));
@@ -1753,7 +1753,7 @@ void KPlayerWindow::windowStateChanged (uint wid)
       if ( ! full_screen )
         settings() -> setMaximized (maximize);
     }
-    engine() -> doneSyncronizing();
+    engine() -> doneSynchronizing();
     /*if ( m_toggling_full_screen )
     {
       m_toggling_full_screen = false;
@@ -1767,10 +1767,10 @@ void KPlayerWindow::windowStateChanged (uint wid)
   }
 }
 
-void KPlayerWindow::syncronizeState (bool* pending)
+void KPlayerWindow::synchronizeState (bool* pending)
 {
 #ifdef DEBUG_KPLAYER_WINDOW
-  kdDebugTime() << "KPlayerWindow::syncronizeState\n";
+  kdDebugTime() << "KPlayerWindow::synchronizeState\n";
 #endif
   setUpdatesEnabled (false);
   layout() -> setEnabled (false);
@@ -1818,10 +1818,10 @@ void KPlayerWindow::syncronizeState (bool* pending)
   }
 }
 
-void KPlayerWindow::syncronizeControls (void)
+void KPlayerWindow::synchronizeControls (void)
 {
 #ifdef DEBUG_KPLAYER_WINDOW
-  kdDebugTime() << "KPlayerWindow::syncronizeControls\n";
+  kdDebugTime() << "KPlayerWindow::synchronizeControls\n";
   kdDebugTime() << " Menu visible " << ! menuBar() -> isHidden() << " show " << showMenubar() << "\n";
 #endif
   if ( showMenubar() == menuBar() -> isHidden() )

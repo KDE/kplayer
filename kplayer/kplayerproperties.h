@@ -3054,9 +3054,9 @@ public:
   bool originalSizeKnown (void) const
     { return hasVideo() || hasNoVideo(); }
 
-  /** Returns whether the video area needs to be expanded to accomodate subtitles. */
+  /** Returns whether the video area needs to be expanded to accommodate subtitles. */
   bool needsExpanding (void) const;
-  /** Expands the video area to accomodate subtitles. */
+  /** Expands the video area to accommodate subtitles. */
   void autoexpand (void);
 
   bool hasDemuxer (void) const
