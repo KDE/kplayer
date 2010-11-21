@@ -11,6 +11,7 @@ add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} )
 
+add_subdirectory(doc)
 add_subdirectory(icons)
 add_subdirectory(kplayer)
 
