@@ -55,6 +55,7 @@ Name[tr]=Oynat
 Name[uk]=Відтворити
 Name[x-test]=xxPlayxx
 Name[zh_CN]=播放
+Name[zh_TW]=播放
 Icon=kplayer
 Exec=kplayer -- %U
 
@@ -106,5 +107,6 @@ Name[tr]=Sıraya ekle
 Name[uk]=Поставити у чергу
 Name[x-test]=xxQueuexx
 Name[zh_CN]=队列
+Name[zh_TW]=排入佇列
 Icon=kplayer
 Exec=kplayer --queue -- %U

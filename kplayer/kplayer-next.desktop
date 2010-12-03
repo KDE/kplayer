@@ -49,6 +49,7 @@ Name[tr]=Sonrakini oynat
 Name[uk]=Відтворити наступний
 Name[x-test]=xxPlay nextxx
 Name[zh_CN]=播放下一首
+Name[zh_TW]=播放下一首
 Icon=kplayer
 Exec=kplayer --play-next -- %U
 
@@ -97,5 +98,6 @@ Name[tr]=Sonrakini sıraya ekle
 Name[uk]=Поставити у чергу наступним
 Name[x-test]=xxQueue nextxx
 Name[zh_CN]=播放队列中的下一首
+Name[zh_TW]=將下一首排入佇列
 Icon=kplayer
 Exec=kplayer --queue-next -- %U

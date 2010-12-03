@@ -49,6 +49,7 @@ Name[tr]=Çalma listelerine ekle
 Name[uk]=Додати до списків відтворення
 Name[x-test]=xxAdd to playlistsxx
 Name[zh_CN]=添加到播放列表
+Name[zh_TW]=新增到播放清單
 Icon=kplayer
 Exec=kplayer --add-to-playlists -- %U
 
@@ -97,5 +98,6 @@ Name[tr]=Koleksiyona ekle
 Name[uk]=Додати до збірки
 Name[x-test]=xxAdd to collectionxx
 Name[zh_CN]=添加到收藏
+Name[zh_TW]=新增到收藏
 Icon=kplayer
 Exec=kplayer --add-to-collection -- %U
