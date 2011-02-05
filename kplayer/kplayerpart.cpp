@@ -19,14 +19,14 @@
 #include "kplayersettings.h"
 #include "kplayerwidget.h"
 
-#include <kapplication.h>
-#include <klocalizedstring.h>
-#include <kpluginfactory.h>
-#include <kpluginloader.h>
-#include <ktoolbar.h>
-#include <kxmlguifactory.h>
-#include <qaction.h>
-#include <qmenu.h>
+#include <KApplication>
+#include <KLocalizedString>
+#include <KPluginFactory>
+#include <KPluginLoader>
+#include <KToolBar>
+#include <KXMLGUIFactory>
+#include <QAction>
+#include <QMenu>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_KPART

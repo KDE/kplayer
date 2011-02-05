@@ -16,8 +16,8 @@
 #ifndef KPLAYERWIDGET_H
 #define KPLAYERWIDGET_H
 
-#include <qtimer.h>
-#include <qwidget.h>
+#include <QTimer>
+#include <QWidget>
 
 #include "kplayerprocess.h"
 

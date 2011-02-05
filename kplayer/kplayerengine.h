@@ -16,10 +16,10 @@
 #ifndef KPLAYERENGINE_H
 #define KPLAYERENGINE_H
 
-#include <kactioncollection.h>
-#include <kdiroperator.h>
-#include <kfiledialog.h>
-#include <qtimer.h>
+#include <KActionCollection>
+#include <KDirOperator>
+#include <KFileDialog>
+#include <QTimer>
 
 #include "kplayerprocess.h"
 

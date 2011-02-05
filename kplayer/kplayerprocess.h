@@ -17,13 +17,13 @@
 #define KPLAYERPROCESS_H
 
 #include <kio/jobclasses.h>
-#include <kio/job.h>
-#include <kprocess.h>
-#include <ktemporaryfile.h>
-#include <kurl.h>
-#include <qfile.h>
-#include <qobject.h>
-#include <qsocketnotifier.h>
+#include <KIO/Job>
+#include <KProcess>
+#include <KTemporaryFile>
+#include <KUrl>
+#include <QFile>
+#include <QObject>
+#include <QSocketNotifier>
 
 class KPlayerConfiguration;
 class KPlayerTrackProperties;

@@ -20,17 +20,17 @@
 #include "kplayerslideraction.h"
 #include "kplayerwidget.h"
 
-#include <kapplication.h>
-#include <kconfig.h>
-#include <klocale.h>
-#include <kmainwindow.h>
-#include <krecentdocument.h>
-#include <kurlrequester.h>
-#include <kurlrequesterdialog.h>
-#include <qaction.h>
-#include <qdatetime.h>
-#include <qevent.h>
-#include <qregexp.h>
+#include <KApplication>
+#include <KConfig>
+#include <KLocale>
+#include <KMainWindow>
+#include <KRecentDocument>
+#include <KUrlRequester>
+#include <KUrlRequesterDialog>
+#include <QAction>
+#include <QDateTime>
+#include <QMouseEvent>
+#include <QRegExp>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_ENGINE

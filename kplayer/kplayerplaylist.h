@@ -16,8 +16,8 @@
 #ifndef KPLAYERPLAYLIST_H
 #define KPLAYERPLAYLIST_H
 
-#include <kaction.h>
-#include <kcombobox.h>
+#include <KAction>
+#include <KComboBox>
 
 #include "kplayerprocess.h"
 #include "kplayernode.h"

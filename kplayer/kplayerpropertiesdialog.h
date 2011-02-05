@@ -16,7 +16,7 @@
 #ifndef KPLAYERPROPERTIESDIALOG_H
 #define KPLAYERPROPERTIESDIALOG_H
 
-#include <kpagedialog.h>
+#include <KPageDialog>
 
 #include "ui_kplayerpropertiesgeneral.h"
 #include "ui_kplayerpropertiessize.h"

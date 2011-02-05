@@ -23,14 +23,14 @@
 #include "kplayerwidget.h"
 
 #include <fcntl.h>
-#include <klocale.h>
-#include <kstandarddirs.h>
-#include <kio/jobuidelegate.h>
-#include <qdir.h>
-#include <qfileinfo.h>
-#include <qregexp.h>
-#include <qsocketnotifier.h>
-#include <qtimer.h>
+#include <KLocale>
+#include <KStandardDirs>
+#include <KIO/JobUiDelegate>
+#include <QDir>
+#include <QFileInfo>
+#include <QRegExp>
+#include <QSocketNotifier>
+#include <QTimer>
 #include <unistd.h>
 
 #ifdef DEBUG

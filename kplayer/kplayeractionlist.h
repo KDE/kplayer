@@ -16,9 +16,9 @@
 #ifndef KPLAYERACTIONLIST_H
 #define KPLAYERACTIONLIST_H
 
-#include <klocalizedstring.h>
-#include <qobject.h>
-#include <qlist.h>
+#include <KLocalizedString>
+#include <QObject>
+#include <QList>
 
 class QAction;
 class QActionGroup;

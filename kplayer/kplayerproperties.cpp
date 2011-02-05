@@ -22,10 +22,10 @@
 #include "kplayersettings.h"
 
 #include <fcntl.h>
-#include <kconfig.h>
-#include <klocale.h>
-#include <qfileinfo.h>
-#include <qregexp.h>
+#include <KConfig>
+#include <KLocale>
+#include <QFileInfo>
+#include <QRegExp>
 
 //#define KPLAYER_EXTRACT_META_INFORMATION
 #define KPLAYER_PROCESS_SIZE_IDS

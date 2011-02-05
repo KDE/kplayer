@@ -16,9 +16,9 @@
 #ifndef KPLAYERSOURCE_H
 #define KPLAYERSOURCE_H
 
-#include <kdirwatch.h>
-#include <qdir.h>
-#include <qlist.h>
+#include <KDirWatch>
+#include <QDir>
+#include <QList>
 
 class KPlayerCollectionNode;
 class KPlayerContainerNode;

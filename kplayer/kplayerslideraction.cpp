@@ -17,14 +17,14 @@
 #include "kplayerengine.h"
 #include "kplayersettings.h"
 
-#include <kapplication.h>
-#include <ktoolbar.h>
-#include <qbytearray.h>
-#include <qcursor.h>
-#include <qdesktopwidget.h>
-#include <qevent.h>
-#include <qlayout.h>
-#include <qstyle.h>
+#include <KApplication>
+#include <KToolBar>
+#include <QByteArray>
+#include <QCursor>
+#include <QDesktopWidget>
+#include <QMouseEvent>
+#include <QLayout>
+#include <QStyle>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SLIDERS

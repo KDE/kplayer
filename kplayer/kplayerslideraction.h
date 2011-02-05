@@ -16,10 +16,10 @@
 #ifndef KPLAYERSLIDERACTION_H
 #define KPLAYERSLIDERACTION_H
 
-#include <kaction.h>
-#include <qframe.h>
-#include <qslider.h>
-#include <qtoolbutton.h>
+#include <KAction>
+#include <QFrame>
+#include <QSlider>
+#include <QToolButton>
 
 /**KPlayer's slider widget. Works around the Qt upside-down slider bug.
   *@author kiriuja

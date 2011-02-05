@@ -16,10 +16,10 @@
 #include "kplayeractionlist.h"
 #include "kplayerproperties.h"
 
-#include <kaction.h>
-#include <klocale.h>
-#include <qmenu.h>
-#include <qregexp.h>
+#include <KAction>
+#include <KLocale>
+#include <QMenu>
+#include <QRegExp>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_ACTIONLIST

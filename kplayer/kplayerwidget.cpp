@@ -18,11 +18,11 @@
 #include "kplayerprocess.h"
 #include "kplayersettings.h"
 
-#include <kcursor.h>
-#include <klocale.h>
-#include <qevent.h>
-#include <qlayout.h>
-#include <qtimer.h>
+#include <KCursor>
+#include <KLocale>
+#include <QMouseEvent>
+#include <QLayout>
+#include <QTimer>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_WIDGET

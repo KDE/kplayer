@@ -17,7 +17,7 @@
 #include "kplayernodeaction.moc"
 #include "kplayernode.h"
 
-#include <klocale.h>
+#include <KLocale>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_NODEACTION

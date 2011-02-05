@@ -20,17 +20,17 @@
 #include "kplayerpropertiesdialog.h"
 #include "kplayersettings.h"
 
-#include <kiconloader.h>
-#include <kinputdialog.h>
-#include <klineedit.h>
-#include <klocale.h>
-#include <qaction.h>
-#include <qcursor.h>
-#include <qevent.h>
-#include <q3header.h>
-#include <qlabel.h>
-#include <qmenu.h>
-#include <qtimer.h>
+#include <KIconLoader>
+#include <KInputDialog>
+#include <KLineEdit>
+#include <KLocale>
+#include <QAction>
+#include <QCursor>
+#include <QMouseEvent>
+#include <Q3Header>
+#include <QLabel>
+#include <QMenu>
+#include <QTimer>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_NODEVIEW

@@ -13,14 +13,14 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <klocale.h>
-#include <kstandarddirs.h>
-#include <qfile.h>
+#include <KAboutData>
+#include <KCmdLineArgs>
+#include <KLocale>
+#include <KStandardDirs>
+#include <QFile>
 
 #ifdef DEBUG
-#include <kdebug.h>
+#include <KDebug>
 kdbgstream kdDebugTime (void);
 #define DEBUG_KPLAYER_MAIN
 #endif

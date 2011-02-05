@@ -17,15 +17,15 @@
 #include "kplayerpropertiesdialog.moc"
 #include "kplayerproperties.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
-#include <qregexp.h>
-#include <stdlib.h>
+#include <KLocale>
+#include <KMessageBox>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRegExp>
+#include <cstdlib>
 
 QString languageName (int id, QString language);
 

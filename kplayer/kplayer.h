@@ -20,9 +20,9 @@
 #include <config.h>
 #endif
 
-#include <kaction.h>
-#include <kxmlguiwindow.h>
-#include <kuniqueapplication.h>
+#include <KAction>
+#include <KXmlGuiWindow>
+#include <KUniqueApplication>
 
 #include "kplayerengine.h"
 #include "kplayersettings.h"

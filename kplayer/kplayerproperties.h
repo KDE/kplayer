@@ -16,14 +16,14 @@
 #ifndef KPLAYERPROPERTIES_H
 #define KPLAYERPROPERTIES_H
 
-#include <float.h>
-#include <kurl.h>
-#include <limits.h>
-#include <math.h>
-#include <qobject.h>
+#include <cfloat>
+#include <climits>
+#include <cmath>
+#include <QObject>
+#include <KUrl>
 
 #ifdef DEBUG
-#include <kdebug.h>
+#include <KDebug>
 #endif
 
 #include "kplayerengine.h"

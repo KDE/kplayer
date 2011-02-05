@@ -15,13 +15,13 @@
 
 #include <X11/Xlib.h>
 #undef CursorShape
-#include <qbytearray.h>
+#include <QByteArray>
 #include <qnamespace.h>
 #include <qx11info_x11.h>
 
 #ifdef DEBUG
 #undef Status
-#include <kdebug.h>
+#include <KDebug>
 kdbgstream kdDebugTime (void);
 //#define DEBUG_KPLAYER_GRAB
 //#define DEBUG_KPLAYER_PROPERTY

@@ -18,8 +18,8 @@
 #include "kplayernode.h"
 #include "kplayerproperties.h"
 
-#include <klocale.h>
-#include <qregexp.h>
+#include <KLocale>
+#include <QRegExp>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SOURCE

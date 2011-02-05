@@ -18,19 +18,19 @@
 #include "kplayerengine.h"
 #include "kplayersettings.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qfontdatabase.h>
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
-#include <qregexp.h>
-#include <qslider.h>
-#include <solid/audiointerface.h>
-#include <solid/device.h>
-#include <solid/deviceinterface.h>
+#include <KLocale>
+#include <KMessageBox>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QFontDatabase>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRegExp>
+#include <QSlider>
+#include <Solid/AudioInterface>
+#include <Solid/Device>
+#include <Solid/DeviceInterface>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_SETTINGS_DIALOG

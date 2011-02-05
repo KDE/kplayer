@@ -20,9 +20,9 @@
 #include <config.h>
 #endif
 
-#include <kaction.h>
-#include <kparts/browserextension.h>
-#include <kaboutdata.h>
+#include <KAction>
+#include <KParts/BrowserExtension>
+#include <KAboutData>
 
 #include "kplayerprocess.h"
 

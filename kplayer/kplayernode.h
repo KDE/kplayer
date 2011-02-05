@@ -19,8 +19,8 @@
 #include "kplayerproperties.h"
 #include "kplayersource.h"
 
-#include <qmap.h>
-#include <solid/device.h>
+#include <QMap>
+#include <Solid/Device>
 #include <solid/solidnamespace.h>
 
 class KPlayerContainerNode;

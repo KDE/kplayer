@@ -16,7 +16,7 @@
 #ifndef KPLAYERSETTINGSDIALOG_H
 #define KPLAYERSETTINGSDIALOG_H
 
-#include <kpagedialog.h>
+#include <KPageDialog>
 
 #include "ui_kplayersettingsadvanced.h"
 #include "ui_kplayersettingsaudio.h"

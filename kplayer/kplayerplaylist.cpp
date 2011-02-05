@@ -21,17 +21,17 @@
 #include "kplayerpropertiesdialog.h"
 #include "kplayersettings.h"
 
-#include <kinputdialog.h>
-#include <klineedit.h>
-#include <klocale.h>
-#include <krandomsequence.h>
-#include <kurl.h>
-#include <qaction.h>
-#include <qevent.h>
-#include <qfileinfo.h>
-#include <qmenu.h>
-#include <qtooltip.h>
-#include <qapplication.h>
+#include <KInputDialog>
+#include <KLineEdit>
+#include <KLocale>
+#include <KRandomSequence>
+#include <KUrl>
+#include <QAction>
+#include <QContextMenuEvent>
+#include <QFileInfo>
+#include <QMenu>
+#include <QToolTip>
+#include <QApplication>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_PLAYLIST

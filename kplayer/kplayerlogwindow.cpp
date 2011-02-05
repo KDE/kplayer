@@ -18,11 +18,11 @@
 #include "kplayerengine.h"
 #include "kplayersettings.h"
 
-#include <klocale.h>
-#include <qaction.h>
-#include <qevent.h>
-#include <qmenu.h>
-#include <qscrollbar.h>
+#include <KLocale>
+#include <QAction>
+#include <QMoveEvent>
+#include <QMenu>
+#include <QScrollBar>
 
 #ifdef DEBUG
 #define DEBUG_KPLAYER_LOG

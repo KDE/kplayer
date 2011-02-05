@@ -16,11 +16,11 @@
 #ifndef KPLAYERNODEVIEW_H
 #define KPLAYERNODEVIEW_H
 
-#include <kdialog.h>
-#include <k3listview.h>
-#include <qdockwidget.h>
-#include <qsplitter.h>
-#include <qvalidator.h>
+#include <KDialog>
+#include <K3ListView>
+#include <QDockWidget>
+#include <QSplitter>
+#include <QValidator>
 
 #include "kplayeractionlist.h"
 #include "kplayernode.h"

@@ -16,9 +16,9 @@
 #ifndef KPLAYERLOGWINDOW_H
 #define KPLAYERLOGWINDOW_H
 
-#include <kactioncollection.h>
-#include <ktextedit.h>
-#include <qdockwidget.h>
+#include <KActionCollection>
+#include <KTextEdit>
+#include <QDockWidget>
 
 class KPlayerLogWindow;
 
