@@ -395,7 +395,7 @@
          <double>0.100000000000000</double>
         </property>
         <property name="suffix">
-         <string extracomment="Real value"> seconds</string>
+         <string comment="Real value"> seconds</string>
         </property>
        </widget>
       </item>
