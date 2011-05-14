@@ -33,7 +33,7 @@
 #include "ui_kplayersettingssaturation.h"
 #include "kplayerproperties.h"
 
-QString listEntry (QComboBox* combo, bool hasDefault = false);
+QString listEntry (QComboBox* combo, bool hasDefault);
 
 class KPlayerSettingsAdvanced : public QFrame, protected Ui_KPlayerSettingsAdvancedPage
 {

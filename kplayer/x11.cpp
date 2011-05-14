@@ -14,7 +14,7 @@
  ***************************************************************************/
 
 #include <X11/Xlib.h>
-#undef CursorShape
+#include <fixx11h.h>
 #include <QByteArray>
 #include <qnamespace.h>
 #include <qx11info_x11.h>
