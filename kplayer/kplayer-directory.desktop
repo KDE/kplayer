@@ -1,7 +1,6 @@
 [Desktop Entry]
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory;
 Actions=AddToPlaylists;AddToCollection;
-Encoding=UTF-8
 Type=Service
 
 [Desktop Action AddToPlaylists]
