@@ -1798,7 +1798,7 @@ void KPlayerWindow::synchronizeState (bool* pending)
 #ifdef DEBUG_KPLAYER_WINDOW
       kdDebugTime() << " Showing full screen\n";
 #endif
-      showFullScreen();
+      setWindowState(windowState() | Qt::WindowFullScreen);
       //layout() -> setSpacing (-1);
     }
     else if ( maximize )
