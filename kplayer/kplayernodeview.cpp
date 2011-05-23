@@ -2,8 +2,8 @@
                           kplayernodeview.cpp
                           --------------------
     begin                : Mon Apr 18 2005
-    copyright            : (C) 2005-2008 by kiriuja
-    email                : http://kplayer.sourceforge.net/email.html
+    copyright            : (C) 2005-2008 by Kirill Bulygin
+    email                : quattro-kde@nuevoempleo.net
  ***************************************************************************/
 
 /***************************************************************************

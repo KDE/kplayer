@@ -2,8 +2,8 @@
                           kplayerproperties.h
                           -------------------
     begin                : Tue Feb 10 2004
-    copyright            : (C) 2004-2008 by kiriuja
-    email                : http://kplayer.sourceforge.net/email.html
+    copyright            : (C) 2003-2008 by Kirill Bulygin
+    email                : quattro-kde@nuevoempleo.net
  ***************************************************************************/
 
 /***************************************************************************

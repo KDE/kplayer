@@ -2,8 +2,8 @@
                           main.cpp
                           --------
     begin                : Sat Nov 16 10:12:50 EST 2002
-    copyright            : (C) 2002-2008 by kiriuja
-    email                : http://kplayer.sourceforge.net/email.html
+    copyright            : (C) 2002-2008 by Kirill Bulygin
+    email                : quattro-kde@nuevoempleo.net
  ***************************************************************************/
 
 /***************************************************************************
@@ -36,8 +36,8 @@ int main (int argc, char *argv[])
   kdDebugTime() << "Welcome to KPlayer!\n";
 #endif
   about = new KAboutData ("kplayer", 0, ki18n("KPlayer"), "0.7.1", description, KAboutData::License_GPL_V3,
-    ki18n("(C) 2002-2008, kiriuja"), KLocalizedString(), "http://kplayer.sourceforge.net/", "http://kplayer.sourceforge.net/email.html");
-  about -> addAuthor (ki18n("kiriuja"), KLocalizedString(), "http://kplayer.sourceforge.net/email.html");
+    ki18n("(C) 2002-2008, Kirill Bulygin"), KLocalizedString(), "http://kplayer.sourceforge.net/", "http://kplayer.sourceforge.net/email.html");
+  about -> addAuthor (ki18n("Kirill Bulygin"), KLocalizedString(), "http://kplayer.sourceforge.net/email.html");
   KComponentData* data = new KComponentData (about);
   QString localdir (KGlobal::dirs() -> localkdedir());
 #ifdef DEBUG_KPLAYER_MAIN
