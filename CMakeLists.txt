@@ -9,6 +9,6 @@ include_directories( ${KDE4_INCLUDES} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR}
 
 add_subdirectory(doc)
 add_subdirectory(icons)
-add_subdirectory(kplayer)
+add_subdirectory(src)
 
 install(FILES COPYING DESTINATION ${DATA_INSTALL_DIR}/kplayer)
