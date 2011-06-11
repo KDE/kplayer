@@ -35,7 +35,7 @@ int main (int argc, char *argv[])
 #ifdef DEBUG_KPLAYER_MAIN
   kdDebugTime() << "Welcome to KPlayer!\n";
 #endif
-  about = new KAboutData ("kplayer", 0, ki18n("KPlayer"), "0.7.1", description, KAboutData::License_GPL_V3,
+  about = new KAboutData ("kplayer", 0, ki18n("KPlayer"), "0.7.2", description, KAboutData::License_GPL_V3,
     ki18n("(C) 2002-2008, Kirill Bulygin"), KLocalizedString(), "http://kplayer.sourceforge.net/", "http://kplayer.sourceforge.net/email.html");
   about -> addAuthor (ki18n("Kirill Bulygin"), KLocalizedString(), "http://kplayer.sourceforge.net/email.html");
   KComponentData* data = new KComponentData (about);
