@@ -472,7 +472,7 @@
        </widget>
       </item>
       <item row="8" column="2">
-       <widget class="QComboBox" name="c_aspect">
+       <widget class="KComboBox" name="c_aspect">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -595,21 +595,6 @@
    <class>KDoubleNumInput</class>
    <extends>QWidget</extends>
    <header>knuminput.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KFontComboBox</class>
-   <extends>KComboBox</extends>
-   <header>kfontcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

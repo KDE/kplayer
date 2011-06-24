@@ -300,7 +300,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="c_volume_every">
+         <widget class="KComboBox" name="c_volume_every">
           <property name="toolTip">
            <string>Reset volume to a specific setting for each new file or KPlayer session</string>
           </property>

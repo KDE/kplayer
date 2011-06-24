@@ -145,7 +145,7 @@
          </widget>
         </item>
         <item row="0" column="1" colspan="2">
-         <widget class="QComboBox" name="c_demuxer">
+         <widget class="KComboBox" name="c_demuxer">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>1</horstretch>
@@ -183,7 +183,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QComboBox" name="c_frame_drop">
+         <widget class="KComboBox" name="c_frame_drop">
           <property name="toolTip">
            <string>Choose whether and how MPlayer should drop frames</string>
           </property>
@@ -230,7 +230,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QComboBox" name="c_use_cache">
+         <widget class="KComboBox" name="c_use_cache">
           <property name="toolTip">
            <string>Choose whether to use cache and set its size</string>
           </property>
@@ -311,7 +311,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QComboBox" name="c_build_index">
+         <widget class="KComboBox" name="c_build_index">
           <property name="toolTip">
            <string>Choose whether to build new index for seeking</string>
           </property>
@@ -447,7 +447,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="c_osd_level">
+       <widget class="KComboBox" name="c_osd_level">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>

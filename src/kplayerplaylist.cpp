@@ -942,7 +942,7 @@ void KPlayerPlaylist::addNextNodes (const KPlayerNodeList& list)
 }
 
 KPlayerPlaylistCombobox::KPlayerPlaylistCombobox (QWidget* parent)
-  : QComboBox (parent)
+  : KComboBox (parent)
 {
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "Creating playlist combobox\n";
@@ -952,14 +952,14 @@ KPlayerPlaylistCombobox::KPlayerPlaylistCombobox (QWidget* parent)
 
 QSize KPlayerPlaylistCombobox::sizeHint() const
 {
-  QSize hint = QComboBox::sizeHint();
+  QSize hint = KComboBox::sizeHint();
   //hint.setWidth (configuration() -> preferredSliderLength());
   return hint;
 }
 
 QSize KPlayerPlaylistCombobox::minimumSizeHint() const
 {
-  QSize hint = QComboBox::minimumSizeHint();
+  QSize hint = KComboBox::minimumSizeHint();
   hint.setWidth (configuration() -> minimumSliderLength());
   return hint;
 }
@@ -969,7 +969,7 @@ void KPlayerPlaylistCombobox::contextMenuEvent (QContextMenuEvent* event)
 #ifdef DEBUG_KPLAYER_PLAYLIST
   kdDebugTime() << "KPlayerPlaylistCombobox::contextMenuEvent\n";
 #endif
-  QComboBox::contextMenuEvent (event);
+  KComboBox::contextMenuEvent (event);
   m_popup -> popup (event -> globalPos());
   event -> accept();
 }

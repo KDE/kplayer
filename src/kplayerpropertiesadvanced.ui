@@ -69,7 +69,7 @@
                   </widget>
                 </item>
                 <item row="1" column="0">
-                  <widget class="QComboBox" name="c_command_line_option">
+                  <widget class="KComboBox" name="c_command_line_option">
                     <property name="toolTip" stdset="0">
                       <string>Choose how to combine your options with the defaults</string>
                     </property>
@@ -138,7 +138,7 @@
                   </widget>
                 </item>
                 <item row="0" column="1" colspan="3">
-                  <widget class="QComboBox" name="c_demuxer">
+                  <widget class="KComboBox" name="c_demuxer">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -178,7 +178,7 @@
                   </widget>
                 </item>
                 <item row="1" column="1">
-                  <widget class="QComboBox" name="c_frame_drop">
+                  <widget class="KComboBox" name="c_frame_drop">
                     <property name="toolTip" stdset="0">
                       <string>Choose whether and how MPlayer should drop frames</string>
                     </property>
@@ -230,7 +230,7 @@
                   </widget>
                 </item>
                 <item row="2" column="1">
-                  <widget class="QComboBox" name="c_use_cache">
+                  <widget class="KComboBox" name="c_use_cache">
                     <property name="toolTip" stdset="0">
                       <string>Choose whether to use cache and set its size</string>
                     </property>
@@ -336,7 +336,7 @@
                   </widget>
                 </item>
                 <item row="3" column="1">
-                  <widget class="QComboBox" name="c_build_index">
+                  <widget class="KComboBox" name="c_build_index">
                     <property name="toolTip" stdset="0">
                       <string>Choose whether to build new index for seeking</string>
                     </property>
@@ -388,7 +388,7 @@
                   </widget>
                 </item>
                 <item row="4" column="1">
-                  <widget class="QComboBox" name="c_use_kioslave">
+                  <widget class="KComboBox" name="c_use_kioslave">
                     <property name="toolTip" stdset="0">
                       <string>Choose whether to use a KDE I/O Slave to play this file</string>
                     </property>
@@ -435,7 +435,7 @@
                   </widget>
                 </item>
                 <item row="5" column="1">
-                  <widget class="QComboBox" name="c_use_temporary_file">
+                  <widget class="KComboBox" name="c_use_temporary_file">
                     <property name="toolTip" stdset="0">
                       <string>Choose whether to use a temporary file for playing from KDE I/O Slave</string>
                     </property>
@@ -477,7 +477,7 @@
                   </widget>
                 </item>
                 <item row="0" column="1">
-                  <widget class="QComboBox" name="c_decimation">
+                  <widget class="KComboBox" name="c_decimation">
                     <property name="toolTip" stdset="0">
                       <string>Choose whether to use hardware compression and set image size and quality</string>
                     </property>

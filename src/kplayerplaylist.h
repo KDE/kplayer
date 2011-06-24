@@ -26,7 +26,7 @@
 /**The playlist combobox widget.
   *@author kiriuja
   */
-class KPlayerPlaylistCombobox : public QComboBox
+class KPlayerPlaylistCombobox : public KComboBox
 {
   Q_OBJECT
 

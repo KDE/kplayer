@@ -19,8 +19,8 @@
 
 #include <KLocale>
 #include <KMessageBox>
+#include <KComboBox>
 #include <QCheckBox>
-#include <QComboBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -33,7 +33,7 @@ QString languageName (int id, QString language);
 #define DEBUG_KPLAYER_PROPERTIES_DIALOG
 #endif
 
-QString listEntry (QComboBox* combo, bool hasDefault = false)
+QString listEntry (KComboBox* combo, bool hasDefault = false)
 {
   static QRegExp re_key_value ("^([^:]+): *(.*)$");
   if ( hasDefault && combo -> currentIndex() == 0 )
@@ -403,7 +403,7 @@ KPlayerPropertiesAdvanced* KPlayerItemPropertiesDialog::createAdvancedPage (void
   return new KPlayerPropertiesItemAdvanced;
 }
 
-/*void setupHistory (QComboBox* combo, const QStringList& history)
+/*void setupHistory (KComboBox* combo, const QStringList& history)
 {
   for ( QStringList::ConstIterator it (history.begin()); it != history.end(); ++ it )
   {
@@ -1186,7 +1186,7 @@ const float framerates[] = {
   60
 };
 
-void fillEncodingCombobox (QComboBox* combobox)
+void fillEncodingCombobox (KComboBox* combobox)
 {
   for ( uint i = 0; i < sizeof (subtitleencodings) / sizeof (struct KPlayerSubtitleEncoding); i ++ )
   {

@@ -61,7 +61,7 @@
                   </widget>
                 </item>
                 <item row="0" column="1">
-                  <widget class="QComboBox" name="c_track_set">
+                  <widget class="KComboBox" name="c_track_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -135,7 +135,7 @@
                   </widget>
                 </item>
                 <item row="1" column="1">
-                  <widget class="QComboBox" name="c_volume_set">
+                  <widget class="KComboBox" name="c_volume_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -219,7 +219,7 @@
                   </widget>
                 </item>
                 <item row="2" column="1">
-                  <widget class="QComboBox" name="c_delay_set">
+                  <widget class="KComboBox" name="c_delay_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -320,7 +320,7 @@
                   </widget>
                 </item>
                 <item row="3" column="1" colspan="3">
-                  <widget class="QComboBox" name="c_codec">
+                  <widget class="KComboBox" name="c_codec">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -500,7 +500,7 @@
                   </widget>
                 </item>
                 <item row="6" column="1">
-                  <widget class="QComboBox" name="c_mode">
+                  <widget class="KComboBox" name="c_mode">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -565,7 +565,7 @@
                   </widget>
                 </item>
                 <item row="7" column="1">
-                  <widget class="QComboBox" name="c_input_set">
+                  <widget class="KComboBox" name="c_input_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -652,7 +652,7 @@
                   </widget>
                 </item>
                 <item row="8" column="1">
-                  <widget class="QComboBox" name="c_capture">
+                  <widget class="KComboBox" name="c_capture">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>

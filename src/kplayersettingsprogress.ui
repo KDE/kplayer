@@ -233,11 +233,6 @@
    <extends>QSpinBox</extends>
    <header>knuminput.h</header>
   </customwidget>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
