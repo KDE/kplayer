@@ -4,6 +4,7 @@ Exec=kplayer -- %U
 Icon=kplayer
 X-DocPath=kplayer/index.html
 Comment=MPlayer frontend for KDE
+Comment[bg]=Програма за MPlayer в KDE
 Comment[bs]=MPlayer korisničko okruženje za KDE
 Comment[ca]=Frontal de l'MPlayer pel KDE
 Comment[ca@valencia]=Frontal de l'MPlayer pel KDE
