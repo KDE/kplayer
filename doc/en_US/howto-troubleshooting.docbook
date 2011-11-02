@@ -42,7 +42,7 @@ to follow the instructions in the <link linkend="howto-compilation">Compilation
 micro-HOWTO</link>, especially the part about <command>kde-config</command>.
 Before starting, run</para>
 
-<para><userinput><command>kde-config</command>
+<para><userinput><command>kde4-config</command>
 <option>--prefix</option></userinput></para>
 
 <para>from the command line to make sure that it returns the &kde; prefix
