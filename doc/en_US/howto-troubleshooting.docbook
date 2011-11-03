@@ -39,7 +39,7 @@ patches</ulink>.</para>
 installation, and &kplayer; cannot find it. If you installed using a binary
 package, complain to the package maintainer. When compiling from source, be sure
 to follow the instructions in the <link linkend="howto-compilation">Compilation
-micro-HOWTO</link>, especially the part about <command>kde-config</command>.
+micro-HOWTO</link>, especially the part about <command>kde4-config</command>.
 Before starting, run</para>
 
 <para><userinput><command>kde4-config</command>
@@ -182,27 +182,6 @@ video output. You can either enable the XVideo extension or tell &kplayer; to
 use another video output. See the
 <link linkend="howto-configuration">Configuration micro-HOWTO</link> for
 details.</para>
-
-</sect3>
-
-<sect3>
-<title>Video plays fine, but there is no sound</title>
-
-<para>Look in the <link linkend="parts-message-log">Message Log</link> to see
-why &mplayer; cannot play audio. The most common problem is the audio device
-being locked by another program. In this case the chief suspect is
-<command>artsd</command>. Try running</para>
-
-<para><userinput><command>killall</command> artsd</userinput></para>
-
-<para>from the command line. If that helps then the permanent solution is to go
-to the &kcontrolcenter; and disable &arts;. &arts; and everything based on it is
-by far the worst part of &kde;. Fortunately it seems there are plans to finally
-get rid of it in &kde; 4.</para>
-
-<para>For more information on audio setup in &kplayer; see the
-<link linkend="howto-configuration-audio">Configuration
-micro-HOWTO</link>.</para>
 
 </sect3>
 
