@@ -56,8 +56,7 @@
 <releaseinfo>0.6.2</releaseinfo>
 
 <abstract>
-<para><ulink url="http://kplayer.sourceforge.net/">&kplayer;</ulink> is a &kde;
-multimedia player that uses the
+<para>&kplayer; is a &kde; multimedia player that uses the
 <ulink url="http://www.mplayerhq.hu/">&mplayer;</ulink> engine.</para>
 
 <para>If you are having problems with &kplayer;, please have a look at the
@@ -106,6 +105,7 @@ Documentation copyright 2002-2007 kiriuja (<ulink url="http://kplayer.sourceforg
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 &underFDL;               <!-- FDL: do not remove -->
+&underGPL;        	 <!-- GPL License -->
 
 </chapter>
 
