@@ -19,14 +19,13 @@ play.</para>
 <menuchoice><guisubmenu>Multimedia</guisubmenu>
 <guimenuitem>&kplayer;</guimenuitem></menuchoice></para></listitem>
 
-<listitem><para>Or you can put &kplayer; icon on the desktop or on the &kicker;
-panel. Then you can <mousebutton>left</mousebutton> click it to start
+<listitem><para>Or you can put &kplayer; icon on the desktop or on the 
+ panel. Then you can <mousebutton>left</mousebutton> click it to start
 &kplayer;.</para></listitem>
 
 <listitem><para><keycombo action="simul">&Alt;<keycap>F2</keycap></keycombo>
-will open a <guilabel>Run Command</guilabel> dialog box, type
-<userinput><command>kplayer</command></userinput> (lower case) and press
-&Enter; or click the <guibutton>Run</guibutton> button.</para></listitem>
+will open &krunner;, type <userinput><command>kplayer</command></userinput> 
+(lower case) and press &Enter; .</para></listitem>
 
 <listitem><para>In a terminal program like &konsole; type
 <userinput><command>kplayer</command></userinput> and press
