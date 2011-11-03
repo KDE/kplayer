@@ -5,27 +5,14 @@
 <title>Getting support</title>
 
 <para>There are several ways to get help with &kplayer;. If you want to ask a
-question, go to the <ulink url="irc://irc.freenode.net/#kplayer">#kplayer
+question, go to the <ulink url="irc://irc.freenode.net/#kde-multimedia">#kde-multimedia
 channel</ulink> on FreeNode <acronym>IRC</acronym> or post it on the <ulink
-url="http://sourceforge.net/forum/forum.php?forum_id=244388">user
-forum</ulink> where other users will be able to see it, as well as the developer
-who is of course subscribed to receive e-mail when a message is posted there.
-The <acronym>IRC</acronym> channel and the user forum are also good places to
-get help with a problem.</para>
+url="http://forum.kde.org/viewforum.php?f=19">KDE Community Forums
+forum</ulink> where other users will be able to see it.</para>
 
 <para>Bugs should be reported through the <ulink
-url="http://sourceforge.net/tracker/?atid=532182&amp;group_id=71710">bug
-tracking system</ulink>, following the instructions in the
-<link linkend="howto-bug-reporting">Bug reporting micro-HOWTO</link>. Also there
-are special sections at the
-<ulink url="http://sourceforge.net/projects/kplayer/">&kplayer; project</ulink>
-on SourceForge for <ulink
-url="http://sourceforge.net/tracker/?atid=532183&amp;group_id=71710">support
-requests</ulink>, <ulink
-url="http://sourceforge.net/tracker/?atid=532185&amp;group_id=71710">feature
-requests</ulink> and <ulink
-url="http://sourceforge.net/tracker/?group_id=71710&amp;atid=532184">code
-patches</ulink>.</para>
+url="http://bugs.kde.org">&kde; Bug Tracking System</ulink>, following the instructions in the
+<link linkend="howto-bug-reporting">Bug reporting micro-HOWTO</link>.</para>
 
 </sect2>
 
@@ -65,17 +52,8 @@ the <link linkend="configuration-shortcuts">Key Bindings dialog</link>.</para>
 submenu of the &kmenu;</title>
 
 <para>The <filename>kplayer.desktop</filename> file needs to be installed in the
-correct place, under either <filename>share/applnk/Multimedia</filename> or
-<filename>share/applications/kde</filename> in the global &kde;
-directory.</para>
-
-<para>There also may be a file called <filename>kde-kplayer.desktop</filename>
-in <filename>~/.local/share/applications</filename>. Removing it will get the
-<guisubmenu>Multimedia</guisubmenu> menu updated automatically again when you
-install or uninstall &kplayer;, but it will also reset changes you made to
-&kplayer; associations with media types on the <guilabel>File
-Associations</guilabel> page in &konqueror; configuration dialog or in
-&kcontrolcenter;.</para>
+correct place, under <filename>share/applications/kde4</filename> in the global &kde;
+folder.</para>
 
 <para>The <guilabel>Contents</guilabel> tab in &khelpcenter; should also list
 &kplayer; in the <guilabel>Multimedia</guilabel> section under
