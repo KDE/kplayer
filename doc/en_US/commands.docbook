@@ -1246,50 +1246,7 @@ configuration micro-HOWTO</link> in this manual.</para></listitem>
 <sect2 id="menu-help">
 <title><guimenu>Help</guimenu> menu</title>
 
-<variablelist>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>&kplayer; Handbook</guimenuitem>
-</menuchoice></term>
-<listitem><para>Opens and displays the &kplayer; user manual.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>What's This...</guimenuitem>
-</menuchoice></term>
-<listitem><para>Changes the mouse pointer to a question mark and lets you click
-a &kplayer; interface element to get a quick description of its purpose and
-functionality.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>Report Bug...</guimenuitem>
-</menuchoice></term>
-<listitem><para>Opens a <link linkend="howto-bug-reporting">help topic</link>
-that explains the recommended way to report a bug in
-&kplayer;.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>About &kplayer;...</guimenuitem>
-</menuchoice></term>
-<listitem><para>Displays some brief information about &kplayer;'s version
-number, authors and license agreement.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenuitem>About &kde;...</guimenuitem>
-</menuchoice></term>
-<listitem><para>Shows some information about the version of &kde; that
-you are running.</para></listitem>
-</varlistentry>
-
-</variablelist>
+&help.menu.documentation;
 
 </sect2>
 
