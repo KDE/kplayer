@@ -1757,11 +1757,11 @@ play files with it. &konqueror; Web Browser can also be configured to use the
 
 <para>You can tell &konqueror; to use &kplayer; for playing multimedia files and
 <acronym>URL</acronym>s by going to the <guilabel>File Associations</guilabel>
-page either in the &konqueror; configuration dialog or in &kcontrolcenter; and
+page either in the &konqueror; configuration dialog or in &systemsettings; and
 moving &kplayer; to the top of the list of programs for each media type you want
-&kplayer; to play, both on the <guilabel>Program</guilabel> tab and on the
+&kplayer; to play, both on the <guilabel>General</guilabel> tab and on the
 <guilabel>Embedded</guilabel> tab. It is recommended that you choose the option
-to <guilabel>Open Separate Program</guilabel>, which will give you a whole lot
+to <guilabel>Show file in separate viewer</guilabel>, which will give you a whole lot
 more options and better interface when playing multimedia compared to an
 embedded KPart. However, when an object is embedded into a web page, &konqueror;
 has no choice but to use the KPart. In that situation the best thing is to
