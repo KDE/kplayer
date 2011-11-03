@@ -60,7 +60,7 @@ micro-HOWTO</link> if you want to use a different video output.</para>
 <sect3 id="howto-installation-kde">
 <title>Qt and KDE</title>
 
-<para>&kplayer; 0.6 supports &kde; 3.1 and later, so you need to either run a
+<para>&kplayer; 0.7 supports &kde; 4.2 and later, so you need to either run a
 relatively recent &kde; (recommended) or at least have &kde; libraries and the
 corresponding Qt libraries on your system.</para>
 
@@ -75,9 +75,7 @@ corresponding Qt libraries on your system.</para>
 <title>Binary install</title>
 
 <para>The recommended way to install &kplayer; is by using the binary package
-built specifically for your distribution. The
-<ulink url="http://kplayer.sourceforge.net/#downloads">Downloads section</ulink>
-of the &kplayer; home page lists the available packages and repositories.</para>
+built specifically for your distribution.</para>
 
 </sect3>
 
@@ -90,11 +88,11 @@ Micro-HOWTO</link> for instructions.</para>
 
 </sect3>
 
-<sect3 id="howto-installation-cvs">
-<title>Compiling from CVS</title>
+<sect3 id="howto-installation-git">
+<title>Compiling from Git</title>
 <para>If you want to try the latest and greatest &kplayer; features at the risk
 of getting some parts of it broken, you can compile the latest
-<acronym>CVS</acronym> code. See the
+<acronym>Git</acronym> code. See the
 <link linkend="howto-compilation">Compilation Micro-HOWTO</link> for
 details.</para>
 
