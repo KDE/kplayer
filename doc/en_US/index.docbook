@@ -25,7 +25,6 @@
   <!ENTITY kplayer-howto-devices SYSTEM "howto-devices.docbook">
   <!ENTITY kplayer-howto-streams SYSTEM "howto-streams.docbook">
   <!ENTITY kplayer-howto-slaves SYSTEM "howto-slaves.docbook">
-  <!ENTITY kplayer-howto-translation SYSTEM "howto-translation.docbook">
   <!ENTITY kplayer-howto-troubleshooting SYSTEM "howto-troubleshooting.docbook">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
   <!ENTITY % addindex "IGNORE">

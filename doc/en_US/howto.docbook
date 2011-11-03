@@ -62,9 +62,6 @@ problems.</para></listitem>
 micro-HOWTO</link> details the steps to make your bug report really
 helpful.</para></listitem>
 
-<listitem><para><link linkend="howto-translation">Translation micro-HOWTO</link>
-is a quick guide to help &kplayer; translators get going.</para></listitem>
-
 </itemizedlist>
 
 </sect1>
@@ -83,6 +80,5 @@ is a quick guide to help &kplayer; translators get going.</para></listitem>
 &kplayer-howto-slaves;
 &kplayer-howto-troubleshooting;
 &kplayer-howto-bug-reporting;
-&kplayer-howto-translation;
 
 </chapter>
