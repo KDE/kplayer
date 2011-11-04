@@ -328,46 +328,17 @@ shortcut and also not to use the &Shift; key for your new shortcuts, because
 the &Shift; key has a <link linkend="howto-properties">special function</link>
 in &kplayer;.</para>
 
-<para>Search through the list to find the action for which you want to add or
-change the shortcut keys and select it by <mousebutton>left</mousebutton>
-clicking the name. You will then be able to change the shortcut by selecting
-the <guilabel>None</guilabel>, <guilabel>Default</guilabel> or
-<guilabel>Custom</guilabel> radio button or by clicking the large button in the
-<guilabel>Shortcut for Selected Action</guilabel> area. The <guilabel>Define
-Shortcut</guilabel> dialog box will then open.</para>
+<para>Use the filter bar to search through the list to find the action for 
+which you want to add or change the shortcut keys and select it by 
+<mousebutton>left</mousebutton> clicking the name in the <guilabel>Action</guilabel> 
+or the cell in the <guilabel>Shortcut</guilabel> column to change the <guilabel>Primary</guilabel> key. 
+Click on the cell in the <guilabel>Alternate</guilabel> row to change this shortcut.
+You will then be able to change the shortcut by clicking
+the <guilabel>None</guilabel> button.</para>
 
-<mediaobject>
-<imageobject>
-<imagedata fileref="shortcuts-define.png" format="PNG"/>
-</imageobject>
-<textobject>
-<phrase>Define Shortcut dialog</phrase>
-</textobject>
-</mediaobject>
-
-<para>Choose whether you want to change the <guilabel>Primary</guilabel> or 
-<guilabel>Alternate</guilabel> shortcut, then press the key or key combination
-you want to act as the shortcut. If the <guilabel>Auto-Close</guilabel> box is
-checked, the dialog will vanish  as soon as you enter the key combination, else
-it will remain until you press <guibutton>OK</guibutton> or
-<guibutton>Cancel</guibutton>. Clicking the little black icon with a white
-cross in it clears the shortcut.</para>
-
-<sect2 id="configuration-userdefmenus">
-<title>User defined menus</title>
-
-<para>You can add your own pop up menu to &kplayer;, so that pressing one key
-combination will make the menu appear, then pressing a second key, or using the
-<keysym>Up arrow</keysym> and <keysym>Down arrow</keysym> keys and pressing
-&Enter;, will select an item from it.</para>
-
-<para>To do this add a <guilabel>Custom</guilabel> shortcut for each of the
-actions you want to appear in the menu and in the <guilabel>Define
-Shortcut</guilabel> dialog check the <guilabel>Multi-Key</guilabel> box, press
-the key combination that you want to bring up your new menu, then, separately,
-press the key that will choose that item from the menu.</para>
-
-</sect2>
+<para>Press the key or key combination you want to act as the shortcut. 
+Clicking the little black icon with a white cross in it clears the shortcut.
+</para>
 
 </sect1>
 
@@ -382,16 +353,9 @@ options to change the toolbar appearance. To display this menu,
 <mousebutton>right</mousebutton> click the toolbar for which you want to change
 the options.</para>
 
-<para>The <guisubmenu>Orientation</guisubmenu> submenu contains options to place
-the toolbar at the <guimenuitem>Top</guimenuitem>,
-<guimenuitem>Bottom</guimenuitem>, <guimenuitem>Left</guimenuitem> or
-<guimenuitem>Right</guimenuitem> side of the &kplayer; window. You can also
-click and drag the toolbar by the handle on its left border with the &LMB; to
-move it to a new position. The <guimenuitem>Floating</guimenuitem> option
-displays the toolbar on top of other parts of &kplayer; window. The
-<guimenuitem>Flat</guimenuitem> option makes the toolbar show as small lines
-that you need to <mousebutton>left</mousebutton> click to expand the
-toolbar.</para>
+<para>You can also click and drag a unlocked toolbar by the handle on its left 
+border with the &LMB; to move it to a new position inside or outside the main 
+window.</para>
 
 <para>The <guisubmenu>Text Position</guisubmenu> submenu allows you to display
 a description of each icon on the toolbar either underneath or alongside the
@@ -403,6 +367,11 @@ size of the icons on the toolbar. The choices are
 <guimenuitem>Default</guimenuitem>, <guimenuitem>Small</guimenuitem>,
 <guimenuitem>Medium</guimenuitem>, <guimenuitem>Large</guimenuitem> and
 <guimenuitem>Huge</guimenuitem>.</para>
+
+<para>The <guisubmenu>Orientation</guisubmenu> submenu contains options to place the 
+toolbar at the <guimenuitem>Top</guimenuitem>, <guimenuitem>Bottom</guimenuitem>, 
+<guimenuitem>Left</guimenuitem> or <guimenuitem>Right</guimenuitem> side of the 
+;kplayer; window.</para>
 
 </sect2>
 

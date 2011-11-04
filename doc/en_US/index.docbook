@@ -81,10 +81,10 @@
 
 </bookinfo>
 
-&kplayer-introduction;
-&kplayer-basics;
-&kplayer-commands;
-&kplayer-configuration;
+&kplayer-introduction; <!--update to kde 4.7-->
+&kplayer-basics;        <!--update to kde 4.7-->
+&kplayer-commands;      
+&kplayer-configuration; <!--update to kde 4.7-->
 &kplayer-settings;
 &kplayer-properties;
 &kplayer-howto;

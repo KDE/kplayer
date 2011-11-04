@@ -60,7 +60,7 @@ of them to play.</para></listitem>
 <acronym>URL</acronym>s and lets you choose one to put on the playlist and start
 playing.</para></listitem>
 </varlistentry>
-
+<!-- FIXME -->
 <varlistentry>
 <term><menuchoice>
 <guisubmenu>Device</guisubmenu>
@@ -102,7 +102,7 @@ them.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;&Enter;</keycombo>
+<keycombo action="simul">&Alt;<keysym>Return</keysym></keycombo>
 </shortcut>
 <guimenuitem>Properties...</guimenuitem>
 </menuchoice></term>
@@ -124,7 +124,7 @@ for details.</para></listitem>
 </varlistentry>
 
 </variablelist>
-
+<!-- FIXME -->
 <sect3 id="submenu-device">
 <title><guisubmenu>Device</guisubmenu> submenu</title>
 
@@ -322,7 +322,7 @@ ratio.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-&Enter;
+<keysym>Return</keysym>
 </shortcut>
 <guimenuitem>Play</guimenuitem>
 </menuchoice></term>
@@ -356,7 +356,7 @@ is available when the player is not idle.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;<keycap>Down Arrow</keycap></keycombo>
+<keycombo action="simul">&Alt;<keycap>Down</keycap></keycombo>
 </shortcut>
 <guimenuitem>Next</guimenuitem>
 </menuchoice></term>
@@ -367,7 +367,7 @@ playlist.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;<keycap>Up Arrow</keycap></keycombo>
+<keycombo action="simul">&Alt;<keycap>Up</keycap></keycombo>
 </shortcut>
 <guimenuitem>Previous</guimenuitem>
 </menuchoice></term>
@@ -404,7 +404,7 @@ file.</para>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycap>Right Arrow</keycap>
+<keycap>Right</keycap>
 </shortcut>
 <guimenuitem>Forward</guimenuitem>
 </menuchoice></term>
@@ -415,7 +415,7 @@ current file.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>Right Arrow</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>Right</keycap></keycombo>
 </shortcut>
 <guimenuitem>Fast Forward</guimenuitem>
 </menuchoice></term>
@@ -426,7 +426,7 @@ current file.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycap>Left Arrow</keycap>
+<keycap>Left</keycap>
 </shortcut>
 <guimenuitem>Backward</guimenuitem>
 </menuchoice></term>
@@ -437,7 +437,7 @@ current file.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>Left</keycap></keycombo>
 </shortcut>
 <guimenuitem>Fast Backward</guimenuitem>
 </menuchoice></term>
@@ -479,7 +479,7 @@ command will not be available.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycap>Down Arrow</keycap>
+<keycombo action="simul">&Ctrl;<keycap>Down</keycap></keycombo>
 </shortcut>
 <guimenuitem>Decrease Volume</guimenuitem>
 </menuchoice></term>
@@ -489,7 +489,7 @@ command will not be available.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycap>Up Arrow</keycap>
+<keycombo action="simul">&Ctrl;<keycap>Up</keycap></keycombo>
 </shortcut>
 <guimenuitem>Increase Volume</guimenuitem>
 </menuchoice></term>
@@ -759,7 +759,7 @@ the <link linkend="howto-library">Multimedia library micro-HOWTO</link>.</para>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;&Enter;</keycombo>
+<keycombo action="simul">&Ctrl;<keysym>Return</keysym></keycombo>
 </shortcut>
 <guimenuitem>Play</guimenuitem>
 </menuchoice></term>
@@ -844,7 +844,7 @@ around in those sections by clicking and dragging them with the
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycap>Delete</keycap>
+<keycap>Del</keycap>
 </shortcut>
 <guimenuitem>Remove</guimenuitem>
 </menuchoice></term>
@@ -857,7 +857,7 @@ and directories.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycap>F2</keycap>
+<keycombo action="simul">&Ctrl;<keycap>F2</keycap></keycombo>
 </shortcut>
 <guimenuitem>Rename</guimenuitem>
 </menuchoice></term>
@@ -1018,7 +1018,7 @@ details.</para></listitem>
 <title><guisubmenu>Go</guisubmenu> submenu</title>
 
 <variablelist>
-
+<!-- FIXME -->
 <varlistentry>
 <term><menuchoice>
 <guimenuitem>Folder</guimenuitem>
@@ -1032,7 +1032,7 @@ top level folder also has its own command.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;<keycap>Left Arrow</keycap></keycombo>
+<keycombo action="simul">&Alt;<keycap>Left</keycap></keycombo>
 </shortcut>
 <guimenuitem>Back</guimenuitem>
 </menuchoice></term>
@@ -1042,7 +1042,7 @@ top level folder also has its own command.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;<keycap>Right Arrow</keycap></keycombo>
+<keycombo action="simul">&Alt;<keycap>Right</keycap></keycombo>
 </shortcut>
 <guimenuitem>Forward</guimenuitem>
 </menuchoice></term>
@@ -1053,7 +1053,7 @@ use the <guimenuitem>Back</guimenuitem> command.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;&Shift;<keycap>Up Arrow</keycap></keycombo>
+<keycombo action="simul">&Alt;&Shift;<keycap>Up</keycap></keycombo>
 </shortcut>
 <guimenuitem>Up</guimenuitem>
 </menuchoice></term>
@@ -1064,7 +1064,7 @@ folder.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;&Shift;<keycap>Down Arrow</keycap></keycombo>
+<keycombo action="simul">&Alt;&Shift;<keycap>Down</keycap></keycombo>
 </shortcut>
 <guimenuitem>Down</guimenuitem>
 </menuchoice></term>
@@ -1074,7 +1074,7 @@ folder.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;&Shift;<keycap>Left Arrow</keycap></keycombo>
+<keycombo action="simul">&Alt;&Shift;<keycap>Left</keycap></keycombo>
 </shortcut>
 <guimenuitem>To Origin</guimenuitem>
 </menuchoice></term>
