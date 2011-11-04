@@ -127,7 +127,7 @@ discarding any unapplied changes.</para>
 </sect1>
 
 <sect1 id="properties-general">
-<title><guilabel>General</guilabel> section</title>
+<title>General section</title>
 
 <para>This section shows general information about the multimedia item and lets
 you set a few essential properties.</para>
@@ -171,6 +171,16 @@ only.</para></listitem>
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>Length</guilabel></term>
+
+<listitem><para>This property shows the time length of the file.
+&kplayer; tries to detect it with precision of one tenth of a second,
+and usually it gets it pretty close to the real length. This property
+is read only. It is not applicable and not shown for devices and
+channels.</para></listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>Playlist</guilabel></term>
 
 <listitem><para>This property shows and lets you choose whether this item
@@ -185,16 +195,6 @@ or stream.</para>
 
 <para>This property is not applicable and not shown for devices, disks, titles,
 tracks and channels.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Length</guilabel></term>
-
-<listitem><para>This property shows the time length of the file.
-&kplayer; tries to detect it with precision of one tenth of a second,
-and usually it gets it pretty close to the real length. This property
-is read only. It is not applicable and not shown for devices and
-channels.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -251,7 +251,7 @@ shown.</para></listitem>
 </sect1>
 
 <sect1 id="properties-size">
-<title><guilabel>Size</guilabel> section</title>
+<title>Size section</title>
 
 <para>This section shows the video resolution and lets you control the
 <link linkend="parts-video-area">video area</link> size when playing this file,
@@ -333,7 +333,7 @@ Aspect</guilabel> setting you choose globally.</para></listitem>
 </sect1>
 
 <sect1 id="properties-video">
-<title><guilabel>Video</guilabel> section</title>
+<title>Video section</title>
 
 <para>This section contains properties that show technical information about
 the video and let you control video output when playing the file, if it has
@@ -480,7 +480,7 @@ other items this property is not applicable and not shown.</para></listitem>
 </sect1>
 
 <sect1 id="properties-audio">
-<title><guilabel>Audio</guilabel> section</title>
+<title>Audio section</title>
 
 <para>This section contains properties that show technical information about
 the audio and let you control audio output when playing the file, if it has
@@ -624,7 +624,7 @@ other items this property is not applicable and not shown.</para></listitem>
 </sect1>
 
 <sect1 id="properties-subtitles">
-<title><guilabel>Subtitles</guilabel> section</title>
+<title>Subtitles section</title>
 
 <para>This section contains properties that control subtitle loading and
 display, if the file is played with subtitles.</para>
@@ -745,7 +745,7 @@ streams.</para></listitem>
 </sect1>
 
 <sect1 id="properties-advanced">
-<title><guilabel>Advanced</guilabel> section</title>
+<title>Advanced section</title>
 
 <para>This section contains various properties that affect advanced command
 line parameters passed to &mplayer;, as well as interaction with the &kde;
