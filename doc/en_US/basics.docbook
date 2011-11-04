@@ -371,9 +371,7 @@ linkend="menubar">Menu bar</link> section of this document.</para>
 
 <para><interface>Main toolbar</interface> contains buttons for commonly used
 operations. <mousebutton>Left</mousebutton> clicking an icon will activate
-the corresponding action. If you have enabled tooltips in the &kcontrolcenter;
-<menuchoice><guimenu>Appearance &amp; Themes</guimenu>
-<guisubmenu>Style</guisubmenu></menuchoice> dialog, a brief description of what
+the corresponding action. A brief description of what
 that icon does will appear when you hover the mouse pointer over it. Some of the
 main toolbar buttons will pop up slider controls when clicked. The sliders let
 you change various player controls: sound volume, video contrast, brightness,
