@@ -170,10 +170,7 @@ behavior.</para>
 <term><guilabel>Resize main window automatically</guilabel></term>
 
 <listitem><para>By default &kplayer; resizes the main window automatically
-unless it is maximized or full screen. When &kplayer; loads and starts
-playing a new video, it scales it in increments of 50% of the original
-video size until the video width reaches the <guilabel>Minimum initial
-video width</guilabel> setting. It also automatically resizes the window
+unless it is maximized or full screen.It also automatically resizes the window
 to maintain the video aspect if that option is turned on.</para>
 
 <para>If you would like to avoid automatic resizing and always keep the window
@@ -184,16 +181,6 @@ problems coming back from full screen mode, like endless flickering for example.
 But in that case you should also report the bug following instructions in
 Reporting bugs HOWTO.</para></listitem>
 </varlistentry>
-
-<varlistentry>
-<term><guilabel>Minimum initial video width</guilabel></term>
-
-<listitem><para>If <guilabel>Resize main window automatically</guilabel>
-option is enabled, when &kplayer; loads and starts playing a new video,
-it scales it in increments of 50% of the original video size until the
-video width in pixels reaches this setting.</para></listitem>
-</varlistentry>
-
 <varlistentry>
 <term><guilabel>Maximum entries on playlist menus</guilabel></term>
 
@@ -483,13 +470,6 @@ in seconds or in percents of the time length of the file if it is
 known.</para></listitem>
 </varlistentry>
 
-<varlistentry>
-<term><guilabel>Distance between slider marks</guilabel></term>
-
-<listitem><para>This option gives the distance between tick marks on the
-progress slider, in percents of the slider length.</para></listitem>
-</varlistentry>
-
 </variablelist>
 
 </sect1>
@@ -520,13 +500,6 @@ setting.</para></listitem>
 
 <listitem><para>This option gives the upper limit on the sound volume
 setting.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Distance between slider marks</guilabel></term>
-
-<listitem><para>This option gives the distance between tick marks on the
-volume slider, in percents of the slider length.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -580,13 +553,6 @@ setting.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Distance between slider marks</guilabel></term>
-
-<listitem><para>This option gives the distance between tick marks on the
-contrast slider, in percents of the slider length.</para></listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Adjustment amount</guilabel></term>
 
 <listitem><para>This option tells &kplayer; by how much to adjust the
@@ -634,13 +600,6 @@ setting.</para></listitem>
 
 <listitem><para>This option gives the upper limit on the video brightness
 setting.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Distance between slider marks</guilabel></term>
-
-<listitem><para>This option gives the distance between tick marks on the
-brightness slider, in percents of the slider length.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -694,13 +653,6 @@ setting.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Distance between slider marks</guilabel></term>
-
-<listitem><para>This option gives the distance between tick marks on the
-hue slider, in percents of the slider length.</para></listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Adjustment amount</guilabel></term>
 
 <listitem><para>This option tells &kplayer; by how much to adjust the
@@ -748,13 +700,6 @@ setting.</para></listitem>
 
 <listitem><para>This option gives the upper limit on the video saturation
 setting.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Distance between slider marks</guilabel></term>
-
-<listitem><para>This option gives the distance between tick marks on the
-saturation slider, in percents of the slider length.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1083,14 +1028,6 @@ menu or the corresponding keyboard shortcuts.</para></listitem>
 For individual subtitle files that use a different encoding you can override
 this setting in the <link linkend="properties-subtitles"><guilabel>File
 Properties</guilabel></link> of the corresponding video file.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Use embedded fonts when available</guilabel></term>
-
-<listitem><para>This option tells &mplayer; to use the embedded fonts to display
-subtitles if a video file contains embedded fonts. For example, the Matroska
-file format allows embedding of fonts.</para></listitem>
 </varlistentry>
 
 <varlistentry>
