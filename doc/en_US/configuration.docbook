@@ -371,7 +371,7 @@ size of the icons on the toolbar. The choices are
 <para>The <guisubmenu>Orientation</guisubmenu> submenu contains options to place the 
 toolbar at the <guimenuitem>Top</guimenuitem>, <guimenuitem>Bottom</guimenuitem>, 
 <guimenuitem>Left</guimenuitem> or <guimenuitem>Right</guimenuitem> side of the 
-;kplayer; window.</para>
+&kplayer; window.</para>
 
 </sect2>
 
