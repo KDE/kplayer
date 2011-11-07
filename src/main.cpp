@@ -28,17 +28,17 @@ kdbgstream kdDebugTime (void);
 #include "kplayer.h"
 
 static const KLocalizedString description = ki18n("KPlayer, a KDE media player");
-KAboutData* about;
 
 int main (int argc, char *argv[])
 {
 #ifdef DEBUG_KPLAYER_MAIN
   kdDebugTime() << "Welcome to KPlayer!\n";
 #endif
-  about = new KAboutData ("kplayer", 0, ki18n("KPlayer"), "0.7.2", description, KAboutData::License_GPL_V3,
+  KAboutData aboutData("kplayer", 0, ki18n("KPlayer"), "0.7.2", description, KAboutData::License_GPL_V3,
     ki18n("(C) 2002-2008, Kirill Bulygin"), KLocalizedString());
-  about -> addAuthor (ki18n("Kirill Bulygin"), KLocalizedString(), "http://kplayer.sourceforge.net/email.html");
-  KComponentData* data = new KComponentData (about);
+  aboutData.addAuthor (ki18n("Kirill Bulygin"), KLocalizedString(), "http://kplayer.sourceforge.net/email.html");
+  aboutData.addCredit(ki18n("Burkhard Lück"), ki18n("Documentation updates"), "lueck@hube-lueck.de");
+  KComponentData* data = new KComponentData (&aboutData);
   QString localdir (KGlobal::dirs() -> localkdedir());
 #ifdef DEBUG_KPLAYER_MAIN
   kdDebugTime() << " Local directory " << localdir << "\n";
@@ -85,7 +85,7 @@ int main (int argc, char *argv[])
 #ifdef DEBUG_KPLAYER_MAIN
   kdDebugTime() << "Processing command line\n";
 #endif
-  KCmdLineArgs::init (argc, argv, about);
+  KCmdLineArgs::init (argc, argv, &aboutData);
   KCmdLineOptions options;
   options.add ("play", ki18n("Play the files immediately (default)"));
   options.add ("queue", ki18n("Queue the files for playing"));

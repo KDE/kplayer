@@ -24,7 +24,6 @@
 #include "kplayerslideraction.h"
 #include "kplayerwidget.h"
 
-#include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kcursor.h>
@@ -65,7 +64,6 @@ void KPlayerX11GetKeyboardMouseState (uint id);
 #define ID_PROGRESS_MSG 3
 
 QString resourcePath (const QString& filename);
-extern KAboutData* about;
 
 KPlayerApplication::KPlayerApplication (void)
   : KUniqueApplication (true, true)
@@ -76,7 +74,6 @@ KPlayerApplication::KPlayerApplication (void)
 KPlayerApplication::~KPlayerApplication()
 {
   removeEventFilter (this);
-  delete about;
 }
 
 int KPlayerApplication::newInstance (void)
@@ -101,7 +98,6 @@ int KPlayerApplication::newInstance (void)
     //setMainWidget (mainWindow);
   }
   mainWindow -> start();
-  about -> setLicenseTextFile (resourcePath ("COPYING"));
   return 0;
 }
 
