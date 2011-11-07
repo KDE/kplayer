@@ -481,9 +481,7 @@ about the media and its <link linkend="properties">properties</link>.</para>
 
 <para>For details on the available commands and options see the <link
 linkend="menu-library"><guilabel>Library</guilabel> menu</link> and the <link
-linkend="popup-library">library popup menu</link> sections of this manual.
-For a detailed description of the multimedia library feature see the
-<link linkend="howto-library">Multimedia library micro-HOWTO</link>.</para>
+linkend="popup-library">library popup menu</link> sections of this manual.</para>
 
 </sect2>
 

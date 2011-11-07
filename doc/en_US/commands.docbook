@@ -108,8 +108,7 @@ them.</para></listitem>
 </menuchoice></term>
 <listitem><para>Opens the <link linkend="properties">File Properties</link>
 dialog that lets you choose many options specific to the currently loaded file.
-See the <link linkend="howto-properties">File properties micro-HOWTO</link>
-for details.</para></listitem>
+</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -200,7 +199,7 @@ on this submenu.</para></listitem>
 </shortcut>
 <guimenuitem>Full Screen</guimenuitem>
 </menuchoice></term>
-<listitem><para>Switches to <link linkend="howto-full-screen">full screen</link>
+<listitem><para>Switches to full screen
 video display and back to normal mode. Double clicking the video area also
 switches between full screen and normal window size.</para></listitem>
 </varlistentry>
@@ -751,8 +750,7 @@ Library</guimenuitem> command on the <link
 linkend="menu-settings"><guimenu>Settings</guimenu> menu</link> or one of the
 commands on the <link linkend="submenu-go"><guisubmenu>Go</guisubmenu>
 submenu</link>. Other commands become available when you select some items in
-the library. For a detailed description of the multimedia library feature see
-the <link linkend="howto-library">Multimedia library micro-HOWTO</link>.</para>
+the library.</para>
 
 <variablelist>
 
@@ -888,9 +886,7 @@ previous item.</para></listitem>
 <listitem><para>Opens the <link linkend="properties">File Properties</link>
 dialog for the current item in the <interface>multimedia library</interface>.
 This command currently does not apply to folders, but it is available for
-devices and optical disks as well as other items. See the
-<link linkend="howto-properties">File properties micro-HOWTO</link> for
-details.</para></listitem>
+devices and optical disks as well as other items.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1006,8 +1002,7 @@ library</interface>.</para></listitem>
 <listitem><para>Shows a dialog allowing you to enter a name, type and path for a
 new device to add to the <guilabel>Devices</guilabel> section of the
 <interface>multimedia library</interface>. Some device types need additional
-settings. See the <link linkend="howto-devices">Devices micro-HOWTO</link> for
-details.</para></listitem>
+settings. </para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -1079,10 +1074,7 @@ folder.</para></listitem>
 <guimenuitem>To Origin</guimenuitem>
 </menuchoice></term>
 <listitem><para>Opens the origin folder of the selected folder. This command is
-available when the currently selected folder is linked to an origin folder. For
-an explanation of linked folders, see the
-<link linkend="howto-library-linked-folders">Multimedia library
-micro-HOWTO</link>.</para></listitem>
+available when the currently selected folder is linked to an origin folder.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -1215,7 +1207,7 @@ that lets you see and change &kplayer;'s shortcut key bindings, or associations
 between actions and the corresponding keys or combinations of keys that activate
 them. If you change the bindings, make sure not to duplicate an existing
 shortcut and also not to use the &Shift; key for your new shortcuts, because the
-&Shift; key has a <link linkend="howto-properties">special function</link> in
+&Shift; key has a special function in
 &kplayer;.</para></listitem>
 </varlistentry>
 
@@ -1235,8 +1227,7 @@ toolbars.</para></listitem>
 <listitem><para>Opens a dialog that lets you configure the program, modifying
 various aspects of its functionality, user interface and interaction with
 &mplayer;. For more information see the <link linkend="settings">Configuration
-dialog chapter</link> and the <link linkend="howto-settings">Advanced
-configuration micro-HOWTO</link> in this manual.</para></listitem>
+dialog chapter</link> in this manual.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -1293,7 +1284,7 @@ will toggle the option to maintain the video aspect ratio.</para></listitem>
 
 <listitem><para><guimenuitem>Full Screen</guimenuitem> button invokes the
 command on the <link linkend="menu-view"><guimenu>View</guimenu> menu</link>
-that switches to the <link linkend="howto-full-screen">full screen mode</link>
+that switches to the full screen mode 
 and back the to normal mode.</para></listitem>
 
 <listitem><para><guimenuitem>Volume</guimenuitem>,
@@ -1304,7 +1295,7 @@ want the slider to stay visible instead of disappearing when it loses the input
 focus, use the <link linkend="parts-toolbar-slider">slider toolbars</link>
 instead. As usual, if you hold the &Shift; key down, the changes you make to the
 settings will be applied only to the current file and stored in its
-<link linkend="howto-properties">properties</link>.</para></listitem>
+properties.</para></listitem>
 
 </itemizedlist>
 
@@ -1388,7 +1379,7 @@ slider.</para></listitem>
 
 <listitem><para>The volume slider allows you to change the sound volume. If you
 hold the &Shift; key down, the setting will be applied only to the current file
-and stored in its <link linkend="howto-properties">properties</link>. If you
+and stored in its properties. If you
 want the slider to always disappear after you have changed the volume, hide this
 toolbar and use the popup slider on the <link linkend="toolbar-main">main
 toolbar</link> instead.</para></listitem>
@@ -1417,7 +1408,7 @@ of the <guimenu>Player</guimenu> menu.</para></listitem>
 
 <listitem><para>The contrast slider allows you to change the video contrast. If
 you hold the &Shift; key down, the setting will be applied only to the current
-file and stored in its <link linkend="howto-properties">properties</link>. If
+file and stored in its properties. If
 you want the slider to always disappear after you have changed the contrast,
 hide this toolbar and use the popup slider on the
 <link linkend="toolbar-main">main toolbar</link> instead.</para></listitem>
@@ -1440,8 +1431,7 @@ and will hide the toolbar when clicked.</para></listitem>
 
 <listitem><para>The brightness slider allows you to change the video brightness.
 If you hold the &Shift; key down, the setting will be applied only to the
-current file and stored in its
-<link linkend="howto-properties">properties</link>. If you want the slider to
+current file and stored in its properties. If you want the slider to
 always disappear after you have changed the brightness, hide this toolbar and
 use the popup slider on the <link linkend="toolbar-main">main toolbar</link>
 instead.</para></listitem>
@@ -1464,7 +1454,7 @@ and will hide the toolbar when clicked.</para></listitem>
 
 <listitem><para>The hue slider allows you to change the video hue. If you hold
 the &Shift; key down, the setting will be applied only to the current file and
-stored in its <link linkend="howto-properties">properties</link>. If you want
+stored in its properties. If you want
 the slider to always disappear after you have changed the hue, hide this toolbar
 and use the popup slider on the <link linkend="toolbar-main">main toolbar</link>
 instead.</para></listitem>
@@ -1487,8 +1477,7 @@ and will hide the toolbar when clicked.</para></listitem>
 
 <listitem><para>The saturation slider allows you to change the video saturation.
 If you hold the &Shift; key down, the setting will be applied only to the
-current file and stored in its
-<link linkend="howto-properties">properties</link>. If you want the slider to
+current file and stored in its properties. If you want the slider to
 always disappear after you have changed the saturation, hide this toolbar and
 use the popup slider on the <link linkend="toolbar-main">main toolbar</link>
 instead.</para></listitem>
@@ -1551,7 +1540,7 @@ option to maintain the video aspect ratio.</para></listitem>
 
 <listitem><para><guimenuitem>Full Screen</guimenuitem> command invokes the
 action on the <link linkend="menu-view"><guimenu>View</guimenu> menu</link>
-that switches to the <link linkend="howto-full-screen">full screen mode</link>
+that switches to the full screen mode 
 and back to the normal mode.</para></listitem>
 
 <listitem><para>The commands on the <guisubmenu>Settings</guisubmenu> submenu

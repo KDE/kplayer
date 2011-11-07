@@ -2,8 +2,7 @@
 <title>Configuring &kplayer;</title>
 
 <para>Like other &kde; programs, &kplayer; is highly configurable. When you
-<link linkend="howto-installation">install &kplayer;</link> and its multimedia
-playing backend <link linkend="howto-installation-mplayer">&mplayer;</link>,
+install &kplayer; and its multimedia playing backend &mplayer;,
 the default settings should enable your system to play multimedia content
 without any additional configuration. This chapter describes ways to make
 &kplayer;'s user interface best fit your tastes and configure media playback
@@ -59,8 +58,7 @@ toolbar orientation, text position and icon size.</para>
 
 <para>&kplayer; will of course remember all the settings you choose and the
 positions where you put your toolbars. It will remember visibility settings
-for <link linkend="howto-full-screen">full screen mode</link> and for normal
-mode separately.</para>
+for full screen mode and for normal mode separately.</para>
 
 </sect1>
 
@@ -70,9 +68,7 @@ mode separately.</para>
 <para>&kplayer;'s <link linkend="toolbar-playlist">playlist toolbar</link> has
 a drop down box that shows the current playlist. It stores files and streams
 that have been played or are going to be played and lets you easily switch to a
-different item and play it. For details on the playlist feature see the
-<link linkend="howto-playlist">Playlist micro-HOWTO</link>.
-Following is a description of options that affect the playlist behavior.</para>
+different item and play it.</para>
 
 <itemizedlist>
 
@@ -128,9 +124,7 @@ configuration</link> for details.</para>
 <para>&kplayer;'s <link linkend="parts-library"><interface>multimedia
 library</interface></link> is the place to access all your multimedia and
 arrange it into playlists. The things you create in the library affect other
-parts of &kplayer;, in particular some menus and the current playlist. For
-details on the multimedia library feature see the
-<link linkend="howto-library">Multimedia library micro-HOWTO</link>.</para>
+parts of &kplayer;, in particular some menus and the current playlist.</para>
 
 <sect2 id="configuration-now-playing">
 <title>Now Playing</title>
@@ -241,7 +235,7 @@ choose <menuchoice><guisubmenu>Add</guisubmenu>
 <guimenuitem>Device...</guimenuitem></menuchoice> command from the
 <link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
 <mousebutton>right</mousebutton> click <link linkend="popup-library">popup
-menu</link>. This will bring up a dialog box as shown below.</para>
+menu</link>.</para>
 
 <mediaobject>
 <imageobject>
@@ -268,8 +262,7 @@ select the device in the <interface>multimedia library</interface> and choose
 the <guimenuitem>Properties...</guimenuitem> command from the
 <link linkend="menu-library"><guimenu>Library</guimenu> menu</link> or the
 <mousebutton>right</mousebutton> click <link linkend="popup-library">popup
-menu</link>. For more information on disk and tuner device support in &kplayer;
-see the <link linkend="howto-devices">Devices micro-HOWTO</link>.</para>
+menu</link>.</para>
 
 </sect2>
 
@@ -298,9 +291,7 @@ header.</para>
 view</interface>, <mousebutton>left</mousebutton> click the header of the column
 you want to sort by. To sort in the reverse order, click the same header again.
 The new sorting order will apply to all folders in the multimedia library,
-except for <link linkend="howto-library-playlist-folders">playlist
-folders</link> with a <link linkend="howto-library-ordering-sorting">custom
-order</link> of items.</para>
+except for playlist folders with a custom order of items.</para>
 
 </sect2>
 
@@ -325,8 +316,7 @@ as shown below.</para>
 
 <para>If you change the key bindings, make sure not to duplicate an existing
 shortcut and also not to use the &Shift; key for your new shortcuts, because
-the &Shift; key has a <link linkend="howto-properties">special function</link>
-in &kplayer;.</para>
+the &Shift; key has a special function in &kplayer;.</para>
 
 <para>Use the filter bar to search through the list to find the action for 
 which you want to add or change the shortcut keys and select it by 
@@ -451,7 +441,7 @@ Configure &kplayer;...</guimenuitem></menuchoice> to open it.</para>
 behavior, including <link linkend="settings-general">general</link> options. The
 <link linkend="settings-controls">Controls section</link> tells &kplayer; which
 changes it should remember globally and which ones it should store in individual
-<link linkend="howto-properties">file properties</link>, and its subsections
+file properties, and its subsections
 allow you to fine tune individual &kplayer; controls, including
 <link linkend="settings-progress">progress</link>,
 <link linkend="settings-volume">volume</link>,
@@ -461,7 +451,7 @@ allow you to fine tune individual &kplayer; controls, including
 <link linkend="settings-saturation">saturation</link>, and
 <link linkend="settings-sliders">slider controls</link> in general. Other
 sections affect options that &kplayer; uses for interaction with
-<link linkend="howto-installation-mplayer">&mplayer;</link> and control various
+&mplayer; and control various
 aspect of multimedia playback, including
 <link linkend="settings-video">video</link>,
 <link linkend="settings-audio">audio</link>,
@@ -469,9 +459,7 @@ aspect of multimedia playback, including
 <link linkend="settings-advanced">advanced</link> options.</para>
 
 <para>The <link linkend="settings">Configuration dialog chapter</link> gives
-complete details on each section and all the available options. Also the
-<link linkend="howto-settings">Advanced configuration micro-HOWTO</link>
-describes some of the more advanced options in more detail.</para>
+complete details on each section and all the available options.</para>
 
 <para>Some additional options that apply to the main &kplayer; window are
 available from the <link linkend="popup-title-bar">title bar popup menu</link>
@@ -508,7 +496,7 @@ dialog are arranged according to their function. General properties like
 <link linkend="properties-general">General</link> section. Properties that
 control the video size are in the <link linkend="properties-size">Size</link>
 section. Other sections contain properties that affect &kplayer; interaction
-with <link linkend="howto-installation-mplayer">&mplayer;</link> and control
+with &mplayer; and control
 multimedia playback, including <link linkend="properties-video">video</link>,
 <link linkend="properties-audio">audio</link>,
 <link linkend="properties-subtitles">subtitles</link> and
@@ -523,9 +511,7 @@ and select the <guimenuitem>Properties...</guimenuitem> command to open the
 properties dialog for that item.</para>
 
 <para>The <link linkend="properties">File properties dialog chapter</link> gives
-complete details on each section and all the available properties. Also the
-<link linkend="howto-properties">File properties micro-HOWTO</link>
-describes this feature in more detail and gives some examples.</para>
+complete details on each section and all the available properties.</para>
 
 </sect1>
 

@@ -14,10 +14,8 @@ as well as network locations using many types of protocols.</para>
 
 <para>However, &kplayer; is much more that just an &mplayer; frontend. In
 addition to &kde; integration and an easy to use interface that follows &kde;
-standards, it offers a <link linkend="howto-library">multimedia library</link>,
-<link linkend="howto-playlist">playlist</link> support, many additional input
-methods using <link linkend="howto-slaves">&kde; I/O Slaves</link>, and last but
-not least the <link linkend="howto-properties">ability</link> to easily choose
+standards, it offers a multimedia library, playlist support, many additional input
+methods using &kde; I/O Slaves, and last but not least the ability to easily choose
 many different options for each individual file or <acronym>URL</acronym>,
 giving you flexibility not found in any other media player.</para>
 

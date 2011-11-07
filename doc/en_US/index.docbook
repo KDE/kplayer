@@ -11,21 +11,6 @@
   <!ENTITY kplayer-configuration SYSTEM "configuration.docbook">
   <!ENTITY kplayer-settings SYSTEM "settings.docbook">
   <!ENTITY kplayer-properties SYSTEM "properties.docbook">
-  <!ENTITY kplayer-howto SYSTEM "howto.docbook">
-  <!ENTITY kplayer-howto-installation SYSTEM "howto-installation.docbook">
-  <!ENTITY kplayer-howto-compilation SYSTEM "howto-compilation.docbook">
-  <!ENTITY kplayer-howto-configuration SYSTEM "howto-configuration.docbook">
-  <!ENTITY kplayer-howto-settings SYSTEM "howto-settings.docbook">
-  <!ENTITY kplayer-howto-properties SYSTEM "howto-properties.docbook">
-  <!ENTITY kplayer-howto-full-screen SYSTEM "howto-full-screen.docbook">
-  <!ENTITY kplayer-howto-bug-reporting SYSTEM "howto-bug-reporting.docbook">
-  <!ENTITY kplayer-howto-playlist SYSTEM "howto-playlist.docbook">
-  <!ENTITY kplayer-howto-library SYSTEM "howto-library.docbook">
-  <!ENTITY kplayer-howto-subtitles SYSTEM "howto-subtitles.docbook">
-  <!ENTITY kplayer-howto-devices SYSTEM "howto-devices.docbook">
-  <!ENTITY kplayer-howto-streams SYSTEM "howto-streams.docbook">
-  <!ENTITY kplayer-howto-slaves SYSTEM "howto-slaves.docbook">
-  <!ENTITY kplayer-howto-troubleshooting SYSTEM "howto-troubleshooting.docbook">
   <!ENTITY % English "INCLUDE" > <!-- change language only here -->
   <!ENTITY % addindex "IGNORE">
 ]>
@@ -59,8 +44,6 @@
 <para>&kplayer; is a &kde; multimedia player that uses the
 <ulink url="http://www.mplayerhq.hu/">&mplayer;</ulink> engine.</para>
 
-<para>If you are having problems with &kplayer;, please have a look at the
-<link linkend="howto-troubleshooting">Troubleshooting micro-HOWTO</link>.</para>
 </abstract>
 
 <keywordset>
@@ -81,13 +64,12 @@
 
 </bookinfo>
 
-&kplayer-introduction; <!--update to kde 4.7-->
+&kplayer-introduction;  <!--update to kde 4.7-->
 &kplayer-basics;        <!--update to kde 4.7-->
-&kplayer-commands;      
+&kplayer-commands;      <!--not fully updated to kde 4.7-->
 &kplayer-configuration; <!--update to kde 4.7-->
-&kplayer-settings;
-&kplayer-properties;
-&kplayer-howto;
+&kplayer-settings;      <!--update to kde 4.7-->
+&kplayer-properties;    <!--update to kde 4.7-->
 
 <chapter id="credits">
 

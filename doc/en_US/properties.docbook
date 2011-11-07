@@ -199,7 +199,7 @@ tracks and channels.</para></listitem>
 
 </variablelist>
 
-<para>Tuner <link linkend="howto-devices">devices</link> like
+<para>Tuner devices like
 <acronym>DVB</acronym>, <acronym>PVR</acronym> and <acronym>TV</acronym> and
 channels available on them have some specific properties that are not applicable
 to other items.</para>
@@ -431,7 +431,7 @@ It is read only, and it is empty for audio only files.</para></listitem>
 
 </variablelist>
 
-<para>Tuner <link linkend="howto-devices">devices</link> like
+<para>Tuner devices like
 <acronym>DVB</acronym>, <acronym>PVR</acronym> and <acronym>TV</acronym> have
 some specific properties that are not applicable to other items.</para>
 
@@ -550,7 +550,7 @@ read only, and it is empty for files without an audio track.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Samplerate</guilabel></term>
+<term><guilabel>Sample rate</guilabel></term>
 
 <listitem><para>This property shows the audio samplerate of this file. It is
 read only, and it is empty for files without an audio track.</para></listitem>
@@ -558,7 +558,7 @@ read only, and it is empty for files without an audio track.</para></listitem>
 
 </variablelist>
 
-<para>Tuner <link linkend="howto-devices">devices</link> like
+<para>Tuner devices like
 <acronym>DVB</acronym>, <acronym>PVR</acronym> and <acronym>TV</acronym> have
 some specific properties that are not applicable to other items.</para>
 
@@ -612,7 +612,7 @@ property is not applicable and not shown.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Capture device</guilabel></term>
+<term><guilabel>device</guilabel></term>
 
 <listitem><para>This property lets you specify the audio capture device for
 playing from the <acronym>PVR</acronym> or <acronym>TV</acronym> device. For
@@ -847,7 +847,7 @@ property has no effect for URLs passed directly to &mplayer;.</para></listitem>
 </variablelist>
 
 <para><acronym>PVR</acronym> and <acronym>TV</acronym>
-<link linkend="howto-devices">devices</link> have some specific properties that
+devices have some specific properties that
 are not applicable to other items.</para>
 
 <mediaobject>
@@ -868,7 +868,7 @@ For other items this property is not applicable and not shown.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Compression quality</guilabel></term>
+<term><guilabel>quality</guilabel></term>
 
 <listitem><para>This property lets you specify the compression quality from 0 to
 100 when hardware compression is enabled for a <acronym>PVR</acronym> or

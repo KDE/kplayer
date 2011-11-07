@@ -153,7 +153,7 @@ discarding any unapplied changes.</para>
 </sect1>
 
 <sect1 id="settings-general">
-<title><guilabel>General</guilabel> section</title>
+<title>General section</title>
 
 <para>This section contains options that affect general &kplayer;
 behavior.</para>
@@ -178,8 +178,7 @@ the size you make it, turn this option off. &kplayer; will then maintain the
 video aspect by constraining the video within the window, as if the window was
 maximized for example. You will also want to turn this option off if you get
 problems coming back from full screen mode, like endless flickering for example.
-But in that case you should also report the bug following instructions in
-Reporting bugs HOWTO.</para></listitem>
+</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Maximum entries on playlist menus</guilabel></term>
@@ -224,8 +223,7 @@ section and on the <guisubmenu>Play Recent</guisubmenu> menu.</para></listitem>
 <term><guilabel>Meta information cache size limit</guilabel></term>
 
 <listitem><para>This option gives the maximum number of multimedia items for
-which &kplayer; should store the <link linkend="howto-properties">file
-properties</link>. These items include local files, remote
+which &kplayer; should store the file properties. These items include local files, remote
 <acronym>URL</acronym>s, <acronym>CD</acronym> tracks, <acronym>DVD</acronym>
 titles and tuner device channels. &kplayer; remembers the properties of each
 of those items, and when the total number of items exceeds this setting, it will
@@ -264,7 +262,7 @@ log.</para></listitem>
 </sect1>
 
 <sect1 id="settings-controls">
-<title><guilabel>Controls</guilabel> section</title>
+<title>Controls section</title>
 
 <para>This section contains advanced options that control how your choices
 made using various &kplayer; controls are applied and stored. For more
@@ -281,7 +279,7 @@ section of this manual.</para>
 
 <varlistentry>
 <term><guilabel>Remember for current file any changes made with
-Shift</guilabel></term>
+&Shift;</guilabel></term>
 
 <listitem><para>If this option is selected, when you adjust one of the
 settings listed below while holding the &Shift; key down, &kplayer; will
@@ -436,7 +434,7 @@ loaded file.</para></listitem>
 </sect1>
 
 <sect1 id="settings-progress">
-<title><guilabel>Progress</guilabel> subsection</title>
+<title>Progress subsection</title>
 
 <para>This section contains options that affect the progress slider control
 and the seeking function.</para>
@@ -475,7 +473,7 @@ known.</para></listitem>
 </sect1>
 
 <sect1 id="settings-volume">
-<title><guilabel>Volume</guilabel> subsection</title>
+<title>Volume subsection</title>
 
 <para>This section contains options that affect the volume slider
 control.</para>
@@ -525,7 +523,7 @@ setting every time before loading a new file or when starting
 </sect1>
 
 <sect1 id="settings-contrast">
-<title><guilabel>Contrast</guilabel> subsection</title>
+<title>Contrast subsection</title>
 
 <para>This section contains options that affect the contrast slider
 control.</para>
@@ -575,7 +573,7 @@ setting every time before loading a new file or when starting
 </sect1>
 
 <sect1 id="settings-brightness">
-<title><guilabel>Brightness</guilabel> subsection</title>
+<title>Brightness subsection</title>
 
 <para>This section contains options that affect the brightness slider
 control.</para>
@@ -625,7 +623,7 @@ setting every time before loading a new file or when starting
 </sect1>
 
 <sect1 id="settings-hue">
-<title><guilabel>Hue</guilabel> subsection</title>
+<title>Hue subsection</title>
 
 <para>This section contains options that affect the hue slider
 control.</para>
@@ -675,7 +673,7 @@ setting every time before loading a new file or when starting
 </sect1>
 
 <sect1 id="settings-saturation">
-<title><guilabel>Saturation</guilabel> subsection</title>
+<title>Saturation subsection</title>
 
 <para>This section contains options that affect the saturation slider
 control.</para>
@@ -725,7 +723,7 @@ setting every time before loading a new file or when starting
 </sect1>
 
 <sect1 id="settings-sliders">
-<title><guilabel>Sliders</guilabel> subsection</title>
+<title>Sliders subsection</title>
 
 <para>This section contains miscellaneous options that affect all slider
 controls in &kplayer;.</para>
@@ -771,7 +769,7 @@ in percents of the slider length.</para></listitem>
 </sect1>
 
 <sect1 id="settings-video">
-<title><guilabel>Video</guilabel> section</title>
+<title>Video section</title>
 
 <para>This section contains options that control video output.</para>
 
@@ -846,7 +844,7 @@ double buffering option or when playing with subtitles.</para></listitem>
 </sect1>
 
 <sect1 id="settings-audio">
-<title><guilabel>Audio</guilabel> section</title>
+<title>Audio section</title>
 
 <para>This section contains options that control audio output.</para>
 
@@ -937,7 +935,7 @@ menu or the corresponding keyboard shortcuts.</para></listitem>
 </sect1>
 
 <sect1 id="settings-subtitles">
-<title><guilabel>Subtitles</guilabel> section</title>
+<title>Subtitles section</title>
 
 <para>This section contains options that control subtitle display.</para>
 
@@ -1073,7 +1071,7 @@ spaces.</para></listitem>
 </sect1>
 
 <sect1 id="settings-advanced">
-<title><guilabel>Advanced</guilabel> section</title>
+<title>Advanced section</title>
 
 <para>This section contains various options that affect advanced command
 line parameters passed to &mplayer;, as well as interaction with &kde;
