@@ -188,6 +188,7 @@ KPlayerDeviceDialog::KPlayerDeviceDialog (QWidget* parent)
 #endif
   setCaption (i18n("Add device"));
   setButtons (KDialog::Help | KDialog::Ok | KDialog::Cancel);
+  setHelp ("configuration-devices");
   setMainWidget (new KPlayerPropertiesDevice (this));
 }
 
