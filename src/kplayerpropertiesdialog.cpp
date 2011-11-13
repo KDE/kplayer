@@ -33,7 +33,7 @@ QString languageName (int id, QString language);
 #define DEBUG_KPLAYER_PROPERTIES_DIALOG
 #endif
 
-QString listEntry (KComboBox* combo, bool hasDefault = false)
+QString listEntry (KComboBox* combo, bool hasDefault)
 {
   static QRegExp re_key_value ("^([^:]+): *(.*)$");
   if ( hasDefault && combo -> currentIndex() == 0 )
