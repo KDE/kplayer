@@ -736,7 +736,7 @@ void KPlayerWindow::initActions (void)
 
   action = KStandardAction::preferences (this, SLOT (settingsConfigure()), actionCollection());
   action -> setStatusTip (i18n("Opens the KPlayer configuration dialog"));
-  action -> setWhatsThis (i18n("The 'Configure KPlayer' command opens a dialog that allows you to configure the program, modifying various aspects of its functionality, user interface and interaction with MPlayer. For more information see the Configuration dialog chapter and the Advanced configuration micro-HOWTO in the user manual."));
+  action -> setWhatsThis (i18n("The 'Configure KPlayer' command opens a dialog that allows you to configure the program, modifying various aspects of its functionality, user interface and interaction with MPlayer. For more information see the Configuration dialog chapter in the user manual."));
 
   createGUI();
 

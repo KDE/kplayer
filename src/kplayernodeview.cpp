@@ -3362,7 +3362,7 @@ KPlayerLibrary::KPlayerLibrary (KActionCollection* ac, KPlayerPlaylist* playlist
   actionCollection() -> addAction ("library_properties", action);
   action -> setText (i18n("Propert&ies..."));
   action -> setStatusTip (i18n("Opens the Properties dialog for the selected item"));
-  action -> setWhatsThis (i18n("The 'Properties' command opens the File Properties dialog for the current item in the multimedia library. See the File properties micro-HOWTO for details."));
+  action -> setWhatsThis (i18n("The 'Properties' command opens the File Properties dialog for the current item in the multimedia library. See the File properties chapter in the user manual for details."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("library_select_all", action);

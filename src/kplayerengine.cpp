@@ -489,7 +489,7 @@ void KPlayerEngine::setupActions (void)
   action -> setIcon (KIcon ("document-properties"));
   action -> setShortcut (Qt::AltModifier + Qt::Key_Return);
   action -> setStatusTip (i18n("Opens the File Properties dialog"));
-  action -> setWhatsThis (i18n("Properties command opens the File Properties dialog that lets you choose many options specific to the currently loaded file. See the File properties micro-HOWTO for details."));
+  action -> setWhatsThis (i18n("Properties command opens the File Properties dialog that lets you choose many options specific to the currently loaded file. See the File properties chapter in the user manual for details."));
 
   action = new KAction (actionCollection());
   actionCollection() -> addAction ("player_play", action);
