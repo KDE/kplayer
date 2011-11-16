@@ -770,15 +770,6 @@ void KPlayerWindow::initActions (void)
   }
   */
 
-  action = this -> action ("help_report_bug");
-  if ( action )
-  {
-    disconnect (action, SIGNAL(triggered()), 0, 0);
-    connect (action, SIGNAL(triggered()), SLOT(helpReportBug()));
-    //action -> setStatusTip (i18n("Opens the manual section on bug reporting"));
-    //action -> setWhatsThis (i18n("Report Bug command opens the section of KPlayer user manual that explains how to report a bug in KPlayer, including all the information that may be helpful in finding and fixing the bug."));
-  }
-
   /*
   action = actionCollection() -> action ("help_about_app");
   if ( action )
@@ -1333,11 +1324,6 @@ void KPlayerWindow::newToolbarConfiguration (void)
 void KPlayerWindow::settingsConfigure (void)
 {
   KPlayerSettingsDialog (this).exec();
-}
-
-void KPlayerWindow::helpReportBug (void)
-{
-  KToolInvocation::invokeHelp ("howto-bug-reporting");
 }
 
 void KPlayerWindow::playerStateChanged (KPlayerProcess::State state, KPlayerProcess::State previous)

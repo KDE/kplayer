@@ -280,9 +280,6 @@ public slots:
   /** Opens the KPlayer configuration dialog. */
   void settingsConfigure (void);
 
-  /** Opens the KPlayer manual section on bug reporting. */
-  void helpReportBug (void);
-
   /** Changes the statusbar test temporarily, used to display a hint on the currently highlighted action. */
   //void setStatusMessage (const QString&);
   /** Clears the temporary statusbar text when the action is no longer highlighted. */
