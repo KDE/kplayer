@@ -315,7 +315,7 @@
          </widget>
         </item>
         <item>
-         <widget class="KComboBox" name="c_brightness_every">
+         <widget class="QComboBox" name="c_brightness_every">
           <property name="toolTip">
            <string>Reset brightness to a specific setting for each new file or KPlayer session</string>
           </property>

@@ -57,7 +57,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="KComboBox" name="c_driver">
+         <widget class="QComboBox" name="c_driver">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>1</horstretch>
@@ -142,7 +142,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="KComboBox" name="c_codec">
+         <widget class="QComboBox" name="c_codec">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>1</horstretch>
@@ -180,7 +180,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="KComboBox" name="c_scaler">
+         <widget class="QComboBox" name="c_scaler">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>

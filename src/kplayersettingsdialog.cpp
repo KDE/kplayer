@@ -20,8 +20,8 @@
 
 #include <KLocale>
 #include <KMessageBox>
-#include <KComboBox>
 #include <QCheckBox>
+#include <QComboBox>
 #include <QFontDatabase>
 #include <QLabel>
 #include <QLineEdit>
@@ -36,7 +36,7 @@
 #define DEBUG_KPLAYER_SETTINGS_DIALOG
 #endif
 
-QString comboEntry (KComboBox* combo)
+QString comboEntry (QComboBox* combo)
 {
   return combo -> currentIndex() < 0 ? combo -> currentText() : combo -> itemData (combo -> currentIndex()).toString();
 }
@@ -873,7 +873,7 @@ KPlayerSettingsSubtitles::KPlayerSettingsSubtitles (QWidget* parent)
   m_initialized = true;
 }
 
-void fillEncodingCombobox (KComboBox* combobox);
+void fillEncodingCombobox (QComboBox* combobox);
 
 void KPlayerSettingsSubtitles::loadLists (void)
 {

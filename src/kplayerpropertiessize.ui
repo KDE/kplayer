@@ -307,7 +307,7 @@
                   </widget>
                 </item>
                 <item row="3" column="1" colspan="3">
-                  <widget class="KComboBox" name="c_display_size">
+                  <widget class="QComboBox" name="c_display_size">
                     <property name="toolTip" stdset="0">
                       <string>Initial video display size or aspect</string>
                     </property>
@@ -408,7 +408,7 @@
                   </widget>
                 </item>
                 <item row="5" column="1" colspan="3">
-                  <widget class="KComboBox" name="c_full_screen">
+                  <widget class="QComboBox" name="c_full_screen">
                     <property name="toolTip" stdset="0">
                       <string>Initial full screen window state</string>
                     </property>
@@ -455,7 +455,7 @@
                   </widget>
                 </item>
                 <item row="6" column="1" colspan="3">
-                  <widget class="KComboBox" name="c_maximized">
+                  <widget class="QComboBox" name="c_maximized">
                     <property name="toolTip" stdset="0">
                       <string>Initial maximized window state</string>
                     </property>
@@ -502,7 +502,7 @@
                   </widget>
                 </item>
                 <item row="7" column="1" colspan="3">
-                  <widget class="KComboBox" name="c_maintain_aspect">
+                  <widget class="QComboBox" name="c_maintain_aspect">
                     <property name="toolTip" stdset="0">
                       <string>Maintain video aspect when resizing window</string>
                     </property>

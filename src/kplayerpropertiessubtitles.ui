@@ -61,7 +61,7 @@
                   </widget>
                 </item>
                 <item row="0" column="1">
-                  <widget class="KComboBox" name="c_track_set">
+                  <widget class="QComboBox" name="c_track_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -183,7 +183,7 @@
                   </widget>
                 </item>
                 <item row="3" column="1">
-                  <widget class="KComboBox" name="c_vobsub">
+                  <widget class="QComboBox" name="c_vobsub">
                     <property name="toolTip" stdset="0">
                       <string>Type of external subtitles</string>
                     </property>
@@ -230,7 +230,7 @@
                   </widget>
                 </item>
                 <item row="4" column="1" colspan="3">
-                  <widget class="KComboBox" name="c_encoding">
+                  <widget class="QComboBox" name="c_encoding">
                     <property name="editable">
                       <bool>true</bool>
                     </property>
@@ -283,7 +283,7 @@
                   </widget>
                 </item>
                 <item row="5" column="1">
-                  <widget class="KComboBox" name="c_framerate">
+                  <widget class="QComboBox" name="c_framerate">
                     <property name="editable">
                       <bool>true</bool>
                     </property>
@@ -331,7 +331,7 @@
                   </widget>
                 </item>
                 <item row="6" column="1">
-                  <widget class="KComboBox" name="c_autoload">
+                  <widget class="QComboBox" name="c_autoload">
                     <property name="toolTip" stdset="0">
                       <string>Automatically load subtitles for this file</string>
                     </property>
@@ -378,7 +378,7 @@
                   </widget>
                 </item>
                 <item row="7" column="1">
-                  <widget class="KComboBox" name="c_position_set">
+                  <widget class="QComboBox" name="c_position_set">
                     <property name="toolTip" stdset="0">
                       <string>Vertical position of subtitles</string>
                     </property>
@@ -436,7 +436,7 @@
                   </widget>
                 </item>
                 <item row="8" column="1">
-                  <widget class="KComboBox" name="c_delay_set">
+                  <widget class="QComboBox" name="c_delay_set">
                     <property name="toolTip" stdset="0">
                       <string>Delay of subtitles relative to video</string>
                     </property>
@@ -521,7 +521,7 @@
                   </widget>
                 </item>
                 <item row="9" column="1">
-                  <widget class="KComboBox" name="c_closed_caption">
+                  <widget class="QComboBox" name="c_closed_caption">
                     <property name="toolTip" stdset="0">
                       <string>Display closed caption subtitles if they are available</string>
                     </property>

@@ -303,7 +303,7 @@
          </widget>
         </item>
         <item>
-         <widget class="KComboBox" name="c_saturation_every">
+         <widget class="QComboBox" name="c_saturation_every">
           <property name="toolTip">
            <string>Reset saturation to a specific setting for each new file or KPlayer session</string>
           </property>

@@ -61,7 +61,7 @@
                   </widget>
                 </item>
                 <item row="0" column="1">
-                  <widget class="KComboBox" name="c_track_set">
+                  <widget class="QComboBox" name="c_track_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -135,7 +135,7 @@
                   </widget>
                 </item>
                 <item row="1" column="1">
-                  <widget class="KComboBox" name="c_contrast_set">
+                  <widget class="QComboBox" name="c_contrast_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -229,7 +229,7 @@
                   </widget>
                 </item>
                 <item row="2" column="1">
-                  <widget class="KComboBox" name="c_brightness_set">
+                  <widget class="QComboBox" name="c_brightness_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -305,7 +305,7 @@
                   </widget>
                 </item>
                 <item row="3" column="1">
-                  <widget class="KComboBox" name="c_hue_set">
+                  <widget class="QComboBox" name="c_hue_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -381,7 +381,7 @@
                   </widget>
                 </item>
                 <item row="4" column="1">
-                  <widget class="KComboBox" name="c_saturation_set">
+                  <widget class="QComboBox" name="c_saturation_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -457,7 +457,7 @@
                   </widget>
                 </item>
                 <item row="5" column="1" colspan="3">
-                  <widget class="KComboBox" name="c_codec">
+                  <widget class="QComboBox" name="c_codec">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -621,7 +621,7 @@
                   </widget>
                 </item>
                 <item row="8" column="1">
-                  <widget class="KComboBox" name="c_input_set">
+                  <widget class="QComboBox" name="c_input_set">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -687,7 +687,7 @@
                   </widget>
                 </item>
                 <item row="9" column="1">
-                  <widget class="KComboBox" name="c_format">
+                  <widget class="QComboBox" name="c_format">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
@@ -912,7 +912,7 @@
                   </widget>
                 </item>
                 <item row="10" column="1">
-                  <widget class="KComboBox" name="c_norm">
+                  <widget class="QComboBox" name="c_norm">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>3</hsizetype>
