@@ -106,18 +106,9 @@ contents of all sections of the dialog.</para>
 <variablelist>
 
 <varlistentry>
-<term><guibutton>OK</guibutton> button</term>
-<listitem><para>Accepts your changes and closes the dialog.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guibutton>Cancel</guibutton> button</term>
-<listitem><para>Closes the dialog without saving the changes.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guibutton>Apply</guibutton> button</term>
-<listitem><para>Applies the changes without closing the dialog.</para></listitem>
+<term><guibutton>Help</guibutton> button</term>
+<listitem><para>Opens this user manual and displays the section that describes
+the currently selected section of the dialog.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -127,18 +118,18 @@ applies them.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guibutton>Close</guibutton> button</term>
-<listitem><para>After you choose <guibutton>Apply</guibutton> or
-<guibutton>Defaults</guibutton>, the <guibutton>Cancel</guibutton> button
-changes to <guibutton>Close</guibutton>. Clicking it closes the dialog
-and discards changes you made since the last time changes were
-applied.</para></listitem>
+<term><guibutton>OK</guibutton> button</term>
+<listitem><para>Accepts your changes and closes the dialog.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guibutton>Help</guibutton> button</term>
-<listitem><para>Opens this user manual and displays the section that describes
-the currently selected section of the dialog.</para></listitem>
+<term><guibutton>Apply</guibutton> button</term>
+<listitem><para>Applies the changes without closing the dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Cancel</guibutton> button</term>
+<listitem><para>Closes the dialog without saving the changes.</para></listitem>
 </varlistentry>
 
 </variablelist>
