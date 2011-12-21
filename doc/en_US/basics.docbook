@@ -152,7 +152,8 @@ it. If &kplayer; is at the top of the list of programs associated with the
 media type of the object, when you open the page in &konqueror; Web Browser
 it will embed &kplayer; into the web page and start playing the media. However,
 it is recommended that you <mousebutton>right</mousebutton> click the media
-object and choose <guimenuitem>Start &kplayer;</guimenuitem> so that the full
+object and choose <menuchoice><guisubmenu>Open with</guisubmenu>
+<guimenuitem>&kplayer;</guimenuitem></menuchoice> so that the full
 &kplayer; opens up and starts playing the media. This will give you a better
 interface and more options than an embedded &kplayer;.</para></listitem>
 
@@ -283,7 +284,7 @@ the <mousebutton>left</mousebutton> mouse button so that &kplayer; opens up and
 starts playing the file, just like with plain local files. As usual, for this to
 work &kplayer; needs to be the top program for that file type on the
 <guilabel>File Associations</guilabel> page in &konqueror; or
-&kcontrolcenter;.</para>
+&systemsettings;.</para>
 
 <para>Those same <acronym>URL</acronym>s will work in the <guilabel>Play
 files</guilabel> dialog that you get when you select
