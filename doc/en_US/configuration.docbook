@@ -41,7 +41,7 @@ press <keycombo action="simul">&Ctrl;<keycap>G</keycap></keycombo> or choose
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Show
 Message Log</guimenuitem></menuchoice>.</para>
 
-<para>Each toolbar has a small area on one of its sides where you can press and
+<para>Each unlocked toolbar has a small area on one of its sides where you can press and
 hold the &LMB; to drag the toolbar into a new position. You can place most
 toolbars either horizontally at the top or bottom of &kplayer; window or
 vertically at the left or right side of it, while the playlist toolbar can only
@@ -49,8 +49,7 @@ be positioned horizontally.</para>
 
 <para>Similarly, you can move around the multimedia library and the message log
 by pressing and holding the &LMB; on the title area of the window and dragging
-it above or below the <link linkend="parts-video-area">video area</link> and
-positioning it in relation to the toolbars.</para>
+it above or below the <link linkend="parts-video-area">video area</link>.</para>
 
 <para>If you <mousebutton>right</mousebutton> click a toolbar, you will get a
 <link linkend="popup-toolbar">menu</link> to configure it. You can choose the
@@ -321,7 +320,7 @@ the &Shift; key has a special function in &kplayer;.</para>
 <para>Use the filter bar to search through the list to find the action for 
 which you want to add or change the shortcut keys and select it by 
 <mousebutton>left</mousebutton> clicking the name in the <guilabel>Action</guilabel> 
-or the cell in the <guilabel>Shortcut</guilabel> column to change the <guilabel>Primary</guilabel> key. 
+or the cell in the <guilabel>Shortcut</guilabel> column to change the primary key. 
 Click on the cell in the <guilabel>Alternate</guilabel> row to change this shortcut.
 You will then be able to change the shortcut by clicking
 the <guilabel>None</guilabel> button.</para>
