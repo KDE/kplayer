@@ -1049,23 +1049,5 @@
       <receiver>KPlayerPropertiesVideoPage</receiver>
       <slot>saturationChanged(int)</slot>
     </connection>
-    <connection>
-      <sender>c_codec</sender>
-      <signal>activated(int)</signal>
-      <receiver>KPlayerPropertiesVideoPage</receiver>
-      <slot>codecChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>c_input_set</sender>
-      <signal>activated(int)</signal>
-      <receiver>KPlayerPropertiesVideoPage</receiver>
-      <slot>inputChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>c_norm</sender>
-      <signal>activated(int)</signal>
-      <receiver>KPlayerPropertiesVideoPage</receiver>
-      <slot>normChanged(int)</slot>
-    </connection>
   </connections>
 </ui>

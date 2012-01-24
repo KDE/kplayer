@@ -754,17 +754,5 @@
       <receiver>KPlayerPropertiesAudioPage</receiver>
       <slot>delayChanged(int)</slot>
     </connection>
-    <connection>
-      <sender>c_codec</sender>
-      <signal>activated(int)</signal>
-      <receiver>KPlayerPropertiesAudioPage</receiver>
-      <slot>codecChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>c_input_set</sender>
-      <signal>activated(int)</signal>
-      <receiver>KPlayerPropertiesAudioPage</receiver>
-      <slot>inputChanged(int)</slot>
-    </connection>
   </connections>
 </ui>

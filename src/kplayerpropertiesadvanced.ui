@@ -589,11 +589,5 @@
       <receiver>KPlayerPropertiesAdvancedPage</receiver>
       <slot>cacheChanged(int)</slot>
     </connection>
-    <connection>
-      <sender>c_compression</sender>
-      <signal>toggled(bool)</signal>
-      <receiver>KPlayerPropertiesAdvancedPage</receiver>
-      <slot>compressionChanged(bool)</slot>
-    </connection>
   </connections>
 </ui>
