@@ -97,8 +97,8 @@ KPlayerLineOutputProcess::~KPlayerLineOutputProcess()
 #ifdef DEBUG_KPLAYER_PROCESS
   kdDebugTime() << "Destroying MPlayer process\n";
 #endif
-  delete m_stdout_buffer;
-  delete m_stderr_buffer;
+  delete[] m_stdout_buffer;
+  delete[] m_stderr_buffer;
 }
 
 void KPlayerLineOutputProcess::processHasExited (int, QProcess::ExitStatus)
