@@ -3074,7 +3074,7 @@ public:
   void setSubtitleUrl (const KUrl& url)
     { setUrl ("Subtitle URL", url); }
   void setSubtitleUrl (const QString& url)
-    { setSubtitleUrl (url); }
+    { setSubtitleUrl (KUrl(url)); }
   bool hasSubtitleUrl (void) const
     { return has ("Subtitle URL"); }
   QString subtitleUrlString (void) const
