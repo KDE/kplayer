@@ -37,6 +37,7 @@ int main (int argc, char *argv[])
   KAboutData aboutData("kplayer", 0, ki18n("KPlayer"), "0.7.2", description, KAboutData::License_GPL_V3,
     ki18n("(C) 2002-2008, Kirill Bulygin"), KLocalizedString());
   aboutData.addAuthor (ki18n("Kirill Bulygin"), KLocalizedString(), "http://kplayer.sourceforge.net/email.html");
+  aboutData.addCredit(ki18n("Andrius Štikonas"), ki18n("Bug fixes"), "stikonas@gmail.com");
   aboutData.addCredit(ki18n("Burkhard Lück"), ki18n("Documentation updates"), "lueck@hube-lueck.de");
   KComponentData* data = new KComponentData (&aboutData);
   QString localdir (KGlobal::dirs() -> localkdedir());
