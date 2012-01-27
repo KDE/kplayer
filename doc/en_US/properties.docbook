@@ -296,11 +296,11 @@ will use when it starts playing the file, unless you turned off the option to
 <guilabel>Resize main window automatically</guilabel> on the
 <link linkend="settings-general"><guilabel>General</guilabel> page</link> in
 <guilabel>&kplayer; Settings</guilabel>. The <guilabel>auto</guilabel> setting
-will use the <guilabel>Minimum initial video width</guilabel> option from the
-<guilabel>General</guilabel> settings. The <guilabel>set size</guilabel> setting
+will use the minimum of the native video size, available screen width or height. 
+The <guilabel>set size</guilabel> setting
 will use the fixed initial size you specify. The <guilabel>set aspect</guilabel>
-setting will again use the <guilabel>Minimum initial video width</guilabel>
-option, but will apply the fixed initial aspect you specify.</para></listitem>
+setting will again use the minimum of the native video size, available screen width 
+or height, but will apply the fixed initial aspect you specify.</para></listitem>
 </varlistentry>
 
 <varlistentry>

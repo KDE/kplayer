@@ -299,7 +299,7 @@
                       <string>Initial video display size or aspect</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
+                      <string>Option to set initial video display size or aspect. Auto will choose the minimum of the native video size, available screen width or height. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>
@@ -312,7 +312,7 @@
                       <string>Initial video display size or aspect</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
+                      <string>Option to set initial video display size or aspect. Auto will choose the minimum of the native video size, available screen width or height. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
                     </property>
                     <item>
                       <property name="text">
@@ -343,7 +343,7 @@
                       <string>Initial video display size or aspect</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
+                      <string>Option to set initial video display size or aspect. Auto will choose the minimum of the native video size, available screen width or height. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
                     </property>
                   </widget>
                 </item>
@@ -362,7 +362,7 @@
                       <string>Initial video display size or aspect</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
+                      <string>Option to set initial video display size or aspect. Auto will choose the minimum of the native video size, available screen width or height. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
                     </property>
                     <property name="wordWrap">
                       <bool>false</bool>
@@ -381,7 +381,7 @@
                       <string>Initial video display size or aspect</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                      <string>Option to set initial video display size or aspect. Auto will choose the initial display size based on the Minimum Initial Video Width option in KPlayer Settings. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
+                      <string>Option to set initial video display size or aspect. Auto will choose the minimum of the native video size, available screen width or height. Set Size allows you to set a specific size, and Set Aspect lets you set a specific aspect. It is easier to set this property by resizing KPlayer window or choosing a size or aspect option from View menu while holding the Shift key down.</string>
                     </property>
                   </widget>
                 </item>
