@@ -561,5 +561,25 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>c_display_size</sender>
+   <signal>activated(int)</signal>
+   <receiver>KPlayerPropertiesSizePage</receiver>
+   <slot>displaySizeChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>115</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>393</x>
+     <y>271</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>displaySizeChanged(int)</slot>
+ </slots>
 </ui>
