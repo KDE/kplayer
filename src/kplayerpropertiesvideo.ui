@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>619</width>
-    <height>348</height>
+    <height>352</height>
    </rect>
   </property>
   <property name="frameShape">
@@ -29,6 +29,9 @@
       </sizepolicy>
      </property>
      <layout class="QVBoxLayout">
+      <property name="leftMargin">
+       <number>10</number>
+      </property>
       <item>
        <layout class="QGridLayout">
         <item row="0" column="0">
@@ -1006,36 +1009,86 @@
   </customwidget>
  </customwidgets>
  <resources/>
-  <connections>
-    <connection>
-      <sender>c_track_set</sender>
-      <signal>activated(int)</signal>
-      <receiver>KPlayerPropertiesVideoPage</receiver>
-      <slot>trackChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>c_contrast_set</sender>
-      <signal>activated(int)</signal>
-      <receiver>KPlayerPropertiesVideoPage</receiver>
-      <slot>contrastChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>c_brightness_set</sender>
-      <signal>activated(int)</signal>
-      <receiver>KPlayerPropertiesVideoPage</receiver>
-      <slot>brightnessChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>c_hue_set</sender>
-      <signal>activated(int)</signal>
-      <receiver>KPlayerPropertiesVideoPage</receiver>
-      <slot>hueChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>c_saturation_set</sender>
-      <signal>activated(int)</signal>
-      <receiver>KPlayerPropertiesVideoPage</receiver>
-      <slot>saturationChanged(int)</slot>
-    </connection>
-  </connections>
+ <connections>
+  <connection>
+   <sender>c_track_set</sender>
+   <signal>activated(int)</signal>
+   <receiver>KPlayerPropertiesVideoPage</receiver>
+   <slot>trackChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>c_contrast_set</sender>
+   <signal>activated(int)</signal>
+   <receiver>KPlayerPropertiesVideoPage</receiver>
+   <slot>contrastChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>c_brightness_set</sender>
+   <signal>activated(int)</signal>
+   <receiver>KPlayerPropertiesVideoPage</receiver>
+   <slot>brightnessChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>c_hue_set</sender>
+   <signal>activated(int)</signal>
+   <receiver>KPlayerPropertiesVideoPage</receiver>
+   <slot>hueChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>c_saturation_set</sender>
+   <signal>activated(int)</signal>
+   <receiver>KPlayerPropertiesVideoPage</receiver>
+   <slot>saturationChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
