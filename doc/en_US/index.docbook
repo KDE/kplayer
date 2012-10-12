@@ -15,9 +15,9 @@
   <!ENTITY % addindex "IGNORE">
 ]>
 
-<book lang="&language;"> 
+<book id="en_US" lang="&language;"> 
 
-<bookinfo>
+<book id="en_US"info>
 <title>&kplayer; user manual</title>
 
 <authorgroup>
